@@ -1,0 +1,9 @@
+{
+    "name": "Math Drill",
+    "package": "math_drill",
+    "version": "1.0.0",
+    "author": "Sene",
+    "description": "Rapid-fire mental math drills to boost calculation speed.",
+    "homepage": "https://ankiweb.net/shared/addons/",
+    "conflicts": []
+}
