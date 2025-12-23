@@ -1,6 +1,6 @@
 # Math Drill – Make Mental Math Fun! 🧠⚡
 
-**Author:** Sene @Agampodige
+**Author:** Sene🦎
 
 **Anki Version:** 25.09.2+  
 **version:** 1.0.0V
