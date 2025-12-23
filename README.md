@@ -11,6 +11,7 @@
 Want to get faster at mental math without feeling overwhelmed? **Math Drill** is here to help! Just a few minutes a day, and in **2-3 weeks of consistent practice**, you’ll see your brain speeding through calculations like a pro.  
 
 ---
+<img width="637" height="771" alt="image" src="https://github.com/user-attachments/assets/44ab154f-d040-4418-80bc-099a4c8b4c4e" />
 
 ## What You Can Do 🎯
 
@@ -22,6 +23,10 @@ Want to get faster at mental math without feeling overwhelmed? **Math Drill** is
 - Discover **tips and tricks** to make calculations easier  
 
 ---
+<img width="686" height="603" alt="image" src="https://github.com/user-attachments/assets/b8881635-5f6c-4b5e-94fd-f73f83f161d3" />
+<img width="529" height="700" alt="image" src="https://github.com/user-attachments/assets/4dd27208-a7ef-4bfb-83bd-e7b4a7f1142f" />
+
+<img width="628" height="59" alt="image" src="https://github.com/user-attachments/assets/e179283d-f011-49e6-9694-adcd323206e7" />
 
 ## Quick Hotkeys ⚡
 
