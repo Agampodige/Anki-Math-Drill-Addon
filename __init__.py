@@ -2,11 +2,11 @@ from aqt import mw
 from aqt.qt import QAction, QMessageBox
 import traceback
 
-from .main import MathDrill  # Use relative import
+from .main_webengine import MathDrillWebEngine  # Use WebEngine version
 
 def open_math_drill():
     try:
-        dialog = MathDrill(mw)
+        dialog = MathDrillWebEngine(mw)
         dialog.show()
     except Exception as e:
         print("=== MathDrill Error ===")

@@ -1,0 +1,706 @@
+/* Modern CSS Variables */
+:root {
+    --dark-bg: #0B0E0B;
+    --card-bg: #1A201A;
+    --accent-color: #2ECC71;
+    --success-color: #2ECC71;
+    --error-color: #FF6B6B;
+    --text-color: #ECF0F1;
+    --muted-color: #4B5E4B;
+    --secondary-accent: #27AE60;
+    --border-color: #252F25;
+    --focus-bg: #182218;
+    --progress-bg: #121812;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow: hidden;
+}
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    gap: 15px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.app-title {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.coach-label {
+    color: var(--muted-color);
+    font-style: italic;
+    font-size: 11px;
+    display: none;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-btn {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--muted-color);
+    font-size: 12px;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--dark-bg);
+    transform: translateY(-1px);
+}
+
+.streak-counter {
+    color: #FF9F1C;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+}
+
+/* Control Card */
+.control-card .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.control-select {
+    background-color: var(--card-bg);
+    border: 1px solid var(--muted-color);
+    border-radius: 8px;
+    padding: 8px;
+    min-width: 120px;
+    color: var(--text-color);
+    font-size: 11px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.control-select:hover {
+    border-color: var(--accent-color);
+}
+
+.control-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* Status Card */
+.stats-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.stat-item {
+    flex: 1;
+    background-color: rgba(126, 200, 80, 0.1);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+}
+
+.today-stat {
+    background-color: rgba(224, 175, 104, 0.1);
+}
+
+.lifetime-stat {
+    background-color: rgba(125, 207, 255, 0.1);
+}
+
+.stat-icon {
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.stat-value {
+    color: var(--accent-color);
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.today-stat .stat-value {
+    color: #e0af68;
+}
+
+.lifetime-stat .stat-value {
+    color: #7dcfff;
+}
+
+.stat-label {
+    color: var(--muted-color);
+    font-size: 10px;
+}
+
+.stats-detail {
+    color: var(--muted-color);
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.progress-container {
+    margin-top: 8px;
+}
+
+.progress-label {
+    color: var(--muted-color);
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.progress-bar {
+    position: relative;
+    background-color: var(--progress-bg);
+    border-radius: 6px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background-color: var(--accent-color);
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.ghost-line {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+    right: 0;
+    display: none;
+}
+
+/* Challenge Card */
+.challenge-card {
+    background-color: var(--focus-bg);
+    text-align: center;
+}
+
+.question-number {
+    color: var(--accent-color);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.timer-display {
+    color: var(--muted-color);
+    font-size: 10px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.question-text {
+    font-size: 56px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.answer-input {
+    background-color: var(--card-bg);
+    border: 2px solid var(--muted-color);
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 32px;
+    color: white;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px;
+    transition: all 0.2s ease;
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: #1F271F;
+}
+
+.answer-input::selection {
+    background-color: var(--accent-color);
+    color: var(--dark-bg);
+}
+
+.feedback {
+    color: var(--muted-color);
+    font-size: 14px;
+    min-height: 20px;
+}
+
+/* Hint Bar */
+.hint-bar {
+    color: var(--muted-color);
+    font-size: 11px;
+    text-align: center;
+    margin-top: 5px;
+    padding-top: 10px;
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: none;
+    z-index: 1001;
+}
+
+.large-modal {
+    width: 600px;
+    height: 500px;
+}
+
+.modal-title {
+    color: var(--accent-color);
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Buttons */
+.btn {
+    background-color: var(--accent-color);
+    color: var(--dark-bg);
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 45px;
+}
+
+.btn:hover {
+    background-color: var(--secondary-accent);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    background-color: #1E8449;
+    transform: translateY(1px);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-accent);
+    color: white;
+}
+
+/* Result Modal */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background-color: var(--dark-bg);
+    border-radius: 12px;
+    border: 1px solid var(--card-bg);
+    padding: 15px;
+    text-align: center;
+}
+
+.stat-card .stat-label {
+    color: var(--muted-color);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.stat-card .stat-value {
+    color: var(--success-color);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.main-stat {
+    font-size: 24px !important;
+}
+
+.mistakes-section {
+    margin-top: 20px;
+}
+
+.mistakes-section h3 {
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.mistakes-list {
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.mistake-item {
+    color: var(--error-color);
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+/* Achievements */
+.achievements-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.achievement-card {
+    background-color: #121812;
+    border: 2px solid var(--muted-color);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    opacity: 0.5;
+}
+
+.achievement-card.unlocked {
+    border-color: var(--accent-color);
+    opacity: 1;
+}
+
+.achievement-icon {
+    font-size: 32px;
+}
+
+.achievement-info h4 {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.achievement-info p {
+    color: var(--text-color);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Weakness */
+.weakness-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.weakness-card {
+    border-radius: 12px;
+    border: 2px solid var(--muted-color);
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.weakness-card.high-weakness {
+    background-color: #2C1810;
+    border-color: var(--error-color);
+}
+
+.weakness-card.medium-weakness {
+    background-color: #2A1F15;
+    border-color: #e67e22;
+}
+
+.weakness-card.low-weakness {
+    background-color: #2A2415;
+    border-color: #f39c12;
+}
+
+.weakness-card.unpracticed {
+    background-color: #1A1A1A;
+    border-color: var(--muted-color);
+}
+
+.weakness-info h4 {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.weakness-info p {
+    color: var(--text-color);
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.weakness-info .suggestions {
+    color: var(--accent-color);
+    font-size: 11px;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.weakness-score {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Mastery Grid */
+.mastery-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mastery-header {
+    color: var(--muted-color);
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+.mastery-cell {
+    background-color: #2C3E50;
+    border-radius: 8px;
+    color: var(--text-color);
+    padding: 10px;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mastery-cell.apprentice {
+    background-color: #27AE60;
+    color: var(--dark-bg);
+}
+
+.mastery-cell.pro {
+    background-color: var(--accent-color);
+    color: var(--dark-bg);
+}
+
+.mastery-cell.master {
+    background-color: #F1C40F;
+    color: var(--dark-bg);
+}
+
+.mastery-level {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.mastery-detail {
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+.mastery-count {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.legend {
+    color: var(--muted-color);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--card-bg);
+    border: 2px solid #e0af68;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    display: none;
+    z-index: 1002;
+}
+
+.toast-content h3 {
+    color: #e0af68;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.toast-content p {
+    color: var(--text-color);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Animations */
+@keyframes flash {
+    0% { opacity: 0.3; }
+    100% { opacity: 0; }
+}
+
+.flash-success {
+    animation: flash 0.3s ease-out;
+}
+
+.flash-error {
+    animation: flash 0.3s ease-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}
+
+.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 15px;
+    }
+    
+    .stats-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .question-text {
+        font-size: 42px;
+    }
+    
+    .answer-input {
+        font-size: 24px;
+    }
+    
+    .modal {
+        width: 95vw;
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--muted-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}

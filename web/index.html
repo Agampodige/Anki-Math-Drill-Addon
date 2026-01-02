@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Drill Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="app-title">MATH DRILL</h1>
+                <div class="coach-label" id="coachLabel"></div>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn" data-action="progress" title="Progress">📊</button>
+                <button class="icon-btn" data-action="weakness" title="Weakness Analysis">🎯</button>
+                <button class="icon-btn" data-action="achievements" title="Achievements">🏆</button>
+                <button class="icon-btn" data-action="settings" title="Settings">⚙️</button>
+                <div class="streak-counter" id="streakCounter">🔥 0</div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Control Card -->
+            <section class="card control-card">
+                <div class="controls">
+                    <select id="modeBox" class="control-select">
+                        <option value="Free Play">Free Play</option>
+                        <option value="Drill (20 Qs)">Drill (20 Qs)</option>
+                        <option value="Sprint (60s)">Sprint (60s)</option>
+                        <option value="Adaptive Coach">Adaptive Coach</option>
+                    </select>
+                    
+                    <select id="operationBox" class="control-select">
+                        <option value="Addition">Addition</option>
+                        <option value="Subtraction">Subtraction</option>
+                        <option value="Multiplication">Multiplication</option>
+                        <option value="Division">Division</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
+                    
+                    <select id="digitsBox" class="control-select">
+                        <option value="1 digit">1 digit</option>
+                        <option value="2 digits" selected>2 digits</option>
+                        <option value="3 digits">3 digits</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Stats Card -->
+            <section class="card status-card">
+                <div class="stats-row">
+                    <div class="stat-item session-stat">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value" id="sessionCount">0</div>
+                        <div class="stat-label">Session</div>
+                    </div>
+                    <div class="stat-item today-stat">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-value" id="todayCount">0</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-item lifetime-stat">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="lifetimeCount">0</div>
+                        <div class="stat-label">Lifetime</div>
+                    </div>
+                </div>
+                <div class="stats-detail" id="statsDetail">Start answering to see stats</div>
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                    <div class="progress-label" id="progressLabel"></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <div class="ghost-line" id="ghostLine"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Challenge Card -->
+            <section class="card challenge-card">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="timer-display" id="timerDisplay">⏱ 0.0s</div>
+                <div class="question-text" id="questionText">Ready?</div>
+                <input type="text" id="answerInput" class="answer-input" placeholder="?" autocomplete="off">
+                <div class="feedback" id="feedback">Press Enter to Start</div>
+            </section>
+        </main>
+
+        <!-- Hint Bar -->
+        <footer class="hint-bar">
+            [M] Mode  [O] Op  [F1-F3] Digits  [S] Settings  [A] Awards  [P] Progress  [W] Weakness  [Esc] Clear  [Ctrl+Q] End Session
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="modal-overlay"></div>
+    
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Session Complete!</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-value main-stat" id="resultAccuracy">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Speed</div>
+                    <div class="stat-value" id="resultSpeed">0.0s</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Questions</div>
+                    <div class="stat-value" id="resultTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Time</div>
+                    <div class="stat-value" id="resultTime">0.0s</div>
+                </div>
+            </div>
+            <div class="mistakes-section" id="mistakesSection">
+                <h3>Mistakes Review</h3>
+                <div class="mistakes-list" id="mistakesList"></div>
+            </div>
+            <div class="modal-buttons">
+                <button id="retakeBtn" class="btn btn-secondary" style="display: none;">🔁 Retake Mistakes</button>
+                <button id="closeResultBtn" class="btn btn-primary">Stop Review & Close (Esc)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Preferences</h2>
+            <button id="soundToggle" class="btn btn-secondary">Sound Effects: ON</button>
+            <button id="closeSettingsBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievementsModal" class="modal">
+        <div class="modal-content large-modal">
+            <h2 class="modal-title">🏆 Your Trophy Case</h2>
+            <div class="achievements-list" id="achievementsList"></div>
+            <button id="closeAchievementsBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Weakness Modal -->
+    <div id="weaknessModal" class="modal">
+        <div class="modal-content large-modal">
+            <h2 class="modal-title">🎯 Areas Needing Focus</h2>
+            <div class="weakness-list" id="weaknessList"></div>
+            <button id="closeWeaknessBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Mastery Modal -->
+    <div id="masteryModal" class="modal">
+        <div class="modal-content large-modal">
+            <h2 class="modal-title">Your Math Skills Profile</h2>
+            <div class="mastery-grid" id="masteryGrid"></div>
+            <div class="legend">Legend: Novice (Need practice) → Apprentice (Fix errors) → Pro (Speed up) → Master (Perfect)</div>
+            <button id="closeMasteryBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Achievement Toast -->
+    <div id="achievementToast" class="toast">
+        <div class="toast-content">
+            <h3>🏆 Achievement Unlocked!</h3>
+            <div id="toastMessage"></div>
+            <button id="toastCloseBtn" class="btn btn-primary">Awesome!</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
