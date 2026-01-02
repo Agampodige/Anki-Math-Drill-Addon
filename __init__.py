@@ -2,7 +2,7 @@ from aqt import mw
 from aqt.qt import QAction, QMessageBox
 import traceback
 
-from math_drill.main import MathDrill  # Use absolute import
+from .main import MathDrill  # Use relative import
 
 def open_math_drill():
     try:

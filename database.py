@@ -1,7 +1,15 @@
 import sqlite3
+import os
 from datetime import date
 
-DB_NAME = "math_drill.db"
+# Get the addon's data directory for proper database storage
+try:
+    from aqt import mw
+    ADDON_DIR = os.path.dirname(os.path.dirname(__file__))
+    DB_NAME = os.path.join(mw.pm.addonFolder(), "math_drill.db")
+except ImportError:
+    # Fallback for standalone testing
+    DB_NAME = "math_drill.db"
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
@@ -54,6 +62,19 @@ def init_db():
         c.execute("SELECT session_id FROM attempts LIMIT 1")
     except sqlite3.OperationalError:
         c.execute("ALTER TABLE attempts ADD COLUMN session_id INTEGER")
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS weakness_tracking (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        operation TEXT,
+        digits INTEGER,
+        weakness_score REAL,
+        consecutive_correct INTEGER,
+        last_practiced DATE,
+        mastery_level TEXT,
+        UNIQUE(operation, digits)
+    )
+    """)
 
     conn.commit()
     conn.close()
@@ -178,3 +199,92 @@ def get_today_attempts_count():
     result = c.fetchone()
     conn.close()
     return result[0] if result else 0
+
+def update_weakness_tracking(operation, digits, correct):
+    """Update weakness tracking for a specific operation/digit combination."""
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    
+    # Get recent performance for this skill (last 10 attempts)
+    c.execute("""
+    SELECT correct, time_taken 
+    FROM attempts 
+    WHERE operation = ? AND digits = ? 
+    ORDER BY created DESC, id DESC 
+    LIMIT 10
+    """, (operation, digits))
+    
+    recent_attempts = c.fetchall()
+    
+    # Calculate weakness score based on recent performance
+    if len(recent_attempts) < 3:
+        weakness_score = 80.0  # High weakness for new skills
+        mastery_level = "Novice"
+    else:
+        recent_correct = sum(1 for attempt in recent_attempts if attempt[0])
+        recent_accuracy = recent_correct / len(recent_attempts)
+        recent_avg_time = sum(attempt[1] for attempt in recent_attempts if attempt[1]) / len(recent_attempts)
+        
+        # Calculate weakness score (lower is better)
+        if recent_accuracy >= 0.9 and recent_avg_time < 4.0:
+            weakness_score = 10.0  # Mastered
+            mastery_level = "Master"
+        elif recent_accuracy >= 0.8:
+            weakness_score = 30.0  # Good
+            mastery_level = "Pro"
+        elif recent_accuracy >= 0.6:
+            weakness_score = 60.0  # Needs work
+            mastery_level = "Apprentice"
+        else:
+            weakness_score = 90.0  # Struggling
+            mastery_level = "Novice"
+    
+    # Update consecutive correct streak
+    if correct:
+        c.execute("""
+        SELECT consecutive_correct FROM weakness_tracking 
+        WHERE operation = ? AND digits = ?
+        """, (operation, digits))
+        result = c.fetchone()
+        consecutive = (result[0] + 1) if result else 1
+    else:
+        consecutive = 0
+    
+    # Insert or update weakness tracking
+    c.execute("""
+    INSERT OR REPLACE INTO weakness_tracking 
+    (operation, digits, weakness_score, consecutive_correct, last_practiced, mastery_level)
+    VALUES (?, ?, ?, ?, ?, ?)
+    """, (operation, digits, weakness_score, consecutive, date.today().isoformat(), mastery_level))
+    
+    conn.commit()
+    conn.close()
+
+def get_weakness_areas():
+    """Get all weakness areas sorted by weakness score (highest first)."""
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    
+    c.execute("""
+    SELECT operation, digits, weakness_score, consecutive_correct, mastery_level, last_practiced
+    FROM weakness_tracking
+    WHERE weakness_score > 20
+    ORDER BY weakness_score DESC, last_practiced ASC
+    """)
+    
+    data = c.fetchall()
+    conn.close()
+    
+    return [{
+        'operation': row[0],
+        'digits': row[1], 
+        'weakness_score': row[2],
+        'consecutive_correct': row[3],
+        'mastery_level': row[4],
+        'last_practiced': row[5]
+    } for row in data]
+
+def get_weakest_area():
+    """Get the single weakest area that needs the most practice."""
+    weaknesses = get_weakness_areas()
+    return weaknesses[0] if weaknesses else None

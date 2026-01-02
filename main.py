@@ -1,8 +1,8 @@
 import sys
+import os
 import random
 import time
 import threading
-import winsound
 from datetime import date, datetime
 import math
 from aqt.qt import QShortcut, QKeySequence
@@ -13,15 +13,66 @@ from aqt.qt import (
     QStackedWidget, QPainter, QPen, QColor, QFont, QFontDatabase,
     QLinearGradient, QBrush, QAction, QTimer, QRectF, Qt,
     QPropertyAnimation, QPoint, QEasingCurve, QParallelAnimationGroup,
-    QSequentialAnimationGroup, pyqtSignal
+    QSequentialAnimationGroup, pyqtSignal, QKeyEvent
 )
 
 
-from .database import init_db, log_attempt, log_session, get_last_7_days_stats, get_personal_best, get_total_attempts_count, get_today_attempts_count
+from .database import init_db, log_attempt, log_session, get_last_7_days_stats, get_personal_best, get_total_attempts_count, get_today_attempts_count, update_weakness_tracking
 from .analytics import get_today_stats
 from .coach import SmartCoach
 from .gamification import AchievementManager, AppSettings
 
+
+# ----------------- CUSTOM NUMBER INPUT -----------------
+class NumberOnlyLineEdit(QLineEdit):
+    """Custom QLineEdit that only accepts numbers and handles shortcuts properly"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+    def keyPressEvent(self, event: QKeyEvent):
+        key = event.key()
+        text = event.text()
+        
+        # Allow Ctrl+Q for ending session (global shortcut)
+        if event.modifiers() & Qt.KeyboardModifier.ControlModifier and key == Qt.Key.Key_Q:
+            # Let parent handle this
+            super().keyPressEvent(event)
+            return
+            
+        # Allow Escape for clearing
+        if key == Qt.Key.Key_Escape:
+            super().keyPressEvent(event)
+            return
+            
+        # Allow Enter for submitting
+        if key == Qt.Key.Key_Enter or key == Qt.Key.Key_Return:
+            super().keyPressEvent(event)
+            return
+            
+        # Allow Backspace, Delete, and navigation keys
+        if key in [Qt.Key.Key_Backspace, Qt.Key.Key_Delete, Qt.Key.Key_Left, 
+                   Qt.Key.Key_Right, Qt.Key.Key_Home, Qt.Key.Key_End]:
+            super().keyPressEvent(event)
+            return
+            
+        # Allow minus sign (for negative numbers)
+        if text == '-' and (not self.text() or self.cursorPosition() == 0):
+            super().keyPressEvent(event)
+            return
+            
+        # Allow specific shortcut keys to pass through to parent
+        if text.upper() in ['O', 'M']:
+            # Let parent handle these shortcuts
+            event.ignore()
+            return
+            
+        # Only allow digits
+        if text.isdigit():
+            super().keyPressEvent(event)
+        else:
+            # Block letters and other characters, but don't prevent parent shortcuts
+            event.ignore()
 
 
 # ----------------- THEME & STYLES -----------------
@@ -379,6 +430,178 @@ class AchievementDialog(QDialog):
         close.clicked.connect(self.accept)
         layout.addWidget(close)
 
+class WeaknessDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Weakness Analysis")
+        self.setMinimumSize(500, 400)
+        self.resize(600, 500)
+        self.setStyleSheet(STYLESHEET)
+        
+        layout = QVBoxLayout(self)
+        
+        # Header
+        header = QLabel("🎯 Areas Needing Focus")
+        header.setStyleSheet(f"font-size: 20px; font-weight: bold; color: {ACCENT_COLOR}; margin-bottom: 10px;")
+        header.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(header)
+        
+        # Content
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("border: none;")
+        
+        content = QWidget()
+        vbox = QVBoxLayout(content)
+        vbox.setSpacing(10)
+        
+        from .coach import SmartCoach
+        coach = SmartCoach()
+        weaknesses = coach.get_weakness_focus_areas()
+        
+        if not weaknesses:
+            no_weakness = QLabel("🎉 No significant weaknesses found! You're doing great!")
+            no_weakness.setStyleSheet(f"color: {SUCCESS_COLOR}; font-size: 16px; font-weight: bold; padding: 20px;")
+            no_weakness.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            vbox.addWidget(no_weakness)
+        else:
+            for weakness in weaknesses:
+                card = QFrame()
+                # Color based on weakness score
+                if weakness['weakness_score'] > 70:
+                    border_color = ERROR_COLOR
+                    bg_color = "#2C1810"
+                elif weakness['weakness_score'] > 50:
+                    border_color = "#e67e22"
+                    bg_color = "#2A1F15"
+                else:
+                    border_color = "#f39c12"
+                    bg_color = "#2A2415"
+                
+                card.setStyleSheet(f"""
+                    QFrame {{
+                        background-color: {bg_color};
+                        border: 2px solid {border_color};
+                        border-radius: 12px;
+                    }}
+                """)
+                card.setMinimumHeight(90)
+                
+                h = QHBoxLayout(card)
+                
+                # Skill info
+                info_v = QVBoxLayout()
+                skill = QLabel(f"{weakness['operation']} - {weakness['digits']} digits")
+                skill.setStyleSheet(f"font-weight: bold; font-size: 16px; color: {border_color};")
+                
+                level = QLabel(f"Level: {weakness['level']}")
+                level.setStyleSheet(f"color: {TEXT_COLOR}; font-size: 14px;")
+                
+                streak = QLabel(f"Accuracy: {weakness['accuracy']:.0f}% | Speed: {weakness['speed']:.1f}s")
+                streak.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 12px;")
+                
+                info_v.addWidget(skill)
+                info_v.addWidget(level)
+                info_v.addWidget(streak)
+                
+                # Add suggestions if available
+                if 'suggestions' in weakness and weakness['suggestions']:
+                    suggestions_text = "Tips: " + " | ".join(weakness['suggestions'])
+                    suggestions = QLabel(suggestions_text)
+                    suggestions.setStyleSheet(f"color: {ACCENT_COLOR}; font-size: 11px; font-style: italic;")
+                    info_v.addWidget(suggestions)
+                
+                h.addLayout(info_v)
+                h.addStretch()
+                
+                # Weakness score indicator
+                score_label = QLabel(f"Score: {weakness['weakness_score']:.0f}")
+                score_label.setStyleSheet(f"font-size: 18px; font-weight: bold; color: {border_color};")
+                h.addWidget(score_label)
+                
+                vbox.addWidget(card)
+        
+        scroll.setWidget(content)
+        layout.addWidget(scroll)
+        
+        # Close button
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(self.accept)
+        layout.addWidget(close_btn)
+        
+    def show_practice_plan(self):
+        """Show a practice plan dialog"""
+        from .coach import SmartCoach
+        coach = SmartCoach()
+        
+        # Get 10-minute practice plan
+        plan = coach.get_practice_plan(10)
+        
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Practice Plan (10 mins)")
+        dlg.setMinimumSize(500, 400)
+        dlg.setStyleSheet(STYLESHEET)
+        
+        layout = QVBoxLayout(dlg)
+        
+        # Header
+        header = QLabel("🎯 Your Practice Plan")
+        header.setStyleSheet(f"font-size: 20px; font-weight: bold; color: {ACCENT_COLOR}; margin-bottom: 10px;")
+        header.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(header)
+        
+        # Summary
+        summary = QLabel(f"Target: {plan['target_questions']} questions in 10 minutes")
+        summary.setStyleSheet(f"color: {TEXT_COLOR}; font-size: 14px; margin-bottom: 20px;")
+        summary.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(summary)
+        
+        # Plan details
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        content = QWidget()
+        vbox = QVBoxLayout(content)
+        
+        for i, item in enumerate(plan['plan']):
+            card = QFrame()
+            card.setStyleSheet(f"""
+                QFrame {{
+                    background-color: {CARD_BG};
+                    border: 2px solid {ACCENT_COLOR};
+                    border-radius: 10px;
+                }}
+            """)
+            card.setMinimumHeight(80)
+            
+            h = QHBoxLayout(card)
+            
+            # Number
+            num = QLabel(f"{i+1}.")
+            num.setStyleSheet(f"font-weight: bold; font-size: 18px; color: {ACCENT_COLOR};")
+            
+            # Details
+            details = QLabel(
+                f"{item['questions']} questions: {item['operation']} ({item['digits']}-digit)\n"
+                f"Focus: {item['focus']} | Est: {item['estimated_time']:.1f}s"
+            )
+            details.setStyleSheet(f"color: {TEXT_COLOR}; font-size: 14px;")
+            
+            h.addWidget(num)
+            h.addWidget(details)
+            h.addStretch()
+            
+            vbox.addWidget(card)
+        
+        scroll.setWidget(content)
+        layout.addWidget(scroll)
+        
+        # Close button
+        close_btn = QPushButton("Start Practice")
+        close_btn.clicked.connect(dlg.accept)
+        layout.addWidget(close_btn)
+        
+        dlg.exec()
+
 class MasteryDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -507,6 +730,10 @@ class MathDrill(QDialog):
         self.retake_queue = [] # List of tuples: (q_text, answer)
         self.retake_mastery = {} # q_text -> count (1 or 2)
         
+        # Adaptive Coach State
+        self.current_focus_area = None  # (operation, digits) for focused practice
+        self.focus_session_count = 0   # How many questions in current focus session
+        
         self.settings_manager = AppSettings()
         self.achievements = AchievementManager()
         
@@ -553,6 +780,12 @@ class MathDrill(QDialog):
         prog_btn.clicked.connect(self.show_mastery)
         prog_btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         
+        weakness_btn = QPushButton("🎯 Weakness")
+        weakness_btn.setToolTip("Weakness Analysis")
+        weakness_btn.setStyleSheet(btn_style)
+        weakness_btn.clicked.connect(self.show_weakness)
+        weakness_btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        
         trophy_btn = QPushButton("🏆")
         trophy_btn.setToolTip("Achievements")
         trophy_btn.setStyleSheet(btn_style)
@@ -569,6 +802,7 @@ class MathDrill(QDialog):
     
         
         header_layout.addWidget(prog_btn)
+        header_layout.addWidget(weakness_btn)
         header_layout.addWidget(trophy_btn)
         header_layout.addWidget(set_btn)
         
@@ -738,7 +972,7 @@ class MathDrill(QDialog):
         self.question_label.setStyleSheet("font-size: 56px; font-weight: bold; color: white; background: transparent; border: none;")
         challenge_vbox.addWidget(self.question_label)
 
-        self.answer_input = QLineEdit()
+        self.answer_input = NumberOnlyLineEdit()
         self.answer_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.answer_input.setPlaceholderText("?")
         self.answer_input.returnPressed.connect(self.check_answer)
@@ -754,7 +988,7 @@ class MathDrill(QDialog):
         self.feedback_label.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 14px; background: transparent;")
         
         # --- Shortcut Hints ---
-        self.hint_bar = QLabel("[M] Mode  [O] Op  [1-3] Digits  [S] Settings  [A] Awards  [P] Progress  [Esc] Clear  [Ctrl+Q] End Session")
+        self.hint_bar = QLabel("[M] Mode  [O] Op  [1-3] Digits  [S] Settings  [A] Awards  [P] Progress  [W] Weakness  [Esc] Clear  [Ctrl+Q] End Session")
         self.hint_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.hint_bar.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 11px; margin-top: 5px;")
 
@@ -782,14 +1016,8 @@ class MathDrill(QDialog):
         self.session_timer.timeout.connect(self.check_session_end)
         self.session_timer.setInterval(1000)
 
-        #short Keys
-        self.award_shortcut = QShortcut(QKeySequence("A"), self)
-        # This prevents it from triggering while typing or by accident
-        self.award_shortcut.setContext(Qt.ShortcutContext.WidgetWithChildrenShortcut)
-        self.award_shortcut.activated.connect(self.show_achievements)
-        self.settings_shortcut = QShortcut(QKeySequence("S"), self)
-        self.settings_shortcut.setContext(Qt.ShortcutContext.WidgetWithChildrenShortcut)
-        self.settings_shortcut.activated.connect(self.show_settings)
+        # Keyboard shortcuts are handled in keyPressEvent method
+        # This avoids conflicts with input field focus
         # Add a dedicated timer for the ⏱ display
         self.ui_tick_timer = QTimer(self)
         self.ui_tick_timer.timeout.connect(self.update_live_timer)
@@ -805,41 +1033,43 @@ class MathDrill(QDialog):
     def keyPressEvent(self, event):
         key = event.key()
         
-        # Reset / Clear
+        # End Session Early (Ctrl+Q) - Global shortcut, works anytime
+        if event.modifiers() & Qt.KeyboardModifier.ControlModifier and key == Qt.Key.Key_Q:
+            if self.session_active:
+                self.end_session()
+            return
+        
+        # Reset / Clear (Escape) - Global shortcut, works anytime
         if key == Qt.Key.Key_Escape:
             self.answer_input.clear()
             if self.session_active:
                 self.reset_session()
             return
             
-        # End Session Early (Ctrl+Q)
-        if event.modifiers() & Qt.KeyboardModifier.ControlModifier and key == Qt.Key.Key_Q:
-            if self.session_active:
-                self.end_session()
-            return
-            
-        # Dialogs
+        # Dialog shortcuts - Work both when typing and not typing
         if key == Qt.Key.Key_S:
             self.show_settings()
         elif key == Qt.Key.Key_A:
             self.show_achievements()
         elif key == Qt.Key.Key_P:
             self.show_mastery()
+        elif key == Qt.Key.Key_W:
+            self.show_weakness()
             
-        # Difficulty (Digits)
-        elif key == Qt.Key.Key_1:
+        # Difficulty (Digits) - Use F1, F2, F3 instead of 1, 2, 3
+        elif key == Qt.Key.Key_F1:
             self.digits_box.setCurrentIndex(0)
-        elif key == Qt.Key.Key_2:
+        elif key == Qt.Key.Key_F2:
             self.digits_box.setCurrentIndex(1)
-        elif key == Qt.Key.Key_3:
+        elif key == Qt.Key.Key_F3:
             self.digits_box.setCurrentIndex(2)
             
-        # Toggle Mode
+        # Toggle Mode - Work both when typing and not typing
         elif key == Qt.Key.Key_M:
             idx = (self.mode_box.currentIndex() + 1) % self.mode_box.count()
             self.mode_box.setCurrentIndex(idx)
             
-        # Toggle Operation
+        # Toggle Operation - Work both when typing and not typing
         elif key == Qt.Key.Key_O:
             idx = (self.operation_box.currentIndex() + 1) % self.operation_box.count()
             self.operation_box.setCurrentIndex(idx)
@@ -857,6 +1087,10 @@ class MathDrill(QDialog):
         self.streak = 0
         self.streak_label.setText("🔥 0")
         self.start_time = None
+        
+        # Reset adaptive coach focus state
+        self.current_focus_area = None
+        self.focus_session_count = 0
         
         mode = self.mode_box.currentText()
         
@@ -1044,7 +1278,17 @@ class MathDrill(QDialog):
         # Coach Override
         if self.mode_box.currentText() == "Adaptive Coach":
             coach = SmartCoach()
-            target, reason = coach.get_recommendation()
+            
+            # Check if we should continue focusing on current weak area
+            if self.current_focus_area and coach.should_continue_focus(self.current_focus_area[0], self.current_focus_area[1]):
+                target = self.current_focus_area
+                reason = f"CONTINUE FOCUS: {target[0]} ({target[1]} digits) - {self.focus_session_count+1} questions"
+            else:
+                # Get new recommendation
+                target, reason = coach.get_recommendation()
+                self.current_focus_area = target
+                self.focus_session_count = 0
+                
             # target is (Op, Digits) e.g. ("Addition", 1)
             
             # Update UI visibly (disabled)
@@ -1054,7 +1298,8 @@ class MathDrill(QDialog):
             if idx >= self.digits_box.count(): idx = self.digits_box.count() - 1
             self.digits_box.setCurrentIndex(idx)
             
-            self.coach_label.setText(f"Coach: {target[0]} ({target[1]} digits) - {reason}")
+            self.coach_label.setText(f"Coach: {reason}")
+            self.focus_session_count += 1
         
         self.answer_input.setReadOnly(False)
         self.answer_input.clear()
@@ -1122,12 +1367,24 @@ class MathDrill(QDialog):
             
         def worker():
             try:
+                import pygame.mixer
+                pygame.mixer.init()
+                
                 if success:
-                    winsound.Beep(1000, 100) # High pitch, short
+                    sound_file = os.path.join(os.path.dirname(__file__), "sfx", "correct.mp3")
                 else:
-                    winsound.Beep(400, 300)  # Low pitch, long
-            except:
-                pass 
+                    sound_file = os.path.join(os.path.dirname(__file__), "sfx", "error.mp3")
+                
+                if os.path.exists(sound_file):
+                    pygame.mixer.music.load(sound_file)
+                    pygame.mixer.music.play()
+                    # Wait for sound to finish playing
+                    while pygame.mixer.music.get_busy():
+                        pygame.time.Clock().tick(10)
+                pygame.mixer.quit()
+            except Exception as e:
+                # Silently fail if audio doesn't work
+                pass
         threading.Thread(target=worker, daemon=True).start()
 
     def show_achievement_toast(self, badges):
@@ -1180,6 +1437,9 @@ class MathDrill(QDialog):
         # or we could fetch the last session ID. 
         # Actually, let's just log fully compliant data.
         log_attempt(op, dig, int(correct), elapsed) # We can add session_id later if needed
+        
+        # Update weakness tracking
+        update_weakness_tracking(op, dig, correct)
         
         # Track Session Data
         self.session_attempts.append({'correct': correct, 'time': elapsed})
@@ -1291,6 +1551,11 @@ class MathDrill(QDialog):
         
     def show_mastery(self):
         dlg = MasteryDialog(self)
+        dlg.exec()
+        self.answer_input.setFocus()
+        
+    def show_weakness(self):
+        dlg = WeaknessDialog(self)
         dlg.exec()
         self.answer_input.setFocus()
         
