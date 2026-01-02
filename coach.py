@@ -186,8 +186,8 @@ class SmartCoach:
         
         return (target['operation'], target['digits']), reason
     
-    def get_weakness_focus_areas(self, limit=5):
-        """Get detailed weakness analysis with improvement suggestions"""
+    def get_weakness_focus_areas(self, limit=None):
+        """Get detailed weakness analysis with improvement suggestions for ALL categories"""
         self.analyze()
         
         weaknesses = []
@@ -199,40 +199,57 @@ class SmartCoach:
                 if key in self.knowledge_map:
                     skill = self.knowledge_map[key]
                     
-                    if skill['score'] < 85:  # Consider anything below 85 as needing improvement
-                        # Calculate improvement suggestions
-                        suggestions = []
-                        
-                        if skill['acc'] < 80:
-                            suggestions.append("Focus on accuracy - aim for 90%+")
-                        elif skill['acc'] < 90:
-                            suggestions.append("Good accuracy, now work on consistency")
-                        
-                        # Speed benchmarks based on digits
-                        speed_targets = {1: 3.0, 2: 5.0, 3: 8.0}
-                        if skill['speed'] > speed_targets.get(d, 5.0) * 1.5:
-                            suggestions.append(f"Too slow - target speed: {speed_targets[d]:.1f}s")
-                        elif skill['speed'] > speed_targets.get(d, 5.0):
-                            suggestions.append(f"Speed is good, aim for {speed_targets[d]:.1f}s")
-                        
-                        if skill['count'] < 10:
-                            suggestions.append("Need more practice - do at least 10 problems")
-                        
-                        weaknesses.append({
-                            'operation': op,
-                            'digits': d,
-                            'weakness_score': 100 - skill['score'],
-                            'accuracy': skill['acc'],
-                            'speed': skill['speed'],
-                            'count': skill['count'],
-                            'level': skill['level'],
-                            'consecutive_correct': 0,  # Would need tracking in database
-                            'suggestions': suggestions[:2]  # Limit to 2 suggestions
-                        })
+                    # Calculate improvement suggestions
+                    suggestions = []
+                    
+                    if skill['acc'] < 80:
+                        suggestions.append("Focus on accuracy - aim for 90%+")
+                    elif skill['acc'] < 90:
+                        suggestions.append("Good accuracy, now work on consistency")
+                    
+                    # Speed benchmarks based on digits
+                    speed_targets = {1: 3.0, 2: 5.0, 3: 8.0}
+                    if skill['speed'] > speed_targets.get(d, 5.0) * 1.5:
+                        suggestions.append(f"Too slow - target speed: {speed_targets[d]:.1f}s")
+                    elif skill['speed'] > speed_targets.get(d, 5.0):
+                        suggestions.append(f"Speed is good, aim for {speed_targets[d]:.1f}s")
+                    
+                    if skill['count'] < 10:
+                        suggestions.append("Need more practice - do at least 10 problems")
+                    
+                    weaknesses.append({
+                        'operation': op,
+                        'digits': d,
+                        'weakness_score': 100 - skill['score'],
+                        'accuracy': skill['acc'],
+                        'speed': skill['speed'],
+                        'count': skill['count'],
+                        'level': skill['level'],
+                        'consecutive_correct': 0,  # Would need tracking in database
+                        'suggestions': suggestions[:2],  # Limit to 2 suggestions
+                        'practiced': True
+                    })
+                else:
+                    # Category not practiced yet
+                    weaknesses.append({
+                        'operation': op,
+                        'digits': d,
+                        'weakness_score': 50,  # Medium priority for unpracticed categories
+                        'accuracy': 0,
+                        'speed': 0,
+                        'count': 0,
+                        'level': 'Not Started',
+                        'consecutive_correct': 0,
+                        'suggestions': ['Start practicing this category', 'Try basic problems first'],
+                        'practiced': False
+                    })
         
-        # Sort by weakness score
-        weaknesses.sort(key=lambda x: x['weakness_score'], reverse=True)
-        return weaknesses[:limit]
+        # Sort by weakness score (unpracticed categories in middle, high weaknesses first)
+        weaknesses.sort(key=lambda x: (not x['practiced'], x['weakness_score']), reverse=True)
+        
+        if limit:
+            return weaknesses[:limit]
+        return weaknesses
         
     def should_continue_focus(self, operation, digits, questions_so_far=0):
         """Determine if we should continue focusing on current skill"""

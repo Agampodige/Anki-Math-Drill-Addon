@@ -457,26 +457,33 @@ class WeaknessDialog(QDialog):
         
         from .coach import SmartCoach
         coach = SmartCoach()
-        weaknesses = coach.get_weakness_focus_areas()
+        weaknesses = coach.get_weakness_focus_areas()  # Get ALL categories now
         
         if not weaknesses:
-            no_weakness = QLabel("🎉 No significant weaknesses found! You're doing great!")
+            no_weakness = QLabel("🎉 No weakness data available!")
             no_weakness.setStyleSheet(f"color: {SUCCESS_COLOR}; font-size: 16px; font-weight: bold; padding: 20px;")
             no_weakness.setAlignment(Qt.AlignmentFlag.AlignCenter)
             vbox.addWidget(no_weakness)
         else:
             for weakness in weaknesses:
                 card = QFrame()
-                # Color based on weakness score
-                if weakness['weakness_score'] > 70:
-                    border_color = ERROR_COLOR
-                    bg_color = "#2C1810"
-                elif weakness['weakness_score'] > 50:
-                    border_color = "#e67e22"
-                    bg_color = "#2A1F15"
+                
+                # Different styling for practiced vs unpracticed categories
+                if not weakness.get('practiced', True):
+                    # Unpracticed category - neutral gray styling
+                    border_color = MUTED_COLOR
+                    bg_color = "#1A1A1A"
                 else:
-                    border_color = "#f39c12"
-                    bg_color = "#2A2415"
+                    # Practiced category - color based on weakness score
+                    if weakness['weakness_score'] > 70:
+                        border_color = ERROR_COLOR
+                        bg_color = "#2C1810"
+                    elif weakness['weakness_score'] > 50:
+                        border_color = "#e67e22"
+                        bg_color = "#2A1F15"
+                    else:
+                        border_color = "#f39c12"
+                        bg_color = "#2A2415"
                 
                 card.setStyleSheet(f"""
                     QFrame {{
@@ -497,15 +504,25 @@ class WeaknessDialog(QDialog):
                 level = QLabel(f"Level: {weakness['level']}")
                 level.setStyleSheet(f"color: {TEXT_COLOR}; font-size: 14px;")
                 
-                streak = QLabel(f"Accuracy: {weakness['accuracy']:.0f}% | Speed: {weakness['speed']:.1f}s")
+                # Different stats display for practiced vs unpracticed
+                if weakness.get('practiced', True):
+                    stats_text = f"Accuracy: {weakness['accuracy']:.0f}% | Speed: {weakness['speed']:.1f}s"
+                else:
+                    stats_text = "Not practiced yet"
+                
+                streak = QLabel(stats_text)
                 streak.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 12px;")
                 
                 info_v.addWidget(skill)
                 info_v.addWidget(level)
                 info_v.addWidget(streak)
                 
-                # Add suggestions if available
-                if 'suggestions' in weakness and weakness['suggestions']:
+                # Add suggestions or message for unpracticed categories
+                if not weakness.get('practiced', True):
+                    message = QLabel("📝 Start here to build foundation skills")
+                    message.setStyleSheet(f"color: {ACCENT_COLOR}; font-size: 11px; font-style: italic;")
+                    info_v.addWidget(message)
+                elif 'suggestions' in weakness and weakness['suggestions']:
                     suggestions_text = "Tips: " + " | ".join(weakness['suggestions'])
                     suggestions = QLabel(suggestions_text)
                     suggestions.setStyleSheet(f"color: {ACCENT_COLOR}; font-size: 11px; font-style: italic;")
@@ -514,9 +531,13 @@ class WeaknessDialog(QDialog):
                 h.addLayout(info_v)
                 h.addStretch()
                 
-                # Weakness score indicator
-                score_label = QLabel(f"Score: {weakness['weakness_score']:.0f}")
-                score_label.setStyleSheet(f"font-size: 18px; font-weight: bold; color: {border_color};")
+                # Score indicator or message for unpracticed
+                if not weakness.get('practiced', True):
+                    score_label = QLabel("NEW")
+                    score_label.setStyleSheet(f"font-size: 14px; font-weight: bold; color: {ACCENT_COLOR};")
+                else:
+                    score_label = QLabel(f"Score: {weakness['weakness_score']:.0f}")
+                    score_label.setStyleSheet(f"font-size: 18px; font-weight: bold; color: {border_color};")
                 h.addWidget(score_label)
                 
                 vbox.addWidget(card)
@@ -988,7 +1009,7 @@ class MathDrill(QDialog):
         self.feedback_label.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 14px; background: transparent;")
         
         # --- Shortcut Hints ---
-        self.hint_bar = QLabel("[M] Mode  [O] Op  [1-3] Digits  [S] Settings  [A] Awards  [P] Progress  [W] Weakness  [Esc] Clear  [Ctrl+Q] End Session")
+        self.hint_bar = QLabel("[M] Mode  [O] Op  [F1-F3] Digits  [S] Settings  [A] Awards  [P] Progress  [W] Weakness  [Esc] Clear  [Ctrl+Q] End Session")
         self.hint_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.hint_bar.setStyleSheet(f"color: {MUTED_COLOR}; font-size: 11px; margin-top: 5px;")
 
@@ -1184,7 +1205,10 @@ class MathDrill(QDialog):
             'correct': correct,
             'avg_speed': avg_speed,
             'total_time': total_time,
-            'operation': self.operation_box.currentText()
+            'mistakes': len(self.session_mistakes),
+            'operation': self.operation_box.currentText(),
+            'digits': int(self.digits_box.currentText().split()[0]),
+            'max_streak': self.streak
         }
         new_badges = self.achievements.check_achievements(session_data)
         

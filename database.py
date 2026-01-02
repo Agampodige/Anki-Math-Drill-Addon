@@ -99,6 +99,81 @@ def get_unlocked_achievements():
     conn.close()
     return data
 
+def get_total_attempts_count():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM attempts")
+    count = c.fetchone()[0]
+    conn.close()
+    return count
+
+def get_operation_stats(operation):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*), SUM(correct) FROM attempts WHERE operation = ?", (operation,))
+    total, correct = c.fetchone()
+    conn.close()
+    return total, correct
+
+def get_digit_stats(digits):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*), AVG(time_taken) FROM attempts WHERE digits = ?", (digits,))
+    total, avg_time = c.fetchone()
+    conn.close()
+    return total, avg_time
+
+def get_session_count_by_mode(mode_pattern):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM sessions WHERE mode LIKE ?", (f"%{mode_pattern}%",))
+    count = c.fetchone()[0]
+    conn.close()
+    return count
+
+def get_unique_play_days():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(DISTINCT DATE(created)) FROM sessions")
+    days = c.fetchone()[0]
+    conn.close()
+    return days
+
+def get_total_practice_time():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT SUM(total_attempts * avg_speed) FROM sessions")
+    total_seconds = c.fetchone()[0] or 0
+    conn.close()
+    return total_seconds / 60  # Convert to minutes
+
+def get_sessions_by_time_of_day(hour, comparison):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    if comparison == 'before':
+        c.execute("SELECT COUNT(*) FROM sessions WHERE strftime('%H', created) < ?", (str(hour),))
+    else:
+        c.execute("SELECT COUNT(*) FROM sessions WHERE strftime('%H', created) >= ?", (str(hour),))
+    count = c.fetchone()[0]
+    conn.close()
+    return count
+
+def get_weekend_sessions():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM sessions WHERE strftime('%w', created) IN ('0', '6')")
+    count = c.fetchone()[0]
+    conn.close()
+    return count
+
+def get_perfectionist_sessions():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM sessions WHERE correct_count = total_attempts AND total_attempts >= 10")
+    count = c.fetchone()[0]
+    conn.close()
+    return count
+
 def log_session(mode, op, digits, target, total, correct, avg_speed):
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
