@@ -76,7 +76,6 @@ class ProgressPage {
     }
 
     async loadProgressData() {
-        this.showLoading(true);
         console.log('Starting to load progress data...');
         
         try {
@@ -89,6 +88,9 @@ class ProgressPage {
             
             console.log('Python bridge available, requesting data...');
             
+            // For instant loading, don't show main loading spinner initially
+            // Let the cached data handle the display immediately
+            
             // Load all progress data from Python
             const data = await this.sendToPythonAsync('get_progress_data', { period: this.currentPeriod });
             
@@ -96,7 +98,15 @@ class ProgressPage {
             
             if (data && typeof data === 'object') {
                 this.progressData = data;
+                
+                // Update all components immediately since data should be cached
                 this.updateAllSections();
+                
+                // Hide any loading indicators
+                this.showLoading(false);
+                this.showHeavyDataLoading(false);
+                
+                console.log('Progress data loaded and displayed instantly');
             } else {
                 console.log('Invalid data received, loading sample data');
                 this.loadSampleData();
@@ -109,6 +119,33 @@ class ProgressPage {
         } finally {
             this.showLoading(false);
         }
+    }
+    
+    showHeavyDataLoading(show) {
+        // Show loading indicators for heavy data components
+        const heavyComponents = ['masteryGridLarge', 'weaknessListLarge', 'achievementProgress', 'personalBests'];
+        
+        heavyComponents.forEach(componentId => {
+            const element = document.getElementById(componentId);
+            if (element) {
+                if (show) {
+                    // Only show loading if element is empty or already showing loading
+                    if (!element.innerHTML.trim() || element.innerHTML.includes('Loading...')) {
+                        element.innerHTML = `
+                            <div style="text-align: center; color: var(--muted-color); padding: 20px;">
+                                <div class="mini-spinner" style="width: 20px; height: 20px; border: 2px solid var(--muted-color); border-top: 2px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
+                                <p>Loading...</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // Hide loading by clearing the content (will be filled by update methods)
+                    if (element.innerHTML.includes('Loading...')) {
+                        element.innerHTML = '';
+                    }
+                }
+            }
+        });
     }
     
     loadSampleData() {
@@ -158,6 +195,49 @@ class ProgressPage {
         if (this.chartCanvas) {
             this.updatePerformanceChart();
         }
+    }
+    
+    updateHeavyData(heavyData) {
+        console.log('Received heavy data update:', heavyData);
+        
+        let updatedComponents = 0;
+        const totalComponents = 4; // mastery, weaknesses, achievements, personalBests
+        
+        // Update heavy data components
+        if (heavyData.mastery && Object.keys(heavyData.mastery).length > 0) {
+            this.progressData.mastery = heavyData.mastery;
+            this.updateMasteryGrid();
+            updatedComponents++;
+        }
+        
+        if (heavyData.weaknesses && heavyData.weaknesses.length > 0) {
+            this.progressData.weaknesses = heavyData.weaknesses;
+            if (this.weaknessListLarge) {
+                this.updateWeaknessAnalysis();
+                updatedComponents++;
+            }
+        }
+        
+        if (heavyData.achievements && heavyData.achievements.length > 0) {
+            this.progressData.achievements = heavyData.achievements;
+            if (this.achievementProgress) {
+                this.updateAchievementProgress();
+                updatedComponents++;
+            }
+        }
+        
+        if (heavyData.personalBests && Object.keys(heavyData.personalBests).length > 0) {
+            this.progressData.personalBests = heavyData.personalBests;
+            this.updatePersonalBests();
+            updatedComponents++;
+        }
+        
+        // Hide loading indicators when all components are updated
+        if (updatedComponents > 0) {
+            this.showHeavyDataLoading(false);
+        }
+        
+        console.log(`Heavy data update completed: ${updatedComponents}/${totalComponents} components updated`);
     }
 
     updateStatsOverview() {
@@ -521,11 +601,11 @@ class ProgressPage {
                     window.pythonBridge.callbacks = {};
                 }
                 
-                // Set up timeout
+                // Set up timeout - reduced for faster feedback
                 const timeout = setTimeout(() => {
                     delete window.pythonBridge.callbacks[callbackId];
                     reject(new Error('Python bridge timeout'));
-                }, 5000); // 5 second timeout
+                }, 3000); // Reduced from 5000ms to 3000ms
                 
                 // The Python bridge will call this callback directly
                 window.pythonBridge.callbacks[callbackId] = (result) => {
@@ -562,6 +642,9 @@ class ProgressPage {
 
 // Initialize the progress page
 const progressPage = new ProgressPage();
+
+// Make progressPage globally available for Python bridge
+window.progressPage = progressPage;
 
 // Add manual test function for debugging
 window.testProgressData = function() {

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Drill Pro</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,11 +18,21 @@
                 <div class="coach-label" id="coachLabel"></div>
             </div>
             <div class="header-right">
-                <a href="progress.html" class="icon-btn" title="Progress">📊</a>
-                <a href="weakness.html" class="icon-btn" title="Weakness Analysis">🎯</a>
-                <a href="achievements.html" class="icon-btn" title="Achievements">🏆</a>
-                <a href="settings.html" class="icon-btn" title="Settings">⚙️</a>
-                <div class="streak-counter" id="streakCounter">🔥 0</div>
+                <a href="progress.html" class="icon-btn" title="Progress">
+                    <span class="material-icons">analytics</span>
+                </a>
+                <a href="weakness.html" class="icon-btn" title="Weakness Analysis">
+                    <span class="material-icons">target</span>
+                </a>
+                <a href="achievements.html" class="icon-btn" title="Achievements">
+                    <span class="material-icons">emoji_events</span>
+                </a>
+                <a href="settings.html" class="icon-btn" title="Settings">
+                    <span class="material-icons">settings</span>
+                </a>
+                <div class="streak-counter" id="streakCounter">
+                    <span class="material-icons">local_fire_department</span> 0
+                </div>
             </div>
         </header>
 
@@ -56,17 +68,23 @@
             <section class="card status-card">
                 <div class="stats-row">
                     <div class="stat-item session-stat">
-                        <div class="stat-icon">📝</div>
+                        <div class="stat-icon">
+                            <span class="material-icons">edit_note</span>
+                        </div>
                         <div class="stat-value" id="sessionCount">0</div>
                         <div class="stat-label">Session</div>
                     </div>
                     <div class="stat-item today-stat">
-                        <div class="stat-icon">📅</div>
+                        <div class="stat-icon">
+                            <span class="material-icons">today</span>
+                        </div>
                         <div class="stat-value" id="todayCount">0</div>
                         <div class="stat-label">Today</div>
                     </div>
                     <div class="stat-item lifetime-stat">
-                        <div class="stat-icon">🎯</div>
+                        <div class="stat-icon">
+                            <span class="material-icons">military_tech</span>
+                        </div>
                         <div class="stat-value" id="lifetimeCount">0</div>
                         <div class="stat-label">Lifetime</div>
                     </div>
@@ -84,7 +102,9 @@
             <!-- Challenge Card -->
             <section class="card challenge-card">
                 <div class="question-number" id="questionNumber"></div>
-                <div class="timer-display" id="timerDisplay">⏱ 0.0s</div>
+                <div class="timer-display" id="timerDisplay">
+                    <span class="material-icons">timer</span> 0.0s
+                </div>
                 <div class="question-text" id="questionText">Ready?</div>
                 <input type="text" id="answerInput" class="answer-input" placeholder="?" autocomplete="off">
                 <div class="feedback" id="feedback">Press Enter to Start</div>
@@ -137,7 +157,12 @@
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <h2 class="modal-title">Preferences</h2>
-            <button id="soundToggle" class="btn btn-secondary">Sound Effects: ON</button>
+            <button id="themeToggle" class="btn btn-secondary">
+                <span class="material-icons">dark_mode</span> Dark Theme: OFF
+            </button>
+            <button id="soundToggle" class="btn btn-secondary">
+                <span class="material-icons">volume_up</span> Sound Effects: ON
+            </button>
             <button id="closeSettingsBtn" class="btn btn-primary">Close</button>
         </div>
     </div>

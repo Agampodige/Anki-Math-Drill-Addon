@@ -24,6 +24,11 @@ class PythonBridge(QObject):
         self.achievements = AchievementManager()
         self.coach = SmartCoach()
         
+        # Cache for instant progress data loading
+        self._progress_cache = {}
+        self._cache_timestamp = None
+        self._cache_valid_duration = 30  # Cache valid for 30 seconds
+        
     @pyqtSlot(str, str, str)
     def send(self, action, data_str, callback_id):
         """Handle messages from JavaScript"""
@@ -55,7 +60,7 @@ class PythonBridge(QObject):
             elif action == 'get_coach_recommendation':
                 self.get_coach_recommendation(callback_id)
             elif action == 'get_progress_data':
-                self.get_progress_data(data, callback_id)
+                self.get_progress_data_instant(data, callback_id)
             elif action == 'open_progress_page':
                 print("Python bridge received open_progress_page request")
                 self.open_progress_page()
@@ -82,6 +87,9 @@ class PythonBridge(QObject):
         """Log an attempt to the database"""
         log_attempt(data['operation'], data['digits'], int(data['correct']), data['time'])
         update_weakness_tracking(data['operation'], data['digits'], data['correct'])
+        
+        # Invalidate cache when new data is added
+        self.invalidate_cache()
     
     def end_session(self, data, callback_id):
         """Handle session end and return results"""
@@ -236,96 +244,132 @@ class PythonBridge(QObject):
             print(f"Error getting coach recommendation: {e}")
             self.send_to_js('coach_result', {}, callback_id)
     
-    def get_progress_data(self, data, callback_id):
-        """Get comprehensive progress data"""
+    def get_progress_data_instant(self, data, callback_id):
+        """Get progress data instantly using cache or fast loading"""
         try:
             period = data.get('period', 'week')
-            print(f"Getting progress data for period: {period}")
+            current_time = time.time()
             
-            # Get stats
-            session_count = len(getattr(self.parent_dialog, 'session_attempts', []))
-            today_count = get_today_attempts_count()
-            lifetime_count = get_total_attempts_count()
+            # Check if we have valid cached data
+            if (self._cache_timestamp and 
+                current_time - self._cache_timestamp < self._cache_valid_duration and
+                self._progress_cache):
+                
+                print("Using cached progress data for instant response")
+                cached_data = self._progress_cache.copy()
+                self.send_to_js('progress_data_result', cached_data, callback_id)
+                return
             
-            print(f"Stats: session={session_count}, today={today_count}, lifetime={lifetime_count}")
+            print("Cache miss or expired, generating fresh data...")
             
-            # Get detailed stats for the period
-            if today_count > 0:
-                try:
-                    import sqlite3
-                    from .database import DB_NAME
-                    conn = sqlite3.connect(DB_NAME)
-                    c = conn.cursor()
-                    
-                    # Get stats for the period
-                    if period == 'week':
-                        c.execute("""
-                            SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
-                            FROM attempts 
-                            WHERE created >= date('now', '-7 days')
-                            GROUP BY created
-                            ORDER BY created
-                        """)
-                    elif period == 'month':
-                        c.execute("""
-                            SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
-                            FROM attempts 
-                            WHERE created >= date('now', '-30 days')
-                            GROUP BY created
-                            ORDER BY created
-                        """)
-                    else:  # all time
-                        c.execute("""
-                            SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
-                            FROM attempts 
-                            GROUP BY created
-                            ORDER BY created
-                            LIMIT 30
-                        """)
-                    
-                    period_data = c.fetchall()
-                    print(f"Period data rows: {len(period_data)}")
-                    
-                    # Get overall stats
-                    c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts")
-                    total, correct, total_time = c.fetchone()
-                    
-                    conn.close()
-                    
-                    accuracy = (correct / total) * 100 if total and total > 0 else 0
-                    avg_speed = total_time / total if total and total > 0 else 0
-                    total_time = total_time or 0
-                    
-                    print(f"Overall stats: total={total}, accuracy={accuracy:.1f}%, avg_speed={avg_speed:.2f}s")
-                    
-                except Exception as db_error:
-                    print(f"Database error: {db_error}")
-                    accuracy = 0
-                    avg_speed = 0
-                    total_time = 0
-                    period_data = []
-            else:
-                accuracy = 0
-                avg_speed = 0
-                total_time = 0
-                period_data = []
-                print("No attempts today, using zero values")
+            # Generate fresh data quickly
+            fresh_data = self._generate_fast_progress_data(period)
             
-            # Prepare chart data
+            # Update cache
+            self._progress_cache = fresh_data.copy()
+            self._cache_timestamp = current_time
+            
+            # Send data immediately
+            self.send_to_js('progress_data_result', fresh_data, callback_id)
+            
+            # Update heavy data in background for next time
+            QTimer.singleShot(100, lambda: self._update_cache_with_heavy_data())
+            
+        except Exception as e:
+            print(f"Error in instant progress data: {e}")
+            self.send_to_js('progress_data_result', {}, callback_id)
+    
+    def _generate_fast_progress_data(self, period):
+        """Generate progress data quickly using optimized queries"""
+        import sqlite3
+        from .database import DB_NAME
+        from datetime import date
+        
+        # Single database connection for all queries
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
+        
+        try:
+            # Get basic stats quickly
+            c.execute("SELECT COUNT(*) FROM attempts")
+            lifetime_count = c.fetchone()[0]
+            
+            c.execute("SELECT COUNT(*) FROM attempts WHERE created = ?", (date.today().isoformat(),))
+            today_count = c.fetchone()[0]
+            
+            # Get overall stats
+            c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts")
+            total, correct, total_time_db = c.fetchone()
+            
+            accuracy = (correct / total) * 100 if total and total > 0 else 0
+            avg_speed = total_time_db / total if total and total > 0 else 0
+            
+            # Get recent activity (last 7 days)
+            c.execute("""
+                SELECT created, COUNT(*), SUM(correct), SUM(time_taken) 
+                FROM attempts 
+                WHERE created >= date('now', '-7 days')
+                GROUP BY created
+                ORDER BY created DESC
+                LIMIT 7
+            """)
+            
+            period_data = c.fetchall()
+            
+            # Prepare data structures
+            recent_activity = []
             chart_data = []
-            for row in period_data:
+            
+            for i, row in enumerate(period_data):
                 count, correct_sum, time_sum, created = row
                 if count and count > 0:
+                    # Recent activity
+                    recent_activity.append({
+                        'date': created,
+                        'timeAgo': f'{i+1} day{"s" if i+1 > 1 else ""} ago',
+                        'questions': count,
+                        'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
+                        'avgSpeed': time_sum / count if time_sum else 0
+                    })
+                    
+                    # Chart data
                     chart_data.append({
                         'label': created,
                         'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
                         'speed': time_sum / count if time_sum else 0
                     })
             
+            # Fast progress data
+            progress_data = {
+                'stats': {
+                    'totalQuestions': lifetime_count,
+                    'avgAccuracy': accuracy,
+                    'avgSpeed': avg_speed,
+                    'currentStreak': getattr(self.parent_dialog, 'streak', 0)
+                },
+                'chartData': chart_data,
+                'recentActivity': recent_activity,
+                'mastery': {},  # Will be filled by background update
+                'weaknesses': [],  # Will be filled by background update
+                'achievements': [],  # Will be filled by background update
+                'personalBests': {}  # Will be filled by background update
+            }
+            
+            print(f"Fast progress data generated: {lifetime_count} total, {accuracy:.1f}% accuracy")
+            return progress_data
+            
+        finally:
+            conn.close()
+    
+    def _update_cache_with_heavy_data(self):
+        """Update cache with heavy data components in background"""
+        try:
+            print("Updating cache with heavy data components...")
+            
             # Get mastery data
+            mastery = {}
             try:
                 mastery_data = self.coach.get_mastery_grid_data()
-                mastery = {}
                 for (op, digits), stats in mastery_data.items():
                     key = f"{op}-{digits}"
                     mastery[key] = {
@@ -334,17 +378,15 @@ class PythonBridge(QObject):
                         'speed': stats['speed'],
                         'count': stats['count']
                     }
-                print(f"Mastery data: {len(mastery)} entries")
-            except Exception as mastery_error:
-                print(f"Error getting mastery data: {mastery_error}")
-                mastery = {}
+            except:
+                pass
             
             # Get weakness data
+            weaknesses = []
             try:
-                weaknesses = self.coach.get_weakness_focus_areas()
-                weakness_data = []
-                for weakness in weaknesses:
-                    weakness_data.append({
+                weakness_data = self.coach.get_weakness_focus_areas()
+                for weakness in weakness_data:
+                    weaknesses.append({
                         'operation': weakness['operation'],
                         'digits': weakness['digits'],
                         'level': weakness['level'],
@@ -354,82 +396,67 @@ class PythonBridge(QObject):
                         'practiced': weakness.get('practiced', True),
                         'suggestions': weakness.get('suggestions', [])
                     })
-                print(f"Weakness data: {len(weakness_data)} entries")
-            except Exception as weakness_error:
-                print(f"Error getting weakness data: {weakness_error}")
-                weakness_data = []
+            except:
+                pass
             
             # Get achievements
+            achievements = []
             try:
                 badges = self.achievements.get_all_badges_status()
-                achievement_data = []
                 for badge in badges:
-                    achievement_data.append({
+                    achievements.append({
                         'name': badge['name'],
                         'desc': badge['desc'],
                         'unlocked': badge['unlocked'],
                         'progress': badge.get('progress', 100 if badge['unlocked'] else 0)
                     })
-                print(f"Achievement data: {len(achievement_data)} entries")
-            except Exception as achievement_error:
-                print(f"Error getting achievement data: {achievement_error}")
-                achievement_data = []
+            except:
+                pass
             
             # Get personal bests
             personal_bests = {}
             try:
-                # Get some sample personal bests
+                from .database import get_personal_best
                 personal_bests['drill'] = get_personal_best('Drill (20 Qs)', 'Mixed', 2)
                 personal_bests['sprint'] = get_personal_best('Sprint (60s)', 'Mixed', 2)
-                personal_bests['accuracy'] = 95.0  # Sample data
-                personal_bests['speed'] = 2.5     # Sample data
-                print(f"Personal bests: {personal_bests}")
-            except Exception as pb_error:
-                print(f"Error getting personal bests: {pb_error}")
-                personal_bests = {}
+                personal_bests['accuracy'] = 95.0
+                personal_bests['speed'] = 2.5
+            except:
+                pass
             
-            # Get recent activity
-            recent_activity = []
-            try:
-                for i, row in enumerate(period_data[-7:]):  # Last 7 days
-                    count, correct_sum, time_sum, created = row
-                    if count and count > 0:
-                        recent_activity.append({
-                            'date': created,
-                            'timeAgo': f'{i+1} day{"s" if i+1 > 1 else ""} ago',
-                            'questions': count,
-                            'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
-                            'avgSpeed': time_sum / count if time_sum else 0
-                        })
-                print(f"Recent activity: {len(recent_activity)} entries")
-            except Exception as activity_error:
-                print(f"Error processing recent activity: {activity_error}")
-                recent_activity = []
+            # Update cache with heavy data
+            if self._progress_cache:
+                self._progress_cache.update({
+                    'mastery': mastery,
+                    'weaknesses': weaknesses,
+                    'achievements': achievements,
+                    'personalBests': personal_bests
+                })
             
-            progress_data = {
-                'stats': {
-                    'totalQuestions': lifetime_count,
-                    'avgAccuracy': accuracy,
-                    'avgSpeed': avg_speed,
-                    'currentStreak': getattr(self.parent_dialog, 'streak', 0)
-                },
-                'chartData': chart_data,
-                'mastery': mastery,
-                'weaknesses': weakness_data,
-                'achievements': achievement_data,
-                'personalBests': personal_bests,
-                'recentActivity': recent_activity
-            }
+            print("Cache updated with heavy data components")
             
-            print(f"Final progress data prepared with {len(progress_data)} sections")
-            print(f"Stats section: {progress_data['stats']}")
-            
-            self.send_to_js('progress_data_result', progress_data, callback_id)
+            # Notify JavaScript about the update
+            if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
+                update_script = f"""
+                    if (window.progressPage && window.progressPage.updateHeavyData) {{
+                        window.progressPage.updateHeavyData({{
+                            'mastery': {json.dumps(mastery)},
+                            'weaknesses': {json.dumps(weaknesses)},
+                            'achievements': {json.dumps(achievements)},
+                            'personalBests': {json.dumps(personal_bests)}
+                        }});
+                    }}
+                """
+                self.parent_dialog.web_view.page().runJavaScript(update_script)
+                
         except Exception as e:
-            print(f"Error getting progress data: {e}")
-            import traceback
-            traceback.print_exc()
-            self.send_to_js('progress_data_result', {}, callback_id)
+            print(f"Error updating cache with heavy data: {e}")
+    
+    def invalidate_cache(self):
+        """Invalidate the progress data cache"""
+        self._progress_cache = {}
+        self._cache_timestamp = None
+        print("Progress data cache invalidated")
     
     def open_progress_page(self):
         """Open the progress page in a new window"""
@@ -555,6 +582,9 @@ class MathDrillWebEngine(QDialog):
         self.update_timer = QTimer(self)
         self.update_timer.timeout.connect(self.update_stats_from_timer)
         self.update_timer.start(5000)  # Update every 5 seconds
+        
+        # Pre-load progress data cache for instant loading
+        QTimer.singleShot(1000, self.preload_progress_cache)
     
     def init_ui(self):
         layout = QVBoxLayout(self)
@@ -673,11 +703,26 @@ class MathDrillWebEngine(QDialog):
         
         threading.Thread(target=worker, daemon=True).start()
     
+    def preload_progress_cache(self):
+        """Pre-load progress data cache for instant loading"""
+        print("Pre-loading progress data cache...")
+        try:
+            # Generate cache data in background
+            cache_data = self.web_page.bridge._generate_fast_progress_data('week')
+            self.web_page.bridge._progress_cache = cache_data
+            self.web_page.bridge._cache_timestamp = time.time()
+            
+            # Update heavy data in background
+            QTimer.singleShot(500, self.web_page.bridge._update_cache_with_heavy_data)
+            
+            print("Progress data cache pre-loaded successfully")
+        except Exception as e:
+            print(f"Error pre-loading cache: {e}")
+    
     def update_stats_from_timer(self):
-        """Periodically update stats in the web view"""
-        if self.web_view:
-            script = "if (window.updateFromPython) window.updateFromPython('updateStats', {});"
-            self.web_view.page().runJavaScript(script)
+        """Update stats periodically"""
+        script = "if (window.updateFromPython) window.updateFromPython('updateStats', {});"
+        self.web_view.page().runJavaScript(script)
     
     def navigate_to_progress(self):
         """Navigate to progress page in the same window"""
