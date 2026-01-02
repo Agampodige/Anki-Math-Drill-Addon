@@ -84,12 +84,21 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
 
 .icon-btn:hover {
     background-color: var(--accent-color);
     color: var(--dark-bg);
     transform: translateY(-1px);
+}
+
+.icon-btn:visited {
+    color: var(--text-color);
+}
+
+.icon-btn:active {
+    transform: translateY(1px);
 }
 
 .streak-counter {

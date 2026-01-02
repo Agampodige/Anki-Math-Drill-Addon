@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the migration from native Qt widgets to a modern web-based UI using PyQt6-WebEngine.
+This document describes the migration from native Qt widgets to a modern web-based UI using PyQt6-WebEngine, including a separate progress page.
 
 ## What Changed
 
@@ -10,13 +10,17 @@ This document describes the migration from native Qt widgets to a modern web-bas
 - **Frontend**: Modern HTML/CSS/JavaScript interface
 - **Backend**: Python with WebEngine integration
 - **Communication**: QWebChannel bridge between Python and JavaScript
+- **Progress Page**: Separate dedicated progress tracking interface
 
 ### Files Added
 - `web/index.html` - Main HTML structure
 - `web/styles.css` - Modern CSS styling with CSS variables
 - `web/script.js` - JavaScript application logic
+- `web/progress.html` - Dedicated progress page HTML
+- `web/progress.js` - Progress page JavaScript logic
 - `main_webengine.py` - WebEngine integration and Python bridge
 - `test_webengine.py` - Test script for the new interface
+- `test_progress.py` - Test script for progress page
 
 ### Files Modified
 - `requirements.txt` - Added PyQt6-WebEngine dependency
@@ -30,6 +34,17 @@ This document describes the migration from native Qt widgets to a modern web-bas
 - Smooth animations and transitions
 - Better typography and spacing
 - Mobile-friendly responsive layout
+
+### Separate Progress Page
+- **Dedicated Window**: Progress opens in its own window for better focus
+- **Comprehensive Analytics**: Detailed progress tracking with multiple views
+- **Time Period Filters**: View progress by Last 7 Days, Last 30 Days, or All Time
+- **Interactive Charts**: Visual performance trends over time
+- **Mastery Grid**: Enhanced skill mastery visualization
+- **Weakness Analysis**: Detailed areas needing improvement
+- **Recent Activity**: Timeline of practice sessions
+- **Achievement Progress**: Track achievement unlock progress
+- **Personal Bests**: View personal records across different modes
 
 ### All Original Features Preserved
 - ✅ All math operations (Addition, Subtraction, Multiplication, Division)
@@ -48,6 +63,7 @@ This document describes the migration from native Qt widgets to a modern web-bas
 - Improved modal dialogs
 - More responsive interface
 - Modern color scheme with CSS variables
+- Separate progress page with advanced analytics
 
 ## Installation
 
@@ -60,6 +76,11 @@ pip install PyQt6 PyQt6-WebEngine pygame
 Run the test script to verify the WebEngine interface:
 ```bash
 python test_webengine.py
+```
+
+Test the progress page specifically:
+```bash
+python test_progress.py
 ```
 
 ## Architecture
@@ -83,12 +104,58 @@ sendToPython(action, data, callback) {
 }
 ```
 
+### Progress Page Integration
+The progress page uses a separate WebEngine window with its own bridge:
+
+```python
+def open_progress_page(self):
+    # Opens progress.html in a new dialog window
+```
+
 ### Communication Flow
 1. JavaScript calls `sendToPython()`
 2. Python bridge receives the request
 3. Python processes the request
 4. Python sends response back to JavaScript
 5. JavaScript updates the UI
+
+## Progress Page Features
+
+### Overview Section
+- Total questions answered
+- Average accuracy percentage
+- Average solving speed
+- Current streak counter
+
+### Performance Chart
+- Visual trend of accuracy and speed over time
+- Canvas-based chart rendering
+- Responsive to window resizing
+
+### Skills Mastery Grid
+- Color-coded mastery levels (Novice → Apprentice → Pro → Master)
+- Interactive cells with hover effects
+- Detailed statistics for each skill combination
+
+### Weakness Analysis
+- Prioritized list of areas needing improvement
+- Color-coded by weakness severity
+- Actionable suggestions for each weakness
+
+### Recent Activity
+- Timeline of practice sessions
+- Daily statistics and performance metrics
+- Easy-to-read activity feed
+
+### Achievement Progress
+- Progress bars for locked achievements
+- Visual indication of unlocked achievements
+- Motivational progress tracking
+
+### Personal Bests
+- Best times for different modes
+- High score tracking
+- Performance benchmarks
 
 ## CSS Variables
 
@@ -115,11 +182,14 @@ All original keyboard shortcuts are preserved:
 - `F1-F3` - Select digit level
 - `S` - Open settings
 - `A` - Open achievements
-- `P` - Open progress/mastery
+- `P` - **Open progress page (new window)**
 - `W` - Open weakness analysis
 - `Esc` - Clear input/reset session
 - `Ctrl+Q` - End session
 - `Enter` - Submit answer
+
+### Progress Page Shortcuts
+- `Esc` - Close progress page and return to main app
 
 ## Fallback
 
@@ -132,6 +202,7 @@ The WebEngine version offers:
 - Smoother animations
 - Better memory management
 - Modern rendering engine
+- Separate progress window for better multitasking
 
 ## Troubleshooting
 
@@ -141,6 +212,12 @@ If WebEngine fails to load:
 2. Check if running in a supported environment
 3. The system will automatically fall back to Qt version
 
+### Progress Page Issues
+If the progress page doesn't open:
+1. Check that `web/progress.html` exists
+2. Verify the Python bridge is working
+3. Check console for JavaScript errors
+
 ### Console Messages
 JavaScript console messages are printed to Python console for debugging.
 
@@ -149,10 +226,15 @@ Sound effects use the same pygame implementation as the original version.
 
 ## Development
 
-### Modifying the UI
+### Modifying the Main UI
 - HTML: `web/index.html`
 - CSS: `web/styles.css`  
 - JavaScript: `web/script.js`
+
+### Modifying the Progress Page
+- HTML: `web/progress.html`
+- CSS: `web/progress.html` (embedded styles)
+- JavaScript: `web/progress.js`
 
 ### Modifying Backend Logic
 - Python bridge: `main_webengine.py`
@@ -163,7 +245,7 @@ Sound effects use the same pygame implementation as the original version.
 
 ### Adding New Features
 1. Add UI elements in HTML/CSS
-2. Add JavaScript handlers in `script.js`
+2. Add JavaScript handlers in `script.js` or `progress.js`
 3. Add Python bridge methods in `main_webengine.py`
 4. Update backend logic as needed
 
@@ -183,3 +265,5 @@ The web-based architecture enables future improvements:
 - Cloud synchronization
 - Progressive Web App (PWA) capabilities
 - Enhanced accessibility features
+- More advanced charting libraries
+- Export functionality for progress data

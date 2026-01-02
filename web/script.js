@@ -53,6 +53,7 @@ class MathDrillWeb {
         this.achievementsModal = document.getElementById('achievementsModal');
         this.weaknessModal = document.getElementById('weaknessModal');
         this.masteryModal = document.getElementById('masteryModal');
+        this.progressModal = document.getElementById('progressModal');
         this.achievementToast = document.getElementById('achievementToast');
     }
 
@@ -66,9 +67,13 @@ class MathDrillWeb {
         this.answerInput.addEventListener('keydown', (e) => this.handleKeydown(e));
         this.answerInput.addEventListener('input', (e) => this.handleInput(e));
         
-        // Header buttons
-        document.querySelectorAll('.icon-btn').forEach(btn => {
-            btn.addEventListener('click', () => this.handleHeaderAction(btn.dataset.action));
+        // Header buttons (excluding progress button since it's now a hyperlink)
+        document.querySelectorAll('.icon-btn[data-action]').forEach(btn => {
+            console.log('Setting up button:', btn.dataset.action, btn);
+            btn.addEventListener('click', () => {
+                console.log('Button clicked:', btn.dataset.action);
+                this.handleHeaderAction(btn.dataset.action);
+            });
         });
         
         // Modal close buttons
@@ -77,6 +82,7 @@ class MathDrillWeb {
         document.getElementById('closeAchievementsBtn').addEventListener('click', () => this.closeModal('achievements'));
         document.getElementById('closeWeaknessBtn').addEventListener('click', () => this.closeModal('weakness'));
         document.getElementById('closeMasteryBtn').addEventListener('click', () => this.closeModal('mastery'));
+        document.getElementById('closeProgressBtn').addEventListener('click', () => this.closeModal('progress'));
         document.getElementById('toastCloseBtn').addEventListener('click', () => this.closeToast());
         
         // Settings
@@ -163,7 +169,7 @@ class MathDrillWeb {
                     this.openModal('achievements');
                     break;
                 case 'p':
-                    this.openModal('mastery');
+                    navigateToProgress();
                     break;
                 case 'w':
                     this.openModal('weakness');
@@ -188,9 +194,10 @@ class MathDrillWeb {
     }
 
     handleHeaderAction(action) {
+        console.log('handleHeaderAction called with:', action);
         switch(action) {
             case 'progress':
-                this.openModal('mastery');
+                this.openModal('progress');
                 break;
             case 'weakness':
                 this.openModal('weakness');
@@ -696,6 +703,10 @@ class MathDrillWeb {
                 this.masteryModal.style.display = 'block';
                 this.loadMastery();
                 break;
+            case 'progress':
+                this.progressModal.style.display = 'block';
+                this.loadProgress();
+                break;
         }
     }
 
@@ -716,6 +727,9 @@ class MathDrillWeb {
                 break;
             case 'mastery':
                 this.masteryModal.style.display = 'none';
+                break;
+            case 'progress':
+                this.progressModal.style.display = 'none';
                 break;
         }
         
@@ -869,10 +883,157 @@ class MathDrillWeb {
         toast.style.display = 'block';
     }
 
+    loadProgress() {
+        // Load progress data with sample data for now
+        this.updateProgressStats();
+        this.updateProgressMastery();
+        this.updateProgressActivity();
+        this.updateProgressBests();
+        this.updateProgressAchievements();
+    }
+
+    updateProgressStats() {
+        // Sample data - in real implementation this would come from Python
+        document.getElementById('progressTotalQuestions').textContent = '247';
+        document.getElementById('progressAvgAccuracy').textContent = '87.3%';
+        document.getElementById('progressAvgSpeed').textContent = '3.2s';
+        document.getElementById('progressCurrentStreak').textContent = '12';
+    }
+
+    updateProgressMastery() {
+        const masteryGrid = document.getElementById('progressMasteryGrid');
+        masteryGrid.innerHTML = '';
+        
+        // Headers
+        masteryGrid.innerHTML += '<div class="mastery-header"></div>';
+        [1, 2, 3].forEach(d => {
+            const header = document.createElement('div');
+            header.className = 'mastery-header';
+            header.textContent = `${d} Digit`;
+            masteryGrid.appendChild(header);
+        });
+        
+        // Sample mastery data
+        const masteryData = {
+            'Addition': ['Apprentice', 'Pro', 'Master'],
+            'Subtraction': ['Novice', 'Apprentice', 'Pro'],
+            'Multiplication': ['Novice', 'Novice', 'Apprentice'],
+            'Division': ['Novice', 'Novice', 'Novice']
+        };
+        
+        ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
+            const opLabel = document.createElement('div');
+            opLabel.className = 'operation-label';
+            opLabel.textContent = op;
+            masteryGrid.appendChild(opLabel);
+            
+            [1, 2, 3].forEach(d => {
+                const level = masteryData[op][d-1];
+                const cell = document.createElement('div');
+                cell.className = `mastery-cell ${level.toLowerCase()}`;
+                cell.innerHTML = `
+                    <div class="mastery-level">${level.toUpperCase()}</div>
+                    <div class="mastery-detail">${85 + d*3}% | ${4.5 - d*0.3}s</div>
+                    <div class="mastery-count">(${10 + d*5} plays)</div>
+                `;
+                masteryGrid.appendChild(cell);
+            });
+        });
+    }
+
+    updateProgressActivity() {
+        const activityContainer = document.getElementById('progressRecentActivity');
+        activityContainer.innerHTML = '';
+        
+        // Sample activity data
+        const activities = [
+            { date: '2024-01-02', timeAgo: '1 day ago', questions: 25, accuracy: 88, speed: 3.2 },
+            { date: '2024-01-01', timeAgo: '2 days ago', questions: 18, accuracy: 92, speed: 2.8 },
+            { date: '2023-12-31', timeAgo: '3 days ago', questions: 32, accuracy: 85, speed: 3.5 },
+            { date: '2023-12-30', timeAgo: '4 days ago', questions: 15, accuracy: 90, speed: 2.9 }
+        ];
+        
+        activities.forEach(activity => {
+            const item = document.createElement('div');
+            item.className = 'activity-item';
+            item.innerHTML = `
+                <div>
+                    <div>${activity.date}</div>
+                    <div class="activity-date">${activity.timeAgo}</div>
+                </div>
+                <div class="activity-stats">
+                    <span class="activity-count">${activity.questions} questions</span>
+                    <span class="activity-accuracy">${activity.accuracy}%</span>
+                    <span>${activity.speed}s avg</span>
+                </div>
+            `;
+            activityContainer.appendChild(item);
+        });
+    }
+
+    updateProgressBests() {
+        const bestsContainer = document.getElementById('progressPersonalBests');
+        bestsContainer.innerHTML = '';
+        
+        const bests = [
+            { title: '🎯 Drill (20 Questions)', value: '45.2s' },
+            { title: '⚡ Sprint (60s)', value: '28 questions' },
+            { title: '🎯 Best Accuracy', value: '96.8%' },
+            { title: '⚡ Fastest Speed', value: '1.8s' }
+        ];
+        
+        bests.forEach(best => {
+            const item = document.createElement('div');
+            item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 8px; background-color: var(--dark-bg); border-radius: 6px;';
+            item.innerHTML = `
+                <span style="color: var(--text-color); font-size: 14px;">${best.title}</span>
+                <span style="color: var(--accent-color); font-weight: bold;">${best.value}</span>
+            `;
+            bestsContainer.appendChild(item);
+        });
+    }
+
+    updateProgressAchievements() {
+        const achievementsContainer = document.getElementById('progressAchievements');
+        achievementsContainer.innerHTML = '';
+        
+        const achievements = [
+            { name: '🏆 Speed Demon', desc: 'Complete 20 questions in under 2 seconds each', unlocked: true },
+            { name: '🔒 Accuracy Master', desc: 'Achieve 95% accuracy over 50 questions', unlocked: false, progress: 75 },
+            { name: '🔒 Marathon Runner', desc: 'Complete 100 questions in one session', unlocked: false, progress: 45 },
+            { name: '🏆 Quick Learner', desc: 'Reach Pro level in any skill', unlocked: true }
+        ];
+        
+        achievements.forEach(achievement => {
+            const item = document.createElement('div');
+            item.style.cssText = 'margin-bottom: 12px; padding: 10px; background-color: var(--dark-bg); border-radius: 6px;';
+            
+            const progress = achievement.progress || 100;
+            const color = achievement.unlocked ? '#e0af68' : 'var(--accent-color)';
+            
+            item.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="color: ${color}; font-weight: bold; font-size: 14px;">${achievement.name}</span>
+                    <span style="color: var(--text-color); font-size: 12px;">${achievement.unlocked ? 'Unlocked!' : `${progress}%`}</span>
+                </div>
+                <div style="background-color: var(--progress-bg); border-radius: 3px; height: 4px; overflow: hidden;">
+                    <div style="background-color: ${color}; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
+                </div>
+                <div style="color: var(--muted-color); font-size: 11px; margin-top: 4px;">
+                    ${achievement.desc}
+                </div>
+            `;
+            achievementsContainer.appendChild(item);
+        });
+    }
+
     sendToPython(action, data, callback) {
         // Send message to Python through WebChannel
+        console.log('sendToPython called:', action, data);
         if (window.pythonBridge) {
             const callbackId = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            console.log('Generated callback ID:', callbackId);
             
             if (callback) {
                 // Store callback for later execution
@@ -883,6 +1044,7 @@ class MathDrillWeb {
             }
             
             // Send the message
+            console.log('Sending to Python bridge...');
             window.pythonBridge.send(action, JSON.stringify(data), callbackId);
         } else {
             console.warn('Python bridge not available');
@@ -892,6 +1054,43 @@ class MathDrillWeb {
 
 // Initialize the app
 const app = new MathDrillWeb();
+
+// Navigation function for progress page
+function navigateToProgress() {
+    console.log('Navigating to progress page...');
+    if (window.pythonBridge) {
+        window.pythonBridge.send('navigate_to_progress', '{}', '');
+    } else {
+        console.warn('Python bridge not available for navigation');
+    }
+}
+
+// Navigation function for main page
+function navigateToMain() {
+    console.log('Navigating to main page...');
+    if (window.pythonBridge) {
+        window.pythonBridge.send('navigate_to_main', '{}', '');
+    } else {
+        console.warn('Python bridge not available for navigation');
+    }
+}
+
+// Wait for WebChannel to be ready
+window.addEventListener('load', () => {
+    console.log('Page loaded, checking for python bridge...');
+    
+    // Check if python bridge is available
+    const checkBridge = () => {
+        if (window.pythonBridge) {
+            console.log('✅ Python bridge is available!');
+        } else {
+            console.log('⏳ Python bridge not ready yet, retrying...');
+            setTimeout(checkBridge, 100);
+        }
+    };
+    
+    checkBridge();
+});
 
 // Global function for Python to call
 window.updateFromPython = function(action, data) {

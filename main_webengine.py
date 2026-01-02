@@ -54,6 +54,17 @@ class PythonBridge(QObject):
                 self.get_mastery(callback_id)
             elif action == 'get_coach_recommendation':
                 self.get_coach_recommendation(callback_id)
+            elif action == 'get_progress_data':
+                self.get_progress_data(data, callback_id)
+            elif action == 'open_progress_page':
+                print("Python bridge received open_progress_page request")
+                self.open_progress_page()
+            elif action == 'navigate_to_progress':
+                print("Python bridge received navigate_to_progress request")
+                self.navigate_to_progress()
+            elif action == 'navigate_to_main':
+                print("Python bridge received navigate_to_main request")
+                self.navigate_to_main()
         except Exception as e:
             print(f"Error handling action {action}: {e}")
     
@@ -225,6 +236,186 @@ class PythonBridge(QObject):
             print(f"Error getting coach recommendation: {e}")
             self.send_to_js('coach_result', {}, callback_id)
     
+    def get_progress_data(self, data, callback_id):
+        """Get comprehensive progress data"""
+        try:
+            period = data.get('period', 'week')
+            
+            # Get stats
+            session_count = len(getattr(self.parent_dialog, 'session_attempts', []))
+            today_count = get_today_attempts_count()
+            lifetime_count = get_total_attempts_count()
+            
+            # Get detailed stats for the period
+            if today_count > 0:
+                import sqlite3
+                from .database import DB_NAME
+                conn = sqlite3.connect(DB_NAME)
+                c = conn.cursor()
+                
+                # Get stats for the period
+                if period == 'week':
+                    c.execute("""
+                        SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
+                        FROM attempts 
+                        WHERE created >= date('now', '-7 days')
+                        GROUP BY created
+                        ORDER BY created
+                    """)
+                elif period == 'month':
+                    c.execute("""
+                        SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
+                        FROM attempts 
+                        WHERE created >= date('now', '-30 days')
+                        GROUP BY created
+                        ORDER BY created
+                    """)
+                else:  # all time
+                    c.execute("""
+                        SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
+                        FROM attempts 
+                        GROUP BY created
+                        ORDER BY created
+                        LIMIT 30
+                    """)
+                
+                period_data = c.fetchall()
+                
+                # Get overall stats
+                c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts")
+                total, correct, total_time = c.fetchone()
+                
+                conn.close()
+                
+                accuracy = (correct / total) * 100 if total and total > 0 else 0
+                avg_speed = total_time / total if total and total > 0 else 0
+                total_time = total_time or 0
+            else:
+                accuracy = 0
+                avg_speed = 0
+                total_time = 0
+                period_data = []
+            
+            # Prepare chart data
+            chart_data = []
+            for row in period_data:
+                count, correct_sum, time_sum, created = row
+                if count and count > 0:
+                    chart_data.append({
+                        'label': created,
+                        'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
+                        'speed': time_sum / count if time_sum else 0
+                    })
+            
+            # Get mastery data
+            mastery_data = self.coach.get_mastery_grid_data()
+            mastery = {}
+            for (op, digits), stats in mastery_data.items():
+                key = f"{op}-{digits}"
+                mastery[key] = {
+                    'level': stats['level'],
+                    'acc': stats['acc'],
+                    'speed': stats['speed'],
+                    'count': stats['count']
+                }
+            
+            # Get weakness data
+            weaknesses = self.coach.get_weakness_focus_areas()
+            weakness_data = []
+            for weakness in weaknesses:
+                weakness_data.append({
+                    'operation': weakness['operation'],
+                    'digits': weakness['digits'],
+                    'level': weakness['level'],
+                    'accuracy': weakness.get('accuracy', 0),
+                    'speed': weakness.get('speed', 0),
+                    'weaknessScore': weakness.get('weakness_score', 0),
+                    'practiced': weakness.get('practiced', True),
+                    'suggestions': weakness.get('suggestions', [])
+                })
+            
+            # Get achievements
+            badges = self.achievements.get_all_badges_status()
+            achievement_data = []
+            for badge in badges:
+                achievement_data.append({
+                    'name': badge['name'],
+                    'desc': badge['desc'],
+                    'unlocked': badge['unlocked'],
+                    'progress': badge.get('progress', 100 if badge['unlocked'] else 0)
+                })
+            
+            # Get personal bests
+            personal_bests = {}
+            try:
+                # Get some sample personal bests
+                personal_bests['drill'] = get_personal_best('Drill (20 Qs)', 'Mixed', 2)
+                personal_bests['sprint'] = get_personal_best('Sprint (60s)', 'Mixed', 2)
+                personal_bests['accuracy'] = 95.0  # Sample data
+                personal_bests['speed'] = 2.5     # Sample data
+            except:
+                personal_bests = {}
+            
+            # Get recent activity
+            recent_activity = []
+            for i, row in enumerate(period_data[-7:]):  # Last 7 days
+                count, correct_sum, time_sum, created = row
+                if count and count > 0:
+                    recent_activity.append({
+                        'date': created,
+                        'timeAgo': f'{i+1} day{"s" if i+1 > 1 else ""} ago',
+                        'questions': count,
+                        'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
+                        'avgSpeed': time_sum / count if time_sum else 0
+                    })
+            
+            progress_data = {
+                'stats': {
+                    'totalQuestions': lifetime_count,
+                    'avgAccuracy': accuracy,
+                    'avgSpeed': avg_speed,
+                    'currentStreak': getattr(self.parent_dialog, 'streak', 0)
+                },
+                'chartData': chart_data,
+                'mastery': mastery,
+                'weaknesses': weakness_data,
+                'achievements': achievement_data,
+                'personalBests': personal_bests,
+                'recentActivity': recent_activity
+            }
+            
+            self.send_to_js('progress_data_result', progress_data, callback_id)
+        except Exception as e:
+            print(f"Error getting progress data: {e}")
+            self.send_to_js('progress_data_result', {}, callback_id)
+    
+    def open_progress_page(self):
+        """Open the progress page in a new window"""
+        print(f"PythonBridge.open_progress_page called, parent_dialog: {self.parent_dialog}")
+        if hasattr(self.parent_dialog, 'open_progress_page'):
+            print("Calling parent_dialog.open_progress_page()")
+            self.parent_dialog.open_progress_page()
+        else:
+            print("parent_dialog does not have open_progress_page method")
+    
+    def navigate_to_progress(self):
+        """Navigate to progress page in the same window"""
+        print(f"PythonBridge.navigate_to_progress called, parent_dialog: {self.parent_dialog}")
+        if hasattr(self.parent_dialog, 'navigate_to_progress'):
+            print("Calling parent_dialog.navigate_to_progress()")
+            self.parent_dialog.navigate_to_progress()
+        else:
+            print("parent_dialog does not have navigate_to_progress method")
+    
+    def navigate_to_main(self):
+        """Navigate back to main page in the same window"""
+        print(f"PythonBridge.navigate_to_main called, parent_dialog: {self.parent_dialog}")
+        if hasattr(self.parent_dialog, 'navigate_to_main'):
+            print("Calling parent_dialog.navigate_to_main()")
+            self.parent_dialog.navigate_to_main()
+        else:
+            print("parent_dialog does not have navigate_to_main method")
+    
     def send_to_js(self, action, data, callback_id):
         """Send data back to JavaScript"""
         if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
@@ -265,10 +456,17 @@ class MathDrillWebEngine(QDialog):
         self.current_focus_area = None
         self.focus_session_count = 0
         self.current_pb = None
+        self.streak = 0
         
         # Settings and achievements
         self.settings_manager = AppSettings()
         self.achievements = AchievementManager()
+        
+        # Progress window
+        self.progress_window = None
+        
+        # Page navigation
+        self.current_page = "main"  # "main" or "progress"
         
         # UI setup
         self.setWindowFlags(Qt.WindowType.Window)
@@ -293,6 +491,9 @@ class MathDrillWebEngine(QDialog):
         # Set up custom page with bridge
         self.web_page = WebEnginePage(self)
         self.web_view.setPage(self.web_page)
+        
+        # IMPORTANT: Set the parent_dialog reference for the bridge
+        self.web_page.bridge.parent_dialog = self
         
         # Set up web channel
         self.channel = QWebChannel()
@@ -403,9 +604,117 @@ class MathDrillWebEngine(QDialog):
             script = "if (window.updateFromPython) window.updateFromPython('updateStats', {});"
             self.web_view.page().runJavaScript(script)
     
+    def navigate_to_progress(self):
+        """Navigate to progress page in the same window"""
+        print("Navigating to progress page...")
+        self.current_page = "progress"
+        
+        # Load the progress HTML file
+        progress_html_path = os.path.join(os.path.dirname(__file__), "web", "progress.html")
+        print(f"Loading progress HTML from: {progress_html_path}")
+        
+        if os.path.exists(progress_html_path):
+            file_url = QUrl.fromLocalFile(os.path.abspath(progress_html_path))
+            self.web_view.load(file_url)
+            
+            # Update window title
+            self.setWindowTitle("Math Drill - Progress")
+            
+            # Set up bridge for progress page
+            progress_channel = QWebChannel()
+            progress_bridge = PythonBridge(self)
+            progress_bridge.parent_dialog = self
+            progress_channel.registerObject("pythonBridge", progress_bridge)
+            self.web_view.page().setWebChannel(progress_channel)
+            
+            print("Progress page loaded successfully")
+        else:
+            print(f"Progress HTML file not found: {progress_html_path}")
+    
+    def navigate_to_main(self):
+        """Navigate back to main page"""
+        print("Navigating to main page...")
+        self.current_page = "main"
+        
+        # Load the main HTML file
+        main_html_path = os.path.join(os.path.dirname(__file__), "web", "index.html")
+        print(f"Loading main HTML from: {main_html_path}")
+        
+        if os.path.exists(main_html_path):
+            file_url = QUrl.fromLocalFile(os.path.abspath(main_html_path))
+            self.web_view.load(file_url)
+            
+            # Update window title
+            self.setWindowTitle("Math Drill Pro")
+            
+            # Re-set up bridge for main page
+            self.channel.registerObject("pythonBridge", self.web_page.bridge)
+            self.web_view.page().setWebChannel(self.channel)
+            
+            print("Main page loaded successfully")
+        else:
+            print(f"Main HTML file not found: {main_html_path}")
+    
+    def open_progress_page(self):
+        """Open the progress page in a new window"""
+        print("MathDrillWebEngine.open_progress_page called")
+        if self.progress_window is None or not self.progress_window.isVisible():
+            print("Creating new progress window")
+            self.progress_window = QDialog(self)
+            self.progress_window.setWindowTitle("Math Drill - Progress")
+            self.progress_window.setMinimumSize(1200, 800)
+            self.progress_window.resize(1400, 900)
+            
+            layout = QVBoxLayout(self.progress_window)
+            layout.setContentsMargins(0, 0, 0, 0)
+            
+            # Create web view for progress page
+            progress_web_view = QWebEngineView()
+            
+            # Set up web channel for progress page
+            progress_channel = QWebChannel()
+            progress_bridge = PythonBridge(self.progress_window)
+            progress_bridge.parent_dialog = self.progress_window
+            progress_channel.registerObject("pythonBridge", progress_bridge)
+            progress_web_view.page().setWebChannel(progress_channel)
+            
+            # Load the progress HTML file
+            progress_html_path = os.path.join(os.path.dirname(__file__), "web", "progress.html")
+            print(f"Loading progress HTML from: {progress_html_path}")
+            file_url = QUrl.fromLocalFile(os.path.abspath(progress_html_path))
+            progress_web_view.load(file_url)
+            
+            layout.addWidget(progress_web_view)
+            
+            # Store reference
+            self.progress_window.web_view = progress_web_view
+            self.progress_window.bridge = progress_bridge
+            
+            # Show the window
+            print("Showing progress window")
+            self.progress_window.show()
+            
+            # Center relative to main window
+            if self.isVisible():
+                main_rect = self.geometry()
+                progress_rect = self.progress_window.geometry()
+                x = main_rect.x() + (main_rect.width() - progress_rect.width()) // 2
+                y = main_rect.y() + (main_rect.height() - progress_rect.height()) // 2
+                self.progress_window.move(x, y)
+        else:
+            print("Progress window already exists, bringing to front")
+            # Bring existing window to front
+            self.progress_window.raise_()
+            self.progress_window.activateWindow()
+    
     def closeEvent(self, event):
         """Handle close event"""
         self.update_timer.stop()
+        
+        # Close progress window if open
+        if self.progress_window and self.progress_window.isVisible():
+            self.progress_window.close()
+        
         super().closeEvent(event)
 
 

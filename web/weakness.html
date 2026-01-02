@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Drill - Weakness Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .weakness-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .weakness-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .weakness-title {
+            color: var(--accent-color);
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .weakness-subtitle {
+            color: var(--muted-color);
+            font-size: 16px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--muted-color);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            z-index: 100;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            transform: translateY(-1px);
+        }
+        
+        .weakness-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .weakness-card {
+            border-radius: 12px;
+            border: 2px solid var(--muted-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+        
+        .weakness-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .weakness-card.high-weakness {
+            background-color: #2C1810;
+            border-color: var(--error-color);
+        }
+        
+        .weakness-card.medium-weakness {
+            background-color: #2A1F15;
+            border-color: #e67e22;
+        }
+        
+        .weakness-card.low-weakness {
+            background-color: #2A2415;
+            border-color: #f39c12;
+        }
+        
+        .weakness-card.unpracticed {
+            background-color: #1A1A1A;
+            border-color: var(--muted-color);
+        }
+        
+        .weakness-info h4 {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .weakness-info p {
+            color: var(--text-color);
+            font-size: 14px;
+            margin: 2px 0;
+        }
+        
+        .weakness-info .suggestions {
+            color: var(--accent-color);
+            font-size: 11px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        .weakness-score {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="weakness-container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-button">
+            ← Back to Math Drill
+        </a>
+
+        <!-- Header -->
+        <div class="weakness-header">
+            <h1 class="weakness-title">🎯 Areas Needing Focus</h1>
+            <p class="weakness-subtitle">Identify your weak areas and get personalized improvement suggestions</p>
+        </div>
+
+        <!-- Weakness List -->
+        <div class="weakness-list">
+            <div class="weakness-card high-weakness">
+                <div class="weakness-info">
+                    <h4>Multiplication - 3 digits</h4>
+                    <p>Level: Advanced</p>
+                    <p>Accuracy: 45% | Speed: 8.2s</p>
+                    <p class="suggestions">Tips: Focus on breaking down large numbers, practice with 2-digit first</p>
+                </div>
+                <div class="weakness-score">Score: 85</div>
+            </div>
+            
+            <div class="weakness-card medium-weakness">
+                <div class="weakness-info">
+                    <h4>Division - 2 digits</h4>
+                    <p>Level: Intermediate</p>
+                    <p>Accuracy: 72% | Speed: 5.1s</p>
+                    <p class="suggestions">Tips: Practice estimation skills, learn common divisors</p>
+                </div>
+                <div class="weakness-score">Score: 62</div>
+            </div>
+            
+            <div class="weakness-card low-weakness">
+                <div class="weakness-info">
+                    <h4>Subtraction - 3 digits</h4>
+                    <p>Level: Advanced</p>
+                    <p>Accuracy: 78% | Speed: 4.3s</p>
+                    <p class="suggestions">Tips: Work on borrowing techniques, practice with smaller numbers first</p>
+                </div>
+                <div class="weakness-score">Score: 48</div>
+            </div>
+            
+            <div class="weakness-card unpracticed">
+                <div class="weakness-info">
+                    <h4>Division - 3 digits</h4>
+                    <p>Level: Not practiced yet</p>
+                    <p>Not practiced yet</p>
+                    <p class="suggestions">📝 Start here to build foundation skills</p>
+                </div>
+                <div class="weakness-score">NEW</div>
+            </div>
+            
+            <div class="weakness-card low-weakness">
+                <div class="weakness-info">
+                    <h4>Multiplication - 2 digits</h4>
+                    <p>Level: Intermediate</p>
+                    <p>Accuracy: 82% | Speed: 3.8s</p>
+                    <p class="suggestions">Tips: Use multiplication tricks, practice with common patterns</p>
+                </div>
+                <div class="weakness-score">Score: 35</div>
+            </div>
+            
+            <div class="weakness-card medium-weakness">
+                <div class="weakness-info">
+                    <h4>Addition - 3 digits</h4>
+                    <p>Level: Advanced</p>
+                    <p>Accuracy: 88% | Speed: 2.9s</p>
+                    <p class="suggestions">Tips: Focus on speed, try mental math techniques</p>
+                </div>
+                <div class="weakness-score">Score: 58</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

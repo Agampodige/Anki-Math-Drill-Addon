@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Drill - Achievements</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .achievements-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .achievements-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .achievements-title {
+            color: var(--accent-color);
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .achievements-subtitle {
+            color: var(--muted-color);
+            font-size: 16px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--muted-color);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            z-index: 100;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            transform: translateY(-1px);
+        }
+        
+        .achievements-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .achievement-card {
+            background-color: #121812;
+            border: 2px solid var(--muted-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0.5;
+            transition: all 0.2s ease;
+        }
+        
+        .achievement-card.unlocked {
+            border-color: var(--accent-color);
+            opacity: 1;
+        }
+        
+        .achievement-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .achievement-icon {
+            font-size: 32px;
+        }
+        
+        .achievement-info h4 {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .achievement-info p {
+            color: var(--text-color);
+            font-size: 14px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="achievements-container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-button">
+            ← Back to Math Drill
+        </a>
+
+        <!-- Header -->
+        <div class="achievements-header">
+            <h1 class="achievements-title">🏆 Your Trophy Case</h1>
+            <p class="achievements-subtitle">Track your achievements and unlock new milestones</p>
+        </div>
+
+        <!-- Achievements List -->
+        <div class="achievements-list">
+            <div class="achievement-card unlocked">
+                <div class="achievement-icon">🏆</div>
+                <div class="achievement-info">
+                    <h4>Speed Demon</h4>
+                    <p>Complete 20 questions in under 2 seconds each</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔒</div>
+                <div class="achievement-info">
+                    <h4>Accuracy Master</h4>
+                    <p>Achieve 95% accuracy over 50 questions</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔒</div>
+                <div class="achievement-info">
+                    <h4>Marathon Runner</h4>
+                    <p>Complete 100 questions in one session</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card unlocked">
+                <div class="achievement-icon">🏆</div>
+                <div class="achievement-info">
+                    <h4>Quick Learner</h4>
+                    <p>Reach Pro level in any skill</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔒</div>
+                <div class="achievement-info">
+                    <h4>Streak Master</h4>
+                    <p>Maintain a 20+ streak for 10 minutes</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔒</div>
+                <div class="achievement-info">
+                    <h4>Perfect Session</h4>
+                    <p>Complete a session with 100% accuracy</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔒</div>
+                <div class="achievement-info">
+                    <h4>All-Rounder</h4>
+                    <p>Master all operations at all difficulty levels</p>
+                </div>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔒</div>
+                <div class="achievement-info">
+                    <h4>Speed King</h4>
+                    <p>Average under 1.5 seconds per question</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

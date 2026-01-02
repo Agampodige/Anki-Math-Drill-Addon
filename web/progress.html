@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Drill - Progress</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Progress-specific styles optimized for 500x750 */
+        .progress-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 750px;
+            box-sizing: border-box;
+        }
+        
+        .progress-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-title {
+            color: var(--accent-color);
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .progress-subtitle {
+            color: var(--muted-color);
+            font-size: 14px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--muted-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            z-index: 100;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .back-button:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+            transform: translateY(-1px);
+        }
+        
+        /* Compact Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .overview-stat {
+            text-align: center;
+            padding: 12px;
+            background-color: rgba(46, 204, 113, 0.1);
+            border-radius: 6px;
+        }
+        
+        .overview-stat.value {
+            background-color: rgba(224, 175, 104, 0.1);
+        }
+        
+        .overview-stat.streak {
+            background-color: rgba(255, 159, 28, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+        }
+        
+        .overview-stat.value .stat-number {
+            color: #e0af68;
+        }
+        
+        .overview-stat.streak .stat-number {
+            color: #FF9F1C;
+        }
+        
+        .stat-label {
+            color: var(--muted-color);
+            font-size: 11px;
+        }
+        
+        /* Compact Progress Grid */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+        }
+        
+        .progress-card h3 {
+            color: var(--accent-color);
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Compact Mastery Grid */
+        .mastery-grid-large {
+            display: grid;
+            grid-template-columns: auto repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 12px;
+        }
+        
+        .mastery-header-cell {
+            color: var(--muted-color);
+            font-weight: bold;
+            text-align: center;
+            padding: 6px 4px;
+            font-size: 11px;
+        }
+        
+        .mastery-cell-large {
+            background-color: #2C3E50;
+            border-radius: 6px;
+            color: var(--text-color);
+            padding: 8px 4px;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            font-size: 10px;
+        }
+        
+        .mastery-cell-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mastery-cell-large.apprentice {
+            background-color: #27AE60;
+            color: var(--dark-bg);
+        }
+        
+        .mastery-cell-large.pro {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+        }
+        
+        .mastery-cell-large.master {
+            background-color: #F1C40F;
+            color: var(--dark-bg);
+        }
+        
+        .operation-label {
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Compact Recent Activity */
+        .recent-activity {
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 13px;
+        }
+        
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid rgba(75, 94, 75, 0.3);
+            font-size: 12px;
+        }
+        
+        .activity-date {
+            color: var(--muted-color);
+            font-size: 10px;
+        }
+        
+        .activity-stats {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 11px;
+        }
+        
+        .activity-accuracy {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        /* Compact Personal Bests */
+        .personal-bests-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 6px;
+            background-color: var(--dark-bg);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .progress-container {
+                padding: 10px;
+            }
+            
+            .progress-title {
+                font-size: 20px;
+            }
+            
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .stat-number {
+                font-size: 18px;
+            }
+            
+            .mastery-grid-large {
+                gap: 4px;
+            }
+            
+            .mastery-cell-large {
+                min-height: 50px;
+                font-size: 9px;
+                padding: 6px 2px;
+            }
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--muted-color);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-button">
+            ← Back
+        </a>
+
+        <!-- Header -->
+        <div class="progress-header">
+            <h1 class="progress-title">📊 Your Progress</h1>
+            <p class="progress-subtitle">Track your mathematical journey</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview" id="statsOverview">
+            <div class="overview-stat">
+                <div class="stat-number" id="totalQuestions">247</div>
+                <div class="stat-label">Total Questions</div>
+            </div>
+            <div class="overview-stat value">
+                <div class="stat-number" id="avgAccuracy">87.3%</div>
+                <div class="stat-label">Avg Accuracy</div>
+            </div>
+            <div class="overview-stat value">
+                <div class="stat-number" id="avgSpeed">3.2s</div>
+                <div class="stat-label">Avg Speed</div>
+            </div>
+            <div class="overview-stat streak">
+                <div class="stat-number" id="currentStreak">12</div>
+                <div class="stat-label">Current Streak</div>
+            </div>
+        </div>
+
+        <!-- Progress Grid -->
+        <div class="progress-grid">
+            <!-- Skills Mastery -->
+            <div class="progress-card">
+                <h3>🎯 Skills Mastery</h3>
+                <div class="mastery-grid-large" id="masteryGridLarge">
+                    <!-- Headers -->
+                    <div class="mastery-header-cell"></div>
+                    <div class="mastery-header-cell">1D</div>
+                    <div class="mastery-header-cell">2D</div>
+                    <div class="mastery-header-cell">3D</div>
+                    
+                    <!-- Addition -->
+                    <div class="operation-label">Addition</div>
+                    <div class="mastery-cell-large apprentice">APPRENTICE</div>
+                    <div class="mastery-cell-large pro">PRO</div>
+                    <div class="mastery-cell-large master">MASTER</div>
+                    
+                    <!-- Subtraction -->
+                    <div class="operation-label">Subtraction</div>
+                    <div class="mastery-cell-large novice">NOVICE</div>
+                    <div class="mastery-cell-large apprentice">APPRENTICE</div>
+                    <div class="mastery-cell-large pro">PRO</div>
+                    
+                    <!-- Multiplication -->
+                    <div class="operation-label">Multiplication</div>
+                    <div class="mastery-cell-large novice">NOVICE</div>
+                    <div class="mastery-cell-large novice">NOVICE</div>
+                    <div class="mastery-cell-large apprentice">APPRENTICE</div>
+                    
+                    <!-- Division -->
+                    <div class="operation-label">Division</div>
+                    <div class="mastery-cell-large novice">NOVICE</div>
+                    <div class="mastery-cell-large novice">NOVICE</div>
+                    <div class="mastery-cell-large novice">NOVICE</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="progress-card">
+                <h3>📅 Recent Activity</h3>
+                <div class="recent-activity" id="recentActivity">
+                    <div class="activity-item">
+                        <div>
+                            <div>2024-01-02</div>
+                            <div class="activity-date">1 day ago</div>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="activity-count">25 Q</span>
+                            <span class="activity-accuracy">88%</span>
+                            <span>3.2s</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <div>2024-01-01</div>
+                            <div class="activity-date">2 days ago</div>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="activity-count">18 Q</span>
+                            <span class="activity-accuracy">92%</span>
+                            <span>2.8s</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <div>2023-12-31</div>
+                            <div class="activity-date">3 days ago</div>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="activity-count">32 Q</span>
+                            <span class="activity-accuracy">85%</span>
+                            <span>3.5s</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div>
+                            <div>2023-12-30</div>
+                            <div class="activity-date">4 days ago</div>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="activity-count">15 Q</span>
+                            <span class="activity-accuracy">90%</span>
+                            <span>2.9s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Bests -->
+            <div class="progress-card">
+                <h3>⭐ Personal Bests</h3>
+                <div id="personalBests">
+                    <div class="personal-bests-item">
+                        <span>🎯 Drill (20 Q)</span>
+                        <span style="color: var(--accent-color); font-weight: bold;">45.2s</span>
+                    </div>
+                    <div class="personal-bests-item">
+                        <span>⚡ Sprint (60s)</span>
+                        <span style="color: var(--accent-color); font-weight: bold;">28 Q</span>
+                    </div>
+                    <div class="personal-bests-item">
+                        <span>🎯 Best Accuracy</span>
+                        <span style="color: var(--accent-color); font-weight: bold;">96.8%</span>
+                    </div>
+                    <div class="personal-bests-item">
+                        <span>⚡ Fastest Speed</span>
+                        <span style="color: var(--accent-color); font-weight: bold;">1.8s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to mastery cells
+            document.querySelectorAll('.mastery-cell-large').forEach(cell => {
+                cell.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                cell.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

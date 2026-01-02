@@ -16,10 +16,10 @@
                 <div class="coach-label" id="coachLabel"></div>
             </div>
             <div class="header-right">
-                <button class="icon-btn" data-action="progress" title="Progress">📊</button>
-                <button class="icon-btn" data-action="weakness" title="Weakness Analysis">🎯</button>
-                <button class="icon-btn" data-action="achievements" title="Achievements">🏆</button>
-                <button class="icon-btn" data-action="settings" title="Settings">⚙️</button>
+                <a href="progress.html" class="icon-btn" title="Progress">📊</a>
+                <a href="weakness.html" class="icon-btn" title="Weakness Analysis">🎯</a>
+                <a href="achievements.html" class="icon-btn" title="Achievements">🏆</a>
+                <a href="settings.html" class="icon-btn" title="Settings">⚙️</a>
                 <div class="streak-counter" id="streakCounter">🔥 0</div>
             </div>
         </header>
@@ -167,6 +167,75 @@
             <div class="mastery-grid" id="masteryGrid"></div>
             <div class="legend">Legend: Novice (Need practice) → Apprentice (Fix errors) → Pro (Speed up) → Master (Perfect)</div>
             <button id="closeMasteryBtn" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div id="progressModal" class="modal">
+        <div class="modal-content large-modal" style="max-width: 1200px; width: 95vw; max-height: 90vh;">
+            <h2 class="modal-title">📊 Your Progress</h2>
+            
+            <!-- Progress Notice -->
+            <div style="background-color: rgba(46, 204, 113, 0.1); border: 1px solid var(--accent-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center; color: var(--accent-color);">
+                <strong>📊 Progress Overview</strong> - Track your mathematical journey and improvement over time
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview" style="margin-bottom: 20px;">
+                <div class="overview-stat">
+                    <div class="stat-number" id="progressTotalQuestions">-</div>
+                    <div class="stat-label">Total Questions</div>
+                </div>
+                <div class="overview-stat value">
+                    <div class="stat-number" id="progressAvgAccuracy">-</div>
+                    <div class="stat-label">Avg Accuracy</div>
+                </div>
+                <div class="overview-stat value">
+                    <div class="stat-number" id="progressAvgSpeed">-</div>
+                    <div class="stat-label">Avg Speed</div>
+                </div>
+                <div class="overview-stat streak">
+                    <div class="stat-number" id="progressCurrentStreak">-</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+            </div>
+
+            <!-- Progress Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                <!-- Skills Mastery -->
+                <div class="card" style="padding: 15px;">
+                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">🎯 Skills Mastery</h3>
+                    <div class="mastery-grid" id="progressMasteryGrid" style="transform: scale(0.8); transform-origin: top left;">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card" style="padding: 15px;">
+                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">📅 Recent Activity</h3>
+                    <div id="progressRecentActivity" style="max-height: 200px; overflow-y: auto;">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Personal Bests -->
+                <div class="card" style="padding: 15px;">
+                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">⭐ Personal Bests</h3>
+                    <div id="progressPersonalBests">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Achievement Progress -->
+                <div class="card" style="padding: 15px;">
+                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">🏆 Achievement Progress</h3>
+                    <div id="progressAchievements">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <button id="closeProgressBtn" class="btn btn-primary" style="margin-top: 20px;">Close</button>
         </div>
     </div>
 
