@@ -240,61 +240,76 @@ class PythonBridge(QObject):
         """Get comprehensive progress data"""
         try:
             period = data.get('period', 'week')
+            print(f"Getting progress data for period: {period}")
             
             # Get stats
             session_count = len(getattr(self.parent_dialog, 'session_attempts', []))
             today_count = get_today_attempts_count()
             lifetime_count = get_total_attempts_count()
             
+            print(f"Stats: session={session_count}, today={today_count}, lifetime={lifetime_count}")
+            
             # Get detailed stats for the period
             if today_count > 0:
-                import sqlite3
-                from .database import DB_NAME
-                conn = sqlite3.connect(DB_NAME)
-                c = conn.cursor()
-                
-                # Get stats for the period
-                if period == 'week':
-                    c.execute("""
-                        SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
-                        FROM attempts 
-                        WHERE created >= date('now', '-7 days')
-                        GROUP BY created
-                        ORDER BY created
-                    """)
-                elif period == 'month':
-                    c.execute("""
-                        SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
-                        FROM attempts 
-                        WHERE created >= date('now', '-30 days')
-                        GROUP BY created
-                        ORDER BY created
-                    """)
-                else:  # all time
-                    c.execute("""
-                        SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
-                        FROM attempts 
-                        GROUP BY created
-                        ORDER BY created
-                        LIMIT 30
-                    """)
-                
-                period_data = c.fetchall()
-                
-                # Get overall stats
-                c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts")
-                total, correct, total_time = c.fetchone()
-                
-                conn.close()
-                
-                accuracy = (correct / total) * 100 if total and total > 0 else 0
-                avg_speed = total_time / total if total and total > 0 else 0
-                total_time = total_time or 0
+                try:
+                    import sqlite3
+                    from .database import DB_NAME
+                    conn = sqlite3.connect(DB_NAME)
+                    c = conn.cursor()
+                    
+                    # Get stats for the period
+                    if period == 'week':
+                        c.execute("""
+                            SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
+                            FROM attempts 
+                            WHERE created >= date('now', '-7 days')
+                            GROUP BY created
+                            ORDER BY created
+                        """)
+                    elif period == 'month':
+                        c.execute("""
+                            SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
+                            FROM attempts 
+                            WHERE created >= date('now', '-30 days')
+                            GROUP BY created
+                            ORDER BY created
+                        """)
+                    else:  # all time
+                        c.execute("""
+                            SELECT COUNT(*), SUM(correct), SUM(time_taken), created 
+                            FROM attempts 
+                            GROUP BY created
+                            ORDER BY created
+                            LIMIT 30
+                        """)
+                    
+                    period_data = c.fetchall()
+                    print(f"Period data rows: {len(period_data)}")
+                    
+                    # Get overall stats
+                    c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts")
+                    total, correct, total_time = c.fetchone()
+                    
+                    conn.close()
+                    
+                    accuracy = (correct / total) * 100 if total and total > 0 else 0
+                    avg_speed = total_time / total if total and total > 0 else 0
+                    total_time = total_time or 0
+                    
+                    print(f"Overall stats: total={total}, accuracy={accuracy:.1f}%, avg_speed={avg_speed:.2f}s")
+                    
+                except Exception as db_error:
+                    print(f"Database error: {db_error}")
+                    accuracy = 0
+                    avg_speed = 0
+                    total_time = 0
+                    period_data = []
             else:
                 accuracy = 0
                 avg_speed = 0
                 total_time = 0
                 period_data = []
+                print("No attempts today, using zero values")
             
             # Prepare chart data
             chart_data = []
@@ -308,42 +323,57 @@ class PythonBridge(QObject):
                     })
             
             # Get mastery data
-            mastery_data = self.coach.get_mastery_grid_data()
-            mastery = {}
-            for (op, digits), stats in mastery_data.items():
-                key = f"{op}-{digits}"
-                mastery[key] = {
-                    'level': stats['level'],
-                    'acc': stats['acc'],
-                    'speed': stats['speed'],
-                    'count': stats['count']
-                }
+            try:
+                mastery_data = self.coach.get_mastery_grid_data()
+                mastery = {}
+                for (op, digits), stats in mastery_data.items():
+                    key = f"{op}-{digits}"
+                    mastery[key] = {
+                        'level': stats['level'],
+                        'acc': stats['acc'],
+                        'speed': stats['speed'],
+                        'count': stats['count']
+                    }
+                print(f"Mastery data: {len(mastery)} entries")
+            except Exception as mastery_error:
+                print(f"Error getting mastery data: {mastery_error}")
+                mastery = {}
             
             # Get weakness data
-            weaknesses = self.coach.get_weakness_focus_areas()
-            weakness_data = []
-            for weakness in weaknesses:
-                weakness_data.append({
-                    'operation': weakness['operation'],
-                    'digits': weakness['digits'],
-                    'level': weakness['level'],
-                    'accuracy': weakness.get('accuracy', 0),
-                    'speed': weakness.get('speed', 0),
-                    'weaknessScore': weakness.get('weakness_score', 0),
-                    'practiced': weakness.get('practiced', True),
-                    'suggestions': weakness.get('suggestions', [])
-                })
+            try:
+                weaknesses = self.coach.get_weakness_focus_areas()
+                weakness_data = []
+                for weakness in weaknesses:
+                    weakness_data.append({
+                        'operation': weakness['operation'],
+                        'digits': weakness['digits'],
+                        'level': weakness['level'],
+                        'accuracy': weakness.get('accuracy', 0),
+                        'speed': weakness.get('speed', 0),
+                        'weaknessScore': weakness.get('weakness_score', 0),
+                        'practiced': weakness.get('practiced', True),
+                        'suggestions': weakness.get('suggestions', [])
+                    })
+                print(f"Weakness data: {len(weakness_data)} entries")
+            except Exception as weakness_error:
+                print(f"Error getting weakness data: {weakness_error}")
+                weakness_data = []
             
             # Get achievements
-            badges = self.achievements.get_all_badges_status()
-            achievement_data = []
-            for badge in badges:
-                achievement_data.append({
-                    'name': badge['name'],
-                    'desc': badge['desc'],
-                    'unlocked': badge['unlocked'],
-                    'progress': badge.get('progress', 100 if badge['unlocked'] else 0)
-                })
+            try:
+                badges = self.achievements.get_all_badges_status()
+                achievement_data = []
+                for badge in badges:
+                    achievement_data.append({
+                        'name': badge['name'],
+                        'desc': badge['desc'],
+                        'unlocked': badge['unlocked'],
+                        'progress': badge.get('progress', 100 if badge['unlocked'] else 0)
+                    })
+                print(f"Achievement data: {len(achievement_data)} entries")
+            except Exception as achievement_error:
+                print(f"Error getting achievement data: {achievement_error}")
+                achievement_data = []
             
             # Get personal bests
             personal_bests = {}
@@ -353,21 +383,28 @@ class PythonBridge(QObject):
                 personal_bests['sprint'] = get_personal_best('Sprint (60s)', 'Mixed', 2)
                 personal_bests['accuracy'] = 95.0  # Sample data
                 personal_bests['speed'] = 2.5     # Sample data
-            except:
+                print(f"Personal bests: {personal_bests}")
+            except Exception as pb_error:
+                print(f"Error getting personal bests: {pb_error}")
                 personal_bests = {}
             
             # Get recent activity
             recent_activity = []
-            for i, row in enumerate(period_data[-7:]):  # Last 7 days
-                count, correct_sum, time_sum, created = row
-                if count and count > 0:
-                    recent_activity.append({
-                        'date': created,
-                        'timeAgo': f'{i+1} day{"s" if i+1 > 1 else ""} ago',
-                        'questions': count,
-                        'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
-                        'avgSpeed': time_sum / count if time_sum else 0
-                    })
+            try:
+                for i, row in enumerate(period_data[-7:]):  # Last 7 days
+                    count, correct_sum, time_sum, created = row
+                    if count and count > 0:
+                        recent_activity.append({
+                            'date': created,
+                            'timeAgo': f'{i+1} day{"s" if i+1 > 1 else ""} ago',
+                            'questions': count,
+                            'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
+                            'avgSpeed': time_sum / count if time_sum else 0
+                        })
+                print(f"Recent activity: {len(recent_activity)} entries")
+            except Exception as activity_error:
+                print(f"Error processing recent activity: {activity_error}")
+                recent_activity = []
             
             progress_data = {
                 'stats': {
@@ -384,9 +421,14 @@ class PythonBridge(QObject):
                 'recentActivity': recent_activity
             }
             
+            print(f"Final progress data prepared with {len(progress_data)} sections")
+            print(f"Stats section: {progress_data['stats']}")
+            
             self.send_to_js('progress_data_result', progress_data, callback_id)
         except Exception as e:
             print(f"Error getting progress data: {e}")
+            import traceback
+            traceback.print_exc()
             self.send_to_js('progress_data_result', {}, callback_id)
     
     def open_progress_page(self):
@@ -418,14 +460,47 @@ class PythonBridge(QObject):
     
     def send_to_js(self, action, data, callback_id):
         """Send data back to JavaScript"""
+        print(f"send_to_js called: action={action}, callback_id={callback_id}")
+        print(f"Data type: {type(data)}, size: {len(str(data)) if data else 0}")
+        
         if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
+            # Log the actual data being sent
+            import json
+            data_json = json.dumps(data, indent=2)
+            print(f"Data being sent to JavaScript:\n{data_json}")
+            
             script = f"""
+                console.log('Python bridge script executing for callback: {callback_id}');
+                console.log('Checking pythonBridge availability:', typeof window.pythonBridge);
+                console.log('Available callbacks:', Object.keys(window.pythonBridge.callbacks || {{}});
+                
                 if (window.pythonBridge && window.pythonBridge.callbacks && window.pythonBridge.callbacks['{callback_id}']) {{
-                    window.pythonBridge.callbacks['{callback_id}']({json.dumps(data)});
-                    delete window.pythonBridge.callbacks['{callback_id}'];
+                    console.log('Found callback, executing with data:');
+                    var data = {data_json};
+                    console.log('Parsed data:', data);
+                    console.log('Data stats section:', data.stats);
+                    
+                    try {{
+                        window.pythonBridge.callbacks['{callback_id}'](data);
+                        delete window.pythonBridge.callbacks['{callback_id}'];
+                        console.log('Callback executed and deleted successfully');
+                    }} catch(e) {{
+                        console.error('Error executing callback:', e);
+                        console.error('Stack:', e.stack);
+                    }}
+                }} else {{
+                    console.log('Callback not found for ID: {callback_id}');
+                    console.log('pythonBridge exists:', !!window.pythonBridge);
+                    console.log('callbacks exists:', !!(window.pythonBridge && window.pythonBridge.callbacks));
+                    if (window.pythonBridge && window.pythonBridge.callbacks) {{
+                        console.log('Available callback IDs:', Object.keys(window.pythonBridge.callbacks));
+                    }}
                 }}
             """
+            print("Executing JavaScript in web view...")
             self.parent_dialog.web_view.page().runJavaScript(script)
+        else:
+            print("No web_view available in parent_dialog")
 
 
 class WebEnginePage(QWebEnginePage):
@@ -620,16 +695,30 @@ class MathDrillWebEngine(QDialog):
             # Update window title
             self.setWindowTitle("Math Drill - Progress")
             
-            # Set up bridge for progress page
-            progress_channel = QWebChannel()
-            progress_bridge = PythonBridge(self)
-            progress_bridge.parent_dialog = self
-            progress_channel.registerObject("pythonBridge", progress_bridge)
-            self.web_view.page().setWebChannel(progress_channel)
+            # Use the SAME bridge for progress page - don't create a new one
+            # The existing bridge already has the proper parent_dialog reference
+            self.channel.registerObject("pythonBridge", self.web_page.bridge)
+            self.web_view.page().setWebChannel(self.channel)
             
-            print("Progress page loaded successfully")
+            print("Progress page loaded successfully with existing bridge")
+            
+            # Test bridge after a short delay to ensure page is loaded
+            QTimer.singleShot(1000, self.test_progress_bridge)
         else:
             print(f"Progress HTML file not found: {progress_html_path}")
+    
+    def test_progress_bridge(self):
+        """Test if the bridge is working on the progress page"""
+        print("Testing progress page bridge...")
+        test_script = """
+            console.log('Testing bridge on progress page...');
+            console.log('pythonBridge available:', !!window.pythonBridge);
+            if (window.pythonBridge) {
+                console.log('Bridge methods:', Object.getOwnPropertyNames(window.pythonBridge));
+                console.log('Bridge send method:', typeof window.pythonBridge.send);
+            }
+        """
+        self.web_view.page().runJavaScript(test_script)
     
     def navigate_to_main(self):
         """Navigate back to main page"""
