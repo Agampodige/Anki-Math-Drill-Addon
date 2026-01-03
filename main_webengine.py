@@ -8,26 +8,55 @@ from aqt.qt import (
     QDialog, QVBoxLayout, QApplication, QUrl, Qt,
     QWebEngineView, QWebEnginePage, QWebChannel
 )
-from PyQt6.QtCore import QObject, pyqtSlot, QTimer
+from PyQt6.QtCore import QObject, pyqtSlot, QTimer, pyqtSignal
 
-from .database import init_db, log_attempt, log_session, get_last_7_days_stats, get_personal_best, get_total_attempts_count, get_today_attempts_count, update_weakness_tracking
-from .analytics import get_today_stats
-from .coach import SmartCoach
-from .gamification import AchievementManager, AppSettings
+try:
+    from .database import init_db, log_attempt, log_session, get_last_7_days_stats, get_personal_best, get_total_attempts_count, get_today_attempts_count, update_weakness_tracking
+except ImportError:
+    from database import init_db, log_attempt, log_session, get_last_7_days_stats, get_personal_best, get_total_attempts_count, get_today_attempts_count, update_weakness_tracking
+
+try:
+    from .database_api import db_api
+except ImportError:
+    from database_api import db_api
+
+try:
+    from .database_api import adaptive_learning
+except ImportError:
+    from database_api import adaptive_learning
+
+try:
+    from .analytics import get_today_stats
+except ImportError:
+    from analytics import get_today_stats
+
+try:
+    from .coach import SmartCoach
+except ImportError:
+    from coach import SmartCoach
+
+try:
+    from .gamification import AchievementManager, AppSettings
+except ImportError:
+    from gamification import AchievementManager, AppSettings
 
 
 class PythonBridge(QObject):
+    progress_data_ready = pyqtSignal(dict, str)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent_dialog = parent
         self.settings_manager = AppSettings()
         self.achievements = AchievementManager()
         self.coach = SmartCoach()
+        self.adaptive_learning = adaptive_learning
         
-        # Cache for instant progress data loading
-        self._progress_cache = {}
-        self._cache_timestamp = None
-        self._cache_valid_duration = 30  # Cache valid for 30 seconds
+        self.progress_data_ready.connect(self._handle_progress_data_ready)
+        
+        # Real-time sync subscribers
+        self._sync_subscribers = set()
+        self._last_sync_data = {}
         
     @pyqtSlot(str, str, str)
     def send(self, action, data_str, callback_id):
@@ -70,6 +99,34 @@ class PythonBridge(QObject):
             elif action == 'navigate_to_main':
                 print("Python bridge received navigate_to_main request")
                 self.navigate_to_main()
+            elif action == 'subscribe_realtime':
+                self.subscribe_realtime(data, callback_id)
+            elif action == 'unsubscribe_realtime':
+                self.unsubscribe_realtime(callback_id)
+            elif action == 'get_daily_goals':
+                self.get_daily_goals(callback_id)
+            elif action == 'set_daily_goals':
+                self.set_daily_goals(data, callback_id)
+            elif action == 'export_data':
+                self.export_user_data(data, callback_id)
+            elif action == 'import_data':
+                self.import_user_data(data, callback_id)
+            elif action == 'get_adaptive_difficulty':
+                self.get_adaptive_difficulty(data, callback_id)
+            elif action == 'update_adaptive_performance':
+                self.update_adaptive_performance(data, callback_id)
+            elif action == 'get_adaptive_recommendations':
+                self.get_adaptive_recommendations(data, callback_id)
+            elif action == 'get_learning_path':
+                self.get_learning_path(data, callback_id)
+            elif action == 'get_adaptive_insights':
+                self.get_adaptive_insights(callback_id)
+            elif action == 'get_adaptive_report':
+                self.get_adaptive_report(callback_id)
+            elif action == 'get_adaptive_recommendations_summary':
+                self.get_adaptive_recommendations_summary(callback_id)
+            elif action == 'export_adaptive_data':
+                self.export_adaptive_data(callback_id)
         except Exception as e:
             print(f"Error handling action {action}: {e}")
     
@@ -78,18 +135,63 @@ class PythonBridge(QObject):
         if hasattr(self.parent_dialog, 'reset_session'):
             self.parent_dialog.reset_session()
     
+    def log_attempt(self, data):
+        """Log a practice attempt with adaptive learning integration"""
+        try:
+            operation = data.get('operation')
+            digits = data.get('digits')
+            correct = data.get('correct')
+            time_taken = data.get('time_taken')
+            session_id = getattr(self, 'current_session_id', None)
+            question_text = data.get('question_text')
+            user_answer = data.get('user_answer')
+            correct_answer = data.get('correct_answer')
+            
+            # Log to database
+            attempt_id = db_api.create_attempt(
+                operation=operation,
+                digits=digits,
+                correct=correct,
+                time_taken=time_taken,
+                session_id=session_id,
+                question_text=question_text,
+                user_answer=user_answer,
+                correct_answer=correct_answer
+            )
+            
+            # Update adaptive learning system
+            try:
+                self.adaptive_learning.update_adaptive_performance(
+                    operation, digits, correct, time_taken
+                )
+            except Exception as e:
+                print(f"Error updating adaptive performance: {e}")
+            
+            # Update weakness tracking
+            update_weakness_tracking(operation, digits, correct)
+            
+            # Update daily goals
+            try:
+                db_api.update_daily_progress(questions_completed=1)
+            except Exception as e:
+                print(f"Error updating daily progress: {e}")
+            
+            # Trigger real-time sync
+            self._trigger_realtime_sync({
+                'type': 'attempt_logged',
+                'operation': operation,
+                'digits': digits,
+                'correct': correct,
+                'time_taken': time_taken
+            })
+            
+        except Exception as e:
+            print(f"Error logging attempt: {e}")
+    
     def start_session(self, data):
         """Handle session start"""
         if hasattr(self.parent_dialog, 'start_session'):
             self.parent_dialog.start_session(data['mode'], data['operation'], data['digits'])
-    
-    def log_attempt(self, data):
-        """Log an attempt to the database"""
-        log_attempt(data['operation'], data['digits'], int(data['correct']), data['time'])
-        update_weakness_tracking(data['operation'], data['digits'], data['correct'])
-        
-        # Invalidate cache when new data is added
-        self.invalidate_cache()
     
     def end_session(self, data, callback_id):
         """Handle session end and return results"""
@@ -103,38 +205,31 @@ class PythonBridge(QObject):
             self.parent_dialog.play_sound(data['success'])
     
     def get_stats(self, callback_id):
-        """Get current statistics"""
+        """Get current statistics using enhanced API"""
         try:
             session_count = len(getattr(self.parent_dialog, 'session_attempts', []))
-            today_count = get_today_attempts_count()
-            lifetime_count = get_total_attempts_count()
             
-            # Get detailed stats for today
-            if today_count > 0:
-                import sqlite3
-                from .database import DB_NAME
-                conn = sqlite3.connect(DB_NAME)
-                c = conn.cursor()
-                c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts WHERE created = ?", (date.today().isoformat(),))
-                total, correct, total_time = c.fetchone()
-                conn.close()
-                
-                accuracy = (correct / total) * 100 if total and total > 0 else 0
-                avg_speed = total_time / total if total and total > 0 else 0
-                total_time = total_time or 0
-            else:
-                accuracy = 0
-                avg_speed = 0
-                total_time = 0
+            # Get comprehensive stats from database API
+            stats_data = db_api.get_comprehensive_stats('today')
+            basic_stats = stats_data['basic_stats']
+            
+            # Get daily goal status
+            daily_goals = db_api.get_daily_goal_status()
             
             stats = {
                 'session': session_count,
-                'today': today_count,
-                'lifetime': lifetime_count,
-                'accuracy': accuracy,
-                'avgSpeed': avg_speed,
-                'totalTime': total_time
+                'today': basic_stats['total_attempts'],
+                'lifetime': basic_stats['total_attempts'],  # Will be updated with all-time stats
+                'accuracy': (basic_stats['total_correct'] / basic_stats['total_attempts'] * 100) if basic_stats['total_attempts'] > 0 else 0,
+                'avgSpeed': basic_stats['avg_time'] or 0,
+                'totalTime': basic_stats['total_attempts'] * (basic_stats['avg_time'] or 0),
+                'daily_goals': daily_goals,
+                'practice_days': basic_stats['practice_days']
             }
+            
+            # Get lifetime stats separately
+            lifetime_stats = db_api.get_comprehensive_stats('all')
+            stats['lifetime'] = lifetime_stats['basic_stats']['total_attempts']
             
             self.send_to_js('stats_result', stats, callback_id)
         except Exception as e:
@@ -175,21 +270,22 @@ class PythonBridge(QObject):
             self.send_to_js('achievements_result', [], callback_id)
     
     def get_weakness(self, callback_id):
-        """Get weakness analysis data"""
+        """Get weakness analysis data using enhanced API"""
         try:
-            weaknesses = self.coach.get_weakness_focus_areas()
-            weakness_data = []
+            weaknesses = db_api.get_weakness_analysis()
             
+            # Transform data for frontend compatibility
+            weakness_data = []
             for weakness in weaknesses:
                 weakness_data.append({
                     'operation': weakness['operation'],
                     'digits': weakness['digits'],
-                    'level': weakness['level'],
-                    'accuracy': weakness.get('accuracy', 0),
-                    'speed': weakness.get('speed', 0),
-                    'weaknessScore': weakness.get('weakness_score', 0),
-                    'practiced': weakness.get('practiced', True),
-                    'suggestions': weakness.get('suggestions', [])
+                    'level': weakness['mastery_level'],
+                    'accuracy': (weakness['recent_correct'] / weakness['recent_attempts'] * 100) if weakness['recent_attempts'] > 0 else 0,
+                    'speed': weakness['recent_avg_time'],
+                    'weaknessScore': weakness['weakness_score'],
+                    'practiced': True,
+                    'suggestions': self._generate_weakness_suggestions(weakness)
                 })
             
             self.send_to_js('weakness_result', weakness_data, callback_id)
@@ -244,89 +340,214 @@ class PythonBridge(QObject):
             print(f"Error getting coach recommendation: {e}")
             self.send_to_js('coach_result', {}, callback_id)
     
+    def _handle_progress_data_ready(self, data, callback_id):
+        """Handle progress data generated from background thread."""
+        # This is now only called by the background worker. callback_id will be None.
+        
+        # PUSH the newly generated fast data to the frontend.
+        print("Pushing newly generated fast data to frontend.")
+        if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
+            update_script = f"""
+                if (window.progressPage && window.progressPage.updateFastData) {{
+                    window.progressPage.updateFastData({json.dumps(data)});
+                }}
+            """
+            self.parent_dialog.web_view.page().runJavaScript(update_script)
+
+        # Now, trigger the heavy data update in the background.
+        QTimer.singleShot(100, lambda: self._update_progress_data())
+
     def get_progress_data_instant(self, data, callback_id):
-        """Get progress data instantly using cache or fast loading"""
+        """Get progress data"""
         try:
             period = data.get('period', 'week')
-            current_time = time.time()
             
-            # Check if we have valid cached data
-            if (self._cache_timestamp and 
-                current_time - self._cache_timestamp < self._cache_valid_duration and
-                self._progress_cache):
-                
-                print("Using cached progress data for instant response")
-                cached_data = self._progress_cache.copy()
-                self.send_to_js('progress_data_result', cached_data, callback_id)
-                return
+            print("Generating fresh progress data...")
+            streak = getattr(self.parent_dialog, 'streak', 0)
             
-            print("Cache miss or expired, generating fresh data...")
+            # Generate fresh data in a background thread
+            threading.Thread(
+                target=self._generate_progress_worker,
+                args=(period, streak, callback_id),
+                daemon=True
+            ).start()
             
-            # Generate fresh data quickly
-            fresh_data = self._generate_fast_progress_data(period)
-            
-            # Update cache
-            self._progress_cache = fresh_data.copy()
-            self._cache_timestamp = current_time
-            
-            # Send data immediately
-            self.send_to_js('progress_data_result', fresh_data, callback_id)
-            
-            # Update heavy data in background for next time
-            QTimer.singleShot(100, lambda: self._update_cache_with_heavy_data())
+            # Send immediate empty response to prevent JS timeout
+            if callback_id:
+                self.send_to_js('progress_data_result', {}, callback_id)
             
         except Exception as e:
             print(f"Error in instant progress data: {e}")
             self.send_to_js('progress_data_result', {}, callback_id)
     
-    def _generate_fast_progress_data(self, period):
-        """Generate progress data quickly using optimized queries"""
-        import sqlite3
-        from .database import DB_NAME
-        from datetime import date
+    def _generate_progress_worker(self, period, streak, callback_id):
+        """Worker method to run in background thread"""
+        try:
+            data = self._generate_fast_progress_data_static(period, streak)
+            # The callback_id passed here will be None.
+            self.progress_data_ready.emit(data, None)
+        except Exception as e:
+            print(f"Error in progress worker: {e}")
+            # Send empty data on error to stop loading spinner
+            self.progress_data_ready.emit({}, None)
+
+    @staticmethod
+    def _generate_fast_progress_data_static(period, streak):
+        """Static method to generate progress data using enhanced database API"""
+        try:
+            from .database_api import db_api
+        except ImportError:
+            from database_api import db_api
+        from datetime import date, datetime, timedelta
         
-        # Single database connection for all queries
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
+        try:
+            # Get comprehensive stats using enhanced API
+            stats_data = db_api.get_comprehensive_stats('week' if period == 'week' else 'all')
+            basic_stats = stats_data['basic_stats']
+            recent_activity = stats_data['recent_activity']
+            
+            # Get performance trends for charts
+            trends_data = db_api.get_performance_trends(days=7)
+            daily_data = trends_data['daily']
+            
+            # Prepare chart data from real daily performance
+            chart_data = []
+            today = date.today()
+            
+            # Create chart data for last 7 days
+            for i in range(6, -1, -1):
+                chart_date = today - timedelta(days=i)
+                date_str = chart_date.isoformat()
+                
+                # Find matching daily data
+                day_data = next((d for d in daily_data if d['date'] == date_str), None)
+                
+                if day_data and day_data['questions'] > 0:
+                    chart_data.append({
+                        'label': chart_date.strftime('%a'),
+                        'accuracy': day_data['accuracy'],
+                        'speed': day_data['avg_time']
+                    })
+                else:
+                    chart_data.append({
+                        'label': chart_date.strftime('%a'),
+                        'accuracy': 0,
+                        'speed': 0
+                    })
+            
+            # Prepare recent activity data
+            recent_activity_formatted = []
+            for activity in recent_activity[:10]:  # Last 10 days
+                if activity['questions'] > 0:
+                    created_date = datetime.strptime(activity['date'], '%Y-%m-%d').date()
+                    delta = today - created_date
+                    if delta.days == 0:
+                        time_ago = "Today"
+                    elif delta.days == 1:
+                        time_ago = "Yesterday"
+                    else:
+                        time_ago = f"{delta.days} days ago"
+
+                    recent_activity_formatted.append({
+                        'date': activity['date'],
+                        'timeAgo': time_ago,
+                        'questions': activity['questions'],
+                        'accuracy': activity['correct'] / activity['questions'] * 100 if activity['questions'] > 0 else 0,
+                        'avgSpeed': activity['avg_time'] or 0
+                    })
+            
+            # Fast progress data with real statistics
+            progress_data = {
+                'stats': {
+                    'totalQuestions': basic_stats['total_attempts'],
+                    'avgAccuracy': (basic_stats['total_correct'] / basic_stats['total_attempts'] * 100) if basic_stats['total_attempts'] > 0 else 0,
+                    'avgSpeed': basic_stats['avg_time'] or 0,
+                    'currentStreak': streak,
+                    'practiceDays': basic_stats['practice_days']
+                },
+                'chartData': chart_data,
+                'recentActivity': list(reversed(recent_activity_formatted)),
+                'mastery': {},  # Will be filled by background update
+                'weaknesses': [],  # Will be filled by background update
+                'achievements': [],  # Will be filled by background update
+                'personalBests': {},  # Will be filled by background update
+                'operationBreakdown': stats_data['operation_breakdown'],
+                'difficultyProgression': stats_data['difficulty_progression']
+            }
+            
+            print(f"Real progress data generated: {basic_stats['total_attempts']} total, {(basic_stats['total_correct'] / basic_stats['total_attempts'] * 100) if basic_stats['total_attempts'] > 0 else 0:.1f}% accuracy")
+            return progress_data
+            
+        except Exception as e:
+            print(f"Error generating real progress data: {e}")
+            # Fallback to basic implementation
+            return PythonBridge._generate_fallback_progress_data(period, streak)
+    
+    @staticmethod
+    def _generate_fallback_progress_data(period, streak):
+        """Fallback method using JSON storage"""
+        try:
+            from . import json_storage
+        except ImportError:
+            import json_storage
+        from datetime import date, datetime, timedelta
         
         try:
             # Get basic stats quickly
-            c.execute("SELECT COUNT(*) FROM attempts")
-            lifetime_count = c.fetchone()[0]
+            attempts = json_storage._load_json_file(json_storage.ATTEMPTS_FILE, [])
+            lifetime_count = len(attempts)
             
-            c.execute("SELECT COUNT(*) FROM attempts WHERE created = ?", (date.today().isoformat(),))
-            today_count = c.fetchone()[0]
+            today_str = date.today().isoformat()
+            today_count = len([a for a in attempts if a.get('created') == today_str])
             
             # Get overall stats
-            c.execute("SELECT COUNT(*), SUM(correct), SUM(time_taken) FROM attempts")
-            total, correct, total_time_db = c.fetchone()
+            total = len(attempts)
+            correct = sum(1 for a in attempts if a.get('correct', False))
+            total_time_db = sum(a.get('time_taken', 0) for a in attempts)
             
             accuracy = (correct / total) * 100 if total and total > 0 else 0
             avg_speed = total_time_db / total if total and total > 0 else 0
             
             # Get recent activity (last 7 days)
-            c.execute("""
-                SELECT created, COUNT(*), SUM(correct), SUM(time_taken) 
-                FROM attempts 
-                WHERE created >= date('now', '-7 days')
-                GROUP BY created
-                ORDER BY created DESC
-                LIMIT 7
-            """)
+            seven_days_ago = (date.today() - timedelta(days=6)).isoformat()
+            recent_attempts = [a for a in attempts if a.get('created', '') >= seven_days_ago]
             
-            period_data = c.fetchall()
+            # Group by date
+            daily_stats = {}
+            for attempt in recent_attempts:
+                created = attempt.get('created', '')
+                if created not in daily_stats:
+                    daily_stats[created] = {'count': 0, 'correct': 0, 'time_sum': 0}
+                daily_stats[created]['count'] += 1
+                if attempt.get('correct', False):
+                    daily_stats[created]['correct'] += 1
+                daily_stats[created]['time_sum'] += attempt.get('time_taken', 0)
             
             # Prepare data structures
             recent_activity = []
             chart_data = []
+            today = date.today()
             
-            for i, row in enumerate(period_data):
-                count, correct_sum, time_sum, created = row
+            for created_date in sorted(daily_stats.keys()):
+                stats = daily_stats[created_date]
+                count = stats['count']
+                correct_sum = stats['correct']
+                time_sum = stats['time_sum']
+                
                 if count and count > 0:
+                    created_dt = datetime.strptime(created_date, '%Y-%m-%d').date()
+                    delta = today - created_date
+                    if delta.days == 0:
+                        time_ago = "Today"
+                    elif delta.days == 1:
+                        time_ago = "Yesterday"
+                    else:
+                        time_ago = f"{delta.days} days ago"
+
                     # Recent activity
                     recent_activity.append({
-                        'date': created,
-                        'timeAgo': f'{i+1} day{"s" if i+1 > 1 else ""} ago',
+                        'date': created_date,
+                        'timeAgo': time_ago,
                         'questions': count,
                         'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
                         'avgSpeed': time_sum / count if time_sum else 0
@@ -334,129 +555,186 @@ class PythonBridge(QObject):
                     
                     # Chart data
                     chart_data.append({
-                        'label': created,
+                        'label': created_dt.strftime('%a'),
                         'accuracy': (correct_sum / count) * 100 if correct_sum else 0,
                         'speed': time_sum / count if time_sum else 0
                     })
             
-            # Fast progress data
+            # Fallback progress data
             progress_data = {
                 'stats': {
                     'totalQuestions': lifetime_count,
                     'avgAccuracy': accuracy,
                     'avgSpeed': avg_speed,
-                    'currentStreak': getattr(self.parent_dialog, 'streak', 0)
+                    'currentStreak': streak
                 },
                 'chartData': chart_data,
-                'recentActivity': recent_activity,
+                'recentActivity': list(reversed(recent_activity)),
                 'mastery': {},  # Will be filled by background update
                 'weaknesses': [],  # Will be filled by background update
                 'achievements': [],  # Will be filled by background update
                 'personalBests': {}  # Will be filled by background update
             }
             
-            print(f"Fast progress data generated: {lifetime_count} total, {accuracy:.1f}% accuracy")
+            print(f"Fallback progress data generated: {lifetime_count} total, {accuracy:.1f}% accuracy")
             return progress_data
             
-        finally:
-            conn.close()
+        except Exception as e:
+            print(f"Error in fallback progress data generation: {e}")
+            # Return minimal data structure
+            return {
+                'stats': {
+                    'totalQuestions': 0,
+                    'avgAccuracy': 0,
+                    'avgSpeed': 0,
+                    'currentStreak': streak
+                },
+                'chartData': [],
+                'recentActivity': [],
+                'mastery': {},
+                'weaknesses': [],
+                'achievements': [],
+                'personalBests': {}
+            }
     
-    def _update_cache_with_heavy_data(self):
-        """Update cache with heavy data components in background"""
+    def _update_progress_data(self):
+        """Update progress data with heavy data components in background"""
         try:
-            print("Updating cache with heavy data components...")
+            print("Updating progress data with heavy data components...")
             
-            # Get mastery data
+            # Get mastery data using enhanced API
             mastery = {}
             try:
-                mastery_data = self.coach.get_mastery_grid_data()
-                for (op, digits), stats in mastery_data.items():
-                    key = f"{op}-{digits}"
-                    mastery[key] = {
-                        'level': stats['level'],
-                        'acc': stats['acc'],
-                        'speed': stats['speed'],
-                        'count': stats['count']
-                    }
-            except:
+                # Get comprehensive stats for mastery calculation
+                stats_data = db_api.get_comprehensive_stats('all')
+                operation_breakdown = stats_data['operation_breakdown']
+                difficulty_progression = stats_data['difficulty_progression']
+                
+                # Create mastery grid from real data
+                operations = ['Addition', 'Subtraction', 'Multiplication', 'Division']
+                digits = [1, 2, 3]
+                
+                for op in operations:
+                    for digit in digits:
+                        # Find matching data from operation breakdown
+                        op_data = next((d for d in operation_breakdown if d['operation'] == op), None)
+                        digit_data = next((d for d in difficulty_progression if d['digits'] == digit), None)
+                        
+                        if op_data and digit_data:
+                            # Calculate mastery level based on performance
+                            accuracy = (op_data['correct'] / op_data['count'] * 100) if op_data['count'] > 0 else 0
+                            avg_time = op_data['avg_time'] or 0
+                            total_count = op_data['count']
+                            
+                            # Determine mastery level
+                            if accuracy >= 90 and avg_time < 3.0:
+                                level = 'Master'
+                            elif accuracy >= 80 and avg_time < 5.0:
+                                level = 'Pro'
+                            elif accuracy >= 70:
+                                level = 'Apprentice'
+                            else:
+                                level = 'Novice'
+                            
+                            key = f"{op}-{digit}"
+                            mastery[key] = {
+                                'level': level,
+                                'acc': accuracy,
+                                'speed': avg_time,
+                                'count': total_count
+                            }
+                        else:
+                            # No data for this combination
+                            key = f"{op}-{digit}"
+                            mastery[key] = {
+                                'level': 'Novice',
+                                'acc': 0,
+                                'speed': 0,
+                                'count': 0
+                            }
+            except Exception as e:
+                print(f"Error generating mastery data: {e}")
                 pass
             
-            # Get weakness data
+            # Get weakness data using enhanced API
             weaknesses = []
             try:
-                weakness_data = self.coach.get_weakness_focus_areas()
+                weakness_data = db_api.get_weakness_analysis()
                 for weakness in weakness_data:
                     weaknesses.append({
                         'operation': weakness['operation'],
                         'digits': weakness['digits'],
-                        'level': weakness['level'],
-                        'accuracy': weakness.get('accuracy', 0),
-                        'speed': weakness.get('speed', 0),
-                        'weaknessScore': weakness.get('weakness_score', 0),
-                        'practiced': weakness.get('practiced', True),
-                        'suggestions': weakness.get('suggestions', [])
+                        'level': weakness['mastery_level'],
+                        'accuracy': (weakness['recent_correct'] / weakness['recent_attempts'] * 100) if weakness['recent_attempts'] > 0 else 0,
+                        'speed': weakness['recent_avg_time'],
+                        'weaknessScore': weakness['weakness_score'],
+                        'practiced': weakness['total_attempts'] > 0,
+                        'suggestions': self._generate_weakness_suggestions(weakness)
                     })
-            except:
+            except Exception as e:
+                print(f"Error getting weakness data: {e}")
                 pass
             
-            # Get achievements
+            # Get achievements using enhanced API
             achievements = []
             try:
-                badges = self.achievements.get_all_badges_status()
-                for badge in badges:
+                achievement_data = db_api.get_achievements()
+                for achievement in achievement_data:
                     achievements.append({
-                        'name': badge['name'],
-                        'desc': badge['desc'],
-                        'unlocked': badge['unlocked'],
-                        'progress': badge.get('progress', 100 if badge['unlocked'] else 0)
+                        'name': achievement['name'],
+                        'desc': achievement.get('description', 'Achievement unlocked!'),
+                        'unlocked': True,
+                        'progress': 100
                     })
-            except:
+            except Exception as e:
+                print(f"Error getting achievements: {e}")
                 pass
             
-            # Get personal bests
+            # Get personal bests using enhanced API
             personal_bests = {}
             try:
-                from .database import get_personal_best
-                personal_bests['drill'] = get_personal_best('Drill (20 Qs)', 'Mixed', 2)
-                personal_bests['sprint'] = get_personal_best('Sprint (60s)', 'Mixed', 2)
-                personal_bests['accuracy'] = 95.0
-                personal_bests['speed'] = 2.5
-            except:
+                # Get best drill times
+                stats_data = db_api.get_comprehensive_stats('all')
+                
+                # Calculate personal bests from real data
+                if stats_data['basic_stats']['total_attempts'] > 0:
+                    personal_bests['accuracy'] = (stats_data['basic_stats']['total_correct'] / stats_data['basic_stats']['total_attempts'] * 100)
+                    personal_bests['speed'] = stats_data['basic_stats']['avg_time'] or 0
+                
+                # Get session-based personal bests
+                try:
+                    from .database import get_personal_best
+                except ImportError:
+                    from database import get_personal_best
+                drill_best = get_personal_best('Drill (20 Qs)', 'Mixed', 2)
+                sprint_best = get_personal_best('Sprint (60s)', 'Mixed', 2)
+                
+                if drill_best:
+                    personal_bests['drill'] = drill_best
+                if sprint_best:
+                    personal_bests['sprint'] = sprint_best
+                    
+            except Exception as e:
+                print(f"Error getting personal bests: {e}")
                 pass
             
-            # Update cache with heavy data
-            if self._progress_cache:
-                self._progress_cache.update({
-                    'mastery': mastery,
-                    'weaknesses': weaknesses,
-                    'achievements': achievements,
-                    'personalBests': personal_bests
-                })
+            # Prepare progress data with heavy data
+            progress_data = {
+                'mastery': mastery,
+                'weaknesses': weaknesses,
+                'achievements': achievements,
+                'personalBests': personal_bests
+            }
             
-            print("Cache updated with heavy data components")
+            print("Progress data updated with heavy data components")
             
             # Notify JavaScript about the update
             if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
-                update_script = f"""
-                    if (window.progressPage && window.progressPage.updateHeavyData) {{
-                        window.progressPage.updateHeavyData({{
-                            'mastery': {json.dumps(mastery)},
-                            'weaknesses': {json.dumps(weaknesses)},
-                            'achievements': {json.dumps(achievements)},
-                            'personalBests': {json.dumps(personal_bests)}
-                        }});
-                    }}
-                """
+                update_script = f"if(window.updateHeavyData) {{ window.updateHeavyData({json.dumps(progress_data)}); }}"
                 self.parent_dialog.web_view.page().runJavaScript(update_script)
                 
         except Exception as e:
-            print(f"Error updating cache with heavy data: {e}")
-    
-    def invalidate_cache(self):
-        """Invalidate the progress data cache"""
-        self._progress_cache = {}
-        self._cache_timestamp = None
-        print("Progress data cache invalidated")
+            print(f"Error updating progress data with heavy data: {e}")
     
     def open_progress_page(self):
         """Open the progress page in a new window"""
@@ -528,6 +806,130 @@ class PythonBridge(QObject):
             self.parent_dialog.web_view.page().runJavaScript(script)
         else:
             print("No web_view available in parent_dialog")
+    
+    def _generate_weakness_suggestions(self, weakness):
+        """Generate practice suggestions based on weakness analysis"""
+        suggestions = []
+        
+        if weakness['weakness_score'] > 70:
+            suggestions.append("Focus on basic fundamentals")
+            suggestions.append("Practice with easier problems first")
+        elif weakness['weakness_score'] > 40:
+            suggestions.append("Mixed practice with review")
+            suggestions.append("Try timed practice sessions")
+        else:
+            suggestions.append("Challenge yourself with harder problems")
+            suggestions.append("Focus on speed improvement")
+        
+        return suggestions
+    
+    def _trigger_realtime_sync(self, event_type, data):
+        """Trigger real-time synchronization to all subscribers"""
+        sync_data = {
+            'event_type': event_type,
+            'data': data,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        self._last_sync_data = sync_data
+        
+        # Send to all subscribers
+        if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
+            script = f"""
+                if (window.realtimeManager && window.realtimeManager.handleSync) {{
+                    window.realtimeManager.handleSync({json.dumps(sync_data)});
+                }}
+            """
+            self.parent_dialog.web_view.page().runJavaScript(script)
+    
+    def subscribe_realtime(self, data, callback_id):
+        """Subscribe to real-time updates"""
+        try:
+            subscriber_id = data.get('subscriber_id', 'default')
+            self._sync_subscribers.add(subscriber_id)
+            
+            # Send current state immediately
+            self.send_to_js('realtime_subscribed', {
+                'subscriber_id': subscriber_id,
+                'last_data': self._last_sync_data
+            }, callback_id)
+        except Exception as e:
+            print(f"Error subscribing to realtime: {e}")
+    
+    def unsubscribe_realtime(self, callback_id):
+        """Unsubscribe from real-time updates"""
+        try:
+            # Clear all subscribers (simplified for single-page app)
+            self._sync_subscribers.clear()
+            self.send_to_js('realtime_unsubscribed', {}, callback_id)
+        except Exception as e:
+            print(f"Error unsubscribing from realtime: {e}")
+    
+    def get_daily_goals(self, callback_id):
+        """Get daily goals status"""
+        try:
+            daily_goals = db_api.get_daily_goal_status()
+            goal_history = db_api.get_goal_history(days=7)
+            
+            result = {
+                'current': daily_goals,
+                'history': goal_history
+            }
+            
+            self.send_to_js('daily_goals_result', result, callback_id)
+        except Exception as e:
+            print(f"Error getting daily goals: {e}")
+            self.send_to_js('daily_goals_result', {}, callback_id)
+    
+    def set_daily_goals(self, data, callback_id):
+        """Set daily goals"""
+        try:
+            target_questions = data.get('target_questions', 20)
+            target_time_minutes = data.get('target_time_minutes', 10)
+            
+            db_api.set_daily_goal(target_questions, target_time_minutes)
+            
+            # Get updated status
+            daily_goals = db_api.get_daily_goal_status()
+            
+            self.send_to_js('daily_goals_set', daily_goals, callback_id)
+        except Exception as e:
+            print(f"Error setting daily goals: {e}")
+            self.send_to_js('daily_goals_set', {}, callback_id)
+    
+    def export_user_data(self, data, callback_id):
+        """Export user data for backup"""
+        try:
+            include_attempts = data.get('include_attempts', True)
+            include_sessions = data.get('include_sessions', True)
+            
+            export_data = db_api.export_data(include_attempts, include_sessions)
+            
+            self.send_to_js('export_data_result', export_data, callback_id)
+        except Exception as e:
+            print(f"Error exporting data: {e}")
+            self.send_to_js('export_data_result', {'error': str(e)}, callback_id)
+    
+    def import_user_data(self, data, callback_id):
+        """Import user data from backup"""
+        try:
+            import_data = data.get('data', {})
+            merge = data.get('merge', True)
+            
+            success = db_api.import_data(import_data, merge)
+            
+            if success:
+                
+                # Trigger real-time sync
+                self._trigger_realtime_sync('data_imported', {
+                    'merge': merge,
+                    'timestamp': datetime.now().isoformat()
+                })
+            
+            self.send_to_js('import_data_result', {'success': success}, callback_id)
+        except Exception as e:
+            print(f"Error importing data: {e}")
+            self.send_to_js('import_data_result', {'success': False, 'error': str(e)}, callback_id)
 
 
 class WebEnginePage(QWebEnginePage):
@@ -583,8 +985,6 @@ class MathDrillWebEngine(QDialog):
         self.update_timer.timeout.connect(self.update_stats_from_timer)
         self.update_timer.start(5000)  # Update every 5 seconds
         
-        # Pre-load progress data cache for instant loading
-        QTimer.singleShot(1000, self.preload_progress_cache)
     
     def init_ui(self):
         layout = QVBoxLayout(self)
@@ -638,14 +1038,19 @@ class MathDrillWebEngine(QDialog):
         """End session and log to database"""
         try:
             # Log session to database
-            sid = log_session(
-                data['mode'], 
-                data['operation'], 
-                data['digits'], 
-                self.session_target, 
-                data['total'], 
-                data['correct'], 
-                data['avgSpeed']
+            sid = db_api.create_session(
+                mode=data['mode'], 
+                operation=data['operation'], 
+                digits=data['digits'], 
+                target_value=self.session_target
+            )
+            
+            # Update session with actual stats
+            db_api.update_session(
+                session_id=sid,
+                total_attempts=data['total'], 
+                correct_count=data['correct'], 
+                avg_speed=data['avgSpeed']
             )
             
             # Check achievements
@@ -702,22 +1107,6 @@ class MathDrillWebEngine(QDialog):
                 pass  # Silently fail if audio doesn't work
         
         threading.Thread(target=worker, daemon=True).start()
-    
-    def preload_progress_cache(self):
-        """Pre-load progress data cache for instant loading"""
-        print("Pre-loading progress data cache...")
-        try:
-            # Generate cache data in background
-            cache_data = self.web_page.bridge._generate_fast_progress_data('week')
-            self.web_page.bridge._progress_cache = cache_data
-            self.web_page.bridge._cache_timestamp = time.time()
-            
-            # Update heavy data in background
-            QTimer.singleShot(500, self.web_page.bridge._update_cache_with_heavy_data)
-            
-            print("Progress data cache pre-loaded successfully")
-        except Exception as e:
-            print(f"Error pre-loading cache: {e}")
     
     def update_stats_from_timer(self):
         """Update stats periodically"""
@@ -789,11 +1178,93 @@ class MathDrillWebEngine(QDialog):
         else:
             print(f"Main HTML file not found: {main_html_path}")
     
-    def open_progress_page(self):
-        """Open the progress page in a new window"""
-        print("MathDrillWebEngine.open_progress_page called")
-        if self.progress_window is None or not self.progress_window.isVisible():
-            print("Creating new progress window")
+    # === Adaptive Learning Methods ===
+    
+    def get_adaptive_difficulty(self, data, callback_id):
+        """Get adaptive difficulty for a specific skill"""
+        try:
+            operation = data.get('operation', 'Addition')
+            digits = data.get('digits', 1)
+            
+            difficulty_data = self.adaptive_learning.get_adaptive_difficulty(operation, digits)
+            self.send_to_js('adaptive_difficulty_result', difficulty_data, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive difficulty: {e}")
+            self.send_to_js('adaptive_difficulty_result', {}, callback_id)
+
+    def update_adaptive_performance(self, data, callback_id):
+        """Update adaptive performance and return new settings"""
+        try:
+            operation = data.get('operation', 'Addition')
+            digits = data.get('digits', 1)
+            correct = data.get('correct', False)
+            time_taken = data.get('time_taken', 0.0)
+            
+            new_settings = self.adaptive_learning.update_adaptive_performance(
+                operation, digits, correct, time_taken
+            )
+            self.send_to_js('adaptive_performance_result', new_settings, callback_id)
+        except Exception as e:
+            print(f"Error updating adaptive performance: {e}")
+            self.send_to_js('adaptive_performance_result', {}, callback_id)
+
+    def get_adaptive_recommendations(self, callback_id):
+        """Get personalized adaptive recommendations"""
+        try:
+            recommendations = self.adaptive_learning.get_personalized_recommendations(10)
+            self.send_to_js('adaptive_recommendations_result', recommendations, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive recommendations: {e}")
+            self.send_to_js('adaptive_recommendations_result', [], callback_id)
+
+    def get_learning_path(self, data, callback_id):
+        """Get personalized learning path"""
+        try:
+            learning_path = self.adaptive_learning.get_learning_path()
+            self.send_to_js('learning_path_result', learning_path, callback_id)
+        except Exception as e:
+            print(f"Error getting learning path: {e}")
+            self.send_to_js('learning_path_result', [], callback_id)
+
+    def get_adaptive_insights(self, callback_id):
+        """Get comprehensive adaptive insights"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            insights = adaptive_analytics.get_comprehensive_adaptive_report()
+            self.send_to_js('adaptive_insights_result', insights, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive insights: {e}")
+            self.send_to_js('adaptive_insights_result', {}, callback_id)
+
+    def get_adaptive_report(self, callback_id):
+        """Get detailed adaptive report"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            report = adaptive_analytics.get_comprehensive_adaptive_report()
+            self.send_to_js('adaptive_report_result', report, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive report: {e}")
+            self.send_to_js('adaptive_report_result', {}, callback_id)
+
+    def get_adaptive_recommendations_summary(self, callback_id):
+        """Get summary of adaptive recommendations"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            summary = adaptive_analytics.get_adaptive_recommendations_summary()
+            self.send_to_js('adaptive_recommendations_summary_result', summary, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive recommendations summary: {e}")
+            self.send_to_js('adaptive_recommendations_summary_result', {}, callback_id)
+
+    def export_adaptive_data(self, callback_id):
+        """Export adaptive learning data"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            export_data = adaptive_analytics.export_adaptive_data()
+            self.send_to_js('export_adaptive_data_result', export_data, callback_id)
+        except Exception as e:
+            print(f"Error exporting adaptive data: {e}")
+            self.send_to_js('export_adaptive_data_result', {}, callback_id)
             self.progress_window = QDialog(self)
             self.progress_window.setWindowTitle("Math Drill - Progress")
             self.progress_window.setMinimumSize(1200, 800)
@@ -872,6 +1343,8 @@ def show_math_drill():
     app = QApplication.instance()
     if app is None:
         app = QApplication(sys.argv)
+        app.setApplicationName("MathDrill")
+        app.setOrganizationName("Sene")
     
     # Try to use WebEngine version first
     try:

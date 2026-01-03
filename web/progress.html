@@ -3,393 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Drill - Progress</title>
+    <meta name="description" content="Track your math skills improvement, accuracy, and speed over time.">
+    <title>Progress · Math Drill</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent-color: #2ECC71;
-            --dark-bg: #0B0E0B;
-            --card-bg: #1A201A;
-            --text-color: #ECF0F1;
-            --muted-color: #4B5E4B;
-            --border-color: #252F25;
-            --success-color: #2ECC71;
-            --error-color: #FF6B6B;
-            --progress-bg: #121812;
-        }
-        
-        /* Progress-specific styles optimized for 500x750 */
-        .progress-container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 15px;
-            height: 750px;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-        
-        .progress-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .progress-title {
-            color: var(--accent-color);
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        
-        .progress-subtitle {
-            color: var(--muted-color);
-            font-size: 14px;
-        }
-        
-        .back-button {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--muted-color);
-            color: var(--text-color);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-            z-index: 100;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .back-button:hover {
-            background-color: var(--accent-color);
-            color: var(--dark-bg);
-            transform: translateY(-1px);
-        }
-        
-        /* Compact Stats Overview */
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .overview-stat {
-            text-align: center;
-            padding: 12px;
-            background-color: rgba(46, 204, 113, 0.1);
-            border-radius: 6px;
-        }
-        
-        .overview-stat.value {
-            background-color: rgba(224, 175, 104, 0.1);
-        }
-        
-        .overview-stat.streak {
-            background-color: rgba(255, 159, 28, 0.1);
-        }
-        
-        .stat-number {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-bottom: 4px;
-        }
-        
-        .overview-stat.value .stat-number {
-            color: #e0af68;
-        }
-        
-        .overview-stat.streak .stat-number {
-            color: #FF9F1C;
-        }
-        
-        .stat-label {
-            color: var(--muted-color);
-            font-size: 11px;
-        }
-        
-        /* Compact Progress Grid */
-        .progress-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .progress-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            padding: 15px;
-        }
-        
-        .progress-card h3 {
-            color: var(--accent-color);
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        /* Compact Mastery Grid */
-        .mastery-grid-large {
-            display: grid;
-            grid-template-columns: auto repeat(3, 1fr);
-            gap: 6px;
-            margin-top: 12px;
-        }
-        
-        .mastery-header-cell {
-            color: var(--muted-color);
-            font-weight: bold;
-            text-align: center;
-            padding: 6px 4px;
-            font-size: 11px;
-        }
-        
-        .mastery-cell-large {
-            background-color: #2C3E50;
-            border-radius: 6px;
-            color: var(--text-color);
-            padding: 8px 4px;
-            text-align: center;
-            min-height: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: transform 0.2s ease;
-            font-size: 10px;
-        }
-        
-        .mastery-cell-large:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .mastery-cell-large.apprentice {
-            background-color: #27AE60;
-            color: var(--dark-bg);
-        }
-        
-        .mastery-cell-large.pro {
-            background-color: var(--accent-color);
-            color: var(--dark-bg);
-        }
-        
-        .mastery-cell-large.master {
-            background-color: #F1C40F;
-            color: var(--dark-bg);
-        }
-        
-        .operation-label {
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Compact Recent Activity */
-        .recent-activity {
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 13px;
-        }
-        
-        .activity-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid rgba(75, 94, 75, 0.3);
-            font-size: 12px;
-        }
-        
-        .activity-date {
-            color: var(--muted-color);
-            font-size: 10px;
-        }
-        
-        .activity-stats {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            font-size: 11px;
-        }
-        
-        .activity-accuracy {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-        
-        /* Compact Personal Bests */
-        .personal-bests-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            margin-bottom: 6px;
-            background-color: var(--dark-bg);
-            border-radius: 6px;
-            font-size: 12px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 500px) {
-            .progress-container {
-                padding: 10px;
-                height: 100vh;
-            }
-            
-            .progress-title {
-                font-size: 20px;
-            }
-            
-            .stats-overview {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .stat-number {
-                font-size: 18px;
-            }
-            
-            .mastery-grid-large {
-                gap: 4px;
-            }
-            
-            .mastery-cell-large {
-                min-height: 50px;
-                font-size: 9px;
-                padding: 6px 2px;
-            }
-        }
-        
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--dark-bg);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--muted-color);
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
-        }
-        
-        /* Loading Spinner */
-        .loading-spinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 1000;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--muted-color);
-            border-top: 4px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .loading-spinner p {
-            color: var(--text-color);
-            font-size: 14px;
-            margin: 0;
-        }
-    </style>
+    <script src="theme-loader.js"></script>
 </head>
 <body>
-    <div class="progress-container">
-        <!-- Loading Spinner -->
-        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-            <div class="spinner"></div>
-            <p>Loading progress data...</p>
-        </div>
-
-        <!-- Back Button -->
-        <a href="index.html" class="back-button">
-            ← Back
-        </a>
-
+    <div class="app-container">
         <!-- Header -->
-        <div class="progress-header">
-            <h1 class="progress-title">📊 Your Progress</h1>
-            <p class="progress-subtitle">Track your mathematical journey</p>
-        </div>
+        <header class="header">
+            <div class="header-left">
+                <h1 class="app-logo">
+                    <span style="color: var(--primary); font-size: 24px; font-weight: 600;">MATH</span>
+                    <span style="color: var(--text-primary); font-size: 24px; font-weight: 600;">DRILL</span>
+                </h1>
+            </div>
+            <nav class="header-right">
+                <a href="index.html" class="icon-btn" title="Home (H)" aria-label="Go to home">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                </a>
+                <a href="weakness.html" class="icon-btn" title="Weakness (W)" aria-label="View weakness analysis">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                </a>
+                <a href="achievements.html" class="icon-btn" title="Achievements (A)" aria-label="View achievements">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M9.68 13.69L12 11.93l2.31 1.76-.88-2.85L15.75 9h-2.84L12 6.19 11.09 9H8.25l2.31 1.84-.88 2.85zM20 10c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 2.03.76 3.87 2 5.28V23l6-2 6 2v-7.72c1.24-1.41 2-3.25 2-5.28zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6z"/></svg>
+                </a>
+                <a href="settings.html" class="icon-btn" title="Settings (S)" aria-label="Open settings">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+                </a>
+            </nav>
+        </header>
 
-        <!-- Stats Overview -->
-        <div class="stats-overview" id="statsOverview">
-            <div class="overview-stat">
-                <div class="stat-number" id="totalQuestions">Loading...</div>
-                <div class="stat-label">Total Questions</div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Your Progress</h1>
+                <p class="page-subtitle">Track improvement over time</p>
             </div>
-            <div class="overview-stat value">
-                <div class="stat-number" id="avgAccuracy">Loading...</div>
-                <div class="stat-label">Avg Accuracy</div>
-            </div>
-            <div class="overview-stat value">
-                <div class="stat-number" id="avgSpeed">Loading...</div>
-                <div class="stat-label">Avg Speed</div>
-            </div>
-            <div class="overview-stat streak">
-                <div class="stat-number" id="currentStreak">Loading...</div>
-                <div class="stat-label">Current Streak</div>
-            </div>
-        </div>
 
-        <!-- Progress Grid -->
-        <div class="progress-grid">
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading progress data...</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="card" id="statsOverview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalQuestions">0</div>
+                        <div class="stat-label">Questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgAccuracy">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgSpeed">0.0s</div>
+                        <div class="stat-label">Avg Speed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Chart -->
+            <div class="card">
+                <h3 class="section-title">Performance History</h3>
+                <canvas id="performanceChart" style="width: 100%; height: 200px;"></canvas>
+            </div>
+
+            <!-- Weakness Analysis -->
+            <div class="card">
+                <h3 class="section-title">🎯 Weakness Analysis</h3>
+                <div class="weakness-list" id="weaknessListLarge"></div>
+            </div>
+
             <!-- Skills Mastery -->
-            <div class="progress-card">
-                <h3>🎯 Skills Mastery</h3>
+            <div class="card">
+                <h3 class="section-title">Skills Mastery</h3>
                 <div class="mastery-grid-large" id="masteryGridLarge">
-                    <!-- Will be populated by JavaScript with real data -->
+                    <!-- Generated by JavaScript -->
                 </div>
             </div>
 
             <!-- Recent Activity -->
-            <div class="progress-card">
-                <h3>📅 Recent Activity</h3>
-                <div class="recent-activity" id="recentActivity">
-                    <!-- Will be populated by JavaScript with real data -->
+            <div class="card">
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="activity-list" id="recentActivity">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading activity...</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Personal Bests -->
-            <div class="progress-card">
-                <h3>⭐ Personal Bests</h3>
-                <div id="personalBests">
-                    <!-- Will be populated by JavaScript with real data -->
+            <div class="card">
+                <h3 class="section-title">Personal Bests</h3>
+                <div class="personal-bests-list" id="personalBests">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading records...</p>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Achievement Progress -->
+            <div class="card">
+                <h3 class="section-title">🏆 Achievement Progress</h3>
+                <div id="achievementProgress"></div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="hint-bar">
+            Navigate with keyboard shortcuts: [H] Home [W] Weakness [A] Achievements [S] Settings
+        </footer>
     </div>
 
+    <!-- QWebChannel Bridge -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script>
+        // Initialize QWebChannel bridge
+        window.addEventListener('load', function() {
+            if (typeof qt !== 'undefined' && qt.webChannelTransport) {
+                new QWebChannel(qt.webChannelTransport, function(channel) {
+                    window.pythonBridge = channel.objects.pythonBridge;
+                    console.log('✅ Progress page: Python bridge initialized successfully');
+                    
+                    // Initialize the progress page after bridge is ready
+                    if (typeof ProgressPage !== 'undefined') {
+                        window.progressPage = new ProgressPage();
+                    }
+                });
+            } else {
+                console.warn('❌ Qt WebChannel not available - running in standalone mode');
+                // Initialize app in standalone mode for testing
+                if (typeof ProgressPage !== 'undefined') {
+                    window.progressPage = new ProgressPage();
+                }
+            }
+        });
+    </script>
+    
     <script src="progress.js"></script>
 </body>
 </html>

@@ -3,199 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Customize your Math Drill experience with themes, sound, and difficulty settings.">
     <title>Math Drill - Settings</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .settings-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .settings-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .settings-title {
-            color: var(--accent-color);
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .settings-subtitle {
-            color: var(--muted-color);
-            font-size: 16px;
-        }
-        
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--muted-color);
-            color: var(--text-color);
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            z-index: 100;
-            text-decoration: none;
-        }
-        
-        .back-button:hover {
-            background-color: var(--accent-color);
-            color: var(--dark-bg);
-            transform: translateY(-1px);
-        }
-        
-        .settings-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .setting-item {
-            margin-bottom: 20px;
-        }
-        
-        .setting-label {
-            color: var(--text-color);
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        .setting-toggle {
-            background-color: var(--accent-color);
-            color: var(--dark-bg);
-            font-weight: bold;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 200px;
-        }
-        
-        .setting-toggle:hover {
-            background-color: var(--secondary-accent);
-            transform: translateY(-1px);
-        }
-        
-        .setting-toggle:active {
-            background-color: #1E8449;
-            transform: translateY(1px);
-        }
-        
-        .setting-toggle.off {
-            background-color: var(--muted-color);
-            color: var(--text-color);
-        }
-        
-        .info-text {
-            color: var(--muted-color);
-            font-size: 14px;
-            margin-top: 20px;
-            line-height: 1.5;
-        }
-        
-        .version-info {
-            color: var(--muted-color);
-            font-size: 12px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-    </style>
+    <script src="theme-loader.js"></script>
+    <script src="settings.js"></script>
 </head>
 <body>
-    <div class="settings-container">
-        <!-- Back Button -->
-        <a href="index.html" class="back-button">
-            ← Back to Math Drill
-        </a>
-
+    <div class="app-container">
         <!-- Header -->
-        <div class="settings-header">
-            <h1 class="settings-title">⚙️ Settings</h1>
-            <p class="settings-subtitle">Customize your Math Drill experience</p>
-        </div>
+        <header class="header">
+            <div class="header-left">
+                <h1 class="app-logo">
+                    <span style="color: var(--primary); font-size: 24px; font-weight: 600;">MATH</span>
+                    <span style="color: var(--text-primary); font-size: 24px; font-weight: 600;">DRILL</span>
+                </h1>
+            </div>
+            <nav class="header-right">
+                <a href="index.html" class="icon-btn" title="Home (H)" aria-label="Go to home">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                </a>
+                <a href="progress.html" class="icon-btn" title="Progress (P)" aria-label="View progress">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+                </a>
+                <a href="weakness.html" class="icon-btn" title="Weakness (W)" aria-label="View weakness analysis">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                </a>
+                <a href="achievements.html" class="icon-btn" title="Achievements (A)" aria-label="View achievements">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M9.68 13.69L12 11.93l2.31 1.76-.88-2.85L15.75 9h-2.84L12 6.19 11.09 9H8.25l2.31 1.84-.88 2.85zM20 10c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 2.03.76 3.87 2 5.28V23l6-2 6 2v-7.72c1.24-1.41 2-3.25 2-5.28zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6z"/></svg>
+                </a>
+            </nav>
+        </header>
 
-        <!-- Settings Card -->
-        <div class="settings-card">
-            <div class="setting-item">
-                <label class="setting-label">Sound Effects</label>
-                <button class="setting-toggle" id="soundToggle">
-                    Sound Effects: ON
-                </button>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-subtitle">Customize your Math Drill experience</p>
             </div>
-            
-            <div class="setting-item">
-                <label class="setting-label">Difficulty Level</label>
-                <select class="control-select" style="width: 100%; padding: 10px;">
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate" selected>Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                </select>
+
+            <div class="settings-container">
+                <!-- Appearance Section -->
+                <div class="settings-group">
+                    <h3 class="settings-group-title">Appearance</h3>
+                    <div class="settings-card">
+                        <div class="settings-row">
+                            <div class="settings-label-group">
+                                <span class="settings-label-text">Dark Theme</span>
+                                <span class="settings-description">Easier on the eyes in low light</span>
+                            </div>
+                            <div id="themeToggle" class="toggle-switch" role="switch" aria-label="Dark Theme" tabindex="0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Practice Section -->
+                <div class="settings-group">
+                    <h3 class="settings-group-title">Practice</h3>
+                    <div class="settings-card">
+                        <div class="settings-row">
+                            <div class="settings-label-group">
+                                <span class="settings-label-text">Sound Effects</span>
+                                <span class="settings-description">Audio feedback for answers</span>
+                            </div>
+                            <div id="soundToggle" class="toggle-switch active" role="switch" aria-label="Sound Effects" tabindex="0"></div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label-group">
+                                <span class="settings-label-text">Show Hints</span>
+                                <span class="settings-description">Display helper text during drills</span>
+                            </div>
+                            <div id="hintsToggle" class="toggle-switch active" role="switch" aria-label="Show Hints" tabindex="0"></div>
+                        </div>
+                        <div class="settings-row">
+                            <div class="settings-label-group">
+                                <span class="settings-label-text">Difficulty</span>
+                                <span class="settings-description">Adjust the challenge level</span>
+                            </div>
+                            <select id="difficultySelect" class="control-select" style="width: auto; padding-right: 32px; min-width: 140px;">
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate" selected>Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="version-info">
+                    <strong>Math Drill Pro</strong><br>
+                    Version 1.0.0<br>
+                    © 2024 Math Drill
+                </div>
             </div>
-            
-            <div class="setting-item">
-                <label class="setting-label">Theme</label>
-                <select class="control-select" style="width: 100%; padding: 10px;">
-                    <option value="dark" selected>Dark Theme</option>
-                    <option value="light">Light Theme</option>
-                    <option value="auto">Auto (System)</option>
-                </select>
-            </div>
-            
-            <div class="setting-item">
-                <label class="setting-label">Show Hints</label>
-                <button class="setting-toggle" id="hintsToggle">
-                    Show Hints: ON
-                </button>
-            </div>
-            
-            <p class="info-text">
-                These settings are saved automatically and will be remembered for your next session. 
-                Sound effects play when you answer questions correctly or incorrectly.
-            </p>
-            
-            <div class="version-info">
-                <strong>Math Drill Pro</strong><br>
-                Version 1.0.0<br>
-                © 2024 Math Drill
-            </div>
-        </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="hint-bar">
+            Navigate with keyboard shortcuts: [H] Home [P] Progress [W] Weakness [A] Achievements
+        </footer>
     </div>
     
     <script>
-        // Simple toggle functionality
-        document.getElementById('soundToggle').addEventListener('click', function() {
-            if (this.textContent.includes('ON')) {
-                this.textContent = 'Sound Effects: OFF';
-                this.classList.add('off');
-            } else {
-                this.textContent = 'Sound Effects: ON';
-                this.classList.remove('off');
-            }
-        });
-        
-        document.getElementById('hintsToggle').addEventListener('click', function() {
-            if (this.textContent.includes('ON')) {
-                this.textContent = 'Show Hints: OFF';
-                this.classList.add('off');
-            } else {
-                this.textContent = 'Show Hints: ON';
-                this.classList.remove('off');
+        // Bind UI elements to SettingsManager
+        document.addEventListener('DOMContentLoaded', () => {
+            const sm = window.settingsManager;
+            
+            document.getElementById('themeToggle').addEventListener('click', sm.toggleTheme);
+            document.getElementById('soundToggle').addEventListener('click', sm.toggleSound);
+            document.getElementById('hintsToggle').addEventListener('click', sm.toggleHints);
+            
+            const diffSelect = document.getElementById('difficultySelect');
+            if (diffSelect) {
+                diffSelect.addEventListener('change', (e) => sm.setDifficulty(e.target.value));
             }
         });
     </script>

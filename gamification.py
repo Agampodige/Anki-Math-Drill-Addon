@@ -1,7 +1,13 @@
-from .database import (unlock_achievement, get_unlocked_achievements, get_total_attempts_count,
-                       get_operation_stats, get_digit_stats, get_session_count_by_mode,
-                       get_unique_play_days, get_total_practice_time, get_sessions_by_time_of_day,
-                       get_weekend_sessions, get_perfectionist_sessions)
+try:
+    from .database import (unlock_achievement, get_unlocked_achievements, get_total_attempts_count,
+                           get_operation_stats, get_digit_stats, get_session_count_by_mode,
+                           get_unique_play_days, get_total_practice_time, get_sessions_by_time_of_day,
+                           get_weekend_sessions, get_perfectionist_sessions)
+except ImportError:
+    from database import (unlock_achievement, get_unlocked_achievements, get_total_attempts_count,
+                          get_operation_stats, get_digit_stats, get_session_count_by_mode,
+                          get_unique_play_days, get_total_practice_time, get_sessions_by_time_of_day,
+                          get_weekend_sessions, get_perfectionist_sessions)
 
 class AchievementManager:
     # Define Badges

@@ -77,73 +77,94 @@ class NumberOnlyLineEdit(QLineEdit):
 
 # ----------------- THEME & STYLES -----------------
 
-DARK_BG = "#0B0E0B"
-CARD_BG = "#1A201A"
-ACCENT_COLOR = "#2ECC71"  # Emerald Green
-SUCCESS_COLOR = "#2ECC71"
-ERROR_COLOR = "#FF6B6B"
-TEXT_COLOR = "#ECF0F1"
-MUTED_COLOR = "#4B5E4B"
-SECONDARY_ACCENT = "#27AE60"
+# Modern Color Palette
+DARK_BG = "#111827"
+CARD_BG = "#1F2937"
+ACCENT_COLOR = "#10B981"  # Modern Emerald Green
+SUCCESS_COLOR = "#10B981"
+ERROR_COLOR = "#EF4444"
+TEXT_COLOR = "#F9FAFB"
+MUTED_COLOR = "#6B7280"
+SECONDARY_ACCENT = "#059669"
+BORDER_COLOR = "#374151"
+BORDER_HOVER = "#4B5563"
+GRAY_50 = "#F9FAFB"
+GRAY_100 = "#F3F4F6"
 
 STYLESHEET = f"""
     QWidget {{
         background-color: {DARK_BG};
         color: {TEXT_COLOR};
-        font-family: 'Segoe UI', 'Inter', sans-serif;
+        font-family: 'Inter', 'Roboto', 'Segoe UI', sans-serif;
+        font-size: 14px;
     }}
-    QLabel {{ font-size: 16px; border: none; }}
+    QLabel {{ 
+        font-size: 14px; 
+        border: none; 
+        font-weight: 400;
+        color: {TEXT_COLOR};
+    }}
     QLineEdit {{
         background-color: {CARD_BG};
-        border: 2px solid {MUTED_COLOR};
+        border: 2px solid {BORDER_COLOR};
         border-radius: 12px;
-        padding: 15px;
-        font-size: 32px;
-        color: white;
+        padding: 16px;
+        font-size: 24px;
+        color: {TEXT_COLOR};
         selection-background-color: {ACCENT_COLOR};
         selection-color: {DARK_BG};
+        font-weight: 600;
     }}
     QLineEdit:focus {{
         border: 2px solid {ACCENT_COLOR};
-        background-color: #1F271F;
+        background-color: {GRAY_100};
     }}
     QComboBox {{
         background-color: {CARD_BG};
-        border: 1px solid {MUTED_COLOR};
+        border: 1px solid {BORDER_COLOR};
         border-radius: 8px;
-        padding: 8px;
+        padding: 8px 12px;
         min-width: 120px;
+        font-size: 14px;
+        font-weight: 500;
+        color: {TEXT_COLOR};
     }}
     QComboBox:hover {{
+        border: 1px solid {ACCENT_COLOR};
+        background-color: {GRAY_100};
+    }}
+    QComboBox:focus {{
         border: 1px solid {ACCENT_COLOR};
     }}
     QPushButton {{
         background-color: {ACCENT_COLOR};
-        color: {DARK_BG};
-        font-weight: bold;
+        color: white;
+        font-weight: 600;
         border-radius: 10px;
         padding: 12px 20px;
-        font-size: 15px;
+        font-size: 14px;
         border: none;
+        min-height: 44px;
     }}
     QPushButton:hover {{ 
         background-color: {SECONDARY_ACCENT};
-        margin-top: -1px;
+        transform: translateY(-1px);
     }}
     QPushButton:pressed {{
-        background-color: #1E8449;
-        margin-top: 1px;
+        background-color: {SECONDARY_ACCENT};
+        transform: translateY(0);
     }}
     QProgressBar {{
         border: none;
-        background-color: #121812;
-        border-radius: 6px;
+        background-color: #374151;
+        border-radius: 12px;
         height: 10px;
         text-align: center;
+        font-weight: 500;
     }}
     QProgressBar::chunk {{
         background-color: {ACCENT_COLOR};
-        border-radius: 6px;
+        border-radius: 12px;
     }}
     QScrollArea {{
         border: none;
@@ -151,13 +172,15 @@ STYLESHEET = f"""
     }}
     .card {{
         background-color: {CARD_BG};
-        border-radius: 12px;
-        border: 1px solid #252F25;
+        border-radius: 16px;
+        border: 1px solid {BORDER_COLOR};
+        padding: 20px;
     }}
     .status-card {{
-        background-color: #121812;
-        border-radius: 10px;
-        border: 1px solid {CARD_BG};
+        background-color: {CARD_BG};
+        border-radius: 16px;
+        border: 1px solid {BORDER_COLOR};
+        padding: 20px;
     }}
     #GhostLine {{
         background-color: rgba(255, 255, 255, 0.4);

@@ -1,5 +1,9 @@
 class MathDrillWeb {
     constructor() {
+        // Don't initialize immediately - wait for bridge
+        this.initialized = false;
+        
+        // Session state
         this.sessionActive = false;
         this.sessionAttempts = [];
         this.sessionMistakes = [];
@@ -12,6 +16,39 @@ class MathDrillWeb {
         this.retakeMastery = {};
         this.currentFocusArea = null;
         this.focusSessionCount = 0;
+        
+        // Check if bridge is ready, if so initialize now
+        if (window.pythonBridge) {
+            this.initialize();
+        } else {
+            // Wait for bridge to be ready
+            this.waitForBridge();
+        }
+    }
+    
+    waitForBridge() {
+        const checkInterval = setInterval(() => {
+            if (window.pythonBridge) {
+                clearInterval(checkInterval);
+                this.initialize();
+            }
+        }, 100);
+        
+        // Timeout after 5 seconds
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            if (!window.pythonBridge && !this.initialized) {
+                console.warn('Bridge not available, initializing in standalone mode');
+                this.initialize();
+            }
+        }, 5000);
+    }
+    
+    initialize() {
+        if (this.initialized) return;
+        this.initialized = true;
+        
+        console.log('🚀 Initializing MathDrillWeb...');
         
         this.initElements();
         this.initEventListeners();
@@ -49,11 +86,6 @@ class MathDrillWeb {
         // Modal elements
         this.modalOverlay = document.getElementById('modalOverlay');
         this.resultModal = document.getElementById('resultModal');
-        this.settingsModal = document.getElementById('settingsModal');
-        this.achievementsModal = document.getElementById('achievementsModal');
-        this.weaknessModal = document.getElementById('weaknessModal');
-        this.masteryModal = document.getElementById('masteryModal');
-        this.progressModal = document.getElementById('progressModal');
         this.achievementToast = document.getElementById('achievementToast');
     }
 
@@ -67,26 +99,9 @@ class MathDrillWeb {
         this.answerInput.addEventListener('keydown', (e) => this.handleKeydown(e));
         this.answerInput.addEventListener('input', (e) => this.handleInput(e));
         
-        // Header buttons (excluding progress button since it's now a hyperlink)
-        document.querySelectorAll('.icon-btn[data-action]').forEach(btn => {
-            console.log('Setting up button:', btn.dataset.action, btn);
-            btn.addEventListener('click', () => {
-                console.log('Button clicked:', btn.dataset.action);
-                this.handleHeaderAction(btn.dataset.action);
-            });
-        });
-        
         // Modal close buttons
         document.getElementById('closeResultBtn').addEventListener('click', () => this.closeModal('result'));
-        document.getElementById('closeSettingsBtn').addEventListener('click', () => this.closeModal('settings'));
-        document.getElementById('closeAchievementsBtn').addEventListener('click', () => this.closeModal('achievements'));
-        document.getElementById('closeWeaknessBtn').addEventListener('click', () => this.closeModal('weakness'));
-        document.getElementById('closeMasteryBtn').addEventListener('click', () => this.closeModal('mastery'));
-        document.getElementById('closeProgressBtn').addEventListener('click', () => this.closeModal('progress'));
         document.getElementById('toastCloseBtn').addEventListener('click', () => this.closeToast());
-        
-        // Settings
-        document.getElementById('soundToggle').addEventListener('click', () => this.toggleSound());
         
         // Retake button
         document.getElementById('retakeBtn').addEventListener('click', () => this.startRetakeMistakes());
@@ -163,16 +178,16 @@ class MathDrillWeb {
         if (!e.ctrlKey && !e.altKey) {
             switch(e.key.toLowerCase()) {
                 case 's':
-                    this.openModal('settings');
+                    window.location.href = 'settings.html';
                     break;
                 case 'a':
-                    this.openModal('achievements');
+                    window.location.href = 'achievements.html';
                     break;
                 case 'p':
-                    navigateToProgress();
+                    window.location.href = 'progress.html';
                     break;
                 case 'w':
-                    this.openModal('weakness');
+                    window.location.href = 'weakness.html';
                     break;
                 case 'm':
                     this.cycleMode();
@@ -193,24 +208,6 @@ class MathDrillWeb {
         }
     }
 
-    handleHeaderAction(action) {
-        console.log('handleHeaderAction called with:', action);
-        switch(action) {
-            case 'progress':
-                this.openModal('progress');
-                break;
-            case 'weakness':
-                this.openModal('weakness');
-                break;
-            case 'achievements':
-                this.openModal('achievements');
-                break;
-            case 'settings':
-                this.openModal('settings');
-                break;
-        }
-    }
-
     cycleMode() {
         const index = (this.modeBox.selectedIndex + 1) % this.modeBox.options.length;
         this.modeBox.selectedIndex = index;
@@ -219,6 +216,56 @@ class MathDrillWeb {
     cycleOperation() {
         const index = (this.operationBox.selectedIndex + 1) % this.operationBox.options.length;
         this.operationBox.selectedIndex = index;
+    }
+
+    logAttempt(correct, timeTaken, questionText, userAnswer, correctAnswer) {
+        const attempt = {
+            operation: this.operationBox.value,
+            digits: parseInt(this.digitsBox.value),
+            correct: correct,
+            time: timeTaken,
+            question_text: questionText,
+            user_answer: parseInt(userAnswer) || null,
+            correct_answer: correctAnswer,
+            difficulty_level: this.calculateDifficultyLevel(),
+            timestamp: new Date().toISOString()
+        };
+        
+        this.sessionAttempts.push(attempt);
+        
+        // Send to backend with enhanced data
+        if (window.pythonBridge) {
+            window.pythonBridge.send('log_attempt', JSON.stringify(attempt), null);
+        }
+        
+        // Trigger real-time update
+        if (window.realtimeManager) {
+            window.realtimeManager.handleSync({
+                event_type: 'attempt_logged',
+                data: attempt,
+                timestamp: new Date().toISOString()
+            });
+        }
+    }
+    
+    calculateDifficultyLevel() {
+        // Calculate difficulty based on operation and digits
+        const operation = this.operationBox.value;
+        const digits = parseInt(this.digitsBox.value);
+        
+        let baseLevel = 1;
+        
+        // Operation difficulty
+        if (operation === 'Addition') baseLevel = 1;
+        else if (operation === 'Subtraction') baseLevel = 2;
+        else if (operation === 'Multiplication') baseLevel = 3;
+        else if (operation === 'Division') baseLevel = 4;
+        else if (operation === 'Mixed') baseLevel = 3;
+        
+        // Digit multiplier
+        const digitMultiplier = digits;
+        
+        return Math.min(10, baseLevel * digitMultiplier);
     }
 
     resetSession() {
@@ -238,7 +285,7 @@ class MathDrillWeb {
         }
         
         // Reset UI
-        this.streakCounter.textContent = '🔥 0';
+        this.streakCounter.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg> <span id="streakValue">0</span>';
         this.progressFill.style.width = '0%';
         this.ghostLine.style.display = 'none';
         this.questionText.textContent = 'Ready?';
@@ -289,7 +336,7 @@ class MathDrillWeb {
             this.sendToPython('start_session', {
                 mode,
                 operation: this.operationBox.value,
-                digits: parseInt(this.digitsBox.value.split()[0])
+                digits: parseInt(this.digitsBox.value)
             });
         }
     }
@@ -370,7 +417,7 @@ class MathDrillWeb {
         this.feedback.style.color = 'var(--muted-color)';
         
         let operation = this.operationBox.value;
-        const digits = parseInt(this.digitsBox.value.split()[0]);
+        const digits = parseInt(this.digitsBox.value);
         
         if (operation === 'Mixed') {
             const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
@@ -445,18 +492,18 @@ class MathDrillWeb {
             correct = false;
         }
         
-        // Log attempt
-        this.sendToPython('log_attempt', {
-            operation: this.operationBox.value,
-            digits: parseInt(this.digitsBox.value.split()[0]),
-            correct,
-            time: elapsed
-        });
+        const questionText = this.questionText.textContent;
+        const userAnswer = userText;
+        const correctAnswer = this.currentAnswer;
+        const timeTaken = elapsed;
         
-        this.sessionAttempts.push({ correct, time: elapsed });
+        // Use the enhanced logAttempt method
+        this.logAttempt(correct, timeTaken, questionText, userAnswer, correctAnswer);
         
         // Play sound
-        this.sendToPython('play_sound', { success: correct });
+        if (window.settingsManager && window.settingsManager.state.soundEnabled) {
+            this.sendToPython('play_sound', { success: correct });
+        }
         
         if (correct) {
             this.streak++;
@@ -514,7 +561,7 @@ class MathDrillWeb {
             this.updateProgress();
         }
         
-        this.streakCounter.textContent = `🔥 ${this.streak}`;
+        this.streakCounter.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg> <span id="streakValue">${this.streak}</span>`;
         this.updateStats();
     }
 
@@ -551,7 +598,7 @@ class MathDrillWeb {
         const sessionData = {
             mode: this.modeBox.value,
             operation: this.operationBox.value,
-            digits: parseInt(this.digitsBox.value.split()[0]),
+            digits: parseInt(this.digitsBox.value),
             total,
             correct,
             avgSpeed,
@@ -643,9 +690,9 @@ class MathDrillWeb {
     updateLiveTimer() {
         if (this.startTime) {
             const elapsed = (Date.now() / 1000) - this.startTime;
-            this.timerDisplay.textContent = `⏱ ${elapsed.toFixed(1)}s`;
+            this.timerDisplay.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">${elapsed.toFixed(1)}s</span>`;
         } else {
-            this.timerDisplay.textContent = '⏱ 0.0s';
+            this.timerDisplay.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">0.0s</span>`;
         }
     }
 
@@ -660,7 +707,134 @@ class MathDrillWeb {
             } else {
                 this.statsDetail.textContent = 'Start answering to see stats';
             }
+            
+            // Update daily goals if available
+            if (stats.daily_goals) {
+                this.updateDailyGoalsDisplay(stats.daily_goals);
+            }
         });
+    }
+    
+    updateDailyGoalsDisplay(dailyGoals) {
+        // Update daily goals display in UI
+        const goalsContainer = document.getElementById('dailyGoalsContainer');
+        if (goalsContainer && dailyGoals) {
+            const questionProgress = dailyGoals.question_progress || 0;
+            const timeProgress = dailyGoals.time_progress || 0;
+            
+            goalsContainer.innerHTML = `
+                <div class="daily-goals-section">
+                    <h4>Daily Goals</h4>
+                    <div class="goal-item">
+                        <span>Questions: ${dailyGoals.questions_completed}/${dailyGoals.target_questions}</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${questionProgress}%"></div>
+                        </div>
+                    </div>
+                    <div class="goal-item">
+                        <span>Time: ${Math.floor(dailyGoals.time_spent_minutes)}min/${dailyGoals.target_time_minutes}min</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${timeProgress}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    async setDailyGoals(targetQuestions, targetTimeMinutes) {
+        if (window.realtimeManager) {
+            const result = await window.realtimeManager.setDailyGoals(targetQuestions, targetTimeMinutes);
+            if (result) {
+                this.updateDailyGoalsDisplay(result);
+                this.showToast('Daily goals updated!', 'success');
+            }
+        }
+    }
+    
+    async exportUserData() {
+        if (window.realtimeManager) {
+            const result = await window.realtimeManager.exportData();
+            if (result && !result.error) {
+                // Create download link
+                const dataStr = JSON.stringify(result, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `math_drill_backup_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                this.showToast('Data exported successfully!', 'success');
+            } else {
+                this.showToast('Failed to export data', 'error');
+            }
+        }
+    }
+    
+    async importUserData(file) {
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            
+            if (window.realtimeManager) {
+                const result = await window.realtimeManager.importData(data);
+                if (result && result.success) {
+                    this.showToast('Data imported successfully!', 'success');
+                    // Refresh all data
+                    this.updateStats();
+                    if (window.realtimeManager) {
+                        window.realtimeManager.refreshAllData();
+                    }
+                } else {
+                    this.showToast('Failed to import data', 'error');
+                }
+            }
+        } catch (error) {
+            console.error('Import error:', error);
+            this.showToast('Invalid file format', 'error');
+        }
+    }
+    
+    showToast(message, type = 'info') {
+        // Simple toast implementation
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: ${type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : 'var(--primary)'};
+            color: white;
+            border-radius: 8px;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Animate in
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0)';
+        }, 100);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
     }
 
     flashOverlay(type) {
@@ -687,26 +861,6 @@ class MathDrillWeb {
             case 'result':
                 this.resultModal.style.display = 'block';
                 break;
-            case 'settings':
-                this.settingsModal.style.display = 'block';
-                this.loadSettings();
-                break;
-            case 'achievements':
-                this.achievementsModal.style.display = 'block';
-                this.loadAchievements();
-                break;
-            case 'weakness':
-                this.weaknessModal.style.display = 'block';
-                this.loadWeakness();
-                break;
-            case 'mastery':
-                this.masteryModal.style.display = 'block';
-                this.loadMastery();
-                break;
-            case 'progress':
-                this.progressModal.style.display = 'block';
-                this.loadProgress();
-                break;
         }
     }
 
@@ -715,21 +869,6 @@ class MathDrillWeb {
             case 'result':
                 this.resultModal.style.display = 'none';
                 this.resetSession();
-                break;
-            case 'settings':
-                this.settingsModal.style.display = 'none';
-                break;
-            case 'achievements':
-                this.achievementsModal.style.display = 'none';
-                break;
-            case 'weakness':
-                this.weaknessModal.style.display = 'none';
-                break;
-            case 'mastery':
-                this.masteryModal.style.display = 'none';
-                break;
-            case 'progress':
-                this.progressModal.style.display = 'none';
                 break;
         }
         
@@ -748,283 +887,12 @@ class MathDrillWeb {
         this.achievementToast.style.display = 'none';
     }
 
-    loadSettings() {
-        this.sendToPython('get_settings', {}, (settings) => {
-            const btn = document.getElementById('soundToggle');
-            btn.textContent = `Sound Effects: ${settings.soundEnabled ? 'ON' : 'OFF'}`;
-        });
-    }
-
-    loadAchievements() {
-        this.sendToPython('get_achievements', {}, (achievements) => {
-            const list = document.getElementById('achievementsList');
-            list.innerHTML = '';
-            
-            achievements.forEach(achievement => {
-                const card = document.createElement('div');
-                card.className = `achievement-card ${achievement.unlocked ? 'unlocked' : ''}`;
-                
-                card.innerHTML = `
-                    <div class="achievement-icon">${achievement.unlocked ? '🏆' : '🔒'}</div>
-                    <div class="achievement-info">
-                        <h4>${achievement.name}</h4>
-                        <p>${achievement.desc}</p>
-                    </div>
-                `;
-                
-                list.appendChild(card);
-            });
-        });
-    }
-
-    loadWeakness() {
-        this.sendToPython('get_weakness', {}, (weaknesses) => {
-            const list = document.getElementById('weaknessList');
-            list.innerHTML = '';
-            
-            if (weaknesses.length === 0) {
-                const noData = document.createElement('div');
-                noData.style.color = 'var(--success-color)';
-                noData.style.fontSize = '16px';
-                noData.style.fontWeight = 'bold';
-                noData.style.textAlign = 'center';
-                noData.style.padding = '20px';
-                noData.textContent = '🎉 No weakness data available!';
-                list.appendChild(noData);
-                return;
-            }
-            
-            weaknesses.forEach(weakness => {
-                const card = document.createElement('div');
-                let cardClass = 'weakness-card';
-                
-                if (!weakness.practiced) {
-                    cardClass += ' unpracticed';
-                } else if (weakness.weaknessScore > 70) {
-                    cardClass += ' high-weakness';
-                } else if (weakness.weaknessScore > 50) {
-                    cardClass += ' medium-weakness';
-                } else {
-                    cardClass += ' low-weakness';
-                }
-                
-                card.className = cardClass;
-                
-                const scoreText = !weakness.practiced ? 'NEW' : `Score: ${weakness.weaknessScore.toFixed(0)}`;
-                const statsText = weakness.practiced ? 
-                    `Accuracy: ${weakness.accuracy.toFixed(0)}% | Speed: ${weakness.speed.toFixed(1)}s` : 
-                    'Not practiced yet';
-                
-                card.innerHTML = `
-                    <div class="weakness-info">
-                        <h4>${weakness.operation} - ${weakness.digits} digits</h4>
-                        <p>Level: ${weakness.level}</p>
-                        <p>${statsText}</p>
-                        ${!weakness.practiced ? '<p class="suggestions">📝 Start here to build foundation skills</p>' : ''}
-                        ${weakness.suggestions && weakness.suggestions.length > 0 ? `<p class="suggestions">Tips: ${weakness.suggestions.join(' | ')}</p>` : ''}
-                    </div>
-                    <div class="weakness-score">${scoreText}</div>
-                `;
-                
-                list.appendChild(card);
-            });
-        });
-    }
-
-    loadMastery() {
-        this.sendToPython('get_mastery', {}, (data) => {
-            const grid = document.getElementById('masteryGrid');
-            grid.innerHTML = '';
-            
-            // Headers
-            grid.innerHTML += '<div class="mastery-header"></div>';
-            [1, 2, 3].forEach(d => {
-                const header = document.createElement('div');
-                header.className = 'mastery-header';
-                header.textContent = `${d} Digit`;
-                grid.appendChild(header);
-            });
-            
-            ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
-                const header = document.createElement('div');
-                header.className = 'mastery-header';
-                header.textContent = op;
-                grid.appendChild(header);
-                
-                [1, 2, 3].forEach(d => {
-                    const stats = data[`${op}-${d}`] || { level: 'Novice', acc: 0, speed: 0, count: 0 };
-                    const cell = document.createElement('div');
-                    cell.className = `mastery-cell ${stats.level.toLowerCase()}`;
-                    
-                    cell.innerHTML = `
-                        <div class="mastery-level">${stats.level.toUpperCase()}</div>
-                        <div class="mastery-detail">${stats.acc.toFixed(0)}% | ${stats.speed.toFixed(1)}s</div>
-                        <div class="mastery-count">(${stats.count} plays)</div>
-                    `;
-                    
-                    grid.appendChild(cell);
-                });
-            });
-        });
-    }
-
-    toggleSound() {
-        this.sendToPython('toggle_sound', {}, (settings) => {
-            const btn = document.getElementById('soundToggle');
-            btn.textContent = `Sound Effects: ${settings.soundEnabled ? 'ON' : 'OFF'}`;
-        });
-    }
-
     showAchievementToast(badges) {
         const toast = this.achievementToast;
         const message = document.getElementById('toastMessage');
         
         message.innerHTML = badges.map(b => `<p>UNLOCKED: ${b.name}<br>${b.desc}</p>`).join('');
         toast.style.display = 'block';
-    }
-
-    loadProgress() {
-        // Load progress data with sample data for now
-        this.updateProgressStats();
-        this.updateProgressMastery();
-        this.updateProgressActivity();
-        this.updateProgressBests();
-        this.updateProgressAchievements();
-    }
-
-    updateProgressStats() {
-        // Sample data - in real implementation this would come from Python
-        document.getElementById('progressTotalQuestions').textContent = '247';
-        document.getElementById('progressAvgAccuracy').textContent = '87.3%';
-        document.getElementById('progressAvgSpeed').textContent = '3.2s';
-        document.getElementById('progressCurrentStreak').textContent = '12';
-    }
-
-    updateProgressMastery() {
-        const masteryGrid = document.getElementById('progressMasteryGrid');
-        masteryGrid.innerHTML = '';
-        
-        // Headers
-        masteryGrid.innerHTML += '<div class="mastery-header"></div>';
-        [1, 2, 3].forEach(d => {
-            const header = document.createElement('div');
-            header.className = 'mastery-header';
-            header.textContent = `${d} Digit`;
-            masteryGrid.appendChild(header);
-        });
-        
-        // Sample mastery data
-        const masteryData = {
-            'Addition': ['Apprentice', 'Pro', 'Master'],
-            'Subtraction': ['Novice', 'Apprentice', 'Pro'],
-            'Multiplication': ['Novice', 'Novice', 'Apprentice'],
-            'Division': ['Novice', 'Novice', 'Novice']
-        };
-        
-        ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
-            const opLabel = document.createElement('div');
-            opLabel.className = 'operation-label';
-            opLabel.textContent = op;
-            masteryGrid.appendChild(opLabel);
-            
-            [1, 2, 3].forEach(d => {
-                const level = masteryData[op][d-1];
-                const cell = document.createElement('div');
-                cell.className = `mastery-cell ${level.toLowerCase()}`;
-                cell.innerHTML = `
-                    <div class="mastery-level">${level.toUpperCase()}</div>
-                    <div class="mastery-detail">${85 + d*3}% | ${4.5 - d*0.3}s</div>
-                    <div class="mastery-count">(${10 + d*5} plays)</div>
-                `;
-                masteryGrid.appendChild(cell);
-            });
-        });
-    }
-
-    updateProgressActivity() {
-        const activityContainer = document.getElementById('progressRecentActivity');
-        activityContainer.innerHTML = '';
-        
-        // Sample activity data
-        const activities = [
-            { date: '2024-01-02', timeAgo: '1 day ago', questions: 25, accuracy: 88, speed: 3.2 },
-            { date: '2024-01-01', timeAgo: '2 days ago', questions: 18, accuracy: 92, speed: 2.8 },
-            { date: '2023-12-31', timeAgo: '3 days ago', questions: 32, accuracy: 85, speed: 3.5 },
-            { date: '2023-12-30', timeAgo: '4 days ago', questions: 15, accuracy: 90, speed: 2.9 }
-        ];
-        
-        activities.forEach(activity => {
-            const item = document.createElement('div');
-            item.className = 'activity-item';
-            item.innerHTML = `
-                <div>
-                    <div>${activity.date}</div>
-                    <div class="activity-date">${activity.timeAgo}</div>
-                </div>
-                <div class="activity-stats">
-                    <span class="activity-count">${activity.questions} questions</span>
-                    <span class="activity-accuracy">${activity.accuracy}%</span>
-                    <span>${activity.speed}s avg</span>
-                </div>
-            `;
-            activityContainer.appendChild(item);
-        });
-    }
-
-    updateProgressBests() {
-        const bestsContainer = document.getElementById('progressPersonalBests');
-        bestsContainer.innerHTML = '';
-        
-        const bests = [
-            { title: '🎯 Drill (20 Questions)', value: '45.2s' },
-            { title: '⚡ Sprint (60s)', value: '28 questions' },
-            { title: '🎯 Best Accuracy', value: '96.8%' },
-            { title: '⚡ Fastest Speed', value: '1.8s' }
-        ];
-        
-        bests.forEach(best => {
-            const item = document.createElement('div');
-            item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 8px; background-color: var(--dark-bg); border-radius: 6px;';
-            item.innerHTML = `
-                <span style="color: var(--text-color); font-size: 14px;">${best.title}</span>
-                <span style="color: var(--accent-color); font-weight: bold;">${best.value}</span>
-            `;
-            bestsContainer.appendChild(item);
-        });
-    }
-
-    updateProgressAchievements() {
-        const achievementsContainer = document.getElementById('progressAchievements');
-        achievementsContainer.innerHTML = '';
-        
-        const achievements = [
-            { name: '🏆 Speed Demon', desc: 'Complete 20 questions in under 2 seconds each', unlocked: true },
-            { name: '🔒 Accuracy Master', desc: 'Achieve 95% accuracy over 50 questions', unlocked: false, progress: 75 },
-            { name: '🔒 Marathon Runner', desc: 'Complete 100 questions in one session', unlocked: false, progress: 45 },
-            { name: '🏆 Quick Learner', desc: 'Reach Pro level in any skill', unlocked: true }
-        ];
-        
-        achievements.forEach(achievement => {
-            const item = document.createElement('div');
-            item.style.cssText = 'margin-bottom: 12px; padding: 10px; background-color: var(--dark-bg); border-radius: 6px;';
-            
-            const progress = achievement.progress || 100;
-            const color = achievement.unlocked ? '#e0af68' : 'var(--accent-color)';
-            
-            item.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="color: ${color}; font-weight: bold; font-size: 14px;">${achievement.name}</span>
-                    <span style="color: var(--text-color); font-size: 12px;">${achievement.unlocked ? 'Unlocked!' : `${progress}%`}</span>
-                </div>
-                <div style="background-color: var(--progress-bg); border-radius: 3px; height: 4px; overflow: hidden;">
-                    <div style="background-color: ${color}; height: 100%; width: ${progress}%; transition: width 0.3s ease;"></div>
-                </div>
-                <div style="color: var(--muted-color); font-size: 11px; margin-top: 4px;">
-                    ${achievement.desc}
-                </div>
-            `;
-            achievementsContainer.appendChild(item);
-        });
     }
 
     sendToPython(action, data, callback) {
@@ -1052,55 +920,17 @@ class MathDrillWeb {
     }
 }
 
-// Initialize the app
-const app = new MathDrillWeb();
-
-// Navigation function for progress page
-function navigateToProgress() {
-    console.log('Navigating to progress page...');
-    if (window.pythonBridge) {
-        window.pythonBridge.send('navigate_to_progress', '{}', '');
-    } else {
-        console.warn('Python bridge not available for navigation');
-    }
-}
-
-// Navigation function for main page
-function navigateToMain() {
-    console.log('Navigating to main page...');
-    if (window.pythonBridge) {
-        window.pythonBridge.send('navigate_to_main', '{}', '');
-    } else {
-        console.warn('Python bridge not available for navigation');
-    }
-}
-
-// Wait for WebChannel to be ready
-window.addEventListener('load', () => {
-    console.log('Page loaded, checking for python bridge...');
-    
-    // Check if python bridge is available
-    const checkBridge = () => {
-        if (window.pythonBridge) {
-            console.log('✅ Python bridge is available!');
-        } else {
-            console.log('⏳ Python bridge not ready yet, retrying...');
-            setTimeout(checkBridge, 100);
-        }
-    };
-    
-    checkBridge();
-});
-
 // Global function for Python to call
 window.updateFromPython = function(action, data) {
-    switch(action) {
-        case 'updateStats':
-            app.updateStats();
-            break;
-        case 'showAchievementToast':
-            app.showAchievementToast(data);
-            break;
-        // Add more as needed
+    if (window.mathDrill) {
+        switch(action) {
+            case 'updateStats':
+                window.mathDrill.updateStats();
+                break;
+            case 'showAchievementToast':
+                window.mathDrill.showAchievementToast(data);
+                break;
+            // Add more as needed
+        }
     }
 };

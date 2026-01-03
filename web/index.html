@@ -3,96 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Math Drill Pro - Improve your math skills with adaptive practice">
+    <meta name="theme-color" content="#10B981">
     <title>Math Drill Pro</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="theme-loader.js"></script>
+    <script src="settings.js"></script>
+    <script src="realtime-sync.js"></script>
 </head>
 <body>
     <div class="app-container">
         <!-- Header -->
-        <header class="header">
+        <header class="header" role="banner">
             <div class="header-left">
-                <h1 class="app-title">MATH DRILL</h1>
-                <div class="coach-label" id="coachLabel"></div>
+                <h1 class="app-logo">
+                    <span style="color: var(--primary); font-size: 24px; font-weight: 600;">MATH</span>
+                    <span style="color: var(--text-primary); font-size: 24px; font-weight: 600;">DRILL</span>
+                </h1>
+                <div class="coach-label" id="coachLabel" aria-live="polite"></div>
             </div>
-            <div class="header-right">
-                <a href="progress.html" class="icon-btn" title="Progress">
-                    <span class="material-icons">analytics</span>
+            <nav class="header-right" role="navigation" aria-label="Main navigation">
+                <a href="progress.html" class="icon-btn" title="Progress (P)" aria-label="View progress">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
                 </a>
-                <a href="weakness.html" class="icon-btn" title="Weakness Analysis">
-                    <span class="material-icons">target</span>
+                <a href="weakness.html" class="icon-btn" title="Weakness Analysis (W)" aria-label="View weakness analysis">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
                 </a>
-                <a href="achievements.html" class="icon-btn" title="Achievements">
-                    <span class="material-icons">emoji_events</span>
+                <a href="achievements.html" class="icon-btn" title="Achievements (A)" aria-label="View achievements">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M9.68 13.69L12 11.93l2.31 1.76-.88-2.85L15.75 9h-2.84L12 6.19 11.09 9H8.25l2.31 1.84-.88 2.85zM20 10c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 2.03.76 3.87 2 5.28V23l6-2 6 2v-7.72c1.24-1.41 2-3.25 2-5.28zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6z"/></svg>
                 </a>
-                <a href="settings.html" class="icon-btn" title="Settings">
-                    <span class="material-icons">settings</span>
+                <a href="settings.html" class="icon-btn" title="Settings (S)" aria-label="Open settings">
+                    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
                 </a>
-                <div class="streak-counter" id="streakCounter">
-                    <span class="material-icons">local_fire_department</span> 0
+                <div class="streak-counter" id="streakCounter" title="Current Streak" aria-label="Current streak counter">
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg> <span id="streakValue">0</span>
                 </div>
-            </div>
+            </nav>
         </header>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <!-- Control Card -->
-            <section class="card control-card">
-                <div class="controls">
-                    <select id="modeBox" class="control-select">
-                        <option value="Free Play">Free Play</option>
-                        <option value="Drill (20 Qs)">Drill (20 Qs)</option>
-                        <option value="Sprint (60s)">Sprint (60s)</option>
-                        <option value="Adaptive Coach">Adaptive Coach</option>
-                    </select>
-                    
-                    <select id="operationBox" class="control-select">
-                        <option value="Addition">Addition</option>
-                        <option value="Subtraction">Subtraction</option>
-                        <option value="Multiplication">Multiplication</option>
-                        <option value="Division">Division</option>
-                        <option value="Mixed">Mixed</option>
-                    </select>
-                    
-                    <select id="digitsBox" class="control-select">
-                        <option value="1 digit">1 digit</option>
-                        <option value="2 digits" selected>2 digits</option>
-                        <option value="3 digits">3 digits</option>
-                    </select>
-                </div>
-            </section>
-
+        <main class="main-content" role="main">
             <!-- Stats Card -->
-            <section class="card status-card">
+            <section class="card status-card" aria-labelledby="stats-heading">
+                <h2 id="stats-heading" class="sr-only">Performance Statistics</h2>
                 <div class="stats-row">
                     <div class="stat-item session-stat">
                         <div class="stat-icon">
-                            <span class="material-icons">edit_note</span>
+                            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6 14H7v-2h6v2zm4-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                         </div>
-                        <div class="stat-value" id="sessionCount">0</div>
+                        <div class="stat-value" id="sessionCount" aria-label="Questions answered this session">0</div>
                         <div class="stat-label">Session</div>
                     </div>
                     <div class="stat-item today-stat">
                         <div class="stat-icon">
-                            <span class="material-icons">today</span>
+                            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>
                         </div>
-                        <div class="stat-value" id="todayCount">0</div>
+                        <div class="stat-value" id="todayCount" aria-label="Questions answered today">0</div>
                         <div class="stat-label">Today</div>
                     </div>
                     <div class="stat-item lifetime-stat">
                         <div class="stat-icon">
-                            <span class="material-icons">military_tech</span>
+                            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                         </div>
-                        <div class="stat-value" id="lifetimeCount">0</div>
+                        <div class="stat-value" id="lifetimeCount" aria-label="Total questions answered">0</div>
                         <div class="stat-label">Lifetime</div>
                     </div>
                 </div>
-                <div class="stats-detail" id="statsDetail">Start answering to see stats</div>
-                <div class="progress-container" id="progressContainer" style="display: none;">
-                    <div class="progress-label" id="progressLabel"></div>
-                    <div class="progress-bar">
+                <div class="stats-detail" id="statsDetail" aria-live="polite">Start answering to see stats</div>
+                <div id="dailyGoalsContainer"></div>
+                <div class="progress-container" id="progressContainer" style="display: none;" aria-labelledby="progress-label">
+                    <div class="progress-label" id="progressLabel" aria-live="polite"></div>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                         <div class="progress-fill" id="progressFill"></div>
                         <div class="ghost-line" id="ghostLine"></div>
                     </div>
@@ -100,29 +84,63 @@
             </section>
 
             <!-- Challenge Card -->
-            <section class="card challenge-card">
-                <div class="question-number" id="questionNumber"></div>
-                <div class="timer-display" id="timerDisplay">
-                    <span class="material-icons">timer</span> 0.0s
+            <section class="card challenge-card" aria-labelledby="challenge-heading">
+                <h2 id="challenge-heading" class="sr-only">Math Challenge</h2>
+                <div class="question-number" id="questionNumber" aria-live="polite"></div>
+                <div class="timer-display" id="timerDisplay" aria-live="polite" aria-label="Timer">
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">0.0s</span>
                 </div>
-                <div class="question-text" id="questionText">Ready?</div>
-                <input type="text" id="answerInput" class="answer-input" placeholder="?" autocomplete="off">
-                <div class="feedback" id="feedback">Press Enter to Start</div>
+                <div class="question-text" id="questionText" aria-live="assertive" role="math" aria-label="Math question">Ready?</div>
+                <label for="answerInput" class="sr-only">Your Answer</label>
+                <input type="text" id="answerInput" class="answer-input" placeholder="?" autocomplete="off" inputmode="numeric" aria-describedby="feedback">
+                <div class="feedback" id="feedback" aria-live="polite">Press Enter to Start</div>
+            </section>
+
+            <!-- Control Card -->
+            <section class="card control-card" aria-labelledby="controls-heading">
+                <h2 id="controls-heading" class="sr-only">Practice Controls</h2>
+                <form class="controls" role="form" aria-label="Practice settings">
+                    <label for="modeBox" class="sr-only">Practice Mode</label>
+                    <select id="modeBox" class="control-select" aria-describedby="mode-description">
+                        <option value="Free Play">Free Play</option>
+                        <option value="Drill (20 Qs)">Drill (20 Qs)</option>
+                        <option value="Sprint (60s)">Sprint (60s)</option>
+                        <option value="Adaptive Coach">Adaptive Coach</option>
+                    </select>
+                    <div id="mode-description" class="sr-only">Choose your practice mode</div>
+
+                    <label for="operationBox" class="sr-only">Math Operation</label>
+                    <select id="operationBox" class="control-select" aria-describedby="operation-description">
+                        <option value="Addition">Addition</option>
+                        <option value="Subtraction">Subtraction</option>
+                        <option value="Multiplication">Multiplication</option>
+                        <option value="Division">Division</option>
+                        <option value="Mixed">Mixed</option>
+                    </select>
+                    <div id="operation-description" class="sr-only">Select the math operation to practice</div>
+
+                    <label for="digitsBox" class="sr-only">Number of Digits</label>
+                    <select id="digitsBox" class="control-select" aria-describedby="digits-description">
+                        <option value="1 digit">1 digit</option>
+                        <option value="2 digits" selected>2 digits</option>
+                        <option value="3 digits">3 digits</option>
+                    </select>
+                    <div id="digits-description" class="sr-only">Choose the difficulty level by number of digits</div>
+                </form>
             </section>
         </main>
 
         <!-- Hint Bar -->
-        <footer class="hint-bar">
-            [M] Mode  [O] Op  [F1-F3] Digits  [S] Settings  [A] Awards  [P] Progress  [W] Weakness  [Esc] Clear  [Ctrl+Q] End Session
+        <footer class="hint-bar" role="contentinfo">
+            <div class="sr-only">Keyboard shortcuts:</div>
+            <kbd>[M]</kbd> Mode <kbd>[O]</kbd> Operation <kbd>[F1-F3]</kbd> Digits <kbd>[S]</kbd> Settings <kbd>[A]</kbd> Awards <kbd>[P]</kbd> Progress <kbd>[W]</kbd> Weakness <kbd>[Esc]</kbd> Clear <kbd>[Ctrl+Q]</kbd> End Session
         </footer>
     </div>
 
     <!-- Modals -->
-    <div id="modalOverlay" class="modal-overlay"></div>
-    
-    <!-- Result Modal -->
-    <div id="resultModal" class="modal">
-        <div class="modal-content">
+    <div id="modalOverlay" class="modal-overlay">
+        <!-- Result Modal -->
+        <div id="resultModal" class="modal">
             <h2 class="modal-title">Session Complete!</h2>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -151,128 +169,40 @@
                 <button id="closeResultBtn" class="btn btn-primary">Stop Review & Close (Esc)</button>
             </div>
         </div>
-    </div>
 
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <h2 class="modal-title">Preferences</h2>
-            <button id="themeToggle" class="btn btn-secondary">
-                <span class="material-icons">dark_mode</span> Dark Theme: OFF
-            </button>
-            <button id="soundToggle" class="btn btn-secondary">
-                <span class="material-icons">volume_up</span> Sound Effects: ON
-            </button>
-            <button id="closeSettingsBtn" class="btn btn-primary">Close</button>
-        </div>
-    </div>
-
-    <!-- Achievements Modal -->
-    <div id="achievementsModal" class="modal">
-        <div class="modal-content large-modal">
-            <h2 class="modal-title">🏆 Your Trophy Case</h2>
-            <div class="achievements-list" id="achievementsList"></div>
-            <button id="closeAchievementsBtn" class="btn btn-primary">Close</button>
-        </div>
-    </div>
-
-    <!-- Weakness Modal -->
-    <div id="weaknessModal" class="modal">
-        <div class="modal-content large-modal">
-            <h2 class="modal-title">🎯 Areas Needing Focus</h2>
-            <div class="weakness-list" id="weaknessList"></div>
-            <button id="closeWeaknessBtn" class="btn btn-primary">Close</button>
-        </div>
-    </div>
-
-    <!-- Mastery Modal -->
-    <div id="masteryModal" class="modal">
-        <div class="modal-content large-modal">
-            <h2 class="modal-title">Your Math Skills Profile</h2>
-            <div class="mastery-grid" id="masteryGrid"></div>
-            <div class="legend">Legend: Novice (Need practice) → Apprentice (Fix errors) → Pro (Speed up) → Master (Perfect)</div>
-            <button id="closeMasteryBtn" class="btn btn-primary">Close</button>
-        </div>
-    </div>
-
-    <!-- Progress Modal -->
-    <div id="progressModal" class="modal">
-        <div class="modal-content large-modal" style="max-width: 1200px; width: 95vw; max-height: 90vh;">
-            <h2 class="modal-title">📊 Your Progress</h2>
-            
-            <!-- Progress Notice -->
-            <div style="background-color: rgba(46, 204, 113, 0.1); border: 1px solid var(--accent-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center; color: var(--accent-color);">
-                <strong>📊 Progress Overview</strong> - Track your mathematical journey and improvement over time
-            </div>
-
-            <!-- Stats Overview -->
-            <div class="stats-overview" style="margin-bottom: 20px;">
-                <div class="overview-stat">
-                    <div class="stat-number" id="progressTotalQuestions">-</div>
-                    <div class="stat-label">Total Questions</div>
-                </div>
-                <div class="overview-stat value">
-                    <div class="stat-number" id="progressAvgAccuracy">-</div>
-                    <div class="stat-label">Avg Accuracy</div>
-                </div>
-                <div class="overview-stat value">
-                    <div class="stat-number" id="progressAvgSpeed">-</div>
-                    <div class="stat-label">Avg Speed</div>
-                </div>
-                <div class="overview-stat streak">
-                    <div class="stat-number" id="progressCurrentStreak">-</div>
-                    <div class="stat-label">Current Streak</div>
-                </div>
-            </div>
-
-            <!-- Progress Grid -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                <!-- Skills Mastery -->
-                <div class="card" style="padding: 15px;">
-                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">🎯 Skills Mastery</h3>
-                    <div class="mastery-grid" id="progressMasteryGrid" style="transform: scale(0.8); transform-origin: top left;">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="card" style="padding: 15px;">
-                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">📅 Recent Activity</h3>
-                    <div id="progressRecentActivity" style="max-height: 200px; overflow-y: auto;">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Personal Bests -->
-                <div class="card" style="padding: 15px;">
-                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">⭐ Personal Bests</h3>
-                    <div id="progressPersonalBests">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Achievement Progress -->
-                <div class="card" style="padding: 15px;">
-                    <h3 style="color: var(--accent-color); font-size: 16px; margin-bottom: 10px;">🏆 Achievement Progress</h3>
-                    <div id="progressAchievements">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <button id="closeProgressBtn" class="btn btn-primary" style="margin-top: 20px;">Close</button>
-        </div>
     </div>
 
     <!-- Achievement Toast -->
     <div id="achievementToast" class="toast">
-        <div class="toast-content">
-            <h3>🏆 Achievement Unlocked!</h3>
-            <div id="toastMessage"></div>
-            <button id="toastCloseBtn" class="btn btn-primary">Awesome!</button>
-        </div>
+        <h3 style="font-size: 16px; margin-bottom: 4px;">🏆 Achievement Unlocked!</h3>
+        <div id="toastMessage" style="font-size: 14px; color: var(--text-secondary);"></div>
     </div>
 
+    <!-- QWebChannel Bridge -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script>
+        // Initialize QWebChannel bridge
+        window.addEventListener('load', function() {
+            if (typeof qt !== 'undefined' && qt.webChannelTransport) {
+                new QWebChannel(qt.webChannelTransport, function(channel) {
+                    window.pythonBridge = channel.objects.pythonBridge;
+                    console.log('✅ Python bridge initialized successfully');
+                    
+                    // Initialize the main app after bridge is ready
+                    if (typeof MathDrillWeb !== 'undefined') {
+                        window.mathDrill = new MathDrillWeb();
+                    }
+                });
+            } else {
+                console.warn('❌ Qt WebChannel not available - running in standalone mode');
+                // Initialize app in standalone mode for testing
+                if (typeof MathDrillWeb !== 'undefined') {
+                    window.mathDrill = new MathDrillWeb();
+                }
+            }
+        });
+    </script>
+    
     <script src="script.js"></script>
 </body>
 </html>
