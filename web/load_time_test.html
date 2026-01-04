@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Page Load Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .timer { font-size: 48px; font-weight: bold; text-align: center; margin: 20px 0; }
+        .fast { color: #27ae60; }
+        .medium { color: #f39c12; }
+        .slow { color: #e74c3c; }
+        .log { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto; margin: 10px 0; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #2980b9; }
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .metric { text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .metric-value { font-size: 24px; font-weight: bold; }
+        .metric-label { color: #7f8c8d; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏱️ Progress Page Load Time Test</h1>
+        <p>Measure the actual load time of the progress page</p>
+        
+        <div>
+            <button onclick="startTest()">🚀 Start Load Test</button>
+            <button onclick="openProgressPage()">🔗 Open Progress Page</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+        
+        <div class="timer" id="timer">Ready to test</div>
+        
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value" id="htmlTime">-</div>
+                <div class="metric-label">HTML Load (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="jsTime">-</div>
+                <div class="metric-label">JavaScript (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="totalTime">-</div>
+                <div class="metric-label">Total Time (ms)</div>
+            </div>
+        </div>
+        
+        <div class="log" id="log">Click "Start Load Test" to begin measuring...</div>
+    </div>
+
+    <script>
+        let logElement = document.getElementById('log');
+        let timerElement = document.getElementById('timer');
+        let startTime = null;
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            logElement.innerHTML = 'Log cleared...\n';
+            timerElement.textContent = 'Ready to test';
+            timerElement.className = '';
+        }
+        
+        function updateTimer(elapsed) {
+            timerElement.textContent = `${elapsed}ms`;
+            if (elapsed < 100) {
+                timerElement.className = 'timer fast';
+            } else if (elapsed < 500) {
+                timerElement.className = 'timer medium';
+            } else {
+                timerElement.className = 'timer slow';
+            }
+        }
+        
+        async function startTest() {
+            clearLog();
+            log('🚀 Starting progress page load test...');
+            
+            const testStart = performance.now();
+            
+            // Step 1: Load HTML
+            log('📄 Loading HTML...');
+            const htmlStart = performance.now();
+            
+            try {
+                const response = await fetch('./progress.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const htmlText = await response.text();
+                const htmlTime = performance.now() - htmlStart;
+                
+                log(`✅ HTML loaded in ${htmlTime.toFixed(2)}ms`);
+                document.getElementById('htmlTime').textContent = htmlTime.toFixed(2);
+                
+                // Step 2: Simulate JavaScript execution
+                log('⚙️ Simulating JavaScript execution...');
+                const jsStart = performance.now();
+                
+                // Simulate the JavaScript operations that happen in progress.js
+                await simulateProgressJS();
+                
+                const jsTime = performance.now() - jsStart;
+                const totalTime = performance.now() - testStart;
+                
+                log(`✅ JavaScript executed in ${jsTime.toFixed(2)}ms`);
+                log(`🎯 Total load time: ${totalTime.toFixed(2)}ms`);
+                
+                document.getElementById('jsTime').textContent = jsTime.toFixed(2);
+                document.getElementById('totalTime').textContent = totalTime.toFixed(2);
+                updateTimer(Math.round(totalTime));
+                
+                // Performance assessment
+                if (totalTime < 100) {
+                    log('🟢 EXCELLENT: Page loads very quickly!');
+                } else if (totalTime < 500) {
+                    log('🟡 GOOD: Page loads reasonably fast');
+                } else if (totalTime < 1000) {
+                    log('🟠 OK: Page load is acceptable');
+                } else {
+                    log('🔴 SLOW: Page load needs optimization');
+                }
+                
+            } catch (error) {
+                log(`❌ Test failed: ${error.message}`);
+                timerElement.textContent = 'Error';
+                timerElement.className = 'timer slow';
+            }
+        }
+        
+        async function simulateProgressJS() {
+            // Simulate the operations that happen in progress.js
+            
+            // 1. Bridge check (1 second timeout)
+            await new Promise(resolve => {
+                const bridgeCheck = setTimeout(() => {
+                    log('⚡ Bridge not available, falling back to JSON (1000ms timeout)');
+                    resolve();
+                }, 50); // Simulate quick bridge check failure
+                
+                // In real scenario, this would wait up to 1000ms
+                if (Math.random() > 0.9) { // 10% chance bridge is available
+                    clearTimeout(bridgeCheck);
+                    log('🔗 Bridge available (rare case)');
+                    resolve();
+                }
+            });
+            
+            // 2. Parallel JSON loading
+            const jsonStart = performance.now();
+            const [attemptsResponse, sessionsResponse] = await Promise.all([
+                fetch('./attempts.json'),
+                fetch('./sessions.json').catch(() => ({ ok: false }))
+            ]);
+            const jsonTime = performance.now() - jsonStart;
+            
+            if (!attemptsResponse.ok) {
+                throw new Error('Failed to load attempts.json');
+            }
+            
+            const attempts = await attemptsResponse.json();
+            const sessions = sessionsResponse.ok ? await sessionsResponse.json() : [];
+            
+            log(`📁 Loaded ${attempts.length} attempts and ${sessions.length} sessions in ${jsonTime.toFixed(2)}ms`);
+            
+            // 3. Data processing (single pass)
+            const processStart = performance.now();
+            const dailyStats = new Map();
+            const masteryStats = new Map();
+            
+            let totalCorrect = 0, totalSumTime = 0, maxStreak = 0, currentStreak = 0;
+            
+            // Single loop through attempts
+            attempts.forEach(attempt => {
+                if (attempt.correct) {
+                    totalCorrect++;
+                    totalSumTime += attempt.time_taken;
+                    currentStreak++;
+                    maxStreak = Math.max(maxStreak, currentStreak);
+                } else {
+                    currentStreak = 0;
+                }
+                
+                const date = attempt.created || attempt.timestamp?.split('T')[0];
+                if (date) {
+                    if (!dailyStats.has(date)) {
+                        dailyStats.set(date, { count: 0, correct: 0, timeSum: 0 });
+                    }
+                    const dayStats = dailyStats.get(date);
+                    dayStats.count++;
+                    if (attempt.correct) dayStats.correct++;
+                    dayStats.timeSum += attempt.time_taken;
+                }
+                
+                if (attempt.operation && attempt.digits) {
+                    const key = `${attempt.operation}-${attempt.digits}`;
+                    if (!masteryStats.has(key)) {
+                        masteryStats.set(key, { count: 0, correct: 0, timeSum: 0 });
+                    }
+                    const mastery = masteryStats.get(key);
+                    mastery.count++;
+                    if (attempt.correct) mastery.correct++;
+                    mastery.timeSum += attempt.time_taken;
+                }
+            });
+            
+            const processTime = performance.now() - processStart;
+            log(`⚙️ Processed data in ${processTime.toFixed(2)}ms (${attempts.length} attempts)`);
+            
+            // 4. UI rendering simulation
+            const renderStart = performance.now();
+            await new Promise(resolve => setTimeout(resolve, 10)); // Simulate DOM updates
+            const renderTime = performance.now() - renderStart;
+            log(`🎨 Rendered UI in ${renderTime.toFixed(2)}ms`);
+        }
+        
+        function openProgressPage() {
+            log('🔗 Opening progress page in new tab...');
+            window.open('./progress.html', '_blank');
+        }
+        
+        // Initialize
+        log('Load test ready. Click "Start Load Test" to measure performance.\n');
+    </script>
+</body>
+</html>

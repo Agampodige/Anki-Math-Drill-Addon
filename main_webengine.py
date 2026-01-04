@@ -6,9 +6,68 @@ import time
 from datetime import date, datetime
 from aqt.qt import (
     QDialog, QVBoxLayout, QApplication, QUrl, Qt,
-    QWebEngineView, QWebEnginePage, QWebChannel
+    QWebEngineView, QWebEnginePage, QWebChannel, QWebEngineSettings
 )
 from PyQt6.QtCore import QObject, pyqtSlot, QTimer, pyqtSignal
+
+# === Logging Setup ===
+LOG_FILE = os.path.join(os.path.dirname(__file__), "math_drill_debug.log")
+
+class FileLogger:
+    """Redirect all prints and JS console messages to a log file"""
+    
+    def __init__(self, log_file):
+        self.log_file = log_file
+        self.original_stdout = sys.stdout
+        self.original_stderr = sys.stderr
+        
+        # Create log file with timestamp
+        self._write_log(f"\n{'='*60}")
+        self._write_log(f"Math Drill Debug Log Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        self._write_log(f"Log file: {self.log_file}")
+        self._write_log(f"{'='*60}\n")
+    
+    def _write_log(self, message):
+        """Write message to log file with timestamp"""
+        timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+        try:
+            with open(self.log_file, 'a', encoding='utf-8') as f:
+                f.write(f"[{timestamp}] {message}\n")
+        except Exception as e:
+            # Fallback to original stdout if file writing fails
+            self.original_stdout.write(f"LOG ERROR: {e}\n[{timestamp}] {message}\n")
+    
+    def write(self, message):
+        """Intercept stdout writes"""
+        if message.strip():  # Only log non-empty messages
+            self._write_log(f"PYTHON: {message.rstrip()}")
+        # Also write to original stdout for Anki console
+        self.original_stdout.write(message)
+    
+    def flush(self):
+        """Flush both log file and original stdout"""
+        try:
+            with open(self.log_file, 'a', encoding='utf-8') as f:
+                f.flush()
+        except:
+            pass
+        self.original_stdout.flush()
+    
+    def log_js_message(self, level, message, line_number, source_id):
+        """Log JavaScript console messages"""
+        self._write_log(f"JS [{level}]: {message} (line {line_number}, source: {source_id})")
+    
+    def log_error(self, message):
+        """Log error messages"""
+        self._write_log(f"ERROR: {message}")
+        self.original_stderr.write(f"ERROR: {message}\n")
+
+# Initialize file logger
+file_logger = FileLogger(LOG_FILE)
+
+# Redirect stdout and stderr
+sys.stdout = file_logger
+sys.stderr = file_logger
 
 try:
     from .database import init_db, log_attempt, log_session, get_last_7_days_stats, get_personal_best, get_total_attempts_count, get_today_attempts_count, update_weakness_tracking
@@ -61,6 +120,12 @@ class PythonBridge(QObject):
     @pyqtSlot(str, str, str)
     def send(self, action, data_str, callback_id):
         """Handle messages from JavaScript"""
+        print(f"=== PythonBridge.send called ===")
+        print(f"Action: {action}")
+        print(f"Data: {data_str}")
+        print(f"Callback ID: {callback_id}")
+        print(f"Bridge available: True")
+        
         try:
             data = json.loads(data_str) if data_str else {}
             
@@ -68,7 +133,24 @@ class PythonBridge(QObject):
                 self.reset_session(data)
             elif action == 'start_session':
                 self.start_session(data)
+            elif action == 'test_direct_log':
+                print("=== Testing direct attempt logging ===")
+                test_data = {
+                    'operation': 'Test',
+                    'digits': 1,
+                    'correct': True,
+                    'time_taken': 1.0,
+                    'question_text': '1+1',
+                    'user_answer': 2,
+                    'correct_answer': 2
+                }
+                self.log_attempt(test_data)
+                self.send_to_js('test_direct_log_result', {'status': 'success', 'message': 'Direct logging test completed'}, callback_id)
+            elif action == 'test_bridge':
+                print("=== Test bridge action received ===")
+                self.send_to_js('test_bridge_result', {'status': 'success', 'message': 'Bridge working!'}, callback_id)
             elif action == 'log_attempt':
+                print("=== Handling log_attempt action ===")
                 self.log_attempt(data)
             elif action == 'end_session':
                 self.end_session(data, callback_id)
@@ -137,17 +219,33 @@ class PythonBridge(QObject):
     
     def log_attempt(self, data):
         """Log a practice attempt with adaptive learning integration"""
+        print(f"=== Python log_attempt called ===")
+        print(f"Received data: {data}")
+        print(f"Data directory being used: {os.path.dirname(__file__)}")
+        
         try:
             operation = data.get('operation')
             digits = data.get('digits')
             correct = data.get('correct')
-            time_taken = data.get('time_taken')
+            time_taken = data.get('time') or data.get('time_taken')
             session_id = getattr(self, 'current_session_id', None)
             question_text = data.get('question_text')
             user_answer = data.get('user_answer')
             correct_answer = data.get('correct_answer')
             
+            print(f"Parsed: operation={operation}, digits={digits}, correct={correct}, time_taken={time_taken}, session_id={session_id}")
+            
+            # Test database API connection
+            try:
+                print("Testing database API connection...")
+                test_count = db_api.get_basic_stats()
+                print(f"Database API test successful: {test_count}")
+            except Exception as db_test_e:
+                print(f"❌ Database API test failed: {db_test_e}")
+                return
+            
             # Log to database
+            print("Attempting to create attempt in database...")
             attempt_id = db_api.create_attempt(
                 operation=operation,
                 digits=digits,
@@ -159,39 +257,70 @@ class PythonBridge(QObject):
                 correct_answer=correct_answer
             )
             
+            print(f"Attempt created with ID: {attempt_id}")
+            
+            if attempt_id > 0:
+                print("✅ Successfully logged attempt to database")
+            else:
+                print("❌ Failed to log attempt - returned ID 0")
+            
             # Update adaptive learning system
             try:
+                print("Updating adaptive learning...")
                 self.adaptive_learning.update_adaptive_performance(
                     operation, digits, correct, time_taken
                 )
+                print("✅ Adaptive learning updated")
             except Exception as e:
-                print(f"Error updating adaptive performance: {e}")
+                print(f"❌ Error updating adaptive performance: {e}")
             
             # Update weakness tracking
-            update_weakness_tracking(operation, digits, correct)
+            try:
+                print("Updating weakness tracking...")
+                update_weakness_tracking(operation, digits, correct)
+                print("✅ Weakness tracking updated")
+            except Exception as e:
+                print(f"❌ Error updating weakness tracking: {e}")
             
             # Update daily goals
             try:
-                db_api.update_daily_progress(questions_completed=1)
+                print("Updating daily progress...")
+                db_api.update_daily_progress(questions_completed=1, time_spent_minutes=time_taken/60)
+                print("✅ Daily progress updated")
             except Exception as e:
-                print(f"Error updating daily progress: {e}")
+                print(f"❌ Error updating daily progress: {e}")
             
             # Trigger real-time sync
-            self._trigger_realtime_sync({
-                'type': 'attempt_logged',
-                'operation': operation,
-                'digits': digits,
-                'correct': correct,
-                'time_taken': time_taken
-            })
+            try:
+                print("Triggering real-time sync...")
+                self._trigger_realtime_sync('attempt_logged', {
+                    'operation': operation,
+                    'digits': digits,
+                    'correct': correct,
+                    'time_taken': time_taken
+                })
+                print("✅ Real-time sync triggered")
+            except Exception as e:
+                print(f"❌ Error triggering real-time sync: {e}")
+            
+            print("✅ All logging operations completed successfully")
             
         except Exception as e:
-            print(f"Error logging attempt: {e}")
+            print(f"❌ Critical error logging attempt: {e}")
+            import traceback
+            traceback.print_exc()
     
     def start_session(self, data):
         """Handle session start"""
         if hasattr(self.parent_dialog, 'start_session'):
             self.parent_dialog.start_session(data['mode'], data['operation'], data['digits'])
+            # Create and store session ID
+            session_id = db_api.create_session(
+                mode=data['mode'], 
+                operation=data['operation'], 
+                digits=data['digits']
+            )
+            self.current_session_id = session_id
     
     def end_session(self, data, callback_id):
         """Handle session end and return results"""
@@ -503,7 +632,7 @@ class PythonBridge(QObject):
             # Get overall stats
             total = len(attempts)
             correct = sum(1 for a in attempts if a.get('correct', False))
-            total_time_db = sum(a.get('time_taken', 0) for a in attempts)
+            total_time_db = sum(a.get('time_taken', 0) or 0 for a in attempts)
             
             accuracy = (correct / total) * 100 if total and total > 0 else 0
             avg_speed = total_time_db / total if total and total > 0 else 0
@@ -521,7 +650,7 @@ class PythonBridge(QObject):
                 daily_stats[created]['count'] += 1
                 if attempt.get('correct', False):
                     daily_stats[created]['correct'] += 1
-                daily_stats[created]['time_sum'] += attempt.get('time_taken', 0)
+                daily_stats[created]['time_sum'] += attempt.get('time_taken', 0) or 0
             
             # Prepare data structures
             recent_activity = []
@@ -771,37 +900,42 @@ class PythonBridge(QObject):
         if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
             # Log the actual data being sent
             import json
-            data_json = json.dumps(data, indent=2)
-            print(f"Data being sent to JavaScript:\n{data_json}")
+            try:
+                data_json = json.dumps(data, indent=2, ensure_ascii=False)
+                print(f"Data being sent to JavaScript:\n{data_json}")
+            except (TypeError, ValueError) as e:
+                print(f"Error serializing data: {e}")
+                data_json = str(data)
             
-            script = f"""
-                console.log('Python bridge script executing for callback: {callback_id}');
-                console.log('Checking pythonBridge availability:', typeof window.pythonBridge);
-                console.log('Available callbacks:', Object.keys(window.pythonBridge.callbacks || {{}});
-                
-                if (window.pythonBridge && window.pythonBridge.callbacks && window.pythonBridge.callbacks['{callback_id}']) {{
-                    console.log('Found callback, executing with data:');
-                    var data = {data_json};
-                    console.log('Parsed data:', data);
-                    console.log('Data stats section:', data.stats);
+            # Create a simpler, more robust callback script
+            script = f'''
+                (function() {{
+                    console.log('Python bridge script executing for callback: {callback_id}');
+                    console.log('Checking pythonBridge availability:', typeof window.pythonBridge);
                     
-                    try {{
-                        window.pythonBridge.callbacks['{callback_id}'](data);
-                        delete window.pythonBridge.callbacks['{callback_id}'];
-                        console.log('Callback executed and deleted successfully');
-                    }} catch(e) {{
-                        console.error('Error executing callback:', e);
-                        console.error('Stack:', e.stack);
-                    }}
-                }} else {{
-                    console.log('Callback not found for ID: {callback_id}');
-                    console.log('pythonBridge exists:', !!window.pythonBridge);
-                    console.log('callbacks exists:', !!(window.pythonBridge && window.pythonBridge.callbacks));
                     if (window.pythonBridge && window.pythonBridge.callbacks) {{
-                        console.log('Available callback IDs:', Object.keys(window.pythonBridge.callbacks));
+                        console.log('Setting up callback for:', '{callback_id}');
+                        
+                        window.pythonBridge.callbacks['{callback_id}'] = function(response) {{
+                            console.log('Callback executed with response:', response);
+                            delete window.pythonBridge.callbacks['{callback_id}'];
+                        }};
+                        
+                        console.log('Available callbacks after setup:', Object.keys(window.pythonBridge.callbacks));
+                        
+                        try {{
+                            var data = {data_json};
+                            console.log('Sending data via pythonBridge.send:', data);
+                            window.pythonBridge.send('{action}', JSON.stringify(data), '{callback_id}');
+                        }} catch(e) {{
+                            console.error('Error calling pythonBridge.send:', e);
+                        }}
+                    }} else {{
+                        console.error('pythonBridge or callbacks not available');
                     }}
-                }}
-            """
+                }})();
+            '''
+            
             print("Executing JavaScript in web view...")
             self.parent_dialog.web_view.page().runJavaScript(script)
         else:
@@ -848,13 +982,22 @@ class PythonBridge(QObject):
             subscriber_id = data.get('subscriber_id', 'default')
             self._sync_subscribers.add(subscriber_id)
             
+            print(f"Subscribing to realtime: subscriber_id={subscriber_id}, callback_id={callback_id}")
+            
             # Send current state immediately
-            self.send_to_js('realtime_subscribed', {
+            response_data = {
                 'subscriber_id': subscriber_id,
                 'last_data': self._last_sync_data
-            }, callback_id)
+            }
+            
+            print(f"Sending subscription response: {response_data}")
+            self.send_to_js('realtime_subscribed', response_data, callback_id)
+            return True
+            
         except Exception as e:
             print(f"Error subscribing to realtime: {e}")
+            self.send_to_js('realtime_subscribed', {'error': str(e)}, callback_id)
+            return False
     
     def unsubscribe_realtime(self, callback_id):
         """Unsubscribe from real-time updates"""
@@ -936,10 +1079,59 @@ class WebEnginePage(QWebEnginePage):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.bridge = PythonBridge(parent)
+        
+        # Enable developer tools and other features
+        settings = self.settings()
+        
+        # Define attributes to set with their fallback behavior
+        attributes_config = [
+            # (attribute_name, description, critical_for_functionality)
+            ('JavascriptEnabled', 'Core JavaScript', True),
+            ('LocalStorageEnabled', 'Local storage', True),
+            ('LocalContentCanAccessFileUrls', 'File URL access', False),
+            ('AllowWindowActivationFromJavaScript', 'Window activation', False),
+            ('JavascriptCanOpenWindows', 'Popup windows', False),
+            ('JavascriptCanAccessClipboard', 'Clipboard access', False),
+            ('DeveloperExtrasEnabled', 'Developer tools', False)
+        ]
+        
+        print("Configuring WebEngine settings...")
+        
+        for attr_name, description, critical in attributes_config:
+            try:
+                # Get the attribute enum value
+                attr_value = getattr(QWebEngineSettings.WebAttribute, attr_name)
+                # Set the attribute to True
+                settings.setAttribute(attr_value, True)
+                print(f"✅ {attr_name} ({description}) - Enabled")
+            except AttributeError:
+                print(f"⚠️ {attr_name} ({description}) - Not available in this Qt version")
+                if critical:
+                    print(f"❌ CRITICAL: {description} is not available - may cause issues")
+            except Exception as e:
+                print(f"❌ Error setting {attr_name}: {e}")
+                if critical:
+                    print(f"❌ CRITICAL: Failed to set {description} - may cause issues")
+        
+        print("✅ WebEngine page configured with developer tools enabled")
     
     def javaScriptConsoleMessage(self, level, message, line_number, source_id):
         """Handle JavaScript console messages for debugging"""
-        print(f"JS Console [{level}]: {message} (line {line_number}, {source_id})")
+        # Use file logger instead of print
+        file_logger.log_js_message(level, message, line_number, source_id)
+    
+    # Override to enable developer tools
+    def triggerAction(self, action, checked=False):
+        """Override trigger action to handle developer tools"""
+        if action == QWebEnginePage.WebAction.InspectElement:
+            print("🔧 Attempting to open developer tools...")
+            try:
+                super().triggerAction(action, checked)
+                print("✅ Developer tools trigger sent")
+            except Exception as e:
+                print(f"❌ Failed to trigger developer tools: {e}")
+        else:
+            super().triggerAction(action, checked)
 
 
 class MathDrillWebEngine(QDialog):
@@ -984,6 +1176,105 @@ class MathDrillWebEngine(QDialog):
         self.update_timer = QTimer(self)
         self.update_timer.timeout.connect(self.update_stats_from_timer)
         self.update_timer.start(5000)  # Update every 5 seconds
+        
+    def keyPressEvent(self, event):
+        """Handle key press events including F12 for developer tools"""
+        key = event.key()
+        
+        # F12 - Open Developer Tools/Inspection
+        if key == Qt.Key.Key_F12:
+            self.open_dev_tools()
+            return
+            
+        # Let parent handle other keys
+        super().keyPressEvent(event)
+    
+    def open_dev_tools(self):
+        """Open developer tools for web inspection"""
+        print("🔧 F12 pressed - attempting to open developer tools...")
+        
+        try:
+            # Method 1: Try to trigger inspection
+            print("Trying method 1: InspectElement action...")
+            self.web_view.page().triggerAction(QWebEnginePage.WebAction.InspectElement)
+            print("✅ Developer tools opened via InspectElement")
+            return
+            
+        except Exception as e1:
+            print(f"❌ Method 1 failed: {e1}")
+            
+            try:
+                # Method 2: Try right-click context menu simulation
+                print("Trying method 2: Reload and inspect...")
+                self.web_view.page().triggerAction(QWebEnginePage.WebAction.Reload)
+                # Wait a moment then try inspection again
+                QTimer.singleShot(1000, lambda: self._retry_inspection())
+                return
+                
+            except Exception as e2:
+                print(f"❌ Method 2 failed: {e2}")
+                
+                try:
+                    # Method 3: Try using JavaScript to open console
+                    print("Trying method 3: JavaScript console...")
+                    js_code = """
+                        if (typeof console !== 'undefined') {
+                            console.log('Developer tools request received');
+                            console.clear();
+                            console.log('=== Math Drill Debug Console ===');
+                            console.log('Bridge available:', !!window.pythonBridge);
+                            if (window.pythonBridge) {
+                                console.log('Bridge methods:', Object.getOwnPropertyNames(window.pythonBridge));
+                            }
+                            console.log('Current page:', window.location.href);
+                            console.log('=== End Debug Info ===');
+                        }
+                    """
+                    self.web_view.page().runJavaScript(js_code)
+                    print("✅ JavaScript debug console activated")
+                    
+                except Exception as e3:
+                    print(f"❌ Method 3 failed: {e3}")
+                    print("❌ All developer tools methods failed")
+                    
+                    # Show user a message
+                    self._show_devtools_error()
+    
+    def _retry_inspection(self):
+        """Retry inspection after reload"""
+        try:
+            print("Retrying inspection after reload...")
+            self.web_view.page().triggerAction(QWebEnginePage.WebAction.InspectElement)
+            print("✅ Developer tools opened on retry")
+        except Exception as e:
+            print(f"❌ Retry failed: {e}")
+    
+    def _show_devtools_error(self):
+        """Show error message to user"""
+        try:
+            # Show a simple message in the web view
+            error_js = """
+                if (typeof document !== 'undefined') {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #ff4444;
+                        color: white;
+                        padding: 10px;
+                        border-radius: 5px;
+                        z-index: 9999;
+                        font-family: monospace;
+                    `;
+                    errorDiv.textContent = 'F12: Developer tools not available in this environment';
+                    document.body.appendChild(errorDiv);
+                    setTimeout(() => errorDiv.remove(), 5000);
+                }
+            """
+            self.web_view.page().runJavaScript(error_js)
+        except:
+            pass  # If even this fails, just give up
         
     
     def init_ui(self):

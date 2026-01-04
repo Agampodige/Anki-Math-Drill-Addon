@@ -831,6 +831,28 @@ body {
 .achievements-list {
     display: flex;
     flex-direction: column;
+    gap: var(--space-4);
+}
+
+.achievement-category {
+    background: var(--surface-elevated);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    border: 1px solid var(--border-color);
+}
+
+.category-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4) 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-3);
 }
 
@@ -840,10 +862,11 @@ body {
     padding: var(--space-4);
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-3);
     border: 1px solid transparent;
     opacity: 0.7;
     transition: var(--transition-fast);
+    position: relative;
 }
 
 .achievement-card.unlocked {
@@ -851,6 +874,10 @@ body {
     border-color: var(--warning);
     box-shadow: var(--shadow-sm);
     opacity: 1;
+}
+
+.achievement-card.locked {
+    opacity: 0.6;
 }
 
 .achievement-card:hover {
@@ -875,21 +902,137 @@ body {
     color: var(--gray-900);
 }
 
+.achievement-card.locked .achievement-icon {
+    background: var(--gray-300);
+    filter: grayscale(0.5);
+}
+
 .achievement-info {
     flex: 1;
+    min-width: 0;
 }
 
 .achievement-info h4 {
     font-size: 15px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--space-1);
+    margin: 0 0 var(--space-1) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.achievement-card.locked .achievement-info h4 {
+    color: var(--text-secondary);
 }
 
 .achievement-info p {
     font-size: 13px;
     color: var(--text-secondary);
-    margin: 0;
+    margin: 0 0 var(--space-2) 0;
+    line-height: 1.4;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: var(--space-2) 0 var(--space-1) 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent-color));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.achievement-status {
+    font-size: 20px;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+}
+
+.achievement-card.unlocked .achievement-status {
+    background: var(--success-color);
+    color: white;
+}
+
+.achievement-card.locked .achievement-status {
+    background: var(--gray-300);
+    color: var(--text-secondary);
+}
+
+.error-message {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--error-color);
+    background: var(--surface-elevated);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--error-color);
+    opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .achievements-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .achievement-card {
+        padding: var(--space-3);
+        gap: var(--space-2);
+    }
+    
+    .achievement-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    .achievement-info h4 {
+        font-size: 14px;
+    }
+    
+    .achievement-info p {
+        font-size: 12px;
+    }
+}
+
+/* Loading spinner for achievements */
+.achievements-list .loading-spinner {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-secondary);
+}
+
+.achievements-list .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--gray-200);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto var(--space-3) auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Settings Page Styles */

@@ -63,10 +63,31 @@ class DatabaseAPI:
     def create_attempt(self, operation: str, digits: int, correct: bool, time_taken: float,
                       session_id: Optional[int] = None, question_text: Optional[str] = None,
                       user_answer: Optional[int] = None, correct_answer: Optional[int] = None,
-                      difficulty_level: int = 1) -> bool:
-        """Create a new attempt record"""
-        return json_storage.log_attempt(operation, digits, correct, time_taken, session_id,
-                                       question_text, user_answer, correct_answer, difficulty_level)
+                      difficulty_level: int = 1) -> int:
+        """Create a new attempt record and return its ID"""
+        # Get the next ID
+        attempts = json_storage._load_json_file(json_storage.ATTEMPTS_FILE, [])
+        attempt_id = len(attempts) + 1
+        
+        # Create attempt data with ID
+        attempt_data = {
+            'id': attempt_id,
+            'operation': operation,
+            'digits': digits,
+            'correct': correct,
+            'time_taken': time_taken,
+            'created': date.today().isoformat(),
+            'session_id': session_id,
+            'question_text': question_text,
+            'user_answer': user_answer,
+            'correct_answer': correct_answer,
+            'difficulty_level': difficulty_level,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Append to file
+        success = json_storage._append_to_json_file(json_storage.ATTEMPTS_FILE, attempt_data)
+        return attempt_id if success else 0
     
     def get_attempts_by_session(self, session_id: int) -> List[Dict]:
         """Get all attempts for a specific session"""
@@ -113,15 +134,19 @@ class DatabaseAPI:
         # Calculate average time
         avg_time = 0
         if total_attempts > 0:
-            total_time = sum(a.get('time_taken', 0) for a in attempts)
+            total_time = sum(a.get('time_taken', 0) or 0 for a in attempts)
             avg_time = total_time / total_attempts
+        
+        # Calculate practice days (distinct days with attempts)
+        practice_days = len(set(a.get('created', '') for a in attempts if a.get('created')))
         
         return {
             'total_attempts': total_attempts,
             'total_correct': total_correct,
             'total_sessions': total_sessions,
             'accuracy': (total_correct / total_attempts * 100) if total_attempts > 0 else 0,
-            'avg_time': avg_time
+            'avg_time': avg_time,
+            'practice_days': practice_days
         }
     
     def get_comprehensive_stats(self, period: str = 'all') -> Dict:
@@ -153,7 +178,7 @@ class DatabaseAPI:
             operation_stats[op]['count'] += 1
             if attempt.get('correct', False):
                 operation_stats[op]['correct'] += 1
-            operation_stats[op]['time_total'] += attempt.get('time_taken', 0)
+            operation_stats[op]['time_total'] += attempt.get('time_taken', 0) or 0
         
         operation_breakdown = []
         for op, stats in operation_stats.items():
@@ -177,7 +202,7 @@ class DatabaseAPI:
             difficulty_stats[digits]['count'] += 1
             if attempt.get('correct', False):
                 difficulty_stats[digits]['correct'] += 1
-            difficulty_stats[digits]['time_total'] += attempt.get('time_taken', 0)
+            difficulty_stats[digits]['time_total'] += attempt.get('time_taken', 0) or 0
         
         difficulty_progression = []
         for digits, stats in sorted(difficulty_stats.items()):
@@ -192,13 +217,17 @@ class DatabaseAPI:
                 'avg_time': avg_time
             })
         
+        # Calculate practice days (distinct days with attempts)
+        practice_days = len(set(a.get('created', '') for a in attempts if a.get('created')))
+        
         return {
             'basic_stats': {
                 'total_attempts': total_attempts,
                 'total_correct': total_correct,
                 'total_sessions': total_sessions,
                 'accuracy': (total_correct / total_attempts * 100) if total_attempts > 0 else 0,
-                'avg_time': sum(a.get('time_taken', 0) for a in attempts) / total_attempts if total_attempts > 0 else 0
+                'avg_time': sum(a.get('time_taken', 0) or 0 for a in attempts) / total_attempts if total_attempts > 0 else 0,
+                'practice_days': practice_days
             },
             'operation_breakdown': operation_breakdown,
             'difficulty_progression': difficulty_progression
@@ -221,7 +250,7 @@ class DatabaseAPI:
             daily_stats[created_date]['count'] += 1
             if attempt.get('correct', False):
                 daily_stats[created_date]['correct'] += 1
-            daily_stats[created_date]['time_total'] += attempt.get('time_taken', 0)
+            daily_stats[created_date]['time_total'] += attempt.get('time_taken', 0) or 0
         
         # Convert to trend data
         trends = []
@@ -259,7 +288,7 @@ class DatabaseAPI:
                 # Calculate recent performance metrics
                 recent_correct = sum(1 for a in recent_attempts if a.get('correct', False))
                 recent_accuracy = recent_correct / len(recent_attempts)
-                recent_avg_time = sum(a.get('time_taken', 0) for a in recent_attempts) / len(recent_attempts)
+                recent_avg_time = sum(a.get('time_taken', 0) or 0 for a in recent_attempts) / len(recent_attempts)
                 
                 # Calculate improvement trend
                 if len(recent_attempts) >= 10:

@@ -1,0 +1,119 @@
+[09:18:27.662] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:28.588] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:31.766] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
+[09:18:31.798] PYTHON: conf key anki_task_bar_snapshot should be fetched with col.get_config(), and saved with col.set_config()
+[09:18:37.152] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:18:37.168] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:18:38.622] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:40.253] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:45.261] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:46.621] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:47.677] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:52.029] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:18:53.814] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
+[09:18:53.854] PYTHON: conf key anki_task_bar_snapshot should be fetched with col.get_config(), and saved with col.set_config()
+[09:18:58.597] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:18:58.609] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:18:59.469] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:19:01.425] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:19:02.493] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:19:23.836] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:19:25.435] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:20:38.789] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
+[09:20:38.841] PYTHON: conf key anki_task_bar_snapshot should be fetched with col.get_config(), and saved with col.set_config()
+[09:20:41.520] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:20:41.527] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:20:46.742] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:20:56.163] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:20:59.564] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:21:20.781] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:21:22.380] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:21:41.553] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:21:43.693] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:21:45.122] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:21:47.334] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
+[09:21:47.379] PYTHON: conf key anki_task_bar_snapshot should be fetched with col.get_config(), and saved with col.set_config()
+[09:21:51.050] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:21:51.057] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:22:06.814] JSON_STORAGE: Using standalone data directory: D:\coding\Math drill python\data
+[09:22:06.827] JSON_STORAGE: Initializing JSON storage system...
+[09:22:06.828] JSON_STORAGE: === Testing Data Folder ===
+[09:22:06.829] JSON_STORAGE: DATA_DIR: D:\coding\Math drill python\data
+[09:22:06.830] JSON_STORAGE: ATTEMPTS_FILE: D:\coding\Math drill python\data\attempts.json
+[09:22:06.830] JSON_STORAGE: ✅ Data folder exists: D:\coding\Math drill python\data
+[09:22:06.830] JSON_STORAGE: ✅ Attempts file exists in data folder: D:\coding\Math drill python\data\attempts.json
+[09:22:06.833] JSON_STORAGE: Current attempts count: 35
+[09:22:06.834] JSON_STORAGE: 
+=== Creating Test Attempt ===
+[09:22:06.836] JSON_STORAGE: === Attempting to append to D:\coding\Math drill python\data\attempts.json ===
+[09:22:06.836] JSON_STORAGE: Item data: {'id': 36, 'operation': 'Data_Folder_Test', 'digits': 1, 'correct': True, 'time_taken': 1.2, 'created': '2026-01-04', 'session_id': None, 'question_text': '3+3', 'user_answer': 6, 'correct_answer': 6, 'difficulty_level': 1, 'timestamp': '2026-01-04T09:22:06.836173'}
+[09:22:06.837] JSON_STORAGE: Current data count: 35
+[09:22:06.840] JSON_STORAGE: ✅ Successfully saved to D:\coding\Math drill python\data\attempts.json
+[09:22:06.858] JSON_STORAGE: Verification: new count = 36
+[09:22:06.859] JSON_STORAGE: Test attempt created with ID: 36
+[09:22:06.860] JSON_STORAGE: New attempts count: 36
+[09:22:06.860] JSON_STORAGE: ✅ Attempt successfully saved to data folder!
+[09:22:06.861] JSON_STORAGE: 
+=== Test Complete ===
+[09:22:08.060] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:09.389] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:11.492] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:13.107] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:21.617] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:24.908] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:45.339] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:48.507] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:22:50.826] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:23:12.833] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:23:15.698] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:23:17.872] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:23:29.746] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:23:30.914] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:23:33.684] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
+[09:23:33.722] PYTHON: conf key anki_task_bar_snapshot should be fetched with col.get_config(), and saved with col.set_config()
+[09:23:35.692] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:23:35.701] PYTHON: Traceback (most recent call last):
+  File "C:\Users\Moonlight\AppData\Local\AnkiProgramFiles\.venv\Lib\site-packages\aqt\webview.py", line 235, in javaScriptConsoleMessage
+    buf = buf.encode(sys.stdout.encoding, "backslashreplace").decode(
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FileLogger' object has no attribute 'encoding'
+[09:23:43.997] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:24:19.228] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:24:20.800] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[09:24:27.651] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.

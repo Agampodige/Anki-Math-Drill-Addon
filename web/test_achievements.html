@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { color: #27ae60; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Achievements System Test</h1>
+        <p>Test the achievements page functionality and data loading</p>
+        
+        <div>
+            <button onclick="testDataLoading()">📊 Test Data Loading</button>
+            <button onclick="testAchievementCalculation()">🧮 Test Achievement Calculation</button>
+            <button onclick="testProgressCalculation()">📈 Test Progress Calculation</button>
+            <button onclick="openAchievementsPage()">🔗 Open Achievements Page</button>
+        </div>
+        
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        const resultsDiv = document.getElementById('testResults');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            resultsDiv.innerHTML += `<p class="${className}">[${timestamp}] ${message}</p>`;
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+
+        async function testDataLoading() {
+            clearResults();
+            log('🔄 Testing data loading...');
+            
+            try {
+                // Test achievements.json loading
+                const achievementsResponse = await fetch('./achievements.json');
+                if (!achievementsResponse.ok) {
+                    throw new Error(`Achievements JSON: HTTP ${achievementsResponse.status}`);
+                }
+                const achievements = await achievementsResponse.json();
+                log(`✅ Loaded ${achievements.length} achievements from achievements.json`, 'success');
+                
+                // Test attempts.json loading
+                const attemptsResponse = await fetch('./attempts.json');
+                if (!attemptsResponse.ok) {
+                    throw new Error(`Attempts JSON: HTTP ${attemptsResponse.status}`);
+                }
+                const attempts = await attemptsResponse.json();
+                log(`✅ Loaded ${attempts.length} attempts from attempts.json`, 'success');
+                
+                // Show sample data
+                if (attempts.length > 0) {
+                    log(`📊 Sample attempt: ${JSON.stringify(attempts[0], null, 2)}`, 'info');
+                }
+                
+                log('🎯 Data loading test completed successfully!', 'success');
+                
+            } catch (error) {
+                log(`❌ Data loading failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAchievementCalculation() {
+            clearResults();
+            log('🧮 Testing achievement calculation...');
+            
+            try {
+                // Load attempts data
+                const attemptsResponse = await fetch('./attempts.json');
+                const attempts = attemptsResponse.ok ? await attemptsResponse.json() : [];
+                
+                // Calculate stats (same as achievements.js)
+                const totalAttempts = attempts.length;
+                const correctAttempts = attempts.filter(a => a.correct).length;
+                const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts) * 100 : 0;
+                
+                const speeds = attempts.filter(a => a.correct).map(a => a.time_taken).filter(t => t > 0);
+                const bestSpeed = speeds.length > 0 ? Math.min(...speeds) : 0;
+                
+                let maxStreak = 0;
+                let currentStreak = 0;
+                attempts.forEach(attempt => {
+                    if (attempt.correct) {
+                        currentStreak++;
+                        maxStreak = Math.max(maxStreak, currentStreak);
+                    } else {
+                        currentStreak = 0;
+                    }
+                });
+                
+                const uniqueDays = new Set(attempts.map(a => a.created || a.timestamp?.split('T')[0]).filter(Boolean)).size;
+                
+                const stats = {
+                    lifetimeCount: totalAttempts,
+                    accuracy,
+                    bestSpeed,
+                    maxStreak,
+                    uniqueDays
+                };
+                
+                log(`📊 Calculated stats:`, 'info');
+                log(`   Total attempts: ${stats.lifetimeCount}`, 'info');
+                log(`   Accuracy: ${stats.accuracy.toFixed(1)}%`, 'info');
+                log(`   Best speed: ${stats.bestSpeed.toFixed(2)}s`, 'info');
+                log(`   Max streak: ${stats.maxStreak}`, 'info');
+                log(`   Unique days: ${stats.uniqueDays}`, 'info');
+                
+                // Test some achievement conditions
+                const testAchievements = [
+                    { id: 'first_win', condition: (s) => s.lifetimeCount >= 1, unlocked: stats.lifetimeCount >= 1 },
+                    { id: 'novice', condition: (s) => s.lifetimeCount >= 10, unlocked: stats.lifetimeCount >= 10 },
+                    { id: 'streak_5', condition: (s) => s.maxStreak >= 5, unlocked: stats.maxStreak >= 5 },
+                    { id: 'speed_demon', condition: (s) => s.bestSpeed <= 2.0 && s.bestSpeed > 0, unlocked: stats.bestSpeed <= 2.0 && stats.bestSpeed > 0 }
+                ];
+                
+                log('\n🏆 Achievement Status:', 'info');
+                testAchievements.forEach(ach => {
+                    const status = ach.unlocked ? '✅ UNLOCKED' : '🔒 LOCKED';
+                    log(`   ${ach.id}: ${status}`, ach.unlocked ? 'success' : 'info');
+                });
+                
+                log('🎯 Achievement calculation test completed!', 'success');
+                
+            } catch (error) {
+                log(`❌ Achievement calculation failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProgressCalculation() {
+            clearResults();
+            log('📈 Testing progress calculation...');
+            
+            try {
+                // Load attempts data
+                const attemptsResponse = await fetch('./attempts.json');
+                const attempts = attemptsResponse.ok ? await attemptsResponse.json() : [];
+                
+                const totalAttempts = attempts.length;
+                
+                // Test progress calculations
+                const progressTests = [
+                    { id: 'novice', target: 10, current: totalAttempts, expected: Math.min(100, (totalAttempts / 10) * 100) },
+                    { id: 'apprentice', target: 25, current: totalAttempts, expected: Math.min(100, (totalAttempts / 25) * 100) },
+                    { id: 'centurion', target: 100, current: totalAttempts, expected: Math.min(100, (totalAttempts / 100) * 100) }
+                ];
+                
+                log('📊 Progress Calculations:', 'info');
+                progressTests.forEach(test => {
+                    log(`   ${test.id}: ${test.current}/${test.target} = ${test.expected.toFixed(1)}%`, 'info');
+                });
+                
+                // Test streak progress
+                let maxStreak = 0;
+                let currentStreak = 0;
+                attempts.forEach(attempt => {
+                    if (attempt.correct) {
+                        currentStreak++;
+                        maxStreak = Math.max(maxStreak, currentStreak);
+                    } else {
+                        currentStreak = 0;
+                    }
+                });
+                
+                const streakProgress = Math.min(100, (maxStreak / 5) * 100);
+                log(`   streak_5: ${maxStreak}/5 = ${streakProgress.toFixed(1)}%`, 'info');
+                
+                log('🎯 Progress calculation test completed!', 'success');
+                
+            } catch (error) {
+                log(`❌ Progress calculation failed: ${error.message}`, 'error');
+            }
+        }
+
+        function openAchievementsPage() {
+            log('🔗 Opening achievements page in new tab...', 'info');
+            window.open('./achievements.html', '_blank');
+        }
+        
+        // Auto-run data loading test on page load
+        window.addEventListener('load', () => {
+            log('🚀 Achievements test page loaded. Click buttons to run tests.', 'info');
+        });
+    </script>
+</body>
+</html>

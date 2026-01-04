@@ -1,3 +1,34 @@
+// Initialize the app when bridge is ready
+window.addEventListener('load', function() {
+    // Make test function globally available
+    window.testBridge = function() {
+        if (window.mathDrill) {
+            window.mathDrill.testBridge();
+        } else {
+            console.error('MathDrill not initialized');
+        }
+    };
+    
+    // Make logAttempt globally available for testing
+    window.logTestAttempt = function() {
+        if (window.mathDrill) {
+            window.mathDrill.logAttempt(true, 1.5, '1+1', 2, 2);
+        } else {
+            console.error('MathDrill not initialized');
+        }
+    };
+    
+    // Make testDirectLog globally available for testing
+    window.testDirectLog = function() {
+        if (window.pythonBridge) {
+            console.log('Testing direct Python logging...');
+            window.pythonBridge.send('test_direct_log', JSON.stringify({test: true}), 'direct_log_callback');
+        } else {
+            console.error('Bridge not available for direct test');
+        }
+    };
+});
+
 class MathDrillWeb {
     constructor() {
         // Don't initialize immediately - wait for bridge
@@ -48,7 +79,12 @@ class MathDrillWeb {
         if (this.initialized) return;
         this.initialized = true;
         
-        console.log('🚀 Initializing MathDrillWeb...');
+        // Add bridge status indicator
+        this.addBridgeStatusIndicator();
+        
+        console.log('Initializing MathDrillWeb...');
+        
+        console.log(' Bridge status:', window.pythonBridge ? 'Connected' : 'Not connected');
         
         this.initElements();
         this.initEventListeners();
@@ -219,11 +255,19 @@ class MathDrillWeb {
     }
 
     logAttempt(correct, timeTaken, questionText, userAnswer, correctAnswer) {
+        console.log('=== logAttempt called ===');
+        console.log('correct:', correct);
+        console.log('timeTaken:', timeTaken);
+        console.log('questionText:', questionText);
+        console.log('userAnswer:', userAnswer);
+        console.log('correctAnswer:', correctAnswer);
+        console.log('window.pythonBridge available:', !!window.pythonBridge);
+        
         const attempt = {
             operation: this.operationBox.value,
             digits: parseInt(this.digitsBox.value),
             correct: correct,
-            time: timeTaken,
+            time_taken: timeTaken,
             question_text: questionText,
             user_answer: parseInt(userAnswer) || null,
             correct_answer: correctAnswer,
@@ -231,11 +275,26 @@ class MathDrillWeb {
             timestamp: new Date().toISOString()
         };
         
+        console.log('JavaScript logging attempt:', attempt);
+        
         this.sessionAttempts.push(attempt);
         
         // Send to backend with enhanced data
         if (window.pythonBridge) {
-            window.pythonBridge.send('log_attempt', JSON.stringify(attempt), null);
+            console.log('Sending to Python bridge...');
+            console.log('Bridge type:', typeof window.pythonBridge);
+            console.log('Bridge send method:', typeof window.pythonBridge.send);
+            
+            try {
+                window.pythonBridge.send('log_attempt', JSON.stringify(attempt), null);
+                console.log('✅ Successfully sent to Python bridge');
+            } catch (error) {
+                console.error('❌ Error sending to Python bridge:', error);
+            }
+        } else {
+            console.error('❌ Python bridge not available!');
+            console.log('window.pythonBridge:', window.pythonBridge);
+            console.log('typeof window.pythonBridge:', typeof window.pythonBridge);
         }
         
         // Trigger real-time update
@@ -245,6 +304,44 @@ class MathDrillWeb {
                 data: attempt,
                 timestamp: new Date().toISOString()
             });
+        }
+    }
+    
+    addBridgeStatusIndicator() {
+        // Add a visual indicator for bridge status
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'bridgeStatus';
+        statusDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 9999;
+            background: ${window.pythonBridge ? '#10B981' : '#EF4444'};
+            color: white;
+        `;
+        statusDiv.textContent = window.pythonBridge ? '🔗 Bridge Connected' : '❌ Bridge Disconnected';
+        document.body.appendChild(statusDiv);
+        
+        // Update status periodically
+        setInterval(() => {
+            const connected = !!window.pythonBridge;
+            statusDiv.style.background = connected ? '#10B981' : '#EF4444';
+            statusDiv.textContent = connected ? '🔗 Bridge Connected' : '❌ Bridge Disconnected';
+        }, 1000);
+    }
+    
+    // Test bridge communication (can be called from console)
+    testBridge() {
+        console.log('=== Testing bridge communication ===');
+        if (window.pythonBridge) {
+            console.log('Bridge available, sending test message...');
+            window.pythonBridge.send('test_bridge', JSON.stringify({test: true}), 'test_callback');
+        } else {
+            console.error('Bridge not available for testing');
         }
     }
     
@@ -323,7 +420,7 @@ class MathDrillWeb {
 
     startSessionIfNeeded() {
         const mode = this.modeBox.value;
-        if (mode !== 'Free Play' && !this.sessionActive) {
+        if (!this.sessionActive) {
             this.sessionActive = true;
             this.sessionAttempts = [];
             this.sessionMistakes = [];
@@ -333,6 +430,7 @@ class MathDrillWeb {
                 this.startSprintTimer();
             }
             
+            // Always send start_session to Python, even for Free Play
             this.sendToPython('start_session', {
                 mode,
                 operation: this.operationBox.value,
@@ -471,16 +569,26 @@ class MathDrillWeb {
         
         this.questionText.textContent = `${a} ${symbol} ${b} =`;
         this.startTime = Date.now() / 1000;
+        console.log('Timer started for question:', this.questionText.textContent);
     }
 
     checkAnswer() {
+        console.log('=== checkAnswer called ===');
+        console.log('startTime:', this.startTime);
+        console.log('answerInput.value:', this.answerInput.value);
+        
         if (this.startTime === null) {
+            console.log('startTime is null, generating question...');
             this.generateQuestion();
             return;
         }
         
         const userText = this.answerInput.value.trim();
-        if (!userText) return;
+        console.log('userText:', userText);
+        if (!userText) {
+            console.log('userText is empty, returning...');
+            return;
+        }
         
         const elapsed = (Date.now() / 1000) - this.startTime;
         let correct = false;
@@ -492,11 +600,15 @@ class MathDrillWeb {
             correct = false;
         }
         
+        console.log('elapsed:', elapsed);
+        console.log('correct:', correct);
+        
         const questionText = this.questionText.textContent;
         const userAnswer = userText;
         const correctAnswer = this.currentAnswer;
         const timeTaken = elapsed;
         
+        console.log('About to call logAttempt...');
         // Use the enhanced logAttempt method
         this.logAttempt(correct, timeTaken, questionText, userAnswer, correctAnswer);
         
@@ -690,9 +802,16 @@ class MathDrillWeb {
     updateLiveTimer() {
         if (this.startTime) {
             const elapsed = (Date.now() / 1000) - this.startTime;
-            this.timerDisplay.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">${elapsed.toFixed(1)}s</span>`;
+            if (this.timerDisplay) {
+                this.timerDisplay.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">${elapsed.toFixed(1)}s</span>`;
+                console.log(`Timer updated: ${elapsed.toFixed(1)}s`);
+            } else {
+                console.error('Timer display element not found!');
+            }
         } else {
-            this.timerDisplay.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">0.0s</span>`;
+            if (this.timerDisplay) {
+                this.timerDisplay.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span id="timerValue">0.0s</span>`;
+            }
         }
     }
 

@@ -1,6 +1,5 @@
 """
 JSON-based storage system for Math Drill Pro
-Replaces SQLite database with file-based JSON storage
 """
 
 import os
@@ -10,14 +9,70 @@ from datetime import date, datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 
-# Get the addon's data directory for proper storage
+# === Logging Setup ===
+try:
+    # Try to use the same logger as main_webengine
+    import sys
+    if hasattr(sys, 'stdout') and hasattr(sys.stdout, 'log_js_message'):
+        # File logger is already set up
+        pass
+    else:
+        # Set up a simple file logger for json_storage
+        LOG_FILE = os.path.join(os.path.dirname(__file__), "math_drill_debug.log")
+        
+        class SimpleLogger:
+            def __init__(self, log_file):
+                self.log_file = log_file
+            
+            def _write_log(self, message):
+                timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                try:
+                    with open(self.log_file, 'a', encoding='utf-8') as f:
+                        f.write(f"[{timestamp}] JSON_STORAGE: {message}\n")
+                except:
+                    pass
+            
+            def log_message(self, message):
+                self._write_log(message)
+        
+        # Create simple logger instance
+        json_logger = SimpleLogger(LOG_FILE)
+        
+        # Add logging functions to builtins for use in this module
+        import builtins
+        original_print = builtins.print
+        
+        def json_print(*args, **kwargs):
+            message = ' '.join(str(arg) for arg in args)
+            json_logger.log_message(message)
+            original_print(*args, **kwargs)  # Also print to console
+        
+        builtins.print = json_print
+        
+except Exception as e:
+    # If logging setup fails, continue without it
+    print(f"Warning: Could not set up json_storage logging: {e}")
+
+# Get addon's data directory for proper storage
 try:
     from aqt import mw
+    # Get the specific addon directory (where this addon is installed)
     ADDON_DIR = os.path.dirname(os.path.dirname(__file__))
-    DATA_DIR = os.path.join(mw.pm.addonFolder())
+    # Create and use a data subdirectory within the addon folder
+    DATA_DIR = os.path.join(ADDON_DIR, "data")
+    print(f"Using Anki addon data directory: {DATA_DIR}")
 except ImportError:
     # Fallback for standalone testing
-    DATA_DIR = os.path.dirname(__file__)
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+    print(f"Using standalone data directory: {DATA_DIR}")
+except Exception as e:
+    # Additional fallback for any other import issues
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+    print(f"Error accessing Anki data directory, using fallback: {e}")
+    print(f"Using fallback data directory: {DATA_DIR}")
+
+# Ensure data directory exists
+os.makedirs(DATA_DIR, exist_ok=True)
 
 # JSON file paths
 ATTEMPTS_FILE = os.path.join(DATA_DIR, "attempts.json")
@@ -63,11 +118,28 @@ def _save_json_file(file_path: str, data: Any) -> bool:
 def _append_to_json_file(file_path: str, item: Dict) -> bool:
     """Append a new item to JSON array file"""
     try:
+        print(f"=== Attempting to append to {file_path} ===")
+        print(f"Item data: {item}")
+        
         data = _load_json_file(file_path, [])
+        print(f"Current data count: {len(data)}")
+        
         data.append(item)
-        return _save_json_file(file_path, data)
+        result = _save_json_file(file_path, data)
+        
+        if result:
+            print(f"✅ Successfully saved to {file_path}")
+            # Verify the save
+            verify_data = _load_json_file(file_path, [])
+            print(f"Verification: new count = {len(verify_data)}")
+        else:
+            print(f"❌ Failed to save to {file_path}")
+        
+        return result
     except Exception as e:
-        print(f"Error appending to {file_path}: {e}")
+        print(f"❌ Error appending to {file_path}: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def _update_in_json_file(file_path: str, key_func, update_func) -> bool:
@@ -290,7 +362,7 @@ def update_weakness_tracking(operation: str, digits: int, correct: bool) -> bool
     all_attempts = get_attempts_by_operation_digits(operation, digits, 1000)  # Get all history
     total_attempts = len(all_attempts)
     total_correct = sum(1 for a in all_attempts if a.get('correct', False))
-    avg_time = sum(a.get('time_taken', 0) for a in all_attempts) / len(all_attempts) if all_attempts else 0
+    avg_time = sum(a.get('time_taken', 0) or 0 for a in all_attempts) / len(all_attempts) if all_attempts else 0
     
     weakness_entry = {
         'id': existing_entry.get('id') if existing_entry else len(weakness_data) + 1,

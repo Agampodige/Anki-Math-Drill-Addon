@@ -23,14 +23,14 @@ class ProgressPage {
             }
         }, 100);
         
-        // Timeout after 5 seconds
+        // Timeout after 1 second instead of 5 seconds for faster fallback
         setTimeout(() => {
             clearInterval(checkInterval);
             if (!window.pythonBridge && !this.initialized) {
                 console.warn('Bridge not available, initializing ProgressPage in standalone mode');
                 this.initialize();
             }
-        }, 5000);
+        }, 1000); // Reduced from 5000ms to 1000ms
     }
     
     initialize() {
@@ -111,7 +111,7 @@ class ProgressPage {
             // Request data from Python with timeout
             const data = await Promise.race([
                 this.sendToPythonAsync('get_progress_data', { period: this.currentPeriod }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Bridge timeout')), 5000))
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Bridge timeout')), 1000)) // Reduced from 5000ms to 1000ms
             ]);
             
             console.log('📊 Received data:', data);
@@ -176,22 +176,28 @@ class ProgressPage {
         console.log('🚀 Loading real data from JSON file...');
         
         try {
-            // Try to fetch the attempts.json file
-            const fetchStart = performance.now();
-            const response = await fetch('./attempts.json');
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            // Load both files in PARALLEL for maximum speed
+            const loadStart = performance.now();
+            const [attemptsResponse, sessionsResponse] = await Promise.all([
+                fetch('./attempts.json'),
+                fetch('./sessions.json').catch(() => ({ ok: false })) // Optional sessions file
+            ]);
+            const loadTime = performance.now() - loadStart;
+            
+            if (!attemptsResponse.ok) {
+                throw new Error(`Attempts JSON: HTTP ${attemptsResponse.status}`);
             }
             
-            const attempts = await response.json();
-            const fetchTime = performance.now() - fetchStart;
-            console.log(`✅ Loaded ${attempts.length} attempts in ${fetchTime.toFixed(2)}ms`);
+            const attempts = await attemptsResponse.json();
+            const sessions = sessionsResponse.ok ? await sessionsResponse.json() : [];
+            
+            console.log(`✅ Loaded ${attempts.length} attempts and ${sessions.length} sessions in ${loadTime.toFixed(2)}ms`);
             
             // Early return for empty data
             if (attempts.length === 0) {
                 console.log('⚠️ No attempts found, showing empty state');
                 this.progressData = {
-                    stats: { totalQuestions: 0, avgAccuracy: 0, avgSpeed: 0, currentStreak: 0 },
+                    stats: { totalQuestions: 0, avgAccuracy: 0, avgSpeed: 0, currentStreak: 0, practiceDays: 0 },
                     recentActivity: [],
                     mastery: {},
                     chartData: []
@@ -200,14 +206,17 @@ class ProgressPage {
                 return;
             }
             
-            // Optimize calculations - single pass through data
+            // Ultra-optimized single-pass processing
             const processStart = performance.now();
             const dailyStats = new Map();
             const masteryStats = new Map();
             const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
             
             let totalCorrect = 0;
-            let totalTime = 0;
+            let totalSumTime = 0;
+            let maxStreak = 0;
+            let currentStreak = 0;
+            let bestSpeed = Infinity;
             const today = new Date().toISOString().split('T')[0];
             const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
             
@@ -216,8 +225,17 @@ class ProgressPage {
                 const { correct, time_taken = 0, operation, digits, created, timestamp } = attempt;
                 
                 // Basic stats
-                if (correct) totalCorrect++;
-                totalTime += time_taken;
+                if (correct) {
+                    totalCorrect++;
+                    totalSumTime += time_taken;
+                    if (time_taken > 0 && time_taken < bestSpeed) {
+                        bestSpeed = time_taken;
+                    }
+                    currentStreak++;
+                    maxStreak = Math.max(maxStreak, currentStreak);
+                } else {
+                    currentStreak = 0;
+                }
                 
                 // Daily stats (optimized with Map)
                 const date = created || timestamp?.split('T')[0];
@@ -246,7 +264,7 @@ class ProgressPage {
             
             const totalAttempts = attempts.length;
             const accuracy = (totalCorrect / totalAttempts) * 100;
-            const avgSpeed = totalTime / totalAttempts;
+            const avgSpeed = totalSumTime / totalAttempts;
             
             // Process recent activity (more efficient)
             const recentActivity = Array.from(dailyStats.entries())
@@ -295,17 +313,17 @@ class ProgressPage {
                 speed: activity.avgSpeed
             }));
             
-            const processingTime = performance.now() - processStart;
-            const totalTimeElapsed = performance.now() - startTime;
+            const processTime = performance.now() - processStart;
+            const totalTime = performance.now() - startTime;
             
-            console.log(`⚡ Processed data in ${processingTime.toFixed(2)}ms (total: ${totalTimeElapsed.toFixed(2)}ms)`);
+            console.log(`⚡ Processed data in ${processTime.toFixed(2)}ms (total: ${totalTime.toFixed(2)}ms)`);
             
             const realData = {
                 stats: {
                     totalQuestions: totalAttempts,
                     avgAccuracy: accuracy,
                     avgSpeed: avgSpeed,
-                    currentStreak: 0,
+                    currentStreak: maxStreak, // Use calculated max streak
                     practiceDays: dailyStats.size
                 },
                 chartData,
@@ -320,6 +338,7 @@ class ProgressPage {
                 attempts: totalAttempts,
                 accuracy: accuracy.toFixed(1) + '%',
                 speed: avgSpeed.toFixed(2) + 's',
+                maxStreak: maxStreak,
                 days: dailyStats.size,
                 masteryKeys: Object.keys(mastery).length
             });
@@ -333,7 +352,7 @@ class ProgressPage {
             
             // Fast fallback to zeros
             this.progressData = {
-                stats: { totalQuestions: 0, avgAccuracy: 0, avgSpeed: 0, currentStreak: 0 },
+                stats: { totalQuestions: 0, avgAccuracy: 0, avgSpeed: 0, currentStreak: 0, practiceDays: 0 },
                 recentActivity: [],
                 mastery: {},
                 chartData: []
@@ -372,16 +391,68 @@ class ProgressPage {
             requestAnimationFrame(() => {
                 this.updateRecentActivity();
                 
-                // Update heavy components last
+                // Update heavy components last with batching
                 requestAnimationFrame(() => {
-                    this.updateMasteryGrid();
+                    // Batch DOM updates for better performance
+                    const fragment = document.createDocumentFragment();
+                    
+                    // Update mastery grid
+                    if (this.masteryGridLarge) {
+                        const tempContainer = document.createElement('div');
+                        this.masteryGridLarge.innerHTML = '';
+                        
+                        // Headers
+                        tempContainer.innerHTML += '<div class="mastery-header-cell"></div>';
+                        [1, 2, 3].forEach(d => {
+                            const header = document.createElement('div');
+                            header.className = 'mastery-header-cell';
+                            header.textContent = `${d} Digit`;
+                            tempContainer.appendChild(header);
+                        });
+                        
+                        // Operations
+                        ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
+                            const opLabel = document.createElement('div');
+                            opLabel.className = 'operation-label';
+                            opLabel.textContent = op;
+                            tempContainer.appendChild(opLabel);
+                            
+                            [1, 2, 3].forEach(d => {
+                                const key = `${op}-${d}`;
+                                const stats = this.progressData.mastery?.[key] || { level: 'Novice', acc: 0, speed: 0, count: 0 };
+                                const cell = document.createElement('div');
+                                cell.className = `mastery-cell-large ${stats.level.toLowerCase()}`;
+                                
+                                cell.innerHTML = `
+                                    <div class="mastery-level">${stats.level.toUpperCase()}</div>
+                                    <div class="mastery-detail">${stats.acc.toFixed(0)}% | ${stats.speed.toFixed(1)}s</div>
+                                    <div class="mastery-count">(${stats.count} plays)</div>
+                                `;
+                                
+                                tempContainer.appendChild(cell);
+                            });
+                        });
+                        
+                        // Append all at once
+                        while (tempContainer.firstChild) {
+                            this.masteryGridLarge.appendChild(tempContainer.firstChild);
+                        }
+                    }
+                    
+                    // Update weakness analysis
                     if (this.weaknessListLarge) {
                         this.updateWeaknessAnalysis();
                     }
+                    
+                    // Update achievements
                     if (this.achievementProgress) {
                         this.updateAchievementProgress();
                     }
+                    
+                    // Update personal bests
                     this.updatePersonalBests();
+                    
+                    // Update chart
                     if (this.chartCanvas) {
                         this.updatePerformanceChart();
                     }
@@ -904,7 +975,7 @@ class ProgressPage {
                 const timeout = setTimeout(() => {
                     delete window.pythonBridge.callbacks[callbackId];
                     reject(new Error('Python bridge timeout'));
-                }, 3000); // Reduced from 5000ms to 3000ms
+                }, 1000); // Reduced from 3000ms to 1000ms
                 
                 // The Python bridge will call this callback directly
                 window.pythonBridge.callbacks[callbackId] = (result) => {
