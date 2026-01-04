@@ -123,27 +123,49 @@ class MathDrillWeb {
         this.modalOverlay = document.getElementById('modalOverlay');
         this.resultModal = document.getElementById('resultModal');
         this.achievementToast = document.getElementById('achievementToast');
+        
+        // Verify critical elements exist
+        const criticalElements = ['answerInput', 'modeBox', 'operationBox', 'digitsBox', 
+                                'sessionCount', 'todayCount', 'lifetimeCount'];
+        const missing = criticalElements.filter(id => !this[id]);
+        if (missing.length > 0) {
+            console.error('Missing critical elements:', missing);
+            throw new Error(`Missing critical DOM elements: ${missing.join(', ')}`);
+        }
     }
 
     initEventListeners() {
         // Control changes
-        this.modeBox.addEventListener('change', () => this.resetSession());
-        this.operationBox.addEventListener('change', () => this.resetSession());
-        this.digitsBox.addEventListener('change', () => this.resetSession());
+        if (this.modeBox) this.modeBox.addEventListener('change', () => this.resetSession());
+        if (this.operationBox) this.operationBox.addEventListener('change', () => this.resetSession());
+        if (this.digitsBox) this.digitsBox.addEventListener('change', () => this.resetSession());
         
         // Answer input
-        this.answerInput.addEventListener('keydown', (e) => this.handleKeydown(e));
-        this.answerInput.addEventListener('input', (e) => this.handleInput(e));
+        if (this.answerInput) {
+            this.answerInput.addEventListener('keydown', (e) => this.handleKeydown(e));
+            this.answerInput.addEventListener('input', (e) => this.handleInput(e));
+        }
         
         // Modal close buttons
-        document.getElementById('closeResultBtn').addEventListener('click', () => this.closeModal('result'));
-        document.getElementById('toastCloseBtn').addEventListener('click', () => this.closeToast());
+        const closeResultBtn = document.getElementById('closeResultBtn');
+        if (closeResultBtn) {
+            closeResultBtn.addEventListener('click', () => this.closeModal('result'));
+        }
+        const toastCloseBtn = document.getElementById('toastCloseBtn');
+        if (toastCloseBtn) {
+            toastCloseBtn.addEventListener('click', () => this.closeToast());
+        }
         
         // Retake button
-        document.getElementById('retakeBtn').addEventListener('click', () => this.startRetakeMistakes());
+        const retakeBtn = document.getElementById('retakeBtn');
+        if (retakeBtn) {
+            retakeBtn.addEventListener('click', () => this.startRetakeMistakes());
+        }
         
         // Modal overlay click
-        this.modalOverlay.addEventListener('click', () => this.closeAllModals());
+        if (this.modalOverlay) {
+            this.modalOverlay.addEventListener('click', () => this.closeAllModals());
+        }
         
         // Global keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleGlobalKeydown(e));
@@ -817,14 +839,25 @@ class MathDrillWeb {
 
     updateStats() {
         this.sendToPython('get_stats', {}, (stats) => {
-            this.sessionCount.textContent = stats.session;
-            this.todayCount.textContent = stats.today;
-            this.lifetimeCount.textContent = stats.lifetime;
+            if (!stats) {
+                console.warn('No stats data received');
+                return;
+            }
             
-            if (stats.today > 0) {
-                this.statsDetail.textContent = `Today: ${stats.accuracy.toFixed(0)}% accuracy • ${stats.avgSpeed.toFixed(2)}s avg • ${Math.floor(stats.totalTime)}s total`;
-            } else {
-                this.statsDetail.textContent = 'Start answering to see stats';
+            // Update stat displays with null checks
+            if (this.sessionCount) this.sessionCount.textContent = stats.session || 0;
+            if (this.todayCount) this.todayCount.textContent = stats.today || 0;
+            if (this.lifetimeCount) this.lifetimeCount.textContent = stats.lifetime || 0;
+            
+            if (this.statsDetail) {
+                if (stats.today > 0) {
+                    const accuracy = stats.accuracy || 0;
+                    const avgSpeed = stats.avgSpeed || 0;
+                    const totalTime = stats.totalTime || 0;
+                    this.statsDetail.textContent = `Today: ${accuracy.toFixed(0)}% accuracy • ${avgSpeed.toFixed(2)}s avg • ${Math.floor(totalTime)}s total`;
+                } else {
+                    this.statsDetail.textContent = 'Start answering to see stats';
+                }
             }
             
             // Update daily goals if available

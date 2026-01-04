@@ -907,31 +907,30 @@ class PythonBridge(QObject):
                 print(f"Error serializing data: {e}")
                 data_json = str(data)
             
-            # Create a simpler, more robust callback script
+            # Create a script that directly executes the callback
             script = f'''
                 (function() {{
                     console.log('Python bridge script executing for callback: {callback_id}');
                     console.log('Checking pythonBridge availability:', typeof window.pythonBridge);
                     
-                    if (window.pythonBridge && window.pythonBridge.callbacks) {{
-                        console.log('Setting up callback for:', '{callback_id}');
-                        
-                        window.pythonBridge.callbacks['{callback_id}'] = function(response) {{
-                            console.log('Callback executed with response:', response);
-                            delete window.pythonBridge.callbacks['{callback_id}'];
-                        }};
-                        
-                        console.log('Available callbacks after setup:', Object.keys(window.pythonBridge.callbacks));
+                    if (window.pythonBridge && window.pythonBridge.callbacks && window.pythonBridge.callbacks['{callback_id}']) {{
+                        console.log('Executing callback directly for:', '{callback_id}');
                         
                         try {{
                             var data = {data_json};
-                            console.log('Sending data via pythonBridge.send:', data);
-                            window.pythonBridge.send('{action}', JSON.stringify(data), '{callback_id}');
+                            var callback = window.pythonBridge.callbacks['{callback_id}'];
+                            console.log('Calling callback with data:', data);
+                            callback(data);
+                            console.log('Callback executed successfully');
+                            
+                            // Clean up
+                            delete window.pythonBridge.callbacks['{callback_id}'];
                         }} catch(e) {{
-                            console.error('Error calling pythonBridge.send:', e);
+                            console.error('Error executing callback:', e);
                         }}
                     }} else {{
-                        console.error('pythonBridge or callbacks not available');
+                        console.error('Callback not found for:', '{callback_id}');
+                        console.log('Available callbacks:', window.pythonBridge ? Object.keys(window.pythonBridge.callbacks || {{}}) : 'pythonBridge not available');
                     }}
                 }})();
             '''
