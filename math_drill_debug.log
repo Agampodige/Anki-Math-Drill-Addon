@@ -1,37 +1,81 @@
-[10:37:08.131] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:08.888] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:09.583] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:16.762] PYTHON: Initializing JSON storage system...
-[10:37:16.764] PYTHON: Configuring WebEngine settings...
-[10:37:16.765] PYTHON: ✅ JavascriptEnabled (Core JavaScript) - Enabled
-[10:37:16.765] PYTHON: ✅ LocalStorageEnabled (Local storage) - Enabled
-[10:37:16.765] PYTHON: ✅ LocalContentCanAccessFileUrls (File URL access) - Enabled
-[10:37:16.766] PYTHON: ✅ AllowWindowActivationFromJavaScript (Window activation) - Enabled
-[10:37:16.766] PYTHON: ✅ JavascriptCanOpenWindows (Popup windows) - Enabled
-[10:37:16.767] PYTHON: ✅ JavascriptCanAccessClipboard (Clipboard access) - Enabled
-[10:37:16.767] PYTHON: ⚠️ DeveloperExtrasEnabled (Developer tools) - Not available in this Qt version
-[10:37:16.767] PYTHON: ✅ WebEngine page configured with developer tools enabled
-[10:37:17.096] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 189, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
-[10:37:17.096] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:17.097] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:17.097] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:17.099] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503237095_m2o612izi (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:17.100] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:17.101] PYTHON: === PythonBridge.send called ===
-[10:37:17.101] PYTHON: Action: get_stats
-[10:37:17.102] PYTHON: Data: {}
-[10:37:17.102] PYTHON: Callback ID: cb_1767503237095_m2o612izi
-[10:37:17.102] PYTHON: Bridge available: True
-[10:37:17.104] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503237095_m2o612izi
-[10:37:17.105] PYTHON: Data type: <class 'dict'>, size: 283
-[10:37:17.105] PYTHON: Data being sent to JavaScript:
+[11:55:39.810] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:40.279] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:40.637] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:41.367] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:42.024] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:42.537] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:43.281] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:43.981] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:44.752] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:45.523] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:48.528] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:50.938] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:52.457] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:53.025] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:53.829] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:54.707] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:55.477] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:56.324] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:57.072] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:57.976] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:58.677] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:59.337] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:55:59.655] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:00.983] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:01.724] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:03.164] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:04.121] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:05.018] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:06.176] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:07.171] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:56:50.236] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:02.679] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:04.270] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:06.068] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:07.786] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:09.177] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:10.327] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:11.328] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:15.225] PYTHON: Initializing JSON storage system...
+[11:57:15.227] PYTHON: Configuring WebEngine settings...
+[11:57:15.228] PYTHON: ✅ JavascriptEnabled (Core JavaScript) - Enabled
+[11:57:15.228] PYTHON: ✅ LocalStorageEnabled (Local storage) - Enabled
+[11:57:15.228] PYTHON: ✅ LocalContentCanAccessFileUrls (File URL access) - Enabled
+[11:57:15.229] PYTHON: ✅ AllowWindowActivationFromJavaScript (Window activation) - Enabled
+[11:57:15.229] PYTHON: ✅ JavascriptCanOpenWindows (Popup windows) - Enabled
+[11:57:15.230] PYTHON: ✅ JavascriptCanAccessClipboard (Clipboard access) - Enabled
+[11:57:15.230] PYTHON: ⚠️ DeveloperExtrasEnabled (Developer tools) - Not available in this Qt version
+[11:57:15.230] PYTHON: ✅ WebEngine page configured with developer tools enabled
+[11:57:15.643] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element themeToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.643] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.644] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.644] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element soundToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.645] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element hintsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.645] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element timerToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.646] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element animationsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.646] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element autosaveToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.647] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element shortcutsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:15.648] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 156, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
+[11:57:15.649] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:15.649] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:15.650] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:15.651] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508035647_u1rvt7wxn (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:15.651] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:15.652] PYTHON: === PythonBridge.send called ===
+[11:57:15.652] PYTHON: Action: get_stats
+[11:57:15.652] PYTHON: Data: {}
+[11:57:15.653] PYTHON: Callback ID: cb_1767508035647_u1rvt7wxn
+[11:57:15.653] PYTHON: Bridge available: True
+[11:57:15.655] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508035647_u1rvt7wxn
+[11:57:15.656] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:15.656] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
-  "today": 1,
-  "lifetime": 1,
+  "today": 2,
+  "lifetime": 2,
   "accuracy": 100.0,
-  "avgSpeed": 9.882999897003174,
-  "totalTime": 9.882999897003174,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
   "daily_goals": {
     "target_questions": 20,
     "target_time_minutes": 10,
@@ -41,544 +85,63 @@
   },
   "practice_days": 1
 }
-[10:37:17.105] PYTHON: Executing JavaScript in web view...
-[10:37:17.136] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503237095_m2o612izi (line 3, source: )
-[10:37:17.137] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:17.138] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503237095_m2o612izi (line 7, source: )
-[10:37:17.138] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:17.139] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:18.006] PYTHON: === PythonBridge.send called ===
-[10:37:18.007] PYTHON: Action: subscribe_realtime
-[10:37:18.007] PYTHON: Data: {"subscriber_id":"main_1767503236998"}
-[10:37:18.008] PYTHON: Callback ID: rt_1767503238005_qgputxaw6
-[10:37:18.008] PYTHON: Bridge available: True
-[10:37:18.008] PYTHON: Subscribing to realtime: subscriber_id=main_1767503236998, callback_id=rt_1767503238005_qgputxaw6
-[10:37:18.009] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767503236998', 'last_data': {}}
-[10:37:18.009] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767503238005_qgputxaw6
-[10:37:18.009] PYTHON: Data type: <class 'dict'>, size: 56
-[10:37:18.010] PYTHON: Data being sent to JavaScript:
+[11:57:15.657] PYTHON: Executing JavaScript in web view...
+[11:57:15.661] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508035647_u1rvt7wxn (line 3, source: )
+[11:57:15.661] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:15.662] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508035647_u1rvt7wxn (line 7, source: )
+[11:57:15.662] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:15.662] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:16.565] PYTHON: === PythonBridge.send called ===
+[11:57:16.565] PYTHON: Action: subscribe_realtime
+[11:57:16.566] PYTHON: Data: {"subscriber_id":"main_1767508035554"}
+[11:57:16.566] PYTHON: Callback ID: rt_1767508036564_8auow5aoa
+[11:57:16.567] PYTHON: Bridge available: True
+[11:57:16.567] PYTHON: Subscribing to realtime: subscriber_id=main_1767508035554, callback_id=rt_1767508036564_8auow5aoa
+[11:57:16.568] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767508035554', 'last_data': {}}
+[11:57:16.568] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767508036564_8auow5aoa
+[11:57:16.568] PYTHON: Data type: <class 'dict'>, size: 56
+[11:57:16.569] PYTHON: Data being sent to JavaScript:
 {
-  "subscriber_id": "main_1767503236998",
+  "subscriber_id": "main_1767508035554",
   "last_data": {}
 }
-[10:37:18.010] PYTHON: Executing JavaScript in web view...
-[10:37:18.012] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767503238005_qgputxaw6 (line 3, source: )
-[10:37:18.012] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:18.013] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767503238005_qgputxaw6 (line 7, source: )
-[10:37:18.014] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 15, source: )
-[10:37:18.015] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 17, source: )
-[10:37:18.015] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:18.889] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🏆 DOM ready, initializing AchievementsPage... (line 530, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.891] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Achievements page: Python bridge initialized successfully (line 69, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.html)
-[10:37:18.892] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🏆 Initializing AchievementsPage... (line 39, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.892] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Loading achievements... (line 51, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.893] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔗 Python bridge available, requesting achievements... (line 63, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.894] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge: get_achievements [object Object] cb_1767503238891_gwxe5va6i (line 514, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.895] PYTHON: === PythonBridge.send called ===
-[10:37:18.895] PYTHON: Action: get_achievements
-[10:37:18.896] PYTHON: Data: {}
-[10:37:18.896] PYTHON: Callback ID: cb_1767503238891_gwxe5va6i
-[10:37:18.896] PYTHON: Bridge available: True
-[10:37:18.897] PYTHON: send_to_js called: action=achievements_result, callback_id=cb_1767503238891_gwxe5va6i
-[10:37:18.897] PYTHON: Data type: <class 'list'>, size: 3995
-[10:37:18.898] PYTHON: Data being sent to JavaScript:
-[
-  {
-    "name": "First Steps",
-    "desc": "Complete your first session",
-    "unlocked": false
-  },
-  {
-    "name": "Novice",
-    "desc": "Complete 10 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Apprentice",
-    "desc": "Complete 25 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Centurion",
-    "desc": "Complete 100 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Veteran",
-    "desc": "Complete 500 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Legend",
-    "desc": "Complete 1000 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Sniper",
-    "desc": "100% Accuracy in a Drill (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Sharpshooter",
-    "desc": "95% Accuracy in a Drill (30+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Marksman",
-    "desc": "90% Accuracy in a Drill (40+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Perfectionist",
-    "desc": "100% Accuracy in 3 separate sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Demon",
-    "desc": "Avg Speed < 2.0s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Lightning Fast",
-    "desc": "Avg Speed < 1.5s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Flash",
-    "desc": "Avg Speed < 1.0s in a Drill/Sprint (10+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Quicksilver",
-    "desc": "Answer 10 questions under 1s each",
-    "unlocked": false
-  },
-  {
-    "name": "Marathoner",
-    "desc": "Complete a session with 50+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ultra Marathoner",
-    "desc": "Complete a session with 100+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ironman",
-    "desc": "Complete a session with 200+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "On Fire",
-    "desc": "Achieve a 5-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Blazing",
-    "desc": "Achieve a 10-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Inferno",
-    "desc": "Achieve a 25-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Volcano",
-    "desc": "Achieve a 50-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Addition Master",
-    "desc": "Complete 50 addition questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Subtraction Master",
-    "desc": "Complete 50 subtraction questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Multiplication Master",
-    "desc": "Complete 50 multiplication questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Division Master",
-    "desc": "Complete 50 division questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Digit Expert",
-    "desc": "Complete 30 questions with 3-digit numbers",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Digits",
-    "desc": "Complete 20 3-digit questions under 3s each",
-    "unlocked": false
-  },
-  {
-    "name": "Precision Digits",
-    "desc": "95% accuracy with 3-digit numbers (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Drill Sergeant",
-    "desc": "Complete 10 Drill mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Sprint Champion",
-    "desc": "Complete 5 Sprint mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Coach's Pet",
-    "desc": "Complete 10 Adaptive Coach sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Master Mind",
-    "desc": "Complete a Mixed Mode session with >90% Acc",
-    "unlocked": false
-  },
-  {
-    "name": "Daily Player",
-    "desc": "Play on 3 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Weekly Warrior",
-    "desc": "Play on 7 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Monthly Master",
-    "desc": "Play for 30 consecutive days",
-    "unlocked": false
-  },
-  {
-    "name": "Early Bird",
-    "desc": "Complete a session before 9 AM",
-    "unlocked": false
-  },
-  {
-    "name": "Night Owl",
-    "desc": "Complete a session after 9 PM",
-    "unlocked": false
-  },
-  {
-    "name": "Weekend Warrior",
-    "desc": "Complete 5 sessions on weekends",
-    "unlocked": false
-  },
-  {
-    "name": "Flawless",
-    "desc": "Complete a session with zero mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Comeback Kid",
-    "desc": "Get 80% accuracy after 5 mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Retake Master",
-    "desc": "Successfully complete all retake questions",
-    "unlocked": false
-  },
-  {
-    "name": "Time Master",
-    "desc": "Practice for 60 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Veteran",
-    "desc": "Practice for 180 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Legend",
-    "desc": "Practice for 300 total minutes",
-    "unlocked": false
-  }
-]
-[10:37:18.898] PYTHON: Executing JavaScript in web view...
-[10:37:18.900] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503238891_gwxe5va6i (line 3, source: )
-[10:37:18.901] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:18.901] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503238891_gwxe5va6i (line 7, source: )
-[10:37:18.902] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 233, source: )
-[10:37:18.903] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received callback result: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 509, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.904] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 235, source: )
-[10:37:18.905] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Received achievements from Python: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 69, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.906] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🎨 Rendering achievements... (line 371, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:18.912] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Rendered 44 achievements in 10.90ms (line 445, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.000] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🏆 Initializing AchievementsPage... (line 39, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.000] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Loading achievements... (line 51, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.001] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔗 Python bridge available, requesting achievements... (line 63, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.001] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge: get_achievements [object Object] cb_1767503238999_dujns4go6 (line 514, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.002] PYTHON: === PythonBridge.send called ===
-[10:37:19.004] PYTHON: Action: get_achievements
-[10:37:19.004] PYTHON: Data: {}
-[10:37:19.005] PYTHON: Callback ID: cb_1767503238999_dujns4go6
-[10:37:19.005] PYTHON: Bridge available: True
-[10:37:19.006] PYTHON: send_to_js called: action=achievements_result, callback_id=cb_1767503238999_dujns4go6
-[10:37:19.006] PYTHON: Data type: <class 'list'>, size: 3995
-[10:37:19.007] PYTHON: Data being sent to JavaScript:
-[
-  {
-    "name": "First Steps",
-    "desc": "Complete your first session",
-    "unlocked": false
-  },
-  {
-    "name": "Novice",
-    "desc": "Complete 10 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Apprentice",
-    "desc": "Complete 25 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Centurion",
-    "desc": "Complete 100 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Veteran",
-    "desc": "Complete 500 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Legend",
-    "desc": "Complete 1000 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Sniper",
-    "desc": "100% Accuracy in a Drill (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Sharpshooter",
-    "desc": "95% Accuracy in a Drill (30+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Marksman",
-    "desc": "90% Accuracy in a Drill (40+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Perfectionist",
-    "desc": "100% Accuracy in 3 separate sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Demon",
-    "desc": "Avg Speed < 2.0s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Lightning Fast",
-    "desc": "Avg Speed < 1.5s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Flash",
-    "desc": "Avg Speed < 1.0s in a Drill/Sprint (10+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Quicksilver",
-    "desc": "Answer 10 questions under 1s each",
-    "unlocked": false
-  },
-  {
-    "name": "Marathoner",
-    "desc": "Complete a session with 50+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ultra Marathoner",
-    "desc": "Complete a session with 100+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ironman",
-    "desc": "Complete a session with 200+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "On Fire",
-    "desc": "Achieve a 5-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Blazing",
-    "desc": "Achieve a 10-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Inferno",
-    "desc": "Achieve a 25-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Volcano",
-    "desc": "Achieve a 50-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Addition Master",
-    "desc": "Complete 50 addition questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Subtraction Master",
-    "desc": "Complete 50 subtraction questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Multiplication Master",
-    "desc": "Complete 50 multiplication questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Division Master",
-    "desc": "Complete 50 division questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Digit Expert",
-    "desc": "Complete 30 questions with 3-digit numbers",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Digits",
-    "desc": "Complete 20 3-digit questions under 3s each",
-    "unlocked": false
-  },
-  {
-    "name": "Precision Digits",
-    "desc": "95% accuracy with 3-digit numbers (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Drill Sergeant",
-    "desc": "Complete 10 Drill mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Sprint Champion",
-    "desc": "Complete 5 Sprint mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Coach's Pet",
-    "desc": "Complete 10 Adaptive Coach sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Master Mind",
-    "desc": "Complete a Mixed Mode session with >90% Acc",
-    "unlocked": false
-  },
-  {
-    "name": "Daily Player",
-    "desc": "Play on 3 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Weekly Warrior",
-    "desc": "Play on 7 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Monthly Master",
-    "desc": "Play for 30 consecutive days",
-    "unlocked": false
-  },
-  {
-    "name": "Early Bird",
-    "desc": "Complete a session before 9 AM",
-    "unlocked": false
-  },
-  {
-    "name": "Night Owl",
-    "desc": "Complete a session after 9 PM",
-    "unlocked": false
-  },
-  {
-    "name": "Weekend Warrior",
-    "desc": "Complete 5 sessions on weekends",
-    "unlocked": false
-  },
-  {
-    "name": "Flawless",
-    "desc": "Complete a session with zero mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Comeback Kid",
-    "desc": "Get 80% accuracy after 5 mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Retake Master",
-    "desc": "Successfully complete all retake questions",
-    "unlocked": false
-  },
-  {
-    "name": "Time Master",
-    "desc": "Practice for 60 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Veteran",
-    "desc": "Practice for 180 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Legend",
-    "desc": "Practice for 300 total minutes",
-    "unlocked": false
-  }
-]
-[10:37:19.007] PYTHON: Executing JavaScript in web view...
-[10:37:19.009] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503238999_dujns4go6 (line 3, source: )
-[10:37:19.010] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:19.010] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503238999_dujns4go6 (line 7, source: )
-[10:37:19.011] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 233, source: )
-[10:37:19.011] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received callback result: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 509, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.012] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 235, source: )
-[10:37:19.013] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Received achievements from Python: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 69, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.013] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🎨 Rendering achievements... (line 371, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:19.039] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Rendered 44 achievements in 27.90ms (line 445, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:34.506] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 189, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
-[10:37:34.507] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:34.507] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:34.508] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:34.509] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503254506_a9lsmvcbk (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:34.509] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:34.510] PYTHON: === PythonBridge.send called ===
-[10:37:34.510] PYTHON: Action: get_stats
-[10:37:34.510] PYTHON: Data: {}
-[10:37:34.511] PYTHON: Callback ID: cb_1767503254506_a9lsmvcbk
-[10:37:34.511] PYTHON: Bridge available: True
-[10:37:34.513] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503254506_a9lsmvcbk
-[10:37:34.514] PYTHON: Data type: <class 'dict'>, size: 283
-[10:37:34.514] PYTHON: Data being sent to JavaScript:
+[11:57:16.569] PYTHON: Executing JavaScript in web view...
+[11:57:16.571] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767508036564_8auow5aoa (line 3, source: )
+[11:57:16.572] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:16.572] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767508036564_8auow5aoa (line 7, source: )
+[11:57:16.573] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 15, source: )
+[11:57:16.573] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 17, source: )
+[11:57:16.574] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
+[11:57:17.508] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element themeToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.509] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.510] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.510] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element soundToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.511] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element hintsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.512] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element timerToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.512] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element animationsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.512] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element autosaveToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.513] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element shortcutsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:17.513] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 156, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
+[11:57:17.514] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:17.514] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:17.514] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:17.515] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508037510_bmvos70ns (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:17.515] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:17.516] PYTHON: === PythonBridge.send called ===
+[11:57:17.516] PYTHON: Action: get_stats
+[11:57:17.517] PYTHON: Data: {}
+[11:57:17.517] PYTHON: Callback ID: cb_1767508037510_bmvos70ns
+[11:57:17.517] PYTHON: Bridge available: True
+[11:57:17.520] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508037510_bmvos70ns
+[11:57:17.521] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:17.521] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
-  "today": 1,
-  "lifetime": 1,
+  "today": 2,
+  "lifetime": 2,
   "accuracy": 100.0,
-  "avgSpeed": 9.882999897003174,
-  "totalTime": 9.882999897003174,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
   "daily_goals": {
     "target_questions": 20,
     "target_time_minutes": 10,
@@ -588,184 +151,44 @@
   },
   "practice_days": 1
 }
-[10:37:34.515] PYTHON: Executing JavaScript in web view...
-[10:37:34.516] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503254506_a9lsmvcbk (line 3, source: )
-[10:37:34.517] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:34.517] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503254506_a9lsmvcbk (line 7, source: )
-[10:37:34.518] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:34.518] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:35.488] PYTHON: === PythonBridge.send called ===
-[10:37:35.489] PYTHON: Action: subscribe_realtime
-[10:37:35.489] PYTHON: Data: {"subscriber_id":"main_1767503254485"}
-[10:37:35.490] PYTHON: Callback ID: rt_1767503255487_8a53c4w3i
-[10:37:35.491] PYTHON: Bridge available: True
-[10:37:35.491] PYTHON: Subscribing to realtime: subscriber_id=main_1767503254485, callback_id=rt_1767503255487_8a53c4w3i
-[10:37:35.491] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767503254485', 'last_data': {}}
-[10:37:35.492] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767503255487_8a53c4w3i
-[10:37:35.492] PYTHON: Data type: <class 'dict'>, size: 56
-[10:37:35.493] PYTHON: Data being sent to JavaScript:
+[11:57:17.522] PYTHON: Executing JavaScript in web view...
+[11:57:17.525] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508037510_bmvos70ns (line 3, source: )
+[11:57:17.526] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:17.526] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508037510_bmvos70ns (line 7, source: )
+[11:57:17.527] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:17.528] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:18.499] PYTHON: === PythonBridge.send called ===
+[11:57:18.499] PYTHON: Action: subscribe_realtime
+[11:57:18.500] PYTHON: Data: {"subscriber_id":"main_1767508037494"}
+[11:57:18.500] PYTHON: Callback ID: rt_1767508038498_vxxinsw5z
+[11:57:18.500] PYTHON: Bridge available: True
+[11:57:18.501] PYTHON: Subscribing to realtime: subscriber_id=main_1767508037494, callback_id=rt_1767508038498_vxxinsw5z
+[11:57:18.501] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767508037494', 'last_data': {}}
+[11:57:18.502] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767508038498_vxxinsw5z
+[11:57:18.502] PYTHON: Data type: <class 'dict'>, size: 56
+[11:57:18.503] PYTHON: Data being sent to JavaScript:
 {
-  "subscriber_id": "main_1767503254485",
+  "subscriber_id": "main_1767508037494",
   "last_data": {}
 }
-[10:37:35.494] PYTHON: Executing JavaScript in web view...
-[10:37:35.495] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767503255487_8a53c4w3i (line 3, source: )
-[10:37:35.495] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:35.496] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767503255487_8a53c4w3i (line 7, source: )
-[10:37:35.496] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 15, source: )
-[10:37:35.497] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 17, source: )
-[10:37:35.497] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:36.090] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: === checkAnswer called === (line 598, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.091] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: startTime: null (line 599, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.092] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: answerInput.value:  (line 600, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.092] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: startTime is null, generating question... (line 603, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.097] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: start_session [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.098] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503256088_ash23c6iv (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.099] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.099] PYTHON: === PythonBridge.send called ===
-[10:37:36.100] PYTHON: Action: start_session
-[10:37:36.100] PYTHON: Data: {"mode":"Free Play","operation":"Addition","digits":2}
-[10:37:36.100] PYTHON: Callback ID: cb_1767503256088_ash23c6iv
-[10:37:36.101] PYTHON: Bridge available: True
-[10:37:36.102] PYTHON: === Attempting to append to C:\Users\Moonlight\AppData\Roaming\Anki2\addons21\math_drill\data\sessions.json ===
-[10:37:36.102] PYTHON: Item data: {'id': 9, 'mode': 'Free Play', 'operation': 'Addition', 'digits': 2, 'target_value': None, 'total_attempts': 0, 'correct_count': 0, 'avg_speed': 0.0, 'created': '2026-01-04T10:37:36.102039'}
-[10:37:36.103] PYTHON: Current data count: 8
-[10:37:36.104] PYTHON: ✅ Successfully saved to C:\Users\Moonlight\AppData\Roaming\Anki2\addons21\math_drill\data\sessions.json
-[10:37:36.118] PYTHON: Verification: new count = 9
-[10:37:36.119] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer started for question: 31 + 12 = (line 594, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.120] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.0s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.222] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.320] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.2s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.423] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.3s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.512] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.4s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.610] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.5s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.715] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.6s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.778] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.779] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503256777_h8hn1pu2y (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.779] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.779] PYTHON: === PythonBridge.send called ===
-[10:37:36.780] PYTHON: Action: get_stats
-[10:37:36.780] PYTHON: Data: {}
-[10:37:36.780] PYTHON: Callback ID: cb_1767503256777_h8hn1pu2y
-[10:37:36.781] PYTHON: Bridge available: True
-[10:37:36.783] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503256777_h8hn1pu2y
-[10:37:36.783] PYTHON: Data type: <class 'dict'>, size: 283
-[10:37:36.784] PYTHON: Data being sent to JavaScript:
-{
-  "session": 0,
-  "today": 1,
-  "lifetime": 1,
-  "accuracy": 100.0,
-  "avgSpeed": 9.882999897003174,
-  "totalTime": 9.882999897003174,
-  "daily_goals": {
-    "target_questions": 20,
-    "target_time_minutes": 10,
-    "questions_completed": 0,
-    "time_spent_minutes": 0.0,
-    "achieved": false
-  },
-  "practice_days": 1
-}
-[10:37:36.784] PYTHON: Executing JavaScript in web view...
-[10:37:36.785] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503256777_h8hn1pu2y (line 3, source: )
-[10:37:36.786] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:36.786] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503256777_h8hn1pu2y (line 7, source: )
-[10:37:36.787] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:36.787] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:36.809] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.7s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:36.918] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.8s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.010] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.9s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.123] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.0s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.221] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.312] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.2s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.412] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.3s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.518] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.4s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.619] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.5s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.712] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.6s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.820] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.7s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:37.913] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.8s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.021] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.9s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.113] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.0s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.223] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.316] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.2s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.416] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.3s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.523] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.4s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.615] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.5s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.712] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.6s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.818] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.7s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:38.912] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.8s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.024] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 2.9s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.120] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.0s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.209] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.403] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.3s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.515] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.4s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.621] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.5s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.714] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.6s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.816] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.7s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:39.908] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.8s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.018] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 3.9s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.023] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: === checkAnswer called === (line 598, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.024] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: startTime: 1767503256.088 (line 599, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.025] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: answerInput.value: 43 (line 600, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.025] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: userText: 43 (line 609, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.026] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: elapsed: 3.934999942779541 (line 625, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.026] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: correct: true (line 626, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.027] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: About to call logAttempt... (line 633, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.027] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: === logAttempt called === (line 280, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.027] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: correct: true (line 281, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.028] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: timeTaken: 3.934999942779541 (line 282, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.028] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: questionText: 31 + 12 = (line 283, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.029] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: userAnswer: 43 (line 284, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.029] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: correctAnswer: 43 (line 285, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.030] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: window.pythonBridge available: true (line 286, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.031] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: JavaScript logging attempt: [object Object] (line 300, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.031] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 306, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.032] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Bridge type: object (line 307, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.033] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Bridge send method: function (line 308, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.033] PYTHON: === PythonBridge.send called ===
-[10:37:40.034] PYTHON: Action: log_attempt
-[10:37:40.034] PYTHON: Data: {"operation":"Addition","digits":2,"correct":true,"time_taken":3.934999942779541,"question_text":"31 + 12 =","user_answer":43,"correct_answer":43,"difficulty_level":2,"timestamp":"2026-01-04T05:07:40.024Z"}
-[10:37:40.034] PYTHON: Callback ID:
-[10:37:40.035] PYTHON: Bridge available: True
-[10:37:40.035] PYTHON: === Handling log_attempt action ===
-[10:37:40.036] PYTHON: === Python log_attempt called ===
-[10:37:40.036] PYTHON: Received data: {'operation': 'Addition', 'digits': 2, 'correct': True, 'time_taken': 3.934999942779541, 'question_text': '31 + 12 =', 'user_answer': 43, 'correct_answer': 43, 'difficulty_level': 2, 'timestamp': '2026-01-04T05:07:40.024Z'}
-[10:37:40.036] PYTHON: Data directory being used: C:\Users\Moonlight\AppData\Roaming\Anki2\addons21\math_drill
-[10:37:40.037] PYTHON: Parsed: operation=Addition, digits=2, correct=True, time_taken=3.934999942779541, session_id=9
-[10:37:40.037] PYTHON: Testing database API connection...
-[10:37:40.038] PYTHON: Database API test successful: {'total_attempts': 1, 'total_correct': 1, 'total_sessions': 9, 'accuracy': 100.0, 'avg_time': 9.882999897003174, 'practice_days': 1}
-[10:37:40.038] PYTHON: Attempting to create attempt in database...
-[10:37:40.039] PYTHON: === Attempting to append to C:\Users\Moonlight\AppData\Roaming\Anki2\addons21\math_drill\data\attempts.json ===
-[10:37:40.039] PYTHON: Item data: {'id': 2, 'operation': 'Addition', 'digits': 2, 'correct': True, 'time_taken': 3.934999942779541, 'created': '2026-01-04', 'session_id': 9, 'question_text': '31 + 12 =', 'user_answer': 43, 'correct_answer': 43, 'difficulty_level': 1, 'timestamp': '2026-01-04T10:37:40.039290'}
-[10:37:40.040] PYTHON: Current data count: 1
-[10:37:40.041] PYTHON: ✅ Successfully saved to C:\Users\Moonlight\AppData\Roaming\Anki2\addons21\math_drill\data\attempts.json
-[10:37:40.053] PYTHON: Verification: new count = 2
-[10:37:40.054] PYTHON: Attempt created with ID: 2
-[10:37:40.054] PYTHON: ✅ Successfully logged attempt to database
-[10:37:40.054] PYTHON: Updating adaptive learning...
-[10:37:40.056] PYTHON: ✅ Adaptive learning updated
-[10:37:40.056] PYTHON: Updating weakness tracking...
-[10:37:40.058] PYTHON: ✅ Weakness tracking updated
-[10:37:40.059] PYTHON: Updating daily progress...
-[10:37:40.059] PYTHON: ✅ Daily progress updated
-[10:37:40.060] PYTHON: Triggering real-time sync...
-[10:37:40.060] PYTHON: ✅ Real-time sync triggered
-[10:37:40.060] PYTHON: ✅ All logging operations completed successfully
-[10:37:40.066] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Successfully sent to Python bridge (line 312, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.066] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Processing real-time sync: attempt_logged (line 107, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:40.067] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 📊 New attempt logged: [object Object] (line 26, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:40.067] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.072] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503260026_en0tduwtj (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.073] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.074] PYTHON: === PythonBridge.send called ===
-[10:37:40.074] PYTHON: Action: get_stats
-[10:37:40.075] PYTHON: Data: {}
-[10:37:40.075] PYTHON: Callback ID: cb_1767503260026_en0tduwtj
-[10:37:40.075] PYTHON: Bridge available: True
-[10:37:40.077] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503260026_en0tduwtj
-[10:37:40.078] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:40.078] PYTHON: Data being sent to JavaScript:
+[11:57:18.503] PYTHON: Executing JavaScript in web view...
+[11:57:18.505] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767508038498_vxxinsw5z (line 3, source: )
+[11:57:18.506] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:18.507] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767508038498_vxxinsw5z (line 7, source: )
+[11:57:18.507] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 15, source: )
+[11:57:18.508] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 17, source: )
+[11:57:18.508] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
+[11:57:20.230] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:20.231] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508040230_gkx7hpkyp (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:20.231] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:20.232] PYTHON: === PythonBridge.send called ===
+[11:57:20.232] PYTHON: Action: get_stats
+[11:57:20.233] PYTHON: Data: {}
+[11:57:20.233] PYTHON: Callback ID: cb_1767508040230_gkx7hpkyp
+[11:57:20.233] PYTHON: Bridge available: True
+[11:57:20.235] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508040230_gkx7hpkyp
+[11:57:20.235] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:20.236] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -782,18 +205,94 @@
   },
   "practice_days": 1
 }
-[10:37:40.078] PYTHON: Executing JavaScript in web view...
-[10:37:40.080] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.080] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503260027_4bfsf2gz5 (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.081] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.081] PYTHON: === PythonBridge.send called ===
-[10:37:40.082] PYTHON: Action: get_stats
-[10:37:40.082] PYTHON: Data: {}
-[10:37:40.083] PYTHON: Callback ID: cb_1767503260027_4bfsf2gz5
-[10:37:40.083] PYTHON: Bridge available: True
-[10:37:40.085] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503260027_4bfsf2gz5
-[10:37:40.086] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:40.086] PYTHON: Data being sent to JavaScript:
+[11:57:20.236] PYTHON: Executing JavaScript in web view...
+[11:57:20.238] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508040230_gkx7hpkyp (line 3, source: )
+[11:57:20.238] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:20.239] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508040230_gkx7hpkyp (line 7, source: )
+[11:57:20.239] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:20.240] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:23.582] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Progress page: Python bridge initialized successfully (line 136, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.html)
+[11:57:23.583] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🚀 Initializing ProgressPage... (line 40, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.584] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🚀 Starting to load progress data... (line 90, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.585] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔗 Python bridge available, requesting data... (line 109, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.585] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge: get_progress_data [object Object] cb_1767508043584_kx6ay0474 (line 988, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.586] PYTHON: === PythonBridge.send called ===
+[11:57:23.586] PYTHON: Action: get_progress_data
+[11:57:23.587] PYTHON: Data: {"period":"week"}
+[11:57:23.587] PYTHON: Callback ID: cb_1767508043584_kx6ay0474
+[11:57:23.587] PYTHON: Bridge available: True
+[11:57:23.588] PYTHON: Generating fresh progress data...
+[11:57:23.589] PYTHON: send_to_js called: action=progress_data_result, callback_id=cb_1767508043584_kx6ay0474
+[11:57:23.589] PYTHON: Data type: <class 'dict'>, size: 0
+[11:57:23.590] PYTHON: Data being sent to JavaScript:
+{}
+[11:57:23.590] PYTHON: Executing JavaScript in web view...
+[11:57:23.592] PYTHON: Real progress data generated: 2 total, 100.0% accuracy
+[11:57:23.593] PYTHON: Pushing newly generated fast data to frontend.
+[11:57:23.595] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508043584_kx6ay0474 (line 3, source: )
+[11:57:23.596] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:23.596] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508043584_kx6ay0474 (line 7, source: )
+[11:57:23.597] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 12, source: )
+[11:57:23.597] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received callback result: [object Object] (line 983, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.598] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 14, source: )
+[11:57:23.598] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 📊 Received data: [object Object] (line 117, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.599] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ⏳ No data received. Waiting for data push from Python. (line 128, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.599] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🎯 Total load time: 12.30ms (line 143, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.600] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received fast data push from Python: [object Object] (line 365, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.674] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🚀 Initializing ProgressPage... (line 40, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.674] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🚀 Starting to load progress data... (line 90, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.675] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔗 Python bridge available, requesting data... (line 109, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.676] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge: get_progress_data [object Object] cb_1767508043675_v6owub7ld (line 988, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.676] PYTHON: === PythonBridge.send called ===
+[11:57:23.677] PYTHON: Action: get_progress_data
+[11:57:23.677] PYTHON: Data: {"period":"week"}
+[11:57:23.677] PYTHON: Callback ID: cb_1767508043675_v6owub7ld
+[11:57:23.678] PYTHON: Bridge available: True
+[11:57:23.678] PYTHON: Generating fresh progress data...
+[11:57:23.679] PYTHON: send_to_js called: action=progress_data_result, callback_id=cb_1767508043675_v6owub7ld
+[11:57:23.680] PYTHON: Data type: <class 'dict'>, size: 0
+[11:57:23.681] PYTHON: Data being sent to JavaScript:
+{}
+[11:57:23.681] PYTHON: Real progress data generated: 2 total, 100.0% accuracy
+[11:57:23.681] PYTHON: Executing JavaScript in web view...
+[11:57:23.682] PYTHON: Pushing newly generated fast data to frontend.
+[11:57:23.686] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508043675_v6owub7ld (line 3, source: )
+[11:57:23.686] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:23.687] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508043675_v6owub7ld (line 7, source: )
+[11:57:23.687] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 12, source: )
+[11:57:23.688] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received callback result: [object Object] (line 983, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.688] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 14, source: )
+[11:57:23.689] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 📊 Received data: [object Object] (line 117, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.689] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ⏳ No data received. Waiting for data push from Python. (line 128, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.690] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🎯 Total load time: 11.90ms (line 143, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.690] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received fast data push from Python: [object Object] (line 365, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/progress.js)
+[11:57:23.693] PYTHON: Updating progress data with heavy data components...
+[11:57:23.697] PYTHON: Progress data updated with heavy data components
+[11:57:23.784] PYTHON: Updating progress data with heavy data components...
+[11:57:23.787] PYTHON: Progress data updated with heavy data components
+[11:57:29.417] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element themeToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.418] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.419] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.419] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element soundToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.420] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element hintsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.420] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element timerToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.420] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element animationsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.421] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element autosaveToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.421] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element shortcutsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:29.422] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 156, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
+[11:57:29.422] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:29.423] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:29.423] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:29.424] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508049419_kb9ojpfjb (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:29.424] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:29.425] PYTHON: === PythonBridge.send called ===
+[11:57:29.425] PYTHON: Action: get_stats
+[11:57:29.425] PYTHON: Data: {}
+[11:57:29.426] PYTHON: Callback ID: cb_1767508049419_kb9ojpfjb
+[11:57:29.426] PYTHON: Bridge available: True
+[11:57:29.428] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508049419_kb9ojpfjb
+[11:57:29.428] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:29.429] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -810,26 +309,23 @@
   },
   "practice_days": 1
 }
-[10:37:40.087] PYTHON: Executing JavaScript in web view...
-[10:37:40.088] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: play_sound [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.089] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503260027_9rmg7vhyn (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.089] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.090] PYTHON: === PythonBridge.send called ===
-[10:37:40.090] PYTHON: Action: play_sound
-[10:37:40.091] PYTHON: Data: {"success":true}
-[10:37:40.091] PYTHON: Callback ID: cb_1767503260027_9rmg7vhyn
-[10:37:40.091] PYTHON: Bridge available: True
-[10:37:40.093] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.094] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503260028_v1dllwu38 (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.094] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.095] PYTHON: === PythonBridge.send called ===
-[10:37:40.095] PYTHON: Action: get_stats
-[10:37:40.096] PYTHON: Data: {}
-[10:37:40.096] PYTHON: Callback ID: cb_1767503260028_v1dllwu38
-[10:37:40.096] PYTHON: Bridge available: True
-[10:37:40.099] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503260028_v1dllwu38
-[10:37:40.099] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:40.099] PYTHON: Data being sent to JavaScript:
+[11:57:29.429] PYTHON: Executing JavaScript in web view...
+[11:57:29.433] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508049419_kb9ojpfjb (line 3, source: )
+[11:57:29.434] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:29.434] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508049419_kb9ojpfjb (line 7, source: )
+[11:57:29.435] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:29.435] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:30.228] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:30.228] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508050227_i1hu0w3v8 (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:30.229] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:30.229] PYTHON: === PythonBridge.send called ===
+[11:57:30.230] PYTHON: Action: get_stats
+[11:57:30.230] PYTHON: Data: {}
+[11:57:30.230] PYTHON: Callback ID: cb_1767508050227_i1hu0w3v8
+[11:57:30.231] PYTHON: Bridge available: True
+[11:57:30.233] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508050227_i1hu0w3v8
+[11:57:30.234] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:30.234] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -846,20 +342,44 @@
   },
   "practice_days": 1
 }
-[10:37:40.100] PYTHON: Executing JavaScript in web view...
-[10:37:40.101] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Processing real-time sync: attempt_logged (line 107, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:40.101] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 📊 New attempt logged: [object Object] (line 26, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:40.102] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.103] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503260060_am2u25qyd (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.104] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.104] PYTHON: === PythonBridge.send called ===
-[10:37:40.105] PYTHON: Action: get_stats
-[10:37:40.105] PYTHON: Data: {}
-[10:37:40.105] PYTHON: Callback ID: cb_1767503260060_am2u25qyd
-[10:37:40.106] PYTHON: Bridge available: True
-[10:37:40.108] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503260060_am2u25qyd
-[10:37:40.108] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:40.109] PYTHON: Data being sent to JavaScript:
+[11:57:30.235] PYTHON: Executing JavaScript in web view...
+[11:57:30.237] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508050227_i1hu0w3v8 (line 3, source: )
+[11:57:30.237] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:30.238] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508050227_i1hu0w3v8 (line 7, source: )
+[11:57:30.238] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:30.239] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:30.412] PYTHON: === PythonBridge.send called ===
+[11:57:30.413] PYTHON: Action: subscribe_realtime
+[11:57:30.413] PYTHON: Data: {"subscriber_id":"main_1767508049403"}
+[11:57:30.414] PYTHON: Callback ID: rt_1767508050410_7osq17c56
+[11:57:30.414] PYTHON: Bridge available: True
+[11:57:30.414] PYTHON: Subscribing to realtime: subscriber_id=main_1767508049403, callback_id=rt_1767508050410_7osq17c56
+[11:57:30.415] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767508049403', 'last_data': {}}
+[11:57:30.415] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767508050410_7osq17c56
+[11:57:30.416] PYTHON: Data type: <class 'dict'>, size: 56
+[11:57:30.416] PYTHON: Data being sent to JavaScript:
+{
+  "subscriber_id": "main_1767508049403",
+  "last_data": {}
+}
+[11:57:30.416] PYTHON: Executing JavaScript in web view...
+[11:57:30.419] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767508050410_7osq17c56 (line 3, source: )
+[11:57:30.420] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:30.420] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767508050410_7osq17c56 (line 7, source: )
+[11:57:30.422] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 15, source: )
+[11:57:30.422] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 17, source: )
+[11:57:30.422] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
+[11:57:35.228] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:35.228] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508055227_gu39agtzs (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:35.229] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:35.230] PYTHON: === PythonBridge.send called ===
+[11:57:35.230] PYTHON: Action: get_stats
+[11:57:35.231] PYTHON: Data: {}
+[11:57:35.231] PYTHON: Callback ID: cb_1767508055227_gu39agtzs
+[11:57:35.231] PYTHON: Bridge available: True
+[11:57:35.234] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508055227_gu39agtzs
+[11:57:35.234] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:35.234] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -876,18 +396,44 @@
   },
   "practice_days": 1
 }
-[10:37:40.109] PYTHON: Executing JavaScript in web view...
-[10:37:40.112] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.113] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503260061_3pnkvlv0t (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.114] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.115] PYTHON: === PythonBridge.send called ===
-[10:37:40.115] PYTHON: Action: get_stats
-[10:37:40.115] PYTHON: Data: {}
-[10:37:40.116] PYTHON: Callback ID: cb_1767503260061_3pnkvlv0t
-[10:37:40.116] PYTHON: Bridge available: True
-[10:37:40.118] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503260061_3pnkvlv0t
-[10:37:40.118] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:40.119] PYTHON: Data being sent to JavaScript:
+[11:57:35.235] PYTHON: Executing JavaScript in web view...
+[11:57:35.236] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508055227_gu39agtzs (line 3, source: )
+[11:57:35.237] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:35.237] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508055227_gu39agtzs (line 7, source: )
+[11:57:35.237] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:35.238] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:36.301] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle themeToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.302] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.302] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.303] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle soundToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.303] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle hintsToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.304] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle timerToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.304] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle animationsToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.306] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle autosaveToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:36.306] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Updating toggle shortcutsToggle to true (line 86, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.587] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element themeToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.587] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.588] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Applied theme color purple: [object Object] (line 157, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.588] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element soundToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.589] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element hintsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.590] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element timerToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.590] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element animationsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.592] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element autosaveToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.593] JS [JavaScriptConsoleMessageLevel.WarningMessageLevel]: Element shortcutsToggle not found (line 93, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/settings.js)
+[11:57:38.595] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 156, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
+[11:57:38.596] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:38.597] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:38.597] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:38.598] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508058596_fuq9mgdtj (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:38.598] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:38.599] PYTHON: === PythonBridge.send called ===
+[11:57:38.600] PYTHON: Action: get_stats
+[11:57:38.600] PYTHON: Data: {}
+[11:57:38.600] PYTHON: Callback ID: cb_1767508058596_fuq9mgdtj
+[11:57:38.601] PYTHON: Bridge available: True
+[11:57:38.603] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508058596_fuq9mgdtj
+[11:57:38.603] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:38.604] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -904,61 +450,44 @@
   },
   "practice_days": 1
 }
-[10:37:40.119] PYTHON: Executing JavaScript in web view...
-[10:37:40.120] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503260026_en0tduwtj (line 3, source: )
-[10:37:40.121] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:40.121] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503260026_en0tduwtj (line 7, source: )
-[10:37:40.122] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:40.123] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:40.124] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503260027_4bfsf2gz5 (line 3, source: )
-[10:37:40.124] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:40.125] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503260027_4bfsf2gz5 (line 7, source: )
-[10:37:40.126] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:40.126] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:40.127] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503260028_v1dllwu38 (line 3, source: )
-[10:37:40.127] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:40.128] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503260028_v1dllwu38 (line 7, source: )
-[10:37:40.129] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:40.129] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:40.130] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 4.0s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.130] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503260060_am2u25qyd (line 3, source: )
-[10:37:40.131] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:40.131] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503260060_am2u25qyd (line 7, source: )
-[10:37:40.132] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:40.132] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:40.133] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503260061_3pnkvlv0t (line 3, source: )
-[10:37:40.134] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:40.134] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503260061_3pnkvlv0t (line 7, source: )
-[10:37:40.134] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:40.135] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:40.217] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 4.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.311] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 4.2s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.411] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 4.3s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.522] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 4.4s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.614] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 4.5s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.639] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer started for question: 90 + 69 = (line 594, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.716] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.814] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.2s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:40.930] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.3s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.016] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.4s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.111] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.5s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.208] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.6s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.311] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.7s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.420] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.8s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.511] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 0.9s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.609] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.0s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.719] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Timer updated: 1.1s (line 829, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.774] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.775] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503261773_ax1zjgfoi (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.775] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:41.776] PYTHON: === PythonBridge.send called ===
-[10:37:41.776] PYTHON: Action: get_stats
-[10:37:41.777] PYTHON: Data: {}
-[10:37:41.777] PYTHON: Callback ID: cb_1767503261773_ax1zjgfoi
-[10:37:41.778] PYTHON: Bridge available: True
-[10:37:41.780] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503261773_ax1zjgfoi
-[10:37:41.780] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:41.781] PYTHON: Data being sent to JavaScript:
+[11:57:38.604] PYTHON: Executing JavaScript in web view...
+[11:57:38.605] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508058596_fuq9mgdtj (line 3, source: )
+[11:57:38.606] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:38.606] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508058596_fuq9mgdtj (line 7, source: )
+[11:57:38.607] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:38.607] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:39.572] PYTHON: === PythonBridge.send called ===
+[11:57:39.573] PYTHON: Action: subscribe_realtime
+[11:57:39.573] PYTHON: Data: {"subscriber_id":"main_1767508058570"}
+[11:57:39.573] PYTHON: Callback ID: rt_1767508059571_agr62t1op
+[11:57:39.574] PYTHON: Bridge available: True
+[11:57:39.574] PYTHON: Subscribing to realtime: subscriber_id=main_1767508058570, callback_id=rt_1767508059571_agr62t1op
+[11:57:39.575] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767508058570', 'last_data': {}}
+[11:57:39.576] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767508059571_agr62t1op
+[11:57:39.576] PYTHON: Data type: <class 'dict'>, size: 56
+[11:57:39.576] PYTHON: Data being sent to JavaScript:
+{
+  "subscriber_id": "main_1767508058570",
+  "last_data": {}
+}
+[11:57:39.577] PYTHON: Executing JavaScript in web view...
+[11:57:39.581] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767508059571_agr62t1op (line 3, source: )
+[11:57:39.582] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:39.582] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767508059571_agr62t1op (line 7, source: )
+[11:57:39.582] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 15, source: )
+[11:57:39.583] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 17, source: )
+[11:57:39.584] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
+[11:57:40.227] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:40.229] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508060227_t1r97bzd0 (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:40.231] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:40.232] PYTHON: === PythonBridge.send called ===
+[11:57:40.232] PYTHON: Action: get_stats
+[11:57:40.232] PYTHON: Data: {}
+[11:57:40.233] PYTHON: Callback ID: cb_1767508060227_t1r97bzd0
+[11:57:40.233] PYTHON: Bridge available: True
+[11:57:40.235] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508060227_t1r97bzd0
+[11:57:40.236] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:40.236] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -975,516 +504,23 @@
   },
   "practice_days": 1
 }
-[10:37:41.781] PYTHON: Executing JavaScript in web view...
-[10:37:41.782] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503261773_ax1zjgfoi (line 3, source: )
-[10:37:41.783] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:41.784] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503261773_ax1zjgfoi (line 7, source: )
-[10:37:41.784] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:41.785] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:41.828] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🏆 DOM ready, initializing AchievementsPage... (line 530, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.835] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Achievements page: Python bridge initialized successfully (line 69, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.html)
-[10:37:41.836] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🏆 Initializing AchievementsPage... (line 39, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.836] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Loading achievements... (line 51, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.836] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔗 Python bridge available, requesting achievements... (line 63, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.837] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge: get_achievements [object Object] cb_1767503261833_jd8rlychy (line 514, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.838] PYTHON: === PythonBridge.send called ===
-[10:37:41.838] PYTHON: Action: get_achievements
-[10:37:41.838] PYTHON: Data: {}
-[10:37:41.839] PYTHON: Callback ID: cb_1767503261833_jd8rlychy
-[10:37:41.839] PYTHON: Bridge available: True
-[10:37:41.840] PYTHON: send_to_js called: action=achievements_result, callback_id=cb_1767503261833_jd8rlychy
-[10:37:41.840] PYTHON: Data type: <class 'list'>, size: 3995
-[10:37:41.841] PYTHON: Data being sent to JavaScript:
-[
-  {
-    "name": "First Steps",
-    "desc": "Complete your first session",
-    "unlocked": false
-  },
-  {
-    "name": "Novice",
-    "desc": "Complete 10 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Apprentice",
-    "desc": "Complete 25 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Centurion",
-    "desc": "Complete 100 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Veteran",
-    "desc": "Complete 500 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Legend",
-    "desc": "Complete 1000 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Sniper",
-    "desc": "100% Accuracy in a Drill (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Sharpshooter",
-    "desc": "95% Accuracy in a Drill (30+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Marksman",
-    "desc": "90% Accuracy in a Drill (40+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Perfectionist",
-    "desc": "100% Accuracy in 3 separate sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Demon",
-    "desc": "Avg Speed < 2.0s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Lightning Fast",
-    "desc": "Avg Speed < 1.5s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Flash",
-    "desc": "Avg Speed < 1.0s in a Drill/Sprint (10+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Quicksilver",
-    "desc": "Answer 10 questions under 1s each",
-    "unlocked": false
-  },
-  {
-    "name": "Marathoner",
-    "desc": "Complete a session with 50+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ultra Marathoner",
-    "desc": "Complete a session with 100+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ironman",
-    "desc": "Complete a session with 200+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "On Fire",
-    "desc": "Achieve a 5-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Blazing",
-    "desc": "Achieve a 10-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Inferno",
-    "desc": "Achieve a 25-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Volcano",
-    "desc": "Achieve a 50-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Addition Master",
-    "desc": "Complete 50 addition questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Subtraction Master",
-    "desc": "Complete 50 subtraction questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Multiplication Master",
-    "desc": "Complete 50 multiplication questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Division Master",
-    "desc": "Complete 50 division questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Digit Expert",
-    "desc": "Complete 30 questions with 3-digit numbers",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Digits",
-    "desc": "Complete 20 3-digit questions under 3s each",
-    "unlocked": false
-  },
-  {
-    "name": "Precision Digits",
-    "desc": "95% accuracy with 3-digit numbers (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Drill Sergeant",
-    "desc": "Complete 10 Drill mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Sprint Champion",
-    "desc": "Complete 5 Sprint mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Coach's Pet",
-    "desc": "Complete 10 Adaptive Coach sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Master Mind",
-    "desc": "Complete a Mixed Mode session with >90% Acc",
-    "unlocked": false
-  },
-  {
-    "name": "Daily Player",
-    "desc": "Play on 3 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Weekly Warrior",
-    "desc": "Play on 7 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Monthly Master",
-    "desc": "Play for 30 consecutive days",
-    "unlocked": false
-  },
-  {
-    "name": "Early Bird",
-    "desc": "Complete a session before 9 AM",
-    "unlocked": false
-  },
-  {
-    "name": "Night Owl",
-    "desc": "Complete a session after 9 PM",
-    "unlocked": false
-  },
-  {
-    "name": "Weekend Warrior",
-    "desc": "Complete 5 sessions on weekends",
-    "unlocked": false
-  },
-  {
-    "name": "Flawless",
-    "desc": "Complete a session with zero mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Comeback Kid",
-    "desc": "Get 80% accuracy after 5 mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Retake Master",
-    "desc": "Successfully complete all retake questions",
-    "unlocked": false
-  },
-  {
-    "name": "Time Master",
-    "desc": "Practice for 60 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Veteran",
-    "desc": "Practice for 180 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Legend",
-    "desc": "Practice for 300 total minutes",
-    "unlocked": false
-  }
-]
-[10:37:41.841] PYTHON: Executing JavaScript in web view...
-[10:37:41.843] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503261833_jd8rlychy (line 3, source: )
-[10:37:41.844] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:41.844] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503261833_jd8rlychy (line 7, source: )
-[10:37:41.845] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 233, source: )
-[10:37:41.845] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received callback result: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 509, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.846] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 235, source: )
-[10:37:41.847] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Received achievements from Python: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 69, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.847] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🎨 Rendering achievements... (line 371, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.857] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Rendered 44 achievements in 12.20ms (line 445, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.942] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🏆 Initializing AchievementsPage... (line 39, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.943] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Loading achievements... (line 51, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.943] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔗 Python bridge available, requesting achievements... (line 63, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.944] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge: get_achievements [object Object] cb_1767503261933_53u5h1qyc (line 514, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.945] PYTHON: === PythonBridge.send called ===
-[10:37:41.945] PYTHON: Action: get_achievements
-[10:37:41.945] PYTHON: Data: {}
-[10:37:41.946] PYTHON: Callback ID: cb_1767503261933_53u5h1qyc
-[10:37:41.946] PYTHON: Bridge available: True
-[10:37:41.947] PYTHON: send_to_js called: action=achievements_result, callback_id=cb_1767503261933_53u5h1qyc
-[10:37:41.947] PYTHON: Data type: <class 'list'>, size: 3995
-[10:37:41.948] PYTHON: Data being sent to JavaScript:
-[
-  {
-    "name": "First Steps",
-    "desc": "Complete your first session",
-    "unlocked": false
-  },
-  {
-    "name": "Novice",
-    "desc": "Complete 10 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Apprentice",
-    "desc": "Complete 25 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Centurion",
-    "desc": "Complete 100 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Veteran",
-    "desc": "Complete 500 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Legend",
-    "desc": "Complete 1000 questions total",
-    "unlocked": false
-  },
-  {
-    "name": "Sniper",
-    "desc": "100% Accuracy in a Drill (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Sharpshooter",
-    "desc": "95% Accuracy in a Drill (30+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Marksman",
-    "desc": "90% Accuracy in a Drill (40+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Perfectionist",
-    "desc": "100% Accuracy in 3 separate sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Demon",
-    "desc": "Avg Speed < 2.0s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Lightning Fast",
-    "desc": "Avg Speed < 1.5s in a Drill/Sprint (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Flash",
-    "desc": "Avg Speed < 1.0s in a Drill/Sprint (10+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Quicksilver",
-    "desc": "Answer 10 questions under 1s each",
-    "unlocked": false
-  },
-  {
-    "name": "Marathoner",
-    "desc": "Complete a session with 50+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ultra Marathoner",
-    "desc": "Complete a session with 100+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "Ironman",
-    "desc": "Complete a session with 200+ Questions",
-    "unlocked": false
-  },
-  {
-    "name": "On Fire",
-    "desc": "Achieve a 5-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Blazing",
-    "desc": "Achieve a 10-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Inferno",
-    "desc": "Achieve a 25-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Volcano",
-    "desc": "Achieve a 50-question streak",
-    "unlocked": false
-  },
-  {
-    "name": "Addition Master",
-    "desc": "Complete 50 addition questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Subtraction Master",
-    "desc": "Complete 50 subtraction questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Multiplication Master",
-    "desc": "Complete 50 multiplication questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Division Master",
-    "desc": "Complete 50 division questions with 90%+ accuracy",
-    "unlocked": false
-  },
-  {
-    "name": "Digit Expert",
-    "desc": "Complete 30 questions with 3-digit numbers",
-    "unlocked": false
-  },
-  {
-    "name": "Speed Digits",
-    "desc": "Complete 20 3-digit questions under 3s each",
-    "unlocked": false
-  },
-  {
-    "name": "Precision Digits",
-    "desc": "95% accuracy with 3-digit numbers (20+ Qs)",
-    "unlocked": false
-  },
-  {
-    "name": "Drill Sergeant",
-    "desc": "Complete 10 Drill mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Sprint Champion",
-    "desc": "Complete 5 Sprint mode sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Coach's Pet",
-    "desc": "Complete 10 Adaptive Coach sessions",
-    "unlocked": false
-  },
-  {
-    "name": "Master Mind",
-    "desc": "Complete a Mixed Mode session with >90% Acc",
-    "unlocked": false
-  },
-  {
-    "name": "Daily Player",
-    "desc": "Play on 3 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Weekly Warrior",
-    "desc": "Play on 7 different days",
-    "unlocked": false
-  },
-  {
-    "name": "Monthly Master",
-    "desc": "Play for 30 consecutive days",
-    "unlocked": false
-  },
-  {
-    "name": "Early Bird",
-    "desc": "Complete a session before 9 AM",
-    "unlocked": false
-  },
-  {
-    "name": "Night Owl",
-    "desc": "Complete a session after 9 PM",
-    "unlocked": false
-  },
-  {
-    "name": "Weekend Warrior",
-    "desc": "Complete 5 sessions on weekends",
-    "unlocked": false
-  },
-  {
-    "name": "Flawless",
-    "desc": "Complete a session with zero mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Comeback Kid",
-    "desc": "Get 80% accuracy after 5 mistakes",
-    "unlocked": false
-  },
-  {
-    "name": "Retake Master",
-    "desc": "Successfully complete all retake questions",
-    "unlocked": false
-  },
-  {
-    "name": "Time Master",
-    "desc": "Practice for 60 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Veteran",
-    "desc": "Practice for 180 total minutes",
-    "unlocked": false
-  },
-  {
-    "name": "Time Legend",
-    "desc": "Practice for 300 total minutes",
-    "unlocked": false
-  }
-]
-[10:37:41.948] PYTHON: Executing JavaScript in web view...
-[10:37:41.950] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503261933_53u5h1qyc (line 3, source: )
-[10:37:41.951] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:41.951] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503261933_53u5h1qyc (line 7, source: )
-[10:37:41.952] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 233, source: )
-[10:37:41.952] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Received callback result: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 509, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.953] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 235, source: )
-[10:37:41.953] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Received achievements from Python: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] (line 69, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.954] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🎨 Rendering achievements... (line 371, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:41.958] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Rendered 44 achievements in 7.20ms (line 445, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/achievements.js)
-[10:37:47.036] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Python bridge initialized successfully (line 189, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/index.html)
-[10:37:47.037] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Initializing MathDrillWeb... (line 85, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:47.037] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]:  Bridge status: Connected (line 87, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:47.038] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:47.038] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503267036_1ghq0ckh2 (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:47.039] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:47.039] PYTHON: === PythonBridge.send called ===
-[10:37:47.040] PYTHON: Action: get_stats
-[10:37:47.040] PYTHON: Data: {}
-[10:37:47.040] PYTHON: Callback ID: cb_1767503267036_1ghq0ckh2
-[10:37:47.041] PYTHON: Bridge available: True
-[10:37:47.043] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503267036_1ghq0ckh2
-[10:37:47.043] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:47.044] PYTHON: Data being sent to JavaScript:
+[11:57:40.237] PYTHON: Executing JavaScript in web view...
+[11:57:40.238] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508060227_t1r97bzd0 (line 3, source: )
+[11:57:40.239] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:40.239] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508060227_t1r97bzd0 (line 7, source: )
+[11:57:40.239] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:40.240] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:45.248] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:45.249] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508065244_vbymn76tx (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:45.251] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:45.251] PYTHON: === PythonBridge.send called ===
+[11:57:45.252] PYTHON: Action: get_stats
+[11:57:45.252] PYTHON: Data: {}
+[11:57:45.253] PYTHON: Callback ID: cb_1767508065244_vbymn76tx
+[11:57:45.253] PYTHON: Bridge available: True
+[11:57:45.256] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508065244_vbymn76tx
+[11:57:45.256] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:45.256] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -1501,55 +537,23 @@
   },
   "practice_days": 1
 }
-[10:37:47.044] PYTHON: Executing JavaScript in web view...
-[10:37:47.046] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503267036_1ghq0ckh2 (line 3, source: )
-[10:37:47.046] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:47.047] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503267036_1ghq0ckh2 (line 7, source: )
-[10:37:47.047] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:47.048] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:48.028] PYTHON: === PythonBridge.send called ===
-[10:37:48.029] PYTHON: Action: subscribe_realtime
-[10:37:48.029] PYTHON: Data: {"subscriber_id":"main_1767503267021"}
-[10:37:48.030] PYTHON: Callback ID: rt_1767503268027_ndpzhmw98
-[10:37:48.030] PYTHON: Bridge available: True
-[10:37:48.030] PYTHON: Subscribing to realtime: subscriber_id=main_1767503267021, callback_id=rt_1767503268027_ndpzhmw98
-[10:37:48.031] PYTHON: Sending subscription response: {'subscriber_id': 'main_1767503267021', 'last_data': {'event_type': 'attempt_logged', 'data': {'operation': 'Addition', 'digits': 2, 'correct': True, 'time_taken': 3.934999942779541}, 'timestamp': '2026-01-04T10:37:40.060464'}}
-[10:37:48.031] PYTHON: send_to_js called: action=realtime_subscribed, callback_id=rt_1767503268027_ndpzhmw98
-[10:37:48.031] PYTHON: Data type: <class 'dict'>, size: 227
-[10:37:48.032] PYTHON: Data being sent to JavaScript:
-{
-  "subscriber_id": "main_1767503267021",
-  "last_data": {
-    "event_type": "attempt_logged",
-    "data": {
-      "operation": "Addition",
-      "digits": 2,
-      "correct": true,
-      "time_taken": 3.934999942779541
-    },
-    "timestamp": "2026-01-04T10:37:40.060464"
-  }
-}
-[10:37:48.032] PYTHON: Executing JavaScript in web view...
-[10:37:48.034] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: rt_1767503268027_ndpzhmw98 (line 3, source: )
-[10:37:48.034] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:48.035] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: rt_1767503268027_ndpzhmw98 (line 7, source: )
-[10:37:48.035] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 24, source: )
-[10:37:48.036] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 26, source: )
-[10:37:48.036] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: ✅ Subscribed to real-time updates (line 76, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:48.037] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 🔄 Processing real-time sync: attempt_logged (line 107, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:48.037] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: 📊 New attempt logged: [object Object] (line 26, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/realtime-sync.js)
-[10:37:48.038] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:48.038] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503268033_0jcat58vn (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:48.039] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:48.039] PYTHON: === PythonBridge.send called ===
-[10:37:48.040] PYTHON: Action: get_stats
-[10:37:48.040] PYTHON: Data: {}
-[10:37:48.040] PYTHON: Callback ID: cb_1767503268033_0jcat58vn
-[10:37:48.041] PYTHON: Bridge available: True
-[10:37:48.043] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503268033_0jcat58vn
-[10:37:48.043] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:48.044] PYTHON: Data being sent to JavaScript:
+[11:57:45.257] PYTHON: Executing JavaScript in web view...
+[11:57:45.258] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508065244_vbymn76tx (line 3, source: )
+[11:57:45.259] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:45.259] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508065244_vbymn76tx (line 7, source: )
+[11:57:45.260] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:45.260] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:50.252] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:50.253] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508070248_mgircmhqs (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:50.254] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:50.256] PYTHON: === PythonBridge.send called ===
+[11:57:50.257] PYTHON: Action: get_stats
+[11:57:50.257] PYTHON: Data: {}
+[11:57:50.258] PYTHON: Callback ID: cb_1767508070248_mgircmhqs
+[11:57:50.259] PYTHON: Bridge available: True
+[11:57:50.264] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508070248_mgircmhqs
+[11:57:50.265] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:50.266] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -1566,18 +570,24 @@
   },
   "practice_days": 1
 }
-[10:37:48.044] PYTHON: Executing JavaScript in web view...
-[10:37:48.045] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1052, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:48.045] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767503268034_rnckely7f (line 1056, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:48.046] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1067, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
-[10:37:48.046] PYTHON: === PythonBridge.send called ===
-[10:37:48.046] PYTHON: Action: get_stats
-[10:37:48.047] PYTHON: Data: {}
-[10:37:48.047] PYTHON: Callback ID: cb_1767503268034_rnckely7f
-[10:37:48.047] PYTHON: Bridge available: True
-[10:37:48.049] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767503268034_rnckely7f
-[10:37:48.050] PYTHON: Data type: <class 'dict'>, size: 284
-[10:37:48.050] PYTHON: Data being sent to JavaScript:
+[11:57:50.267] PYTHON: Executing JavaScript in web view...
+[11:57:50.270] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508070248_mgircmhqs (line 3, source: )
+[11:57:50.271] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:50.273] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508070248_mgircmhqs (line 7, source: )
+[11:57:50.274] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:50.275] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:57:54.441] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
+[11:57:55.253] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:55.254] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508075253_xhjyj31eh (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:55.255] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:57:55.255] PYTHON: === PythonBridge.send called ===
+[11:57:55.255] PYTHON: Action: get_stats
+[11:57:55.256] PYTHON: Data: {}
+[11:57:55.256] PYTHON: Callback ID: cb_1767508075253_xhjyj31eh
+[11:57:55.257] PYTHON: Bridge available: True
+[11:57:55.259] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508075253_xhjyj31eh
+[11:57:55.259] PYTHON: Data type: <class 'dict'>, size: 284
+[11:57:55.259] PYTHON: Data being sent to JavaScript:
 {
   "session": 0,
   "today": 2,
@@ -1594,34 +604,240 @@
   },
   "practice_days": 1
 }
-[10:37:48.051] PYTHON: Executing JavaScript in web view...
-[10:37:48.052] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503268033_0jcat58vn (line 3, source: )
-[10:37:48.052] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:48.052] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503268033_0jcat58vn (line 7, source: )
-[10:37:48.053] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:48.053] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:48.054] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767503268034_rnckely7f (line 3, source: )
-[10:37:48.055] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
-[10:37:48.055] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767503268034_rnckely7f (line 7, source: )
-[10:37:48.055] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
-[10:37:48.056] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
-[10:37:52.650] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:53.595] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:54.448] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:55.245] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:37:56.139] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:18.834] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:19.958] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:21.013] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:21.832] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:22.685] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:23.587] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:25.181] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:25.710] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:27.332] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:27.844] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:29.141] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:31.242] PYTHON: Onigiri: Restaurant Level disabled in config, not awarding XP.
-[10:38:41.884] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
-[10:38:41.892] PYTHON: Toggle Taskbar Triggered! (v1.2.1)
-[10:38:41.935] PYTHON: conf key anki_task_bar_snapshot should be fetched with col.get_config(), and saved with col.set_config()
+[11:57:55.260] PYTHON: Executing JavaScript in web view...
+[11:57:55.262] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508075253_xhjyj31eh (line 3, source: )
+[11:57:55.262] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:57:55.263] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508075253_xhjyj31eh (line 7, source: )
+[11:57:55.264] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:57:55.264] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:00.254] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:00.256] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508080250_oj0k3qkgd (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:00.257] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:00.258] PYTHON: === PythonBridge.send called ===
+[11:58:00.259] PYTHON: Action: get_stats
+[11:58:00.260] PYTHON: Data: {}
+[11:58:00.261] PYTHON: Callback ID: cb_1767508080250_oj0k3qkgd
+[11:58:00.261] PYTHON: Bridge available: True
+[11:58:00.266] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508080250_oj0k3qkgd
+[11:58:00.266] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:00.267] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:00.268] PYTHON: Executing JavaScript in web view...
+[11:58:00.272] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508080250_oj0k3qkgd (line 3, source: )
+[11:58:00.273] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:00.274] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508080250_oj0k3qkgd (line 7, source: )
+[11:58:00.275] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:00.276] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:05.248] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:05.250] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508085244_vsugdpgev (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:05.251] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:05.252] PYTHON: === PythonBridge.send called ===
+[11:58:05.253] PYTHON: Action: get_stats
+[11:58:05.254] PYTHON: Data: {}
+[11:58:05.254] PYTHON: Callback ID: cb_1767508085244_vsugdpgev
+[11:58:05.255] PYTHON: Bridge available: True
+[11:58:05.259] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508085244_vsugdpgev
+[11:58:05.260] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:05.262] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:05.263] PYTHON: Executing JavaScript in web view...
+[11:58:05.265] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508085244_vsugdpgev (line 3, source: )
+[11:58:05.266] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:05.267] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508085244_vsugdpgev (line 7, source: )
+[11:58:05.268] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:05.269] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:10.269] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:10.270] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508090268_smspg9r8q (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:10.271] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:10.272] PYTHON: === PythonBridge.send called ===
+[11:58:10.273] PYTHON: Action: get_stats
+[11:58:10.274] PYTHON: Data: {}
+[11:58:10.274] PYTHON: Callback ID: cb_1767508090268_smspg9r8q
+[11:58:10.275] PYTHON: Bridge available: True
+[11:58:10.279] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508090268_smspg9r8q
+[11:58:10.280] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:10.281] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:10.282] PYTHON: Executing JavaScript in web view...
+[11:58:10.284] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508090268_smspg9r8q (line 3, source: )
+[11:58:10.286] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:10.287] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508090268_smspg9r8q (line 7, source: )
+[11:58:10.288] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:10.288] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:15.277] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:15.278] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508095275_sg79olbm1 (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:15.279] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:15.279] PYTHON: === PythonBridge.send called ===
+[11:58:15.280] PYTHON: Action: get_stats
+[11:58:15.281] PYTHON: Data: {}
+[11:58:15.281] PYTHON: Callback ID: cb_1767508095275_sg79olbm1
+[11:58:15.281] PYTHON: Bridge available: True
+[11:58:15.283] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508095275_sg79olbm1
+[11:58:15.284] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:15.284] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:15.285] PYTHON: Executing JavaScript in web view...
+[11:58:15.287] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508095275_sg79olbm1 (line 3, source: )
+[11:58:15.287] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:15.288] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508095275_sg79olbm1 (line 7, source: )
+[11:58:15.288] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:15.289] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:20.288] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:20.288] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508100287_w45p62vb4 (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:20.289] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:20.289] PYTHON: === PythonBridge.send called ===
+[11:58:20.290] PYTHON: Action: get_stats
+[11:58:20.290] PYTHON: Data: {}
+[11:58:20.291] PYTHON: Callback ID: cb_1767508100287_w45p62vb4
+[11:58:20.291] PYTHON: Bridge available: True
+[11:58:20.293] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508100287_w45p62vb4
+[11:58:20.294] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:20.294] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:20.294] PYTHON: Executing JavaScript in web view...
+[11:58:20.296] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508100287_w45p62vb4 (line 3, source: )
+[11:58:20.296] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:20.297] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508100287_w45p62vb4 (line 7, source: )
+[11:58:20.297] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:20.298] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:25.275] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:25.276] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508105275_bimwzhop9 (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:25.277] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:25.277] PYTHON: === PythonBridge.send called ===
+[11:58:25.277] PYTHON: Action: get_stats
+[11:58:25.278] PYTHON: Data: {}
+[11:58:25.278] PYTHON: Callback ID: cb_1767508105275_bimwzhop9
+[11:58:25.278] PYTHON: Bridge available: True
+[11:58:25.281] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508105275_bimwzhop9
+[11:58:25.281] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:25.282] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:25.282] PYTHON: Executing JavaScript in web view...
+[11:58:25.283] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508105275_bimwzhop9 (line 3, source: )
+[11:58:25.284] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:25.284] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508105275_bimwzhop9 (line 7, source: )
+[11:58:25.285] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:25.285] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )
+[11:58:30.275] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: sendToPython called: get_stats [object Object] (line 1061, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:30.276] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Generated callback ID: cb_1767508110274_xihyug3dn (line 1065, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:30.276] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Sending to Python bridge... (line 1076, source: file:///C:/Users/Moonlight/AppData/Roaming/Anki2/addons21/math_drill/web/script.js)
+[11:58:30.277] PYTHON: === PythonBridge.send called ===
+[11:58:30.277] PYTHON: Action: get_stats
+[11:58:30.278] PYTHON: Data: {}
+[11:58:30.278] PYTHON: Callback ID: cb_1767508110274_xihyug3dn
+[11:58:30.278] PYTHON: Bridge available: True
+[11:58:30.281] PYTHON: send_to_js called: action=stats_result, callback_id=cb_1767508110274_xihyug3dn
+[11:58:30.281] PYTHON: Data type: <class 'dict'>, size: 284
+[11:58:30.281] PYTHON: Data being sent to JavaScript:
+{
+  "session": 0,
+  "today": 2,
+  "lifetime": 2,
+  "accuracy": 100.0,
+  "avgSpeed": 6.908999919891357,
+  "totalTime": 13.817999839782715,
+  "daily_goals": {
+    "target_questions": 20,
+    "target_time_minutes": 10,
+    "questions_completed": 0,
+    "time_spent_minutes": 0.0,
+    "achieved": false
+  },
+  "practice_days": 1
+}
+[11:58:30.282] PYTHON: Executing JavaScript in web view...
+[11:58:30.283] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Python bridge script executing for callback: cb_1767508110274_xihyug3dn (line 3, source: )
+[11:58:30.284] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Checking pythonBridge availability: object (line 4, source: )
+[11:58:30.284] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Executing callback directly for: cb_1767508110274_xihyug3dn (line 7, source: )
+[11:58:30.284] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Calling callback with data: [object Object] (line 27, source: )
+[11:58:30.285] JS [JavaScriptConsoleMessageLevel.InfoMessageLevel]: Callback executed successfully (line 29, source: )

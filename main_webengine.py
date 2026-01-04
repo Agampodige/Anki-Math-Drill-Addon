@@ -537,7 +537,7 @@ class PythonBridge(QObject):
             
             # Get performance trends for charts
             trends_data = db_api.get_performance_trends(days=7)
-            daily_data = trends_data['daily']
+            daily_data = trends_data
             
             # Prepare chart data from real daily performance
             chart_data = []
@@ -551,7 +551,7 @@ class PythonBridge(QObject):
                 # Find matching daily data
                 day_data = next((d for d in daily_data if d['date'] == date_str), None)
                 
-                if day_data and day_data['questions'] > 0:
+                if day_data and day_data['attempts'] > 0:
                     chart_data.append({
                         'label': chart_date.strftime('%a'),
                         'accuracy': day_data['accuracy'],

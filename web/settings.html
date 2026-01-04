@@ -39,61 +39,254 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">Settings</h1>
-                <p class="page-subtitle">Customize your Math Drill experience</p>
+                <div class="page-header-content">
+                    <h1 class="page-title">
+                        <svg viewBox="0 0 24 24" width="28" height="28" style="margin-right: 12px; vertical-align: middle;" aria-hidden="true">
+                            <path fill="currentColor" d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.65-.07-.97l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.32-.07.64-.07.97c0 .33.03.65.07.97l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.39 1.06.73 1.69.98l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.25 1.17-.59 1.69-.98l2.49 1c.22.08.49 0 .61-.22l2-3.46c.13-.22.07-.49-.12-.64l-2.11-1.63Z"/>
+                        </svg>
+                        Settings
+                    </h1>
+                    <p class="page-subtitle">Customize your Math Drill experience</p>
+                </div>
+                <div class="settings-actions">
+                    <button id="resetSettingsBtn" class="btn btn-secondary btn-sm">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 6px;" aria-hidden="true">
+                            <path fill="currentColor" d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        </svg>
+                        Reset to Defaults
+                    </button>
+                    <button id="exportSettingsBtn" class="btn btn-outline btn-sm">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 6px;" aria-hidden="true">
+                            <path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                        </svg>
+                        Export Settings
+                    </button>
+                </div>
             </div>
 
-            <div class="settings-container">
+            <div class="settings-grid">
                 <!-- Appearance Section -->
-                <div class="settings-group">
-                    <h3 class="settings-group-title">Appearance</h3>
+                <section class="settings-section" aria-labelledby="appearance-title">
+                    <div class="section-header">
+                        <h2 id="appearance-title" class="section-title">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="margin-right: 8px;" aria-hidden="true">
+                                <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                            </svg>
+                            Appearance
+                        </h2>
+                        <p class="section-description">Customize the visual experience</p>
+                    </div>
                     <div class="settings-card">
-                        <div class="settings-row">
-                            <div class="settings-label-group">
-                                <span class="settings-label-text">Dark Theme</span>
-                                <span class="settings-description">Easier on the eyes in low light</span>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Dark Theme</span>
+                                    <span class="settings-description">Easier on the eyes in low light environments</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="themeToggle" class="toggle-switch" role="switch" aria-label="Dark Theme" tabindex="0"></div>
+                                </div>
                             </div>
-                            <div id="themeToggle" class="toggle-switch" role="switch" aria-label="Dark Theme" tabindex="0"></div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Theme Color</span>
+                                    <span class="settings-description">Choose your preferred accent color</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div class="color-picker">
+                                        <div class="color-option" data-color="green" style="background: var(--primary);" aria-label="Green theme"></div>
+                                        <div class="color-option" data-color="blue" style="background: #3B82F6;" aria-label="Blue theme"></div>
+                                        <div class="color-option" data-color="purple" style="background: #8B5CF6;" aria-label="Purple theme"></div>
+                                        <div class="color-option" data-color="red" style="background: #EF4444;" aria-label="Red theme"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- Practice Section -->
-                <div class="settings-group">
-                    <h3 class="settings-group-title">Practice</h3>
+                <section class="settings-section" aria-labelledby="practice-title">
+                    <div class="section-header">
+                        <h2 id="practice-title" class="section-title">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="margin-right: 8px;" aria-hidden="true">
+                                <path fill="currentColor" d="M14.43 10l-2.43-8-2.43 8-8.57 0 7 5 2.5 8 2.5-8 7-5z"/>
+                            </svg>
+                            Practice
+                        </h2>
+                        <p class="section-description">Configure your learning experience</p>
+                    </div>
                     <div class="settings-card">
-                        <div class="settings-row">
-                            <div class="settings-label-group">
-                                <span class="settings-label-text">Sound Effects</span>
-                                <span class="settings-description">Audio feedback for answers</span>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Sound Effects</span>
+                                    <span class="settings-description">Audio feedback for correct and incorrect answers</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="soundToggle" class="toggle-switch active" role="switch" aria-label="Sound Effects" tabindex="0"></div>
+                                </div>
                             </div>
-                            <div id="soundToggle" class="toggle-switch active" role="switch" aria-label="Sound Effects" tabindex="0"></div>
                         </div>
-                        <div class="settings-row">
-                            <div class="settings-label-group">
-                                <span class="settings-label-text">Show Hints</span>
-                                <span class="settings-description">Display helper text during drills</span>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Show Hints</span>
+                                    <span class="settings-description">Display helpful tips during practice sessions</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="hintsToggle" class="toggle-switch active" role="switch" aria-label="Show Hints" tabindex="0"></div>
+                                </div>
                             </div>
-                            <div id="hintsToggle" class="toggle-switch active" role="switch" aria-label="Show Hints" tabindex="0"></div>
                         </div>
-                        <div class="settings-row">
-                            <div class="settings-label-group">
-                                <span class="settings-label-text">Difficulty</span>
-                                <span class="settings-description">Adjust the challenge level</span>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Default Difficulty</span>
+                                    <span class="settings-description">Set your preferred starting difficulty level</span>
+                                </div>
+                                <div class="settings-control">
+                                    <select id="difficultySelect" class="control-select">
+                                        <option value="beginner">Beginner</option>
+                                        <option value="intermediate" selected>Intermediate</option>
+                                        <option value="advanced">Advanced</option>
+                                    </select>
+                                </div>
                             </div>
-                            <select id="difficultySelect" class="control-select" style="width: auto; padding-right: 32px; min-width: 140px;">
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate" selected>Intermediate</option>
-                            <option value="advanced">Advanced</option>
-                        </select>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Timer Display</span>
+                                    <span class="settings-description">Show countdown timer during practice</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="timerToggle" class="toggle-switch active" role="switch" aria-label="Timer Display" tabindex="0"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <!-- Performance Section -->
+                <section class="settings-section" aria-labelledby="performance-title">
+                    <div class="section-header">
+                        <h2 id="performance-title" class="section-title">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="margin-right: 8px;" aria-hidden="true">
+                                <path fill="currentColor" d="M13 2.05v3.03c3.39.49 6 3.39 6 7.92 0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.53 2.61-7.43 6-7.92V2.05c-5.06.5-9 4.79-9 9.95 0 5.52 4.47 10 9.99 10 5.53 0 10.01-4.48 10.01-10 0-5.16-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                            </svg>
+                            Performance
+                        </h2>
+                        <p class="section-description">Optimize app performance and behavior</p>
+                    </div>
+                    <div class="settings-card">
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Animations</span>
+                                    <span class="settings-description">Enable smooth transitions and effects</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="animationsToggle" class="toggle-switch active" role="switch" aria-label="Animations" tabindex="0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Auto-save Progress</span>
+                                    <span class="settings-description">Automatically save your practice progress</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="autosaveToggle" class="toggle-switch active" role="switch" aria-label="Auto-save Progress" tabindex="0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Keyboard Shortcuts</span>
+                                    <span class="settings-description">Show keyboard shortcut hints</span>
+                                </div>
+                                <div class="settings-control">
+                                    <div id="shortcutsToggle" class="toggle-switch active" role="switch" aria-label="Keyboard Shortcuts" tabindex="0"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Section -->
+                <section class="settings-section" aria-labelledby="data-title">
+                    <div class="section-header">
+                        <h2 id="data-title" class="section-title">
+                            <svg viewBox="0 0 24 24" width="20" height="20" style="margin-right: 8px;" aria-hidden="true">
+                                <path fill="currentColor" d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                            Data & Storage
+                        </h2>
+                        <p class="section-description">Manage your practice data and storage</p>
+                    </div>
+                    <div class="settings-card">
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Clear Cache</span>
+                                    <span class="settings-description">Remove temporary files and free up space</span>
+                                </div>
+                                <div class="settings-control">
+                                    <button id="clearCacheBtn" class="btn btn-outline btn-sm">Clear Cache</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Export Data</span>
+                                    <span class="settings-description">Download your practice history and progress</span>
+                                </div>
+                                <div class="settings-control">
+                                    <button id="exportDataBtn" class="btn btn-outline btn-sm">Export Data</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-content">
+                                <div class="settings-label-group">
+                                    <span class="settings-label-text">Reset All Data</span>
+                                    <span class="settings-description">Permanently delete all practice data</span>
+                                </div>
+                                <div class="settings-control">
+                                    <button id="resetDataBtn" class="btn btn-danger btn-sm">Reset Data</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
 
                 <div class="version-info">
-                    <strong>Math Drill Pro</strong><br>
-                    Version 1.0.0<br>
-                    © 2024 Math Drill
+                    <div class="version-card">
+                        <div class="version-header">
+                            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                                <path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <div>
+                                <strong>Math Drill Pro</strong>
+                                <span class="version-number">Version 1.0.0</span>
+                            </div>
+                        </div>
+                        <div class="version-details">
+                            <p>© 2024 Math Drill</p>
+                            <div class="version-links">
+                                <a href="#" class="version-link">Release Notes</a>
+                                <a href="#" class="version-link">Privacy Policy</a>
+                                <a href="#" class="version-link">Terms of Service</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -107,16 +300,90 @@
     <script>
         // Bind UI elements to SettingsManager
         document.addEventListener('DOMContentLoaded', () => {
-            const sm = window.settingsManager;
-            
-            document.getElementById('themeToggle').addEventListener('click', sm.toggleTheme);
-            document.getElementById('soundToggle').addEventListener('click', sm.toggleSound);
-            document.getElementById('hintsToggle').addEventListener('click', sm.toggleHints);
-            
-            const diffSelect = document.getElementById('difficultySelect');
-            if (diffSelect) {
-                diffSelect.addEventListener('change', (e) => sm.setDifficulty(e.target.value));
-            }
+            // Wait a bit for SettingsManager to initialize
+            setTimeout(() => {
+                const sm = window.settingsManager;
+                
+                if (!sm) {
+                    console.error('SettingsManager not available');
+                    return;
+                }
+                
+                // Basic settings
+                const themeToggle = document.getElementById('themeToggle');
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', () => sm.toggleTheme());
+                }
+                
+                const soundToggle = document.getElementById('soundToggle');
+                if (soundToggle) {
+                    soundToggle.addEventListener('click', () => sm.toggleSound());
+                }
+                
+                const hintsToggle = document.getElementById('hintsToggle');
+                if (hintsToggle) {
+                    hintsToggle.addEventListener('click', () => sm.toggleHints());
+                }
+                
+                const diffSelect = document.getElementById('difficultySelect');
+                if (diffSelect) {
+                    diffSelect.addEventListener('change', (e) => sm.setDifficulty(e.target.value));
+                }
+                
+                // New settings
+                const timerToggle = document.getElementById('timerToggle');
+                if (timerToggle) {
+                    timerToggle.addEventListener('click', () => sm.toggleTimer());
+                }
+                
+                const animationsToggle = document.getElementById('animationsToggle');
+                if (animationsToggle) {
+                    animationsToggle.addEventListener('click', () => sm.toggleAnimations());
+                }
+                
+                const autosaveToggle = document.getElementById('autosaveToggle');
+                if (autosaveToggle) {
+                    autosaveToggle.addEventListener('click', () => sm.toggleAutosave());
+                }
+                
+                const shortcutsToggle = document.getElementById('shortcutsToggle');
+                if (shortcutsToggle) {
+                    shortcutsToggle.addEventListener('click', () => sm.toggleShortcuts());
+                }
+                
+                // Theme color options
+                document.querySelectorAll('.color-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        sm.setThemeColor(option.dataset.color);
+                    });
+                });
+                
+                // Action buttons
+                const resetSettingsBtn = document.getElementById('resetSettingsBtn');
+                if (resetSettingsBtn) {
+                    resetSettingsBtn.addEventListener('click', () => sm.resetSettings());
+                }
+                
+                const exportSettingsBtn = document.getElementById('exportSettingsBtn');
+                if (exportSettingsBtn) {
+                    exportSettingsBtn.addEventListener('click', () => sm.exportSettings());
+                }
+                
+                const clearCacheBtn = document.getElementById('clearCacheBtn');
+                if (clearCacheBtn) {
+                    clearCacheBtn.addEventListener('click', () => sm.clearCache());
+                }
+                
+                const exportDataBtn = document.getElementById('exportDataBtn');
+                if (exportDataBtn) {
+                    exportDataBtn.addEventListener('click', () => sm.exportData());
+                }
+                
+                const resetDataBtn = document.getElementById('resetDataBtn');
+                if (resetDataBtn) {
+                    resetDataBtn.addEventListener('click', () => sm.resetData());
+                }
+            }, 100);
         });
     </script>
 </body>

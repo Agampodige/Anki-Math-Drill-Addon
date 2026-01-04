@@ -97,5 +97,16 @@
     "correct_count": 0,
     "avg_speed": 0.0,
     "created": "2026-01-04T10:37:36.102039"
+  },
+  {
+    "id": 10,
+    "mode": "Free Play",
+    "operation": "Addition",
+    "digits": 2,
+    "target_value": null,
+    "total_attempts": 0,
+    "correct_count": 0,
+    "avg_speed": 0.0,
+    "created": "2026-01-04T10:40:01.489151"
   }
 ]

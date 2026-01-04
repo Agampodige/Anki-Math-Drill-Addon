@@ -407,6 +407,8 @@ class MathDrillWeb {
         this.streakCounter.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg> <span id="streakValue">0</span>';
         this.progressFill.style.width = '0%';
         this.ghostLine.style.display = 'none';
+        this.timerDisplay.style.display = 'none';
+        this.progressContainer.style.display = 'none';
         this.questionText.textContent = 'Ready?';
         this.feedback.textContent = 'Press Enter to Start';
         this.answerInput.value = '';
@@ -425,15 +427,18 @@ class MathDrillWeb {
             this.coachLabel.style.display = 'none';
         }
         
-        // Setup progress bar
+        // Setup progress bar and timer
         if (mode.includes('Drill')) {
             this.progressContainer.style.display = 'block';
             this.progressLabel.textContent = '0 / 20 Questions';
+            this.timerDisplay.style.display = 'block';
         } else if (mode.includes('Sprint')) {
             this.progressContainer.style.display = 'block';
             this.progressLabel.textContent = '60s Remaining';
+            this.timerDisplay.style.display = 'block';
         } else {
             this.progressContainer.style.display = 'none';
+            this.timerDisplay.style.display = 'none';
         }
         
         // Notify Python
@@ -722,6 +727,10 @@ class MathDrillWeb {
         }
         
         this.answerInput.readOnly = true;
+        
+        // Hide timer and progress when session ends
+        this.timerDisplay.style.display = 'none';
+        this.progressContainer.style.display = 'none';
         
         const total = this.sessionAttempts.length;
         const correct = this.sessionAttempts.filter(a => a.correct).length;
