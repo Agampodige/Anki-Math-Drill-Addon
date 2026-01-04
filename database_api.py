@@ -220,6 +220,29 @@ class DatabaseAPI:
         # Calculate practice days (distinct days with attempts)
         practice_days = len(set(a.get('created', '') for a in attempts if a.get('created')))
         
+        # Group by date for recent activity
+        daily_stats = {}
+        for attempt in attempts:
+            created_date = attempt.get('created', '')
+            if created_date not in daily_stats:
+                daily_stats[created_date] = {'count': 0, 'correct': 0, 'time_total': 0}
+            daily_stats[created_date]['count'] += 1
+            if attempt.get('correct', False):
+                daily_stats[created_date]['correct'] += 1
+            daily_stats[created_date]['time_total'] += attempt.get('time_taken', 0) or 0
+        
+        # Generate recent activity data
+        recent_activity = []
+        for date_str in sorted(daily_stats.keys(), reverse=True)[:7]:  # Last 7 days
+            stats = daily_stats[date_str]
+            count = stats['count']
+            recent_activity.append({
+                'date': date_str,
+                'questions': count,
+                'correct': stats['correct'],
+                'avg_time': stats['time_total'] / count if count > 0 else 0
+            })
+        
         return {
             'basic_stats': {
                 'total_attempts': total_attempts,
@@ -230,7 +253,8 @@ class DatabaseAPI:
                 'practice_days': practice_days
             },
             'operation_breakdown': operation_breakdown,
-            'difficulty_progression': difficulty_progression
+            'difficulty_progression': difficulty_progression,
+            'recent_activity': recent_activity
         }
     
     def get_performance_trends(self, days: int = 30) -> List[Dict]:
@@ -304,9 +328,19 @@ class DatabaseAPI:
                 
                 weakness.update({
                     'recent_attempts': len(recent_attempts),
+                    'recent_correct': recent_correct,
                     'recent_accuracy': recent_accuracy,
                     'recent_avg_time': recent_avg_time,
                     'improvement_trend': improvement_trend
+                })
+            else:
+                # Set default values if no recent attempts
+                weakness.update({
+                    'recent_attempts': 0,
+                    'recent_correct': 0,
+                    'recent_accuracy': 0,
+                    'recent_avg_time': 0,
+                    'improvement_trend': 0
                 })
         
         return weakness_data

@@ -90,8 +90,8 @@ class AchievementsPage {
             
             // Load both files in PARALLEL instead of sequentially
             const [achievementsResponse, attemptsResponse] = await Promise.all([
-                fetch('./achievements.json'),
-                fetch('./attempts.json')
+                fetch('../data/achievements.json'),
+                fetch('../data/attempts.json')
             ]);
             
             // Check responses

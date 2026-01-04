@@ -179,8 +179,8 @@ class ProgressPage {
             // Load both files in PARALLEL for maximum speed
             const loadStart = performance.now();
             const [attemptsResponse, sessionsResponse] = await Promise.all([
-                fetch('./attempts.json'),
-                fetch('./sessions.json').catch(() => ({ ok: false })) // Optional sessions file
+                fetch('../data/attempts.json'),
+                fetch('../data/sessions.json').catch(() => ({ ok: false })) // Optional sessions file
             ]);
             const loadTime = performance.now() - loadStart;
             
@@ -1039,7 +1039,7 @@ window.updateFromPython = function(action, data) {
                 window.progressPage.loadProgressData();
                 break;
             case 'updateStats':
-                window.progressPage.updateStatsDisplay();
+                window.progressPage.updateStatsOverview();
                 break;
             // Add more as needed
         }
@@ -1112,3 +1112,7 @@ setTimeout(() => {
         window.testProgressData();
     }
 }, 3000);
+
+// Instantiate the ProgressPage
+const progressPage = new ProgressPage();
+window.progressPage = progressPage;

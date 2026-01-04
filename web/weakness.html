@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="theme-loader.js"></script>
+    <script src="realtime-sync.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -44,65 +45,7 @@
 
             <div class="card">
                 <div class="weakness-list" id="weaknessList">
-                    <div class="weakness-card high-weakness">
-                        <div class="weakness-info">
-                            <h4>Multiplication - 3 digits</h4>
-                            <p>Level: Advanced</p>
-                            <p>Accuracy: 45% | Speed: 8.2s</p>
-                            <p class="suggestions">Tips: Focus on breaking down large numbers, practice with 2-digit first</p>
-                        </div>
-                        <div class="weakness-score">Score: 85</div>
-                    </div>
-                    
-                    <div class="weakness-card medium-weakness">
-                        <div class="weakness-info">
-                            <h4>Division - 2 digits</h4>
-                            <p>Level: Intermediate</p>
-                            <p>Accuracy: 72% | Speed: 5.1s</p>
-                            <p class="suggestions">Tips: Practice estimation skills, learn common divisors</p>
-                        </div>
-                        <div class="weakness-score">Score: 62</div>
-                    </div>
-                    
-                    <div class="weakness-card low-weakness">
-                        <div class="weakness-info">
-                            <h4>Subtraction - 3 digits</h4>
-                            <p>Level: Advanced</p>
-                            <p>Accuracy: 78% | Speed: 4.3s</p>
-                            <p class="suggestions">Tips: Work on borrowing techniques, practice with smaller numbers first</p>
-                        </div>
-                        <div class="weakness-score">Score: 48</div>
-                    </div>
-                    
-                    <div class="weakness-card unpracticed">
-                        <div class="weakness-info">
-                            <h4>Division - 3 digits</h4>
-                            <p>Level: Not practiced yet</p>
-                            <p>Not practiced yet</p>
-                            <p class="suggestions">📝 Start here to build foundation skills</p>
-                        </div>
-                        <div class="weakness-score">NEW</div>
-                    </div>
-                    
-                    <div class="weakness-card low-weakness">
-                        <div class="weakness-info">
-                            <h4>Multiplication - 2 digits</h4>
-                            <p>Level: Intermediate</p>
-                            <p>Accuracy: 82% | Speed: 3.8s</p>
-                            <p class="suggestions">Tips: Use multiplication tricks, practice with common patterns</p>
-                        </div>
-                        <div class="weakness-score">Score: 35</div>
-                    </div>
-                    
-                    <div class="weakness-card medium-weakness">
-                        <div class="weakness-info">
-                            <h4>Addition - 3 digits</h4>
-                            <p>Level: Advanced</p>
-                            <p>Accuracy: 88% | Speed: 2.9s</p>
-                            <p class="suggestions">Tips: Focus on speed, try mental math techniques</p>
-                        </div>
-                        <div class="weakness-score">Score: 58</div>
-                    </div>
+                    <!-- Weakness cards will be dynamically loaded here -->
                 </div>
             </div>
         </main>
@@ -112,5 +55,6 @@
             Navigate with keyboard shortcuts: [H] Home [P] Progress [A] Achievements [S] Settings
         </footer>
     </div>
+    <script src="weakness.js"></script>
 </body>
 </html>

@@ -56,9 +56,13 @@ except Exception as e:
 # Get addon's data directory for proper storage
 try:
     from aqt import mw
-    # Get the specific addon directory (where this addon is installed)
-    ADDON_DIR = os.path.dirname(os.path.dirname(__file__))
-    # Create and use a data subdirectory within the addon folder
+    # In Anki, get the actual addon directory path
+    # The addon is installed as 'math_drill' in the addons folder
+    addon_base_dir = mw.pm.addonFolder()
+    addon_name = "math_drill"
+    ADDON_DIR = os.path.join(addon_base_dir, addon_name)
+    
+    # Use the data subdirectory within the addon folder
     DATA_DIR = os.path.join(ADDON_DIR, "data")
     print(f"Using Anki addon data directory: {DATA_DIR}")
 except ImportError:
