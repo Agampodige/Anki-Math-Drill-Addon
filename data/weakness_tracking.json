@@ -4,12 +4,12 @@
     "operation": "Addition",
     "digits": 2,
     "weakness_score": 80.0,
-    "consecutive_correct": 1,
+    "consecutive_correct": 2,
     "last_practiced": "2026-01-04",
     "mastery_level": "Novice",
-    "total_attempts": 1,
-    "total_correct": 1,
-    "avg_time": 9.882999897003174,
+    "total_attempts": 2,
+    "total_correct": 2,
+    "avg_time": 6.908999919891357,
     "first_practiced": "2026-01-04"
   }
 ]

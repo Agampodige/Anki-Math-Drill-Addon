@@ -12,5 +12,19 @@
     "correct_answer": 141,
     "difficulty_level": 1,
     "timestamp": "2026-01-04T09:37:13.938940"
+  },
+  {
+    "id": 2,
+    "operation": "Addition",
+    "digits": 2,
+    "correct": true,
+    "time_taken": 3.934999942779541,
+    "created": "2026-01-04",
+    "session_id": 9,
+    "question_text": "31 + 12 =",
+    "user_answer": 43,
+    "correct_answer": 43,
+    "difficulty_level": 1,
+    "timestamp": "2026-01-04T10:37:40.039290"
   }
 ]

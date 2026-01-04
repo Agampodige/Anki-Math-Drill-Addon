@@ -380,11 +380,34 @@ class AchievementsPage {
                 accuracy: { name: 'Accuracy', achievements: [] },
                 speed: { name: 'Speed', achievements: [] },
                 consistency: { name: 'Consistency', achievements: [] },
-                operation: { name: 'Operations', achievements: [] }
+                operation: { name: 'Operations', achievements: [] },
+                other: { name: 'Other', achievements: [] }
             };
             
             this.achievements.forEach(achievement => {
-                const category = categories[achievement.category] || categories.basic;
+                // Determine category based on achievement name/description if not set
+                let categoryKey = achievement.category || 'other';
+                
+                if (!achievement.category) {
+                    const name = (achievement.name || achievement.title || '').toLowerCase();
+                    const desc = (achievement.desc || achievement.description || '').toLowerCase();
+                    
+                    if (name.includes('streak') || desc.includes('streak')) {
+                        categoryKey = 'streak';
+                    } else if (name.includes('accuracy') || desc.includes('accuracy') || name.includes('sniper') || name.includes('sharpshooter') || name.includes('marksman') || name.includes('perfectionist')) {
+                        categoryKey = 'accuracy';
+                    } else if (name.includes('speed') || desc.includes('speed') || name.includes('lightning') || name.includes('flash') || name.includes('quicksilver')) {
+                        categoryKey = 'speed';
+                    } else if (name.includes('daily') || name.includes('weekly') || name.includes('monthly') || name.includes('early') || name.includes('night') || name.includes('weekend')) {
+                        categoryKey = 'consistency';
+                    } else if (name.includes('master') || name.includes('addition') || name.includes('subtraction') || name.includes('multiplication') || name.includes('division') || name.includes('digit')) {
+                        categoryKey = 'operation';
+                    } else if (name.includes('first') || name.includes('novice') || name.includes('apprentice') || name.includes('centurion') || name.includes('veteran') || name.includes('legend')) {
+                        categoryKey = 'basic';
+                    }
+                }
+                
+                const category = categories[categoryKey] || categories.other;
                 category.achievements.push(achievement);
             });
             
@@ -430,11 +453,11 @@ class AchievementsPage {
         return `
             <div class="achievement-card ${isUnlocked ? 'unlocked' : 'locked'}">
                 <div class="achievement-icon">
-                    ${achievement.icon}
+                    ${achievement.icon || '🏆'}
                 </div>
                 <div class="achievement-info">
-                    <h4>${achievement.title}</h4>
-                    <p>${achievement.description}</p>
+                    <h4>${achievement.title || achievement.name || 'Unknown Achievement'}</h4>
+                    <p>${achievement.description || achievement.desc || 'No description available'}</p>
                     ${!isUnlocked && progress > 0 ? `
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${progress}%"></div>
