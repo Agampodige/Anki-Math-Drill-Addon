@@ -272,4 +272,54 @@ class AchievementManager:
 
 class AppSettings:
     def __init__(self):
-        self.sound_enabled = True
+        try:
+            from .database_api import DatabaseAPI
+        except ImportError:
+            from database_api import DatabaseAPI
+            
+        self.db = DatabaseAPI()
+        self.default_settings = {
+            'theme': 'light',
+            'themeColor': 'green',
+            'sound': True,
+            'hints': True,
+            'difficulty': 'intermediate',
+            'timer': True,
+            'animations': True,
+            'autosave': True,
+            'shortcuts': True
+        }
+        self.settings = self.load_settings()
+
+    def load_settings(self) -> dict:
+        """Load settings from database, falling back to defaults"""
+        settings = {}
+        for key, default_value in self.default_settings.items():
+            val = self.db.get_setting(key)
+            if val is not None:
+                settings[key] = val
+            else:
+                settings[key] = default_value
+        return settings
+
+    def save_settings(self, new_settings: dict) -> bool:
+        """Save new settings to database"""
+        success = True
+        for key, value in new_settings.items():
+            if key in self.default_settings:
+                success &= self.db.set_setting(key, value)
+                self.settings[key] = value
+        return success
+
+    def get_all(self) -> dict:
+        """Get all current settings"""
+        return self.settings
+
+    @property
+    def sound_enabled(self):
+        return self.settings.get('sound', True)
+    
+    @sound_enabled.setter
+    def sound_enabled(self, value):
+        self.db.set_setting('sound', value)
+        self.settings['sound'] = value

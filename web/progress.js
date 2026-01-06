@@ -3,9 +3,10 @@ class ProgressPage {
         // Don't initialize immediately - wait for bridge
         this.initialized = false;
         this.currentPeriod = 'week';
+        this.heatmapView = 'month'; // 'month' or 'year'
         this.progressData = {};
         this.chart = null;
-        
+
         // Check if bridge is ready, if so initialize now
         if (window.pythonBridge) {
             this.initialize();
@@ -14,7 +15,7 @@ class ProgressPage {
             this.waitForBridge();
         }
     }
-    
+
     waitForBridge() {
         const checkInterval = setInterval(() => {
             if (window.pythonBridge) {
@@ -22,7 +23,7 @@ class ProgressPage {
                 this.initialize();
             }
         }, 100);
-        
+
         // Timeout after 1 second instead of 5 seconds for faster fallback
         setTimeout(() => {
             clearInterval(checkInterval);
@@ -32,13 +33,13 @@ class ProgressPage {
             }
         }, 1000); // Reduced from 5000ms to 1000ms
     }
-    
+
     initialize() {
         if (this.initialized) return;
         this.initialized = true;
-        
+
         console.log('🚀 Initializing ProgressPage...');
-        
+
         this.initElements();
         this.initEventListeners();
         this.loadTheme(); // Load theme preference
@@ -49,20 +50,24 @@ class ProgressPage {
     initElements() {
         this.loadingSpinner = document.getElementById('loadingSpinner');
         this.statsOverview = document.getElementById('statsOverview');
-        
+
         // Stats elements
         this.totalQuestions = document.getElementById('totalQuestions');
         this.avgAccuracy = document.getElementById('avgAccuracy');
         this.avgSpeed = document.getElementById('avgSpeed');
         this.currentStreak = document.getElementById('currentStreak');
-        
+
         // Content containers
         this.masteryGridLarge = document.getElementById('masteryGridLarge');
         this.weaknessListLarge = document.getElementById('weaknessListLarge');
         this.recentActivity = document.getElementById('recentActivity');
         this.achievementProgress = document.getElementById('achievementProgress');
         this.personalBests = document.getElementById('personalBests');
-        
+        this.velocityContainer = document.getElementById('velocityContainer');
+        this.activityHeatmap = document.getElementById('activityHeatmap');
+        this.adaptiveInsightsCard = document.getElementById('adaptiveInsightsCard');
+        this.adaptiveInsightsList = document.getElementById('adaptiveInsightsList');
+
         // Chart
         this.chartCanvas = document.getElementById('performanceChart');
     }
@@ -77,11 +82,33 @@ class ProgressPage {
                 this.loadProgressData();
             });
         });
-        
+
         // Back button
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.goBack();
+            }
+        });
+
+        // Graph Toggles
+        document.getElementById('toggleAccuracy')?.addEventListener('change', () => this.updatePerformanceChart());
+        document.getElementById('toggleSpeed')?.addEventListener('change', () => this.updatePerformanceChart());
+        document.getElementById('toggleQuestions')?.addEventListener('change', () => this.updatePerformanceChart());
+
+        // Heatmap Toggles
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.heatmapView = e.target.dataset.view;
+                this.renderActivityHeatmap();
+            });
+        });
+
+        // Window Resize
+        window.addEventListener('resize', () => {
+            if (this.progressData.chartData) {
+                this.updatePerformanceChart();
             }
         });
     }
@@ -89,10 +116,10 @@ class ProgressPage {
     async loadProgressData() {
         console.log('🚀 Starting to load progress data...');
         const startTime = performance.now();
-        
+
         this.showLoading(true);
         this.showHeavyDataLoading(true);
-        
+
         try {
             // Check if Python bridge is available
             if (!window.pythonBridge) {
@@ -105,17 +132,17 @@ class ProgressPage {
                 this.showHeavyDataLoading(false);
                 return;
             }
-            
+
             console.log('🔗 Python bridge available, requesting data...');
-            
+
             // Request data from Python with timeout
             const data = await Promise.race([
                 this.sendToPythonAsync('get_progress_data', { period: this.currentPeriod }),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Bridge timeout')), 1000)) // Reduced from 5000ms to 1000ms
             ]);
-            
+
             console.log('📊 Received data:', data);
-            
+
             // If we got data back, display it.
             if (data && Object.keys(data).length > 0) {
                 console.log('⚡ Displaying data instantly.');
@@ -127,7 +154,7 @@ class ProgressPage {
                 // No data yet, we are waiting for a push from Python.
                 console.log('⏳ No data received. Waiting for data push from Python.');
             }
-            
+
         } catch (error) {
             console.error('❌ Error loading progress data:', error);
             console.log('🔄 Loading real data as fallback...');
@@ -138,15 +165,15 @@ class ProgressPage {
             this.showLoading(false);
             this.showHeavyDataLoading(false);
         }
-        
+
         const totalTime = performance.now() - startTime;
         console.log(`🎯 Total load time: ${totalTime.toFixed(2)}ms`);
     }
-    
+
     showHeavyDataLoading(show) {
         // Show loading indicators for heavy data components
         const heavyComponents = ['masteryGridLarge', 'weaknessListLarge', 'achievementProgress', 'personalBests'];
-        
+
         heavyComponents.forEach(componentId => {
             const element = document.getElementById(componentId);
             if (element) {
@@ -169,12 +196,12 @@ class ProgressPage {
             }
         });
     }
-    
+
     async loadSampleData() {
         // Load real data from JSON file when Python bridge is not available
         const startTime = performance.now();
         console.log('🚀 Loading real data from JSON file...');
-        
+
         try {
             // Load both files in PARALLEL for maximum speed
             const loadStart = performance.now();
@@ -183,16 +210,16 @@ class ProgressPage {
                 fetch('../data/sessions.json').catch(() => ({ ok: false })) // Optional sessions file
             ]);
             const loadTime = performance.now() - loadStart;
-            
+
             if (!attemptsResponse.ok) {
                 throw new Error(`Attempts JSON: HTTP ${attemptsResponse.status}`);
             }
-            
+
             const attempts = await attemptsResponse.json();
             const sessions = sessionsResponse.ok ? await sessionsResponse.json() : [];
-            
+
             console.log(`✅ Loaded ${attempts.length} attempts and ${sessions.length} sessions in ${loadTime.toFixed(2)}ms`);
-            
+
             // Early return for empty data
             if (attempts.length === 0) {
                 console.log('⚠️ No attempts found, showing empty state');
@@ -205,13 +232,13 @@ class ProgressPage {
                 this.updateAllSections();
                 return;
             }
-            
+
             // Ultra-optimized single-pass processing
             const processStart = performance.now();
             const dailyStats = new Map();
             const masteryStats = new Map();
             const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
-            
+
             let totalCorrect = 0;
             let totalSumTime = 0;
             let maxStreak = 0;
@@ -219,11 +246,11 @@ class ProgressPage {
             let bestSpeed = Infinity;
             const today = new Date().toISOString().split('T')[0];
             const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-            
+
             // Single loop to calculate everything
             attempts.forEach(attempt => {
                 const { correct, time_taken = 0, operation, digits, created, timestamp } = attempt;
-                
+
                 // Basic stats
                 if (correct) {
                     totalCorrect++;
@@ -236,7 +263,7 @@ class ProgressPage {
                 } else {
                     currentStreak = 0;
                 }
-                
+
                 // Daily stats (optimized with Map)
                 const date = created || timestamp?.split('T')[0];
                 if (date) {
@@ -248,7 +275,7 @@ class ProgressPage {
                     if (correct) dayStats.correct++;
                     dayStats.timeSum += time_taken;
                 }
-                
+
                 // Mastery stats (optimized with Map)
                 if (operation && digits) {
                     const key = `${operation}-${digits}`;
@@ -261,11 +288,11 @@ class ProgressPage {
                     mastery.timeSum += time_taken;
                 }
             });
-            
+
             const totalAttempts = attempts.length;
             const accuracy = (totalCorrect / totalAttempts) * 100;
             const avgSpeed = totalSumTime / totalAttempts;
-            
+
             // Process recent activity (more efficient)
             const recentActivity = Array.from(dailyStats.entries())
                 .sort(([a], [b]) => b.localeCompare(a))
@@ -278,7 +305,7 @@ class ProgressPage {
                         const days = Math.floor((new Date(today) - new Date(date)) / 86400000);
                         timeAgo = `${days} days ago`;
                     }
-                    
+
                     return {
                         date,
                         timeAgo,
@@ -287,7 +314,7 @@ class ProgressPage {
                         avgSpeed: stats.timeSum / stats.count
                     };
                 });
-            
+
             // Process mastery data (optimized)
             const mastery = {};
             operations.forEach(op => {
@@ -296,28 +323,28 @@ class ProgressPage {
                     const stats = masteryStats.get(key) || { count: 0, correct: 0, timeSum: 0 };
                     const acc = stats.count > 0 ? (stats.correct / stats.count) * 100 : 0;
                     const speed = stats.count > 0 ? stats.timeSum / stats.count : 0;
-                    
+
                     let level = 'Novice';
                     if (acc >= 90 && speed < 3.0) level = 'Master';
                     else if (acc >= 80 && speed < 5.0) level = 'Pro';
                     else if (acc >= 70) level = 'Apprentice';
-                    
+
                     mastery[key] = { level, acc, speed, count: stats.count };
                 });
             });
-            
+
             // Create chart data (simplified)
             const chartData = recentActivity.slice(0, 7).reverse().map(activity => ({
                 label: new Date(activity.date).toLocaleDateString('en', { weekday: 'short' }),
                 accuracy: activity.accuracy,
                 speed: activity.avgSpeed
             }));
-            
+
             const processTime = performance.now() - processStart;
             const totalTime = performance.now() - startTime;
-            
+
             console.log(`⚡ Processed data in ${processTime.toFixed(2)}ms (total: ${totalTime.toFixed(2)}ms)`);
-            
+
             const realData = {
                 stats: {
                     totalQuestions: totalAttempts,
@@ -333,7 +360,7 @@ class ProgressPage {
                 achievements: [], // Will be loaded separately if needed
                 personalBests: {} // Will be calculated separately if needed
             };
-            
+
             console.log('🎯 Data ready:', {
                 attempts: totalAttempts,
                 accuracy: accuracy.toFixed(1) + '%',
@@ -342,14 +369,14 @@ class ProgressPage {
                 days: dailyStats.size,
                 masteryKeys: Object.keys(mastery).length
             });
-            
+
             this.progressData = realData;
             this.updateAllSections();
-            
+
         } catch (error) {
             const loadTime = performance.now() - startTime;
             console.error(`❌ Error loading data after ${loadTime.toFixed(2)}ms:`, error);
-            
+
             // Fast fallback to zeros
             this.progressData = {
                 stats: { totalQuestions: 0, avgAccuracy: 0, avgSpeed: 0, currentStreak: 0, practiceDays: 0 },
@@ -365,14 +392,19 @@ class ProgressPage {
         console.log('Received fast data push from Python:', data);
         if (data && Object.keys(data).length > 0) {
             this.progressData = data;
-            
+
             // Update fast sections
             this.updateStatsOverview();
             this.updateRecentActivity();
             if (this.chartCanvas) {
                 this.updatePerformanceChart();
             }
-            
+
+            // New Analytics sections
+            this.updateLearningVelocity();
+            this.renderActivityHeatmap();
+            this.updateAdaptiveInsights();
+
             // Hide main loading spinner
             this.showLoading(false);
         } else {
@@ -386,21 +418,21 @@ class ProgressPage {
         requestAnimationFrame(() => {
             // Update critical stats first
             this.updateStatsOverview();
-            
+
             // Then update other sections in the next frame
             requestAnimationFrame(() => {
                 this.updateRecentActivity();
-                
+
                 // Update heavy components last with batching
                 requestAnimationFrame(() => {
                     // Batch DOM updates for better performance
                     const fragment = document.createDocumentFragment();
-                    
+
                     // Update mastery grid
                     if (this.masteryGridLarge) {
                         const tempContainer = document.createElement('div');
                         this.masteryGridLarge.innerHTML = '';
-                        
+
                         // Headers
                         tempContainer.innerHTML += '<div class="mastery-header-cell"></div>';
                         [1, 2, 3].forEach(d => {
@@ -409,71 +441,76 @@ class ProgressPage {
                             header.textContent = `${d} Digit`;
                             tempContainer.appendChild(header);
                         });
-                        
+
                         // Operations
                         ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
                             const opLabel = document.createElement('div');
                             opLabel.className = 'operation-label';
                             opLabel.textContent = op;
                             tempContainer.appendChild(opLabel);
-                            
+
                             [1, 2, 3].forEach(d => {
                                 const key = `${op}-${d}`;
                                 const stats = this.progressData.mastery?.[key] || { level: 'Novice', acc: 0, speed: 0, count: 0 };
                                 const cell = document.createElement('div');
                                 cell.className = `mastery-cell-large ${stats.level.toLowerCase()}`;
-                                
+
                                 cell.innerHTML = `
                                     <div class="mastery-level">${stats.level.toUpperCase()}</div>
                                     <div class="mastery-detail">${stats.acc.toFixed(0)}% | ${stats.speed.toFixed(1)}s</div>
                                     <div class="mastery-count">(${stats.count} plays)</div>
                                 `;
-                                
+
                                 tempContainer.appendChild(cell);
                             });
                         });
-                        
+
                         // Append all at once
                         while (tempContainer.firstChild) {
                             this.masteryGridLarge.appendChild(tempContainer.firstChild);
                         }
                     }
-                    
+
                     // Update weakness analysis
                     if (this.weaknessListLarge) {
                         this.updateWeaknessAnalysis();
                     }
-                    
+
                     // Update achievements
                     if (this.achievementProgress) {
                         this.updateAchievementProgress();
                     }
-                    
+
                     // Update personal bests
                     this.updatePersonalBests();
-                    
+
                     // Update chart
                     if (this.chartCanvas) {
                         this.updatePerformanceChart();
                     }
+
+                    // New Analytics
+                    this.updateLearningVelocity();
+                    this.renderActivityHeatmap();
+                    this.updateAdaptiveInsights();
                 });
             });
         });
     }
-    
+
     updateHeavyData(heavyData) {
         console.log('Received heavy data update:', heavyData);
-        
+
         let updatedComponents = 0;
         const totalComponents = 4; // mastery, weaknesses, achievements, personalBests
-        
+
         // Update heavy data components
         if (heavyData.mastery && Object.keys(heavyData.mastery).length > 0) {
             this.progressData.mastery = heavyData.mastery;
             this.updateMasteryGrid();
             updatedComponents++;
         }
-        
+
         if (heavyData.weaknesses && heavyData.weaknesses.length > 0) {
             this.progressData.weaknesses = heavyData.weaknesses;
             if (this.weaknessListLarge) {
@@ -481,7 +518,7 @@ class ProgressPage {
                 updatedComponents++;
             }
         }
-        
+
         if (heavyData.achievements && heavyData.achievements.length > 0) {
             this.progressData.achievements = heavyData.achievements;
             if (this.achievementProgress) {
@@ -489,16 +526,16 @@ class ProgressPage {
                 updatedComponents++;
             }
         }
-        
+
         if (heavyData.personalBests && Object.keys(heavyData.personalBests).length > 0) {
             this.progressData.personalBests = heavyData.personalBests;
             this.updatePersonalBests();
             updatedComponents++;
         }
-        
+
         // Update progress data with new heavy data
         this.updateAllSections();
-        
+
         // Hide loading indicators when all components are updated
         if (updatedComponents > 0) {
             this.showHeavyDataLoading(false);
@@ -507,18 +544,18 @@ class ProgressPage {
             // to avoid them being stuck indefinitely.
             this.showHeavyDataLoading(false);
         }
-        
+
         console.log(`Heavy data update completed: ${updatedComponents}/${totalComponents} components updated`);
     }
 
     updateStatsOverview() {
         const stats = this.progressData.stats || {};
-        
+
         this.totalQuestions.textContent = stats.totalQuestions || 0;
         this.avgAccuracy.textContent = stats.avgAccuracy ? `${stats.avgAccuracy.toFixed(1)}%` : '0%';
         this.avgSpeed.textContent = stats.avgSpeed ? `${stats.avgSpeed.toFixed(2)}s` : '0.0s';
         this.currentStreak.textContent = stats.currentStreak || 0;
-        
+
         // Add practice days if available
         if (stats.practiceDays !== undefined) {
             // Update the streak label to show both streak and practice days
@@ -530,40 +567,56 @@ class ProgressPage {
                 `;
             }
         }
-        
+
         // Add operation breakdown if available
         if (this.progressData.operationBreakdown && this.progressData.operationBreakdown.length > 0) {
             this.addOperationBreakdown();
         }
     }
-    
+
     addOperationBreakdown() {
         // Check if operation breakdown already exists
         if (document.getElementById('operationBreakdown')) {
             return;
         }
-        
+
         const operationBreakdown = this.progressData.operationBreakdown || [];
         const breakdownDiv = document.createElement('div');
         breakdownDiv.id = 'operationBreakdown';
         breakdownDiv.className = 'operation-breakdown';
         breakdownDiv.style.cssText = 'margin-top: 20px; padding: 15px; background-color: var(--dark-bg); border-radius: 8px;';
-        
+
         breakdownDiv.innerHTML = `
-            <h4 style="margin-bottom: 10px; color: var(--text-primary);">Operation Performance</h4>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                ${operationBreakdown.map(op => `
-                    <div style="text-align: center; padding: 10px; background-color: var(--card-bg); border-radius: 6px;">
-                        <div style="font-weight: bold; color: var(--accent-color);">${op.operation}</div>
-                        <div style="font-size: 14px; color: var(--text-secondary);">${op.count} questions</div>
-                        <div style="font-size: 12px; color: var(--success-color);">
-                            ${((op.correct / op.count) * 100).toFixed(1)}% accuracy
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 class="section-title" style="margin-bottom: 0; font-weight: 700;">Operation Performance</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                ${operationBreakdown.map(op => {
+            const acc = (op.correct / op.count) * 100;
+            return `
+                    <div style="padding: 16px; background: var(--surface-glass); border: var(--border-glass); border-radius: 12px; transition: transform 0.2s;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="font-weight: 700; color: var(--text-primary);">${op.operation}</div>
+                            <div style="font-size: 12px; color: var(--text-tertiary);">${op.count} Qs</div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                <span style="color: var(--text-secondary);">Accuracy</span>
+                                <span style="color: var(--success); font-weight: 600;">${acc.toFixed(1)}%</span>
+                            </div>
+                            <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; width: ${acc}%; background: var(--success); border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                            <span style="color: var(--text-secondary);">Avg Speed</span>
+                            <span style="color: var(--warning); font-weight: 600;">${(op.avg_time || 0).toFixed(2)}s</span>
                         </div>
                     </div>
-                `).join('')}
+                `}).join('')}
             </div>
         `;
-        
+
         // Insert after stats overview
         this.statsOverview.parentNode.insertBefore(breakdownDiv, this.statsOverview.nextSibling);
     }
@@ -571,7 +624,7 @@ class ProgressPage {
     updateMasteryGrid() {
         const mastery = this.progressData.mastery || {};
         this.masteryGridLarge.innerHTML = '';
-        
+
         // Headers
         this.masteryGridLarge.innerHTML += '<div class="mastery-header-cell"></div>';
         [1, 2, 3].forEach(d => {
@@ -580,26 +633,26 @@ class ProgressPage {
             header.textContent = `${d} Digit`;
             this.masteryGridLarge.appendChild(header);
         });
-        
+
         // Operations
         ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
             const opLabel = document.createElement('div');
             opLabel.className = 'operation-label';
             opLabel.textContent = op;
             this.masteryGridLarge.appendChild(opLabel);
-            
+
             [1, 2, 3].forEach(d => {
                 const key = `${op}-${d}`;
                 const stats = mastery[key] || { level: 'Novice', acc: 0, speed: 0, count: 0 };
                 const cell = document.createElement('div');
                 cell.className = `mastery-cell-large ${stats.level.toLowerCase()}`;
-                
+
                 cell.innerHTML = `
                     <div class="mastery-level">${stats.level.toUpperCase()}</div>
                     <div class="mastery-detail">${stats.acc.toFixed(0)}% | ${stats.speed.toFixed(1)}s</div>
                     <div class="mastery-count">(${stats.count} plays)</div>
                 `;
-                
+
                 this.masteryGridLarge.appendChild(cell);
             });
         });
@@ -608,11 +661,11 @@ class ProgressPage {
     updateWeaknessAnalysis() {
         const weaknesses = this.progressData.weaknesses || [];
         this.weaknessListLarge.innerHTML = '';
-        
+
         if (weaknesses.length === 0) {
             // Check if there's any practice data at all
             const hasPracticeData = this.progressData.stats && this.progressData.stats.totalQuestions > 0;
-            
+
             if (hasPracticeData) {
                 this.weaknessListLarge.innerHTML = `
                     <div style="text-align: center; color: var(--success-color); padding: 20px;">
@@ -628,14 +681,14 @@ class ProgressPage {
             }
             return;
         }
-        
+
         // Sort weaknesses by severity
         weaknesses.sort((a, b) => b.weaknessScore - a.weaknessScore);
-        
+
         weaknesses.forEach((weakness, index) => {
             const card = document.createElement('div');
             let cardClass = 'weakness-card';
-            
+
             // Determine severity class
             if (!weakness.practiced || weakness.total_attempts === 0) {
                 cardClass += ' unpracticed';
@@ -646,22 +699,22 @@ class ProgressPage {
             } else {
                 cardClass += ' low-weakness';
             }
-            
+
             card.className = cardClass;
-            
+
             // Create priority indicator
             let priorityBadge = '';
             if (index === 0 && weakness.weaknessScore > 50) {
                 priorityBadge = '<span style="background-color: var(--error-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">PRIORITY</span>';
             }
-            
-            const scoreText = !weakness.practiced || weakness.total_attempts === 0 ? 
+
+            const scoreText = !weakness.practiced || weakness.total_attempts === 0 ?
                 'NEW' : `Score: ${weakness.weaknessScore.toFixed(0)}`;
-            
-            const statsText = weakness.practiced && weakness.total_attempts > 0 ? 
-                `Accuracy: ${weakness.accuracy.toFixed(0)}% | Speed: ${weakness.speed.toFixed(1)}s | ${weakness.total_attempts} attempts` : 
+
+            const statsText = weakness.practiced && weakness.total_attempts > 0 ?
+                `Accuracy: ${weakness.accuracy.toFixed(0)}% | Speed: ${weakness.speed.toFixed(1)}s | ${weakness.total_attempts} attempts` :
                 'Not practiced yet';
-            
+
             // Generate practice recommendation
             let practiceRecommendation = '';
             if (!weakness.practiced || weakness.total_attempts === 0) {
@@ -671,7 +724,7 @@ class ProgressPage {
             } else if (weakness.weaknessScore > 50) {
                 practiceRecommendation = '<p class="suggestions">📈 Needs regular practice</p>';
             }
-            
+
             card.innerHTML = `
                 <div class="weakness-info">
                     <h4>${weakness.operation} - ${weakness.digits} digits${priorityBadge}</h4>
@@ -682,13 +735,13 @@ class ProgressPage {
                 </div>
                 <div class="weakness-score">${scoreText}</div>
             `;
-            
+
             this.weaknessListLarge.appendChild(card);
         });
     }
-    
+
     getMasteryLevelColor(level) {
-        switch(level.toLowerCase()) {
+        switch (level.toLowerCase()) {
             case 'master': return '#e0af68';
             case 'pro': return '#2ECC71';
             case 'apprentice': return '#3498DB';
@@ -700,7 +753,7 @@ class ProgressPage {
     updateRecentActivity() {
         const activity = this.progressData.recentActivity || [];
         this.recentActivity.innerHTML = '';
-        
+
         if (activity.length === 0) {
             this.recentActivity.innerHTML = `
                 <div style="text-align: center; color: var(--muted-color); padding: 20px;">
@@ -709,15 +762,15 @@ class ProgressPage {
             `;
             return;
         }
-        
+
         activity.forEach(item => {
             const activityItem = document.createElement('div');
             activityItem.className = 'activity-item';
-            
-            const speedDisplay = item.avgSpeed ? 
-                `${item.avgSpeed.toFixed(2)}s avg` : 
+
+            const speedDisplay = item.avgSpeed ?
+                `${item.avgSpeed.toFixed(2)}s avg` :
                 (item.speed ? `${item.speed}s avg` : 'N/A');
-            
+
             activityItem.innerHTML = `
                 <div>
                     <div>${item.date}</div>
@@ -729,7 +782,7 @@ class ProgressPage {
                     <span>${speedDisplay}</span>
                 </div>
             `;
-            
+
             this.recentActivity.appendChild(activityItem);
         });
     }
@@ -737,7 +790,7 @@ class ProgressPage {
     updateAchievementProgress() {
         const achievements = this.progressData.achievements || [];
         this.achievementProgress.innerHTML = '';
-        
+
         if (achievements.length === 0) {
             this.achievementProgress.innerHTML = `
                 <div style="text-align: center; color: var(--muted-color); padding: 20px;">
@@ -746,14 +799,14 @@ class ProgressPage {
             `;
             return;
         }
-        
+
         achievements.forEach(achievement => {
             const progressItem = document.createElement('div');
             progressItem.style.cssText = 'margin-bottom: 15px; padding: 10px; background-color: var(--dark-bg); border-radius: 8px;';
-            
+
             const progress = achievement.progress || 0;
             const isUnlocked = achievement.unlocked;
-            
+
             progressItem.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <span style="color: ${isUnlocked ? '#e0af68' : 'var(--muted-color)'}; font-weight: bold;">
@@ -770,7 +823,7 @@ class ProgressPage {
                     ${achievement.desc}
                 </div>
             `;
-            
+
             this.achievementProgress.appendChild(progressItem);
         });
     }
@@ -778,19 +831,19 @@ class ProgressPage {
     updatePersonalBests() {
         const bests = this.progressData.personalBests || {};
         this.personalBests.innerHTML = '';
-        
+
         const categories = [
             { key: 'drill', title: '🎯 Drill (20 Questions)', unit: 'time' },
             { key: 'sprint', title: '⚡ Sprint (60s)', unit: 'score' },
             { key: 'accuracy', title: '🎯 Best Accuracy', unit: 'percent' },
             { key: 'speed', title: '⚡ Fastest Speed', unit: 'time' }
         ];
-        
+
         categories.forEach(category => {
             const best = bests[category.key];
             const bestItem = document.createElement('div');
             bestItem.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 10px; background-color: var(--dark-bg); border-radius: 8px;';
-            
+
             let value = 'Not set';
             if (best) {
                 switch (category.unit) {
@@ -805,12 +858,12 @@ class ProgressPage {
                         break;
                 }
             }
-            
+
             bestItem.innerHTML = `
                 <span style="color: var(--text-color);">${category.title}</span>
                 <span style="color: var(--accent-color); font-weight: bold;">${value}</span>
             `;
-            
+
             this.personalBests.appendChild(bestItem);
         });
     }
@@ -818,116 +871,263 @@ class ProgressPage {
     updatePerformanceChart() {
         const chartData = this.progressData.chartData || [];
         const container = this.chartCanvas.parentNode;
-        
+        const tooltip = document.getElementById('chartTooltip');
+
         // Remove any existing no-data message
         const existingMsg = container.querySelector('.no-data-msg');
         if (existingMsg) {
             existingMsg.remove();
         }
-        
+
         if (chartData.length === 0) {
             this.chartCanvas.style.display = 'none';
             const noDataMsg = document.createElement('div');
             noDataMsg.className = 'no-data-msg';
-            noDataMsg.style.cssText = 'text-align: center; color: var(--muted-color); padding: 40px;';
-            noDataMsg.textContent = 'No chart data available for the selected period.';
+            noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
+            noDataMsg.textContent = 'No data available for the selected period.';
             container.appendChild(noDataMsg);
             return;
         }
-        
+
+        // Check if any metric is actually active
+        const showAccuracy = document.getElementById('toggleAccuracy')?.checked ?? true;
+        const showSpeed = document.getElementById('toggleSpeed')?.checked ?? true;
+        const showQuestions = document.getElementById('toggleQuestions')?.checked ?? true;
+
+        if (!showAccuracy && !showSpeed && !showQuestions) {
+            this.chartCanvas.style.display = 'none';
+            const noDataMsg = document.createElement('div');
+            noDataMsg.className = 'no-data-msg';
+            noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
+            noDataMsg.textContent = 'Please select at least one metric to display.';
+            container.appendChild(noDataMsg);
+            return;
+        }
+
         this.chartCanvas.style.display = 'block';
-        
-        // Simple canvas chart implementation
+
+        // Canvas Setup
         const ctx = this.chartCanvas.getContext('2d');
         const canvas = this.chartCanvas;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        
+        // Use container dimensions for responsiveness
+        const rect = container.getBoundingClientRect();
+        // Handle high DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = 250 * dpr; // Fixed height in CSS is 250px
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = '250px';
+        ctx.scale(dpr, dpr);
+
+        const width = rect.width;
+        const height = 250;
+
         // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+        ctx.clearRect(0, 0, width, height);
+
+        // Get Toggle States (Already fetched above, but keeping structure)
         // Prepare data
         const labels = chartData.map(d => d.label);
         const accuracyData = chartData.map(d => d.accuracy);
         const speedData = chartData.map(d => d.speed);
-        
-        const maxAccuracy = Math.max(...accuracyData, 100);
-        const maxSpeed = Math.max(...speedData, 10);
-        
-        const padding = 40;
-        const chartWidth = canvas.width - (padding * 2);
-        const chartHeight = canvas.height - (padding * 2);
-        
-        // Draw axes
-        ctx.strokeStyle = '#4B5E4B';
+        const questionsData = chartData.map(d => d.questions || 0);
+
+        const maxAccuracy = 100; // Always 100%
+        const maxSpeed = Math.max(...speedData, 10) * 1.2; // Add some headroom
+        const maxQuestions = Math.max(...questionsData, 20) * 1.2;
+
+        const padding = { top: 20, right: 40, bottom: 30, left: 40 };
+        const chartWidth = width - (padding.left + padding.right);
+        const chartHeight = height - (padding.top + padding.bottom);
+
+        // Helper: Get X and Y coordinates
+        const getX = (index) => padding.left + (index / (labels.length - 1)) * chartWidth;
+        const getYAccuracy = (val) => padding.top + chartHeight - (val / maxAccuracy) * chartHeight;
+        const getYSpeed = (val) => padding.top + chartHeight - (val / maxSpeed) * chartHeight;
+        const getYQuestions = (val) => padding.top + chartHeight - (val / maxQuestions) * chartHeight;
+
+        // Draw Grid & Axes
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(padding, padding);
-        ctx.lineTo(padding, canvas.height - padding);
-        ctx.lineTo(canvas.width - padding, canvas.height - padding);
-        ctx.stroke();
-        
-        // Draw accuracy line
-        ctx.strokeStyle = '#2ECC71';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        
-        accuracyData.forEach((value, index) => {
-            const x = padding + (index / (accuracyData.length - 1)) * chartWidth;
-            const y = canvas.height - padding - (value / maxAccuracy) * chartHeight;
-            
-            if (index === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        });
-        
-        ctx.stroke();
-        
-        // Draw speed line
-        ctx.strokeStyle = '#e0af68';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        
-        speedData.forEach((value, index) => {
-            const x = padding + (index / (speedData.length - 1)) * chartWidth;
-            const y = canvas.height - padding - (value / maxSpeed) * chartHeight;
-            
-            if (index === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        });
-        
-        ctx.stroke();
-        
-        // Draw labels
-        ctx.fillStyle = '#ECF0F1';
-        ctx.font = '12px Inter';
+
+        // Horizontal Grid
+        const gridLines = 5;
+        for (let i = 0; i <= gridLines; i++) {
+            const y = padding.top + (chartHeight / gridLines) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, y);
+            ctx.lineTo(width - padding.right, y);
+            ctx.stroke();
+        }
+
+        // -----------------------
+        // Draw Questions Line (Background layer)
+        // -----------------------
+        if (showQuestions) {
+            ctx.strokeStyle = '#818cf8'; // Primary indigo
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+
+            questionsData.forEach((value, index) => {
+                const x = getX(index);
+                const y = getYQuestions(value);
+                if (index === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Draw gradient fill
+            const gradQuest = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+            gradQuest.addColorStop(0, 'rgba(129, 140, 248, 0.2)');
+            gradQuest.addColorStop(1, 'rgba(129, 140, 248, 0.0)');
+            ctx.lineTo(getX(questionsData.length - 1), height - padding.bottom);
+            ctx.lineTo(getX(0), height - padding.bottom);
+            ctx.fillStyle = gradQuest;
+            ctx.fill();
+
+            // Draw Points
+            ctx.fillStyle = '#818cf8';
+            questionsData.forEach((value, index) => {
+                const x = getX(index);
+                const y = getYQuestions(value);
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // -----------------------
+        // Draw Accuracy Line
+        // -----------------------
+        if (showAccuracy) {
+            ctx.strokeStyle = '#2ECC71'; // Success Color
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+
+            accuracyData.forEach((value, index) => {
+                const x = getX(index);
+                const y = getYAccuracy(value);
+                if (index === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Draw gradient fill
+            const gradAcc = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+            gradAcc.addColorStop(0, 'rgba(46, 204, 113, 0.2)');
+            gradAcc.addColorStop(1, 'rgba(46, 204, 113, 0.0)');
+            ctx.lineTo(getX(accuracyData.length - 1), height - padding.bottom);
+            ctx.lineTo(getX(0), height - padding.bottom);
+            ctx.fillStyle = gradAcc;
+            ctx.fill();
+
+            // Draw Points
+            ctx.fillStyle = '#2ECC71';
+            accuracyData.forEach((value, index) => {
+                const x = getX(index);
+                const y = getYAccuracy(value);
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // -----------------------
+        // Draw Speed Line
+        // -----------------------
+        if (showSpeed) {
+            ctx.strokeStyle = '#e0af68'; // Warning Color
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+
+            speedData.forEach((value, index) => {
+                const x = getX(index);
+                const y = getYSpeed(value);
+                if (index === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Draw Points
+            ctx.fillStyle = '#e0af68';
+            speedData.forEach((value, index) => {
+                const x = getX(index);
+                const y = getYSpeed(value);
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // -----------------------
+        // Labels
+        // -----------------------
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.font = '11px Inter';
         ctx.textAlign = 'center';
-        
+
         labels.forEach((label, index) => {
-            if (index % Math.ceil(labels.length / 7) === 0) { // Show every nth label
-                const x = padding + (index / (labels.length - 1)) * chartWidth;
-                ctx.fillText(label, x, canvas.height - padding + 20);
+            // Show all labels if few, otherwise skip
+            if (labels.length <= 7 || index % Math.ceil(labels.length / 7) === 0) {
+                const x = getX(index);
+                ctx.fillText(label, x, height - 10);
             }
         });
-        
-        // Draw legend
-        ctx.fillStyle = '#2ECC71';
-        ctx.fillRect(canvas.width - 150, 10, 15, 3);
-        ctx.fillStyle = '#ECF0F1';
-        ctx.font = '12px Inter';
-        ctx.textAlign = 'left';
-        ctx.fillText('Accuracy', canvas.width - 130, 14);
-        
-        ctx.fillStyle = '#e0af68';
-        ctx.fillRect(canvas.width - 150, 25, 15, 3);
-        ctx.fillStyle = '#ECF0F1';
-        ctx.fillText('Speed', canvas.width - 130, 29);
+
+        // -----------------------
+        // Interaction (Tooltips)
+        // -----------------------
+        // Remove old listener to avoid duplicates
+        if (this._chartMoveHandler) {
+            canvas.removeEventListener('mousemove', this._chartMoveHandler);
+            canvas.removeEventListener('mouseleave', this._chartLeaveHandler);
+        }
+
+        this._chartMoveHandler = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left);
+            const mouseY = (e.clientY - rect.top);
+
+            let found = false;
+
+            // Find closest point
+            chartData.forEach((item, index) => {
+                const x = getX(index);
+                // Check if mouse is near this X column
+                if (Math.abs(mouseX - x) < (chartWidth / labels.length / 2)) {
+                    found = true;
+
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = `${e.clientX + 10}px`;
+                    tooltip.style.top = `${e.clientY + 10}px`;
+
+                    let content = `<strong>${item.label}</strong><br>`;
+                    if (showAccuracy) content += `<span style="color:#2ECC71">●</span> Acc: ${item.accuracy.toFixed(1)}%<br>`;
+                    if (showSpeed) content += `<span style="color:#e0af68">●</span> Speed: ${item.speed.toFixed(2)}s<br>`;
+                    if (showQuestions) content += `<span style="color:#818cf8">●</span> Questions: ${item.questions || 0}`;
+
+                    tooltip.innerHTML = content;
+
+                    // Highlight vertical line (optional)
+                    // ...
+                }
+            });
+
+            if (!found) tooltip.style.display = 'none';
+        };
+
+        this._chartLeaveHandler = () => {
+            tooltip.style.display = 'none';
+        };
+
+        canvas.addEventListener('mousemove', this._chartMoveHandler);
+        canvas.addEventListener('mouseleave', this._chartLeaveHandler);
     }
 
     showLoading(show) {
@@ -956,7 +1156,7 @@ class ProgressPage {
         `;
         errorDiv.textContent = message;
         document.body.appendChild(errorDiv);
-        
+
         setTimeout(() => {
             document.body.removeChild(errorDiv);
         }, 3000);
@@ -966,24 +1166,24 @@ class ProgressPage {
         return new Promise((resolve, reject) => {
             if (window.pythonBridge) {
                 const callbackId = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                
+
                 if (!window.pythonBridge.callbacks) {
                     window.pythonBridge.callbacks = {};
                 }
-                
+
                 // Set up timeout - reduced for faster feedback
                 const timeout = setTimeout(() => {
                     delete window.pythonBridge.callbacks[callbackId];
                     reject(new Error('Python bridge timeout'));
                 }, 1000); // Reduced from 3000ms to 1000ms
-                
+
                 // The Python bridge will call this callback directly
                 window.pythonBridge.callbacks[callbackId] = (result) => {
                     clearTimeout(timeout);
                     console.log('Received callback result:', result);
                     resolve(result);
                 };
-                
+
                 try {
                     console.log('Sending to Python bridge:', action, data, callbackId);
                     window.pythonBridge.send(action, JSON.stringify(data), callbackId);
@@ -1014,7 +1214,7 @@ class ProgressPage {
         const savedTheme = localStorage.getItem('theme');
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = savedTheme || (systemDark ? 'dark' : 'light');
-        
+
         document.documentElement.setAttribute('data-theme', theme);
     }
 
@@ -1029,12 +1229,151 @@ class ProgressPage {
             }
         });
     }
+
+    updateLearningVelocity() {
+        if (!this.velocityContainer) return;
+
+        const v = this.progressData.learningVelocity || {};
+        const velocity = {
+            velocity_score: Number(v.velocity_score) || 0,
+            improvement_rate: Number(v.improvement_rate) || 0,
+            consistency_score: Number(v.consistency_score) || 0,
+            trend: v.trend || 'stable'
+        };
+
+        let trendColor = 'var(--text-secondary)';
+        let trendIcon = '➡️';
+
+        if (velocity.trend === 'improving') {
+            trendColor = 'var(--success)';
+            trendIcon = '📈';
+        } else if (velocity.trend === 'declining') {
+            trendColor = 'var(--error)';
+            trendIcon = '📉';
+        }
+
+        this.velocityContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <span style="font-size: 14px; color: var(--text-secondary);">Overall Velocity</span>
+                <span style="font-size: 18px; font-weight: 700; color: var(--primary);">${velocity.velocity_score.toFixed(1)}</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <div style="flex: 1; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; text-align: center;">
+                    <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">Growth</div>
+                    <div style="font-size: 16px; font-weight: 600; color: ${velocity.improvement_rate >= 0 ? 'var(--success)' : 'var(--error)'};">${velocity.improvement_rate >= 0 ? '+' : ''}${velocity.improvement_rate.toFixed(1)}%</div>
+                </div>
+                <div style="flex: 1; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; text-align: center;">
+                    <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">Consistency</div>
+                    <div style="font-size: 16px; font-weight: 600; color: var(--accent);">${velocity.consistency_score.toFixed(0)}</div>
+                </div>
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="font-size: 14px; color: var(--text-secondary);">Current Trend:</span>
+                <span style="font-weight: 600; color: ${trendColor};">${trendIcon} ${velocity.trend.toUpperCase()}</span>
+            </div>
+        `;
+    }
+
+    renderActivityHeatmap() {
+        if (!this.activityHeatmap) return;
+
+        const goalHistory = this.progressData.goalHistory || [];
+        const heatmapData = new Map();
+
+        // Determine timeframe
+        const isYear = this.heatmapView === 'year';
+        const dayCount = isYear ? 364 : 28; // Multiples of 7 (52 weeks or 4 weeks)
+
+        const today = new Date();
+        const dates = [];
+
+        // Match day of week for grid alignment (starting on Sunday/Monday)
+        // For simplicity, we'll just go back dayCount days
+        for (let i = dayCount - 1; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            dates.push(`${year}-${month}-${day}`);
+        }
+
+        goalHistory.forEach(item => {
+            heatmapData.set(item.date, item.questions_completed || 0);
+        });
+
+        // Find max value for dynamic scaling
+        const values = Array.from(heatmapData.values());
+        const maxVal = Math.max(...values, 10); // Maintain a minimum scale
+
+        this.activityHeatmap.innerHTML = '';
+
+        // Update Grid layout
+        if (isYear) {
+            this.activityHeatmap.style.gridTemplateColumns = 'repeat(52, 1fr)';
+            this.activityHeatmap.style.maxWidth = '1000px';
+            this.activityHeatmap.style.gap = '2px';
+        } else {
+            this.activityHeatmap.style.gridTemplateColumns = 'repeat(7, 1fr)';
+            this.activityHeatmap.style.maxWidth = '250px';
+            this.activityHeatmap.style.gap = '6px';
+        }
+
+        dates.forEach(date => {
+            const count = heatmapData.get(date) || 0;
+            const cell = document.createElement('div');
+            cell.style.aspectRatio = '1';
+            cell.style.borderRadius = isYear ? '1px' : '2px';
+            cell.title = `${date}: ${count} questions`;
+
+            // Dynamic color intensity based on max volume
+            if (count === 0) {
+                cell.style.background = 'rgba(255,255,255,0.03)';
+                cell.style.border = isYear ? 'none' : '1px solid rgba(255,255,255,0.08)';
+            } else {
+                // Calculate opacity based on percentage of max volume
+                // Minimum 0.2 opacity for any activity, up to 1.0
+                const intensity = 0.2 + (Math.min(count / maxVal, 1) * 0.8);
+                cell.style.background = `rgba(52, 211, 153, ${intensity})`; // Using --success color Emerald 400
+                if (!isYear) {
+                    cell.style.boxShadow = `0 0 4px rgba(52, 211, 153, ${intensity * 0.3})`;
+                }
+            }
+
+            this.activityHeatmap.appendChild(cell);
+        });
+    }
+
+    updateAdaptiveInsights() {
+        if (!this.adaptiveInsightsList) return;
+
+        const insights = this.progressData.adaptiveInsights || {};
+        const suggestions = insights.suggestions || [];
+
+        if (suggestions.length === 0) {
+            this.adaptiveInsightsCard.style.display = 'none';
+            return;
+        }
+
+        this.adaptiveInsightsCard.style.display = 'block';
+        this.adaptiveInsightsList.innerHTML = '';
+
+        suggestions.slice(0, 3).forEach(suggestion => {
+            const card = document.createElement('div');
+            card.style.cssText = 'padding: 12px; background: var(--bg-secondary); border-radius: 8px; border-left: 4px solid var(--accent);';
+            card.innerHTML = `
+                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-size: 14px;">${suggestion.title || 'Recommendation'}</div>
+                <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">${suggestion.text || suggestion}</div>
+            `;
+            this.adaptiveInsightsList.appendChild(card);
+        });
+    }
 }
 
 // Global function for Python to call
-window.updateFromPython = function(action, data) {
+window.updateFromPython = function (action, data) {
     if (window.progressPage) {
-        switch(action) {
+        switch (action) {
             case 'updateProgress':
                 window.progressPage.loadProgressData();
                 break;
@@ -1055,7 +1394,7 @@ setTimeout(() => {
 }, 3000);
 
 // Add manual test function for debugging
-window.testProgressData = function() {
+window.testProgressData = function () {
     console.log('Testing progress data with mock data...');
     const mockData = {
         stats: {
@@ -1089,7 +1428,7 @@ window.testProgressData = function() {
             { label: 'Sun', accuracy: 88, speed: 4.0 }
         ]
     };
-    
+
     progressPage.progressData = mockData;
     progressPage.updateAllSections();
     console.log('Test data loaded successfully');
@@ -1105,13 +1444,7 @@ window.addEventListener('resize', () => {
     }
 });
 
-// Auto-test if no Python bridge after 3 seconds
-setTimeout(() => {
-    if (!window.pythonBridge) {
-        console.log('No Python bridge detected, running test with mock data...');
-        window.testProgressData();
-    }
-}, 3000);
+
 
 // Instantiate the ProgressPage
 const progressPage = new ProgressPage();

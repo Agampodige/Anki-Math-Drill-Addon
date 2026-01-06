@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "id": 1,
+    "code": "first_win",
+    "name": "First Steps",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.423511"
+  },
+  {
+    "id": 2,
+    "code": "novice",
+    "name": "Novice",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.440566"
+  },
+  {
+    "id": 3,
+    "code": "apprentice",
+    "name": "Apprentice",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.453865"
+  },
+  {
+    "id": 4,
+    "code": "centurion",
+    "name": "Centurion",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.467446"
+  },
+  {
+    "id": 5,
+    "code": "daily_player",
+    "name": "Daily Player",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.483765"
+  },
+  {
+    "id": 6,
+    "code": "weekend_warrior",
+    "name": "Weekend Warrior",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.497899"
+  },
+  {
+    "id": 7,
+    "code": "no_mistakes",
+    "name": "Flawless",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-06T09:14:26.512826"
+  }
+]

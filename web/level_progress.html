@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Progress · Math Drill</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="theme-loader.js"></script>
+    <style>
+        .level-progress-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: var(--bg-app);
+        }
+
+        .level-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .level-title {
+            font-size: 3em;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-operation {
+            font-size: 1.2em;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-section {
+            width: 100%;
+            max-width: 600px;
+            background: var(--surface-glass);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timer-section {
+            margin-bottom: 30px;
+        }
+
+        .timer-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .timer-fill.warning {
+            background: linear-gradient(90deg, #FF9800, #FFC107);
+        }
+
+        .timer-fill.danger {
+            background: linear-gradient(90deg, #f44336, #FF5722);
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .questions-section {
+            margin-bottom: 30px;
+        }
+
+        .questions-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .questions-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .questions-bar {
+            flex: 1;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .questions-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #64B5F6);
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .questions-text {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.1em;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .criteria-info {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .criteria-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .criteria-icon {
+            font-size: 1.2em;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), #64B5F6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Game Section Styles */
+        .game-section {
+            margin-top: 30px;
+            padding: 30px;
+            background: var(--surface-glass);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .game-section.active {
+            background: var(--surface-glass-hover);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-container {
+            text-align: center;
+        }
+
+        .question-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--surface-glass-strong);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--primary);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .question-display.active {
+            animation: questionAppear 0.5s ease;
+        }
+
+        @keyframes questionAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .answer-input-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .answer-input {
+            font-size: 1.5rem;
+            padding: 15px 20px;
+            border: 2px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-primary);
+            text-align: center;
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .answer-input.correct {
+            border-color: var(--success);
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .answer-input.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+            animation: shake 0.5s ease;
+        }
+
+        .submit-btn {
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 15px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback {
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-height: 30px;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+        }
+
+        .feedback.success {
+            color: var(--success);
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .feedback.error {
+            color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .feedback.neutral {
+            color: var(--text-secondary);
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="level-progress-container">
+        <div class="level-header">
+            <h1 class="level-title" id="levelTitle">Loading...</h1>
+            <div class="level-operation" id="levelOperation">Loading...</div>
+        </div>
+
+        <div class="progress-section">
+            <!-- Timer Section (only shown if time limit exists) -->
+            <div class="timer-section hidden" id="timerSection">
+                <div class="timer-label">Time Limit</div>
+                <div class="timer-bar">
+                    <div class="timer-fill" id="timerFill">
+                        <div class="timer-text" id="timerText">0s</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions Section -->
+            <div class="questions-section">
+                <div class="questions-label">Progress</div>
+                <div class="questions-progress">
+                    <div class="questions-bar">
+                        <div class="questions-fill" id="questionsFill">
+                        </div>
+                    </div>
+                    <div class="questions-text" id="questionsText">0/0</div>
+                </div>
+            </div>
+
+            <!-- Criteria Info -->
+            <div class="criteria-info">
+                <div class="criteria-item">
+                    <span class="criteria-icon">🎯</span>
+                    <span id="criteriaQuestions">Complete questions</span>
+                </div>
+                <div class="criteria-item">
+                    <span class="criteria-icon">✅</span>
+                    <span id="criteriaAccuracy">Minimum accuracy</span>
+                </div>
+                <div class="criteria-item" id="criteriaTimeContainer">
+                    <span class="criteria-icon">⏱️</span>
+                    <span id="criteriaTime">Time limit</span>
+                </div>
+            </div>
+
+            <button class="start-btn" id="startBtn" onclick="startGame()">Start Challenge</button>
+        </div>
+
+        <!-- Game Section (hidden initially) -->
+        <div class="game-section hidden" id="gameSection">
+            <div class="question-container">
+                <div class="question-display" id="questionDisplay">Ready to start!</div>
+                <div class="answer-input-container">
+                    <input type="text" class="answer-input" id="answerInput" placeholder="Type answer & press Enter" />
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Qt Bridge -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script>
+        let levelData = null;
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let questionsAnswered = 0;
+        let correctAnswers = 0;
+        let totalQuestions = 0;
+        let currentAnswer = 0;
+        let gameStartTime = null;
+        let questionStartTime = null;
+        let totalActiveTime = 0;
+        let sessionActive = false;
+
+        window.addEventListener('load', function () {
+            if (typeof qt !== 'undefined' && qt.webChannelTransport) {
+                new QWebChannel(qt.webChannelTransport, function (channel) {
+                    window.pythonBridge = channel.objects.pythonBridge;
+                    window.levelProgress = new LevelProgress();
+                });
+            } else {
+                // Standalone test mode
+                window.levelProgress = new LevelProgress();
+            }
+        });
+
+        class LevelProgress {
+            constructor() {
+                this.processingAnswer = false;
+                this.init();
+            }
+
+            async init() {
+                // Wait for Python bridge to be ready
+                await this.waitForBridge();
+                // Get level data from Python bridge or URL params
+                await this.loadLevelData();
+                this.setupUI();
+                this.setupEventListeners();
+
+                // Auto-start after a short delay to allow UI to settle
+                setTimeout(() => {
+                    this.startGame();
+                }, 1000);
+            }
+
+            async waitForBridge() {
+                // Wait for Python bridge to be available
+                let attempts = 0;
+                const maxAttempts = 10;
+
+                while (!window.pythonBridge && attempts < maxAttempts) {
+                    console.log(`Waiting for Python bridge... attempt ${attempts + 1}`);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    attempts++;
+                }
+
+                if (!window.pythonBridge) {
+                    console.error("Python bridge not available after waiting");
+                    return false;
+                }
+
+                // Check if the bridge has the send method
+                if (typeof window.pythonBridge.send !== 'function') {
+                    console.error("Python bridge found but send method is not available");
+                    console.log("Bridge object:", window.pythonBridge);
+                    return false;
+                }
+
+                // Test the bridge with a simple call to make sure it works
+                try {
+                    console.log("Testing Python bridge functionality...");
+                    // We can't actually test without a real call, but we can check if the method exists and is callable
+                    if (window.pythonBridge.send.length === undefined) {
+                        // This might indicate the method isn't properly set up
+                        console.warn("Python bridge send method may not be properly configured");
+                        return false;
+                    }
+                } catch (e) {
+                    console.error("Python bridge test failed:", e);
+                    return false;
+                }
+
+                console.log("Python bridge is available and ready");
+                return true;
+            }
+
+            async loadLevelData() {
+                // First try to wait for and validate the bridge
+                const bridgeReady = await this.waitForBridge();
+
+                if (bridgeReady) {
+                    try {
+                        console.log("Loading level data...");
+                        const result = await this.sendToPythonWithRetry('get_current_level');
+                        if (result) {
+                            levelData = result;
+                            console.log("Level data loaded successfully:", levelData);
+                        } else {
+                            console.warn("No level data received, using mock data");
+                            this.useMockData();
+                        }
+                    } catch (e) {
+                        console.error("Failed to load level data after retries, using mock data:", e);
+                        this.useMockData();
+                    }
+                } else {
+                    console.warn("Python bridge not properly functional, using mock data");
+                    this.useMockData();
+                }
+            }
+
+            useMockData() {
+                // Try to get the current level ID from URL or session
+                const urlParams = new URLSearchParams(window.location.search);
+                const levelId = urlParams.get('level_id') || '1';
+
+                // Mock data based on level ID
+                const mockLevels = {
+                    '1': {
+                        id: 1,
+                        title: "First Steps",
+                        operation: "Addition",
+                        digits: 1,
+                        criteria: { questions: 10, time_limit: 0, min_accuracy: 80 },
+                        stars_criteria: {
+                            "3": { "min_accuracy": 100, "max_time": 30 },
+                            "2": { "min_accuracy": 90, "max_time": 0 },
+                            "1": { "min_accuracy": 80, "max_time": 0 }
+                        }
+                    },
+                    '2': {
+                        id: 2,
+                        title: "Taking Away",
+                        operation: "Subtraction",
+                        digits: 1,
+                        criteria: { questions: 10, time_limit: 0, min_accuracy: 80 },
+                        stars_criteria: {
+                            "3": { "min_accuracy": 100, "max_time": 30 },
+                            "2": { "min_accuracy": 90, "max_time": 0 },
+                            "1": { "min_accuracy": 80, "max_time": 0 }
+                        }
+                    },
+                    '3': {
+                        id: 3,
+                        title: "Speed Addition",
+                        operation: "Addition",
+                        digits: 1,
+                        criteria: { questions: 15, time_limit: 60, min_accuracy: 90 },
+                        stars_criteria: {
+                            "3": { "min_accuracy": 100, "max_time": 45 },
+                            "2": { "min_accuracy": 95, "max_time": 55 },
+                            "1": { "min_accuracy": 90, "max_time": 60 }
+                        }
+                    },
+                    '4': {
+                        id: 4,
+                        title: "Double Trouble",
+                        operation: "Addition",
+                        digits: 2,
+                        criteria: { questions: 10, time_limit: 0, min_accuracy: 70 },
+                        stars_criteria: {
+                            "3": { "min_accuracy": 90, "max_time": 60 },
+                            "2": { "min_accuracy": 80, "max_time": 90 },
+                            "1": { "min_accuracy": 70, "max_time": 0 }
+                        }
+                    },
+                    '5': {
+                        id: 5,
+                        title: "Multiplication Basics",
+                        operation: "Multiplication",
+                        digits: 1,
+                        criteria: { questions: 15, time_limit: 0, min_accuracy: 80 },
+                        stars_criteria: {
+                            "3": { "min_accuracy": 100, "max_time": 45 },
+                            "2": { "min_accuracy": 90, "max_time": 60 },
+                            "1": { "min_accuracy": 80, "max_time": 0 }
+                        }
+                    },
+                    '6': {
+                        id: 6,
+                        title: "Survival Mode",
+                        operation: "Mixed",
+                        digits: 1,
+                        criteria: { questions: 20, time_limit: 0, min_accuracy: 100 },
+                        stars_criteria: {
+                            "3": { "min_accuracy": 100, "max_time": 60 },
+                            "2": { "min_accuracy": 100, "max_time": 90 },
+                            "1": { "min_accuracy": 100, "max_time": 0 }
+                        }
+                    }
+                };
+
+                levelData = mockLevels[levelId] || mockLevels['1'];
+                console.log("Using mock level data for level", levelId, ":", levelData);
+
+                // Show a visual indicator that we're using mock data
+                setTimeout(() => {
+                    const feedback = document.getElementById('feedback');
+                    if (feedback) {
+                        feedback.textContent = "🔧 Using demo data (bridge not available)";
+                        feedback.className = 'feedback neutral';
+                        feedback.style.background = 'rgba(255, 193, 7, 0.1)';
+                        feedback.style.color = '#f59e0b';
+                    }
+                }, 1000);
+            }
+
+            setupUI() {
+                if (!levelData) return;
+
+                // Update level header
+                document.getElementById('levelTitle').textContent = levelData.title;
+                document.getElementById('levelOperation').textContent = `${levelData.operation} - ${levelData.digits} digit${levelData.digits > 1 ? 's' : ''}`;
+
+                // Setup criteria display
+                const criteria = levelData.criteria;
+                document.getElementById('criteriaQuestions').textContent = `Complete ${criteria.questions} questions`;
+                document.getElementById('criteriaAccuracy').textContent = `Minimum ${criteria.min_accuracy}% accuracy`;
+
+                if (criteria.time_limit > 0) {
+                    document.getElementById('criteriaTime').textContent = `Time limit: ${criteria.time_limit}s`;
+                    document.getElementById('timerSection').classList.remove('hidden');
+                } else {
+                    document.getElementById('criteriaTimeContainer').classList.add('hidden');
+                }
+
+                totalQuestions = criteria.questions;
+                this.updateProgressDisplay();
+            }
+
+            setupEventListeners() {
+                // Handle Enter key for answer submission
+                const answerInput = document.getElementById('answerInput');
+                answerInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.checkAnswer();
+                    }
+                });
+            }
+
+            updateProgressDisplay() {
+                const questionsText = document.getElementById('questionsText');
+                const questionsFill = document.getElementById('questionsFill');
+
+                questionsText.textContent = `${questionsAnswered}/${totalQuestions}`;
+                const progress = (questionsAnswered / totalQuestions) * 100;
+                questionsFill.style.width = `${progress}%`;
+            }
+
+            updateTimerDisplay() {
+                if (levelData.criteria.time_limit > 0) {
+                    const timerText = document.getElementById('timerText');
+                    const timerFill = document.getElementById('timerFill');
+
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                    const progress = ((levelData.criteria.time_limit - timeRemaining) / levelData.criteria.time_limit) * 100;
+                    timerFill.style.width = `${progress}%`;
+
+                    // Change color based on time remaining
+                    if (timeRemaining <= 10) {
+                        timerFill.style.background = 'var(--error)';
+                    } else if (timeRemaining <= 30) {
+                        timerFill.style.background = 'var(--warning)';
+                    }
+                }
+            }
+
+            async startGame() {
+                if (!levelData || sessionActive) return;
+
+                console.log("Starting game...");
+
+                // Hide start button and show game section
+                const startBtn = document.getElementById('startBtn');
+                if (startBtn) startBtn.classList.add('hidden');
+
+                const gameSection = document.getElementById('gameSection');
+                if (gameSection) {
+                    gameSection.classList.remove('hidden');
+                    gameSection.classList.add('active');
+                }
+
+                // Initialize game state
+                questionsAnswered = 0;
+                correctAnswers = 0;
+                totalActiveTime = 0;
+                sessionActive = true;
+                gameStartTime = Date.now();
+                questionStartTime = Date.now();
+
+                // Start timer if needed
+                if (levelData.criteria && levelData.criteria.time_limit > 0) {
+                    timeRemaining = levelData.criteria.time_limit;
+                    this.updateTimerDisplay();
+
+                    if (timerInterval) clearInterval(timerInterval);
+                    timerInterval = setInterval(() => {
+                        timeRemaining--;
+                        this.updateTimerDisplay();
+
+                        if (timeRemaining <= 0) {
+                            this.endGame();
+                        }
+                    }, 1000);
+                }
+
+                // Load first question
+                await this.loadNextQuestion();
+            }
+
+            async loadNextQuestion() {
+                if (!sessionActive) return;
+
+                // Set start time for this specific question
+                questionStartTime = Date.now();
+
+                // Reset processing flag for the new question
+                this.processingAnswer = false;
+
+                // If bridge is not available, use mock question generation
+                if (!window.pythonBridge || typeof window.pythonBridge.send !== 'function') {
+                    this.generateMockQuestion();
+                    return;
+                }
+
+                try {
+                    console.log("Loading next question...");
+                    const result = await this.sendToPythonWithRetry('get_level_question');
+                    if (result && result.question) {
+                        currentAnswer = result.answer;
+                        document.getElementById('questionDisplay').textContent = result.question;
+                        document.getElementById('questionDisplay').classList.add('active');
+
+                        // Reset input
+                        const answerInput = document.getElementById('answerInput');
+                        answerInput.value = '';
+                        answerInput.classList.remove('correct', 'incorrect');
+                        setTimeout(() => answerInput.focus(), 100);
+
+                        // Clear feedback
+                        const feedback = document.getElementById('feedback');
+                        feedback.textContent = '';
+                        feedback.className = 'feedback neutral';
+
+                        // Remove animation class after animation completes
+                        setTimeout(() => {
+                            document.getElementById('questionDisplay').classList.remove('active');
+                        }, 500);
+                    } else {
+                        console.error("Invalid question response:", result);
+                        this.generateMockQuestion();
+                    }
+                } catch (e) {
+                    console.error("Failed to load question, using mock:", e);
+                    this.generateMockQuestion();
+                }
+            }
+
+            generateMockQuestion() {
+                // Generate a simple mock question based on level data
+                const operation = levelData.operation;
+                const digits = levelData.digits;
+
+                let a, b, answer, symbol;
+
+                const low = digits === 1 ? 2 : 10 ** (digits - 1);
+                const high = 10 ** digits - 1;
+
+                if (operation === 'Mixed') {
+                    const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
+                    const randomOp = operations[Math.floor(Math.random() * operations.length)];
+                    operation = randomOp;
+                }
+
+                if (operation === 'Division') {
+                    b = Math.floor(Math.random() * (high - low + 1)) + low;
+                    answer = Math.floor(Math.random() * 9) + 1;
+                    a = b * answer;
+                    symbol = '÷';
+                } else if (operation === 'Addition') {
+                    a = Math.floor(Math.random() * (high - low + 1)) + low;
+                    b = Math.floor(Math.random() * (high - low + 1)) + low;
+                    answer = a + b;
+                    symbol = '+';
+                } else if (operation === 'Subtraction') {
+                    a = Math.floor(Math.random() * (high - low + 1)) + low;
+                    b = Math.floor(Math.random() * (high - low + 1)) + low;
+                    if (a < b) [a, b] = [b, a];
+                    answer = a - b;
+                    symbol = '-';
+                } else if (operation === 'Multiplication') {
+                    a = Math.floor(Math.random() * (high - low + 1)) + low;
+                    b = Math.floor(Math.random() * (high - low + 1)) + low;
+                    answer = a * b;
+                    symbol = '×';
+                }
+
+                currentAnswer = answer;
+                const questionText = `${a} ${symbol} ${b} = ?`;
+
+                document.getElementById('questionDisplay').textContent = questionText;
+                document.getElementById('questionDisplay').classList.add('active');
+
+                // Reset input
+                const answerInput = document.getElementById('answerInput');
+                answerInput.value = '';
+                answerInput.classList.remove('correct', 'incorrect');
+                setTimeout(() => answerInput.focus(), 100);
+
+                // Clear feedback
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = '';
+                feedback.className = 'feedback neutral';
+
+                // Remove animation class after animation completes
+                setTimeout(() => {
+                    document.getElementById('questionDisplay').classList.remove('active');
+                }, 500);
+
+                console.log("Generated mock question:", questionText, "Answer:", answer);
+            }
+
+            async checkAnswer() {
+                if (!sessionActive || this.processingAnswer) return;
+
+                const answerInput = document.getElementById('answerInput');
+                const userAnswer = answerInput.value.trim();
+
+                if (!userAnswer) return;
+
+                this.processingAnswer = true;
+
+                const isCorrect = Math.abs(parseFloat(userAnswer) - currentAnswer) < 0.001;
+                const timeTaken = (Date.now() - questionStartTime) / 1000;
+                totalActiveTime += timeTaken;
+
+                // Update UI based on answer
+                if (isCorrect) {
+                    answerInput.classList.add('correct');
+                    correctAnswers++;
+
+                    const feedback = document.getElementById('feedback');
+                    feedback.textContent = '✅ Correct!';
+                    feedback.className = 'feedback success';
+                } else {
+                    answerInput.classList.add('incorrect');
+
+                    const feedback = document.getElementById('feedback');
+                    feedback.textContent = `❌ Incorrect. The answer is ${currentAnswer}`;
+                    feedback.className = 'feedback error';
+                }
+
+                // Log attempt to backend
+                try {
+                    await this.sendToPythonWithRetry('log_attempt', {
+                        operation: levelData.operation,
+                        digits: levelData.digits,
+                        correct: isCorrect,
+                        time: timeTaken,
+                        question_text: document.getElementById('questionDisplay').textContent,
+                        user_answer: userAnswer,
+                        correct_answer: currentAnswer
+                    });
+                } catch (e) {
+                    console.error("Failed to log attempt", e);
+                }
+
+                questionsAnswered++;
+                this.updateProgressDisplay();
+
+                // Check if level is complete
+                if (questionsAnswered >= totalQuestions) {
+                    setTimeout(() => this.endGame(), 1000);
+                } else {
+                    // Load next question after delay
+                    setTimeout(() => this.loadNextQuestion(), isCorrect ? 400 : 800);
+                }
+            }
+
+            async endGame() {
+                sessionActive = false;
+
+                // Clear timer
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+
+                // Calculate final stats
+                const accuracy = (correctAnswers / questionsAnswered) * 100;
+
+                // End session on backend
+                try {
+                    await this.sendToPythonWithRetry('end_session', {
+                        mode: 'Level',
+                        operation: levelData.operation,
+                        digits: levelData.digits,
+                        total: questionsAnswered,
+                        correct: correctAnswers,
+                        avgSpeed: totalActiveTime / questionsAnswered,
+                        totalTime: totalActiveTime
+                    });
+                } catch (e) {
+                    console.error("Failed to end session", e);
+                }
+
+                // Navigate to completion page
+                try {
+                    await this.sendToPythonWithRetry('navigate_to_level_complete');
+                } catch (e) {
+                    console.error("Failed to navigate to completion page", e);
+                }
+            }
+
+            sendToPython(action, data = {}) {
+                return new Promise((resolve, reject) => {
+                    if (window.pythonBridge) {
+                        const callbackId = 'cb_' + Date.now() + Math.random();
+                        if (!window.pythonBridge.callbacks) window.pythonBridge.callbacks = {};
+                        window.pythonBridge.callbacks[callbackId] = resolve;
+
+                        try {
+                            window.pythonBridge.send(action, JSON.stringify(data), callbackId);
+                        } catch (e) {
+                            console.error("Bridge send error:", e);
+                            delete window.pythonBridge.callbacks[callbackId];
+                            reject(new Error('Bridge send failed: ' + e.message));
+                            return;
+                        }
+
+                        // Timeout after 3 seconds
+                        setTimeout(() => {
+                            if (window.pythonBridge.callbacks[callbackId]) {
+                                delete window.pythonBridge.callbacks[callbackId];
+                                reject(new Error(`Python bridge timeout for action: ${action}`));
+                            }
+                        }, 3000);
+                    } else {
+                        reject(new Error('Python bridge not available'));
+                    }
+                });
+            }
+
+            async sendToPythonWithRetry(action, data = {}, maxRetries = 3) {
+                for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                    try {
+                        console.log(`Attempting ${action} (try ${attempt}/${maxRetries})`);
+                        const result = await this.sendToPython(action, data);
+                        console.log(`Success on attempt ${attempt}`);
+                        return result;
+                    } catch (error) {
+                        console.error(`Attempt ${attempt} failed:`, error.message);
+                        if (attempt === maxRetries) {
+                            throw error;
+                        }
+                        // Wait before retrying
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+            }
+
+            // Method for compatibility with Python bridge updates
+            updateFromPython(answered, time) {
+                // We keep JS as owner of the counter to avoid double-incrementing
+                // when both JS and Python update it.
+                // Only update visual display
+                this.updateProgressDisplay();
+            }
+        }
+
+        // Helper for Python bridge to update progress directly
+        window.updateProgress = function (answered, totalTime) {
+            if (window.levelProgress) {
+                window.levelProgress.updateFromPython(answered, totalTime);
+            }
+        };
+
+        // Global functions for onclick handlers
+        function startGame() {
+            window.levelProgress.startGame();
+        }
+
+        function checkAnswer() {
+            window.levelProgress.checkAnswer();
+        }
+    </script>
+</body>
+
+</html>

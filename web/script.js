@@ -1,28 +1,28 @@
 // Initialize the app when bridge is ready
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     // Make test function globally available
-    window.testBridge = function() {
+    window.testBridge = function () {
         if (window.mathDrill) {
             window.mathDrill.testBridge();
         } else {
             console.error('MathDrill not initialized');
         }
     };
-    
+
     // Make logAttempt globally available for testing
-    window.logTestAttempt = function() {
+    window.logTestAttempt = function () {
         if (window.mathDrill) {
             window.mathDrill.logAttempt(true, 1.5, '1+1', 2, 2);
         } else {
             console.error('MathDrill not initialized');
         }
     };
-    
+
     // Make testDirectLog globally available for testing
-    window.testDirectLog = function() {
+    window.testDirectLog = function () {
         if (window.pythonBridge) {
             console.log('Testing direct Python logging...');
-            window.pythonBridge.send('test_direct_log', JSON.stringify({test: true}), 'direct_log_callback');
+            window.pythonBridge.send('test_direct_log', JSON.stringify({ test: true }), 'direct_log_callback');
         } else {
             console.error('Bridge not available for direct test');
         }
@@ -33,7 +33,7 @@ class MathDrillWeb {
     constructor() {
         // Don't initialize immediately - wait for bridge
         this.initialized = false;
-        
+
         // Session state
         this.sessionActive = false;
         this.sessionAttempts = [];
@@ -47,7 +47,7 @@ class MathDrillWeb {
         this.retakeMastery = {};
         this.currentFocusArea = null;
         this.focusSessionCount = 0;
-        
+
         // Check if bridge is ready, if so initialize now
         if (window.pythonBridge) {
             this.initialize();
@@ -56,7 +56,7 @@ class MathDrillWeb {
             this.waitForBridge();
         }
     }
-    
+
     waitForBridge() {
         const checkInterval = setInterval(() => {
             if (window.pythonBridge) {
@@ -64,7 +64,7 @@ class MathDrillWeb {
                 this.initialize();
             }
         }, 100);
-        
+
         // Timeout after 5 seconds
         setTimeout(() => {
             clearInterval(checkInterval);
@@ -74,34 +74,37 @@ class MathDrillWeb {
             }
         }, 5000);
     }
-    
+
     initialize() {
         if (this.initialized) return;
         this.initialized = true;
-        
+
         // Add bridge status indicator
         this.addBridgeStatusIndicator();
-        
+
         console.log('Initializing MathDrillWeb...');
-        
+
         console.log(' Bridge status:', window.pythonBridge ? 'Connected' : 'Not connected');
-        
+
         this.initElements();
         this.initEventListeners();
         this.initTimers();
         this.updateStats();
+
+        // Check for active session instead of just resetting
+        this.checkActiveSession();
     }
 
     initElements() {
         // Header elements
         this.coachLabel = document.getElementById('coachLabel');
         this.streakCounter = document.getElementById('streakCounter');
-        
+
         // Control elements
         this.modeBox = document.getElementById('modeBox');
         this.operationBox = document.getElementById('operationBox');
         this.digitsBox = document.getElementById('digitsBox');
-        
+
         // Stats elements
         this.sessionCount = document.getElementById('sessionCount');
         this.todayCount = document.getElementById('todayCount');
@@ -111,22 +114,22 @@ class MathDrillWeb {
         this.progressLabel = document.getElementById('progressLabel');
         this.progressFill = document.getElementById('progressFill');
         this.ghostLine = document.getElementById('ghostLine');
-        
+
         // Challenge elements
         this.questionNumber = document.getElementById('questionNumber');
         this.timerDisplay = document.getElementById('timerDisplay');
         this.questionText = document.getElementById('questionText');
         this.answerInput = document.getElementById('answerInput');
         this.feedback = document.getElementById('feedback');
-        
+
         // Modal elements
         this.modalOverlay = document.getElementById('modalOverlay');
         this.resultModal = document.getElementById('resultModal');
         this.achievementToast = document.getElementById('achievementToast');
-        
+
         // Verify critical elements exist
-        const criticalElements = ['answerInput', 'modeBox', 'operationBox', 'digitsBox', 
-                                'sessionCount', 'todayCount', 'lifetimeCount'];
+        const criticalElements = ['answerInput', 'modeBox', 'operationBox', 'digitsBox',
+            'sessionCount', 'todayCount', 'lifetimeCount'];
         const missing = criticalElements.filter(id => !this[id]);
         if (missing.length > 0) {
             console.error('Missing critical elements:', missing);
@@ -139,13 +142,13 @@ class MathDrillWeb {
         if (this.modeBox) this.modeBox.addEventListener('change', () => this.resetSession());
         if (this.operationBox) this.operationBox.addEventListener('change', () => this.resetSession());
         if (this.digitsBox) this.digitsBox.addEventListener('change', () => this.resetSession());
-        
+
         // Answer input
         if (this.answerInput) {
             this.answerInput.addEventListener('keydown', (e) => this.handleKeydown(e));
             this.answerInput.addEventListener('input', (e) => this.handleInput(e));
         }
-        
+
         // Modal close buttons
         const closeResultBtn = document.getElementById('closeResultBtn');
         if (closeResultBtn) {
@@ -155,18 +158,18 @@ class MathDrillWeb {
         if (toastCloseBtn) {
             toastCloseBtn.addEventListener('click', () => this.closeToast());
         }
-        
+
         // Retake button
         const retakeBtn = document.getElementById('retakeBtn');
         if (retakeBtn) {
             retakeBtn.addEventListener('click', () => this.startRetakeMistakes());
         }
-        
+
         // Modal overlay click
         if (this.modalOverlay) {
             this.modalOverlay.addEventListener('click', () => this.closeAllModals());
         }
-        
+
         // Global keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleGlobalKeydown(e));
     }
@@ -174,21 +177,21 @@ class MathDrillWeb {
     initTimers() {
         // UI update timer
         setInterval(() => this.updateLiveTimer(), 100);
-        
+
         // Session timer (for sprint mode)
         this.sessionTimer = null;
     }
 
     handleKeydown(e) {
         const key = e.key;
-        
+
         // Allow Enter for submitting
         if (key === 'Enter') {
             e.preventDefault();
             this.checkAnswer();
             return;
         }
-        
+
         // Allow Escape for clearing
         if (key === 'Escape') {
             this.answerInput.value = '';
@@ -197,17 +200,17 @@ class MathDrillWeb {
             }
             return;
         }
-        
+
         // Allow Backspace, Delete, and navigation keys
         if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) {
             return;
         }
-        
+
         // Allow minus sign (for negative numbers)
         if (key === '-' && (!this.answerInput.value || this.answerInput.selectionStart === 0)) {
             return;
         }
-        
+
         // Only allow digits
         if (!/^\d$/.test(key) && !e.ctrlKey && !e.altKey) {
             e.preventDefault();
@@ -231,10 +234,10 @@ class MathDrillWeb {
             }
             return;
         }
-        
+
         // Dialog shortcuts
         if (!e.ctrlKey && !e.altKey) {
-            switch(e.key.toLowerCase()) {
+            switch (e.key.toLowerCase()) {
                 case 's':
                     window.location.href = 'settings.html';
                     break;
@@ -284,7 +287,7 @@ class MathDrillWeb {
         console.log('userAnswer:', userAnswer);
         console.log('correctAnswer:', correctAnswer);
         console.log('window.pythonBridge available:', !!window.pythonBridge);
-        
+
         const attempt = {
             operation: this.operationBox.value,
             digits: parseInt(this.digitsBox.value),
@@ -296,17 +299,17 @@ class MathDrillWeb {
             difficulty_level: this.calculateDifficultyLevel(),
             timestamp: new Date().toISOString()
         };
-        
+
         console.log('JavaScript logging attempt:', attempt);
-        
+
         this.sessionAttempts.push(attempt);
-        
+
         // Send to backend with enhanced data
         if (window.pythonBridge) {
             console.log('Sending to Python bridge...');
             console.log('Bridge type:', typeof window.pythonBridge);
             console.log('Bridge send method:', typeof window.pythonBridge.send);
-            
+
             try {
                 window.pythonBridge.send('log_attempt', JSON.stringify(attempt), null);
                 console.log('✅ Successfully sent to Python bridge');
@@ -318,7 +321,7 @@ class MathDrillWeb {
             console.log('window.pythonBridge:', window.pythonBridge);
             console.log('typeof window.pythonBridge:', typeof window.pythonBridge);
         }
-        
+
         // Trigger real-time update
         if (window.realtimeManager) {
             window.realtimeManager.handleSync({
@@ -328,7 +331,7 @@ class MathDrillWeb {
             });
         }
     }
-    
+
     addBridgeStatusIndicator() {
         // Add a visual indicator for bridge status
         const statusDiv = document.createElement('div');
@@ -347,7 +350,7 @@ class MathDrillWeb {
         `;
         statusDiv.textContent = window.pythonBridge ? '🔗 Bridge Connected' : '❌ Bridge Disconnected';
         document.body.appendChild(statusDiv);
-        
+
         // Update status periodically
         setInterval(() => {
             const connected = !!window.pythonBridge;
@@ -355,35 +358,35 @@ class MathDrillWeb {
             statusDiv.textContent = connected ? '🔗 Bridge Connected' : '❌ Bridge Disconnected';
         }, 1000);
     }
-    
+
     // Test bridge communication (can be called from console)
     testBridge() {
         console.log('=== Testing bridge communication ===');
         if (window.pythonBridge) {
             console.log('Bridge available, sending test message...');
-            window.pythonBridge.send('test_bridge', JSON.stringify({test: true}), 'test_callback');
+            window.pythonBridge.send('test_bridge', JSON.stringify({ test: true }), 'test_callback');
         } else {
             console.error('Bridge not available for testing');
         }
     }
-    
+
     calculateDifficultyLevel() {
         // Calculate difficulty based on operation and digits
         const operation = this.operationBox.value;
         const digits = parseInt(this.digitsBox.value);
-        
+
         let baseLevel = 1;
-        
+
         // Operation difficulty
         if (operation === 'Addition') baseLevel = 1;
         else if (operation === 'Subtraction') baseLevel = 2;
         else if (operation === 'Multiplication') baseLevel = 3;
         else if (operation === 'Division') baseLevel = 4;
         else if (operation === 'Mixed') baseLevel = 3;
-        
+
         // Digit multiplier
         const digitMultiplier = digits;
-        
+
         return Math.min(10, baseLevel * digitMultiplier);
     }
 
@@ -392,20 +395,33 @@ class MathDrillWeb {
         this.sessionAttempts = [];
         this.sessionMistakes = [];
         this.sessionStartTime = null;
-        this.retakActive = false;
-        this.streak = 0;
         this.startTime = null;
+        this.streak = 0;
+        this.currentAnswer = 0;
+        this.retakActive = false;
+        this.retakeQueue = [];
+        this.retakeMastery = {};
         this.currentFocusArea = null;
         this.focusSessionCount = 0;
-        
-        if (this.sessionTimer) {
-            clearInterval(this.sessionTimer);
-            this.sessionTimer = null;
+
+        // cleanup focus mode
+        if (this.focusTimerInterval) {
+            clearInterval(this.focusTimerInterval);
+            this.focusTimerInterval = null;
         }
-        
-        // Reset UI
-        this.streakCounter.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg> <span id="streakValue">0</span>';
-        this.progressFill.style.width = '0%';
+        this.activeLevelSession = null;
+        const focusBanner = document.getElementById('focusBanner');
+        if (focusBanner) focusBanner.style.display = 'none';
+
+        const controls = document.querySelector('.controls-section');
+        if (controls) controls.style.display = 'block';
+
+        // Clear feedback classes
+        this.answerInput.classList.remove('correct', 'incorrect');
+        this.feedback.classList.remove('success', 'error', 'neutral');
+
+        // Update UI
+        this.updateStreakDisplay();
         this.ghostLine.style.display = 'none';
         this.timerDisplay.style.display = 'none';
         this.progressContainer.style.display = 'none';
@@ -414,19 +430,19 @@ class MathDrillWeb {
         this.answerInput.value = '';
         this.answerInput.readOnly = false;
         this.answerInput.focus();
-        
+
         // Enable/disable controls based on mode
         const mode = this.modeBox.value;
         this.operationBox.disabled = mode === 'Adaptive Coach';
         this.digitsBox.disabled = mode === 'Adaptive Coach';
-        
+
         if (mode === 'Adaptive Coach') {
             this.coachLabel.style.display = 'block';
             this.coachLabel.textContent = 'Coach is analyzing your skills...';
         } else {
             this.coachLabel.style.display = 'none';
         }
-        
+
         // Setup progress bar and timer
         if (mode.includes('Drill')) {
             this.progressContainer.style.display = 'block';
@@ -440,9 +456,117 @@ class MathDrillWeb {
             this.progressContainer.style.display = 'none';
             this.timerDisplay.style.display = 'none';
         }
-        
+
         // Notify Python
-        this.sendToPython('reset_session', { mode });
+        if (mode !== 'Level') { // Don't reset session on backend if we are just initializing UI for level
+            this.sendToPython('reset_session', { mode });
+        }
+    }
+
+    checkActiveSession() {
+        console.log('Checking for active session...');
+        if (window.pythonBridge) {
+            this.sendToPython('get_active_session', {}, (response) => {
+                if (response && response.active && response.session) {
+                    console.log('Found active session:', response.session);
+                    if (response.session.mode === 'Level') {
+                        this.startLevelMode(response.session);
+                    } else {
+                        // For other modes, we might just want to reset or restore. 
+                        // For now, let's reset to be safe unless we want to support resuming standard drills too.
+                        this.resetSession();
+                    }
+                } else {
+                    this.resetSession();
+                }
+            });
+        } else {
+            this.resetSession();
+        }
+    }
+
+    startLevelMode(session) {
+        console.log('Starting Level Mode UI:', session);
+        this.sessionActive = true;
+        this.activeLevelSession = session;
+
+        // Hide standard controls
+        const controls = document.querySelector('.controls-section');
+        if (controls) controls.style.display = 'none';
+
+        // Show Focus Banner
+        const banner = document.getElementById('focusBanner');
+        if (banner) {
+            banner.style.display = 'block';
+            const title = session.level_id ? `Level ${session.level_id}` : 'Level Challenge';
+            document.getElementById('focusLevelTitle').textContent = title;
+
+            // Set initial progress
+            const current = session.questions_completed || 0;
+            const total = session.target_questions || 20; // Default or from session
+            document.getElementById('focusProgress').textContent = `${current}/${total}`;
+            const pct = (current / total) * 100;
+            document.getElementById('focusProgressFill').style.width = `${pct}%`;
+        }
+
+        // Configure game input
+        this.modeBox.value = 'Level';
+        this.operationBox.value = session.operation || 'Addition';
+        this.digitsBox.value = session.digits || 1;
+
+        this.questionText.textContent = 'Ready?';
+        this.feedback.textContent = 'Focus Mode Active';
+        this.answerInput.value = '';
+        this.answerInput.readOnly = false;
+        this.answerInput.focus();
+
+        // Timer Logic
+        this.startFocusTimer(session);
+
+        // Force generation of first question if we don't have one active????
+        // Ideally backend should provide current question if one exists.
+        // For now, let's generate a new one to kickstart.
+        setTimeout(() => this.generateQuestion(), 500);
+    }
+
+    startFocusTimer(session) {
+        if (this.focusTimerInterval) clearInterval(this.focusTimerInterval);
+
+        const startTime = Date.now(); // Or session.start_time if available??
+        // Verify if session has a start time from server to be more accurate on RESUME.
+        // For now, we'll just track time since this specific page load or UI initialization.
+        // Ideally, we should sync with server time.
+
+        const timeLimit = session.criteria ? session.criteria.time_limit : 0;
+
+        this.focusTimerInterval = setInterval(() => {
+            if (!this.activeLevelSession) {
+                clearInterval(this.focusTimerInterval);
+                return;
+            }
+
+            const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000); // Approximate
+            // If we had server start time, we'd use that.
+
+            const timerDisplay = document.getElementById('focusTimer');
+            if (!timerDisplay) return;
+
+            if (timeLimit > 0) {
+                const remaining = Math.max(0, timeLimit - elapsedSeconds);
+                const mins = Math.floor(remaining / 60).toString().padStart(2, '0');
+                const secs = (remaining % 60).toString().padStart(2, '0');
+                timerDisplay.textContent = `${mins}:${secs}`;
+
+                if (remaining <= 0) {
+                    // Time up! Handle via backend end_session or local check?
+                    // Ideally backend enforces it. We just show 00:00.
+                }
+            } else {
+                const mins = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
+                const secs = (elapsedSeconds % 60).toString().padStart(2, '0');
+                timerDisplay.textContent = `${mins}:${secs}`;
+            }
+        }, 1000);
     }
 
     startSessionIfNeeded() {
@@ -452,11 +576,11 @@ class MathDrillWeb {
             this.sessionAttempts = [];
             this.sessionMistakes = [];
             this.sessionStartTime = new Date();
-            
+
             if (mode.includes('Sprint')) {
                 this.startSprintTimer();
             }
-            
+
             // Always send start_session to Python, even for Free Play
             this.sendToPython('start_session', {
                 mode,
@@ -470,10 +594,10 @@ class MathDrillWeb {
         this.sessionTimer = setInterval(() => {
             const elapsed = (Date.now() - this.sessionStartTime) / 1000;
             const remaining = Math.max(0, 60 - elapsed);
-            
+
             this.progressFill.style.width = `${((60 - remaining) / 60) * 100}%`;
             this.progressLabel.textContent = `${Math.ceil(remaining)}s Remaining`;
-            
+
             if (remaining <= 0) {
                 this.endSession();
             }
@@ -484,7 +608,7 @@ class MathDrillWeb {
         if (!this.retakActive) {
             this.startSessionIfNeeded();
         }
-        
+
         // Retake logic
         if (this.retakActive) {
             if (this.retakeQueue.length === 0) {
@@ -495,36 +619,51 @@ class MathDrillWeb {
                 this.questionText.textContent = 'Perfect!';
                 return;
             }
-            
+
             const [qText, qAns] = this.retakeQueue[0];
             this.currentAnswer = qAns;
             this.questionText.textContent = qText;
-            
+
             const count = this.retakeQueue.length;
             const mastered = Object.values(this.retakeMastery).filter(v => v >= 2).length;
             this.questionNumber.textContent = `RETAKE MODE: ${count} Left (${mastered} Mastered)`;
-            
+
             this.answerInput.readOnly = false;
             this.answerInput.value = '';
             this.answerInput.focus();
             this.feedback.textContent = 'Get each right twice in a row!';
             this.feedback.style.color = 'var(--muted-color)';
-            
+
             this.startTime = Date.now() / 1000;
             return;
         }
-        
+
+        // For Level sessions, get questions from backend to respect level criteria
+        if (this.modeBox.value === 'Level' && this.activeLevelSession) {
+            this.sendToPython('get_level_question', {}, (response) => {
+                if (response && response.question) {
+                    this.currentAnswer = response.answer;
+                    this.questionText.textContent = response.question;
+                    this.generateQuestionInternalSetup();
+                } else {
+                    // Fallback to internal generation if backend fails
+                    this.generateQuestionInternal();
+                }
+            });
+            return;
+        }
+
         // Coach mode
         if (this.modeBox.value === 'Adaptive Coach') {
             this.sendToPython('get_coach_recommendation', {}, (response) => {
                 if (response.target) {
                     this.currentFocusArea = response.target;
                     this.focusSessionCount++;
-                    
+
                     this.operationBox.value = response.target[0];
                     const digitIndex = Math.max(0, Math.min(response.target[1] - 1, this.digitsBox.options.length - 1));
                     this.digitsBox.selectedIndex = digitIndex;
-                    
+
                     this.coachLabel.textContent = `Coach: ${response.reason}`;
                 }
                 this.generateQuestionInternal();
@@ -535,31 +674,45 @@ class MathDrillWeb {
     }
 
     generateQuestionInternal() {
+        this.generateQuestionInternalSetup();
+        this.generateQuestionInternalMath();
+    }
+
+    generateQuestionInternalSetup() {
         this.answerInput.readOnly = false;
         this.answerInput.value = '';
         this.answerInput.focus();
-        this.feedback.textContent = '';
-        this.feedback.style.color = 'var(--muted-color)';
-        
+
+        // Clear previous feedback classes and set neutral state
+        this.answerInput.classList.remove('correct', 'incorrect');
+        this.feedback.classList.remove('success', 'error', 'neutral');
+        this.feedback.classList.add('neutral');
+        this.feedback.textContent = 'Enter your answer';
+
+        // Add active state to question
+        this.questionText.classList.add('active');
+    }
+
+    generateQuestionInternalMath() {
         let operation = this.operationBox.value;
         const digits = parseInt(this.digitsBox.value);
-        
+
         if (operation === 'Mixed') {
             const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
             operation = operations[Math.floor(Math.random() * operations.length)];
         }
-        
+
         let a, b, answer, symbol;
-        
+
         const low = digits === 1 ? 2 : Math.pow(10, digits - 1);
         const high = Math.pow(10, digits) - 1;
-        
+
         if (operation === 'Division') {
             const bLow = 2;
             const bHigh = digits === 1 ? 12 : (digits > 2 ? Math.pow(10, digits - 1) - 1 : 20);
             if (digits === 2) bHigh = 20;
             if (digits === 3) bHigh = 50;
-            
+
             b = Math.floor(Math.random() * (bHigh - bLow + 1)) + bLow;
             answer = Math.floor(Math.random() * (Math.min(high, 20) - 2 + 1)) + 2;
             a = b * answer;
@@ -567,22 +720,29 @@ class MathDrillWeb {
         } else {
             a = Math.floor(Math.random() * (high - low + 1)) + low;
             b = Math.floor(Math.random() * (high - low + 1)) + low;
-            
+
             if (operation === 'Addition') {
                 answer = a + b;
                 symbol = '+';
             } else if (operation === 'Subtraction') {
+                // Ensure positive result for subtraction
                 if (a < b) [a, b] = [b, a];
                 answer = a - b;
-                symbol = '−';
+                symbol = '-';
             } else if (operation === 'Multiplication') {
+                // For multiplication, use smaller numbers to avoid very large results
+                if (digits > 1) {
+                    a = Math.floor(Math.random() * (Math.min(high, 20) - low + 1)) + low;
+                    b = Math.floor(Math.random() * (Math.min(high, 20) - low + 1)) + low;
+                }
                 answer = a * b;
                 symbol = '×';
             }
         }
-        
+
         this.currentAnswer = answer;
-        
+        this.questionText.textContent = `${a} ${symbol} ${b} = ?`;
+
         // Update question number
         const count = this.sessionAttempts.length + 1;
         const mode = this.modeBox.value;
@@ -593,84 +753,104 @@ class MathDrillWeb {
         } else {
             this.questionNumber.textContent = `QUESTION #${count}`;
         }
-        
+
         this.questionText.textContent = `${a} ${symbol} ${b} =`;
         this.startTime = Date.now() / 1000;
         console.log('Timer started for question:', this.questionText.textContent);
+
+        // Smooth animation for question appearance
+        this.questionText.style.opacity = '0';
+        this.questionText.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            this.questionText.style.opacity = '1';
+            this.questionText.style.transform = 'translateY(0)';
+        }, 50);
     }
 
     checkAnswer() {
         console.log('=== checkAnswer called ===');
         console.log('startTime:', this.startTime);
         console.log('answerInput.value:', this.answerInput.value);
-        
+
         if (this.startTime === null) {
             console.log('startTime is null, generating question...');
             this.generateQuestion();
             return;
         }
-        
+
         const userText = this.answerInput.value.trim();
         console.log('userText:', userText);
         if (!userText) {
             console.log('userText is empty, returning...');
             return;
         }
-        
+
         const elapsed = (Date.now() / 1000) - this.startTime;
         let correct = false;
-        
+
         try {
             const val = parseFloat(userText);
             correct = Math.abs(val - this.currentAnswer) < 0.001;
         } catch (e) {
             correct = false;
         }
-        
+
         console.log('elapsed:', elapsed);
         console.log('correct:', correct);
-        
+
         const questionText = this.questionText.textContent;
         const userAnswer = userText;
         const correctAnswer = this.currentAnswer;
         const timeTaken = elapsed;
-        
+
         console.log('About to call logAttempt...');
         // Use the enhanced logAttempt method
         this.logAttempt(correct, timeTaken, questionText, userAnswer, correctAnswer);
-        
+
         // Play sound
-        if (window.settingsManager && window.settingsManager.state.soundEnabled) {
-            this.sendToPython('play_sound', { success: correct });
+        try {
+            if (window.settingsManager && window.settingsManager.settings && window.settingsManager.settings.sound) {
+                this.sendToPython('play_sound', { success: correct });
+            }
+        } catch (e) {
+            console.warn('Sound settings not available:', e);
         }
-        
+
+        // Clear previous feedback classes
+        this.answerInput.classList.remove('correct', 'incorrect');
+        this.feedback.classList.remove('success', 'error', 'neutral');
+
         if (correct) {
             this.streak++;
-            this.feedback.textContent = `Correct! (${elapsed.toFixed(2)}s)`;
-            this.feedback.style.color = 'var(--success-color)';
+            this.updateStreakDisplay();
+
+            // Enhanced correct answer feedback
+            this.answerInput.classList.add('correct');
+            this.feedback.classList.add('success');
+            this.feedback.innerHTML = `✅ Correct! (${elapsed.toFixed(2)}s)${this.streak > 1 ? ` • 🔥 Streak: ${this.streak}` : ''}`;
+
             this.flashOverlay('success');
-            
             this.answerInput.readOnly = true;
-            
+
             if (this.retakActive) {
                 const qText = this.questionText.textContent;
                 this.retakeMastery[qText] = (this.retakeMastery[qText] || 0) + 1;
-                
+
                 if (this.retakeMastery[qText] >= 2) {
                     this.retakeQueue.shift();
-                    this.feedback.textContent = '✅ MASTERED!';
+                    this.feedback.innerHTML = '🎯 MASTERED! Ready for next challenge';
                 } else {
                     const item = this.retakeQueue.shift();
                     this.retakeQueue.push(item);
-                    this.feedback.textContent = '1/2 - Keep going!';
+                    this.feedback.innerHTML = '👍 1/2 - One more correct answer to master!';
                 }
-                
+
                 setTimeout(() => this.generateQuestion(), 800);
                 return;
             }
-            
+
             this.updateProgress();
-            
+
             if (this.sessionActive || this.modeBox.value === 'Free Play') {
                 if (this.sessionAttempts.length > 0) {
                     setTimeout(() => this.generateQuestion(), 600);
@@ -680,26 +860,32 @@ class MathDrillWeb {
             this.streak = 0;
             const currQText = this.questionText.textContent;
             this.sessionMistakes.push([currQText, this.currentAnswer, userText]);
-            
-            this.feedback.textContent = `Wrong. Answer: ${this.currentAnswer}`;
-            this.feedback.style.color = 'var(--error-color)';
+
+            // Enhanced incorrect answer feedback
+            this.answerInput.classList.add('incorrect');
+            this.feedback.classList.add('error');
+            this.feedback.innerHTML = `❌ Incorrect. The answer is ${this.currentAnswer}. Your answer: ${userText}`;
+
             this.flashOverlay('error');
             this.shakeInput();
-            
+
             this.startTime = null;
             this.answerInput.value = '';
-            
+
             if (this.retakActive) {
                 this.retakeMastery[currQText] = 0;
                 const item = this.retakeQueue.shift();
                 this.retakeQueue.push(item);
+                this.feedback.innerHTML = '💪 Keep practicing! Try this one again';
                 setTimeout(() => this.generateQuestion(), 1500);
                 return;
             }
-            
+
             this.updateProgress();
         }
-        
+    }
+
+    updateStreakDisplay() {
         this.streakCounter.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg> <span id="streakValue">${this.streak}</span>`;
         this.updateStats();
     }
@@ -707,37 +893,61 @@ class MathDrillWeb {
     updateProgress() {
         const mode = this.modeBox.value;
         const count = this.sessionAttempts.length;
-        
+
+        // Update Focus Mode UI if active
+        if (this.activeLevelSession && document.getElementById('focusBanner').style.display !== 'none') {
+            const current = (this.activeLevelSession.questions_completed || 0) + count;
+            const total = this.activeLevelSession.target_value || 20; // Assuming target_value for questions
+
+            document.getElementById('focusProgress').textContent = `${current}/${total}`;
+            const pct = Math.min((current / total) * 100, 100);
+            document.getElementById('focusProgressFill').style.width = `${pct}%`;
+        }
+
         if (mode.includes('Drill')) {
             this.progressFill.style.width = `${(count / 20) * 100}%`;
             this.progressLabel.textContent = `${count} / 20`;
-            
+
             if (count >= 20) {
                 this.endSession();
             }
+        } else if (mode === 'Level') {
+            // For level sessions, check if we have an active session with target
+            this.sendToPython('get_active_session', {}, (response) => {
+                if (response.active && response.session.target_value) {
+                    const target = response.session.target_value;
+                    this.progressFill.style.width = `${(count / target) * 100}%`;
+                    this.progressLabel.textContent = `${count} / ${target}`;
+
+                    // Auto-end session when target is reached
+                    if (count >= target) {
+                        this.endSession();
+                    }
+                }
+            });
         }
     }
 
     endSession() {
         this.sessionActive = false;
-        
+
         if (this.sessionTimer) {
             clearInterval(this.sessionTimer);
             this.sessionTimer = null;
         }
-        
+
         this.answerInput.readOnly = true;
-        
+
         // Hide timer and progress when session ends
         this.timerDisplay.style.display = 'none';
         this.progressContainer.style.display = 'none';
-        
+
         const total = this.sessionAttempts.length;
         const correct = this.sessionAttempts.filter(a => a.correct).length;
         const totalTime = this.sessionAttempts.reduce((sum, a) => sum + a.time, 0);
         const avgSpeed = total > 0 ? totalTime / total : 0;
         const accuracy = total > 0 ? (correct / total) * 100 : 0;
-        
+
         const sessionData = {
             mode: this.modeBox.value,
             operation: this.operationBox.value,
@@ -749,41 +959,50 @@ class MathDrillWeb {
             mistakes: this.sessionMistakes,
             maxStreak: this.streak
         };
-        
-        this.sendToPython('end_session', sessionData, (response) => {
-            this.showResultModal(sessionData, response.newBadges);
-        });
+
+        // For level sessions, let the Python backend handle navigation
+        if (this.modeBox.value === 'Level') {
+            this.sendToPython('end_session', sessionData, (response) => {
+                // Don't show result modal for level sessions - Python handles navigation
+                console.log('Level session ended, navigation handled by Python');
+            });
+        } else {
+            // Regular sessions show the result modal
+            this.sendToPython('end_session', sessionData, (response) => {
+                this.showResultModal(sessionData, response.newBadges);
+            });
+        }
     }
 
     showResultModal(sessionData, newBadges) {
         const modal = this.resultModal;
         const accuracy = sessionData.total > 0 ? (sessionData.correct / sessionData.total) * 100 : 0;
-        
+
         document.getElementById('resultAccuracy').textContent = `${accuracy.toFixed(1)}%`;
         document.getElementById('resultSpeed').textContent = `${sessionData.avgSpeed.toFixed(2)}s`;
         document.getElementById('resultTotal').textContent = sessionData.total;
         document.getElementById('resultTime').textContent = `${sessionData.totalTime.toFixed(1)}s`;
-        
+
         const mistakesSection = document.getElementById('mistakesSection');
         const mistakesList = document.getElementById('mistakesList');
         const retakeBtn = document.getElementById('retakeBtn');
-        
+
         if (sessionData.mistakes.length > 0) {
             mistakesSection.style.display = 'block';
             mistakesList.innerHTML = '';
-            
+
             sessionData.mistakes.forEach(mistake => {
                 const item = document.createElement('div');
                 item.className = 'mistake-item';
                 item.textContent = `• ${mistake[0]} = ${mistake[1]} (You: ${mistake[2]})`;
                 mistakesList.appendChild(item);
             });
-            
+
             retakeBtn.style.display = 'block';
         } else {
             mistakesSection.style.display = 'none';
             retakeBtn.style.display = 'none';
-            
+
             // Show perfect message
             const perfectMsg = document.createElement('div');
             perfectMsg.style.color = 'var(--accent-color)';
@@ -794,9 +1013,9 @@ class MathDrillWeb {
             perfectMsg.textContent = 'Perfect Session! 🎉';
             mistakesSection.parentNode.insertBefore(perfectMsg, mistakesSection);
         }
-        
+
         this.openModal('result');
-        
+
         if (newBadges && newBadges.length > 0) {
             setTimeout(() => this.showAchievementToast(newBadges), 500);
         }
@@ -805,14 +1024,14 @@ class MathDrillWeb {
     startRetakeMistakes() {
         const uniqueMistakes = [];
         const seen = new Set();
-        
+
         this.sessionMistakes.forEach(mistake => {
             if (!seen.has(mistake[0])) {
                 uniqueMistakes.push([mistake[0], mistake[1]]);
                 seen.add(mistake[0]);
             }
         });
-        
+
         this.closeModal('result');
         this.startRetake(uniqueMistakes);
     }
@@ -824,7 +1043,7 @@ class MathDrillWeb {
         mistakes.forEach(([qText, _]) => {
             this.retakeMastery[qText] = 0;
         });
-        
+
         this.sessionAttempts = [];
         this.sessionMistakes = [];
         this.generateQuestion();
@@ -852,12 +1071,12 @@ class MathDrillWeb {
                 console.warn('No stats data received');
                 return;
             }
-            
+
             // Update stat displays with null checks
             if (this.sessionCount) this.sessionCount.textContent = stats.session || 0;
             if (this.todayCount) this.todayCount.textContent = stats.today || 0;
             if (this.lifetimeCount) this.lifetimeCount.textContent = stats.lifetime || 0;
-            
+
             if (this.statsDetail) {
                 if (stats.today > 0) {
                     const accuracy = stats.accuracy || 0;
@@ -868,21 +1087,21 @@ class MathDrillWeb {
                     this.statsDetail.textContent = 'Start answering to see stats';
                 }
             }
-            
+
             // Update daily goals if available
             if (stats.daily_goals) {
                 this.updateDailyGoalsDisplay(stats.daily_goals);
             }
         });
     }
-    
+
     updateDailyGoalsDisplay(dailyGoals) {
         // Update daily goals display in UI
         const goalsContainer = document.getElementById('dailyGoalsContainer');
         if (goalsContainer && dailyGoals) {
             const questionProgress = dailyGoals.question_progress || 0;
             const timeProgress = dailyGoals.time_progress || 0;
-            
+
             goalsContainer.innerHTML = `
                 <div class="daily-goals-section">
                     <h4>Daily Goals</h4>
@@ -902,7 +1121,7 @@ class MathDrillWeb {
             `;
         }
     }
-    
+
     async setDailyGoals(targetQuestions, targetTimeMinutes) {
         if (window.realtimeManager) {
             const result = await window.realtimeManager.setDailyGoals(targetQuestions, targetTimeMinutes);
@@ -912,21 +1131,21 @@ class MathDrillWeb {
             }
         }
     }
-    
+
     async exportUserData() {
         if (window.realtimeManager) {
             const result = await window.realtimeManager.exportData();
             if (result && !result.error) {
                 // Create download link
                 const dataStr = JSON.stringify(result, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
                 const url = URL.createObjectURL(dataBlob);
-                
+
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = `math_drill_backup_${new Date().toISOString().split('T')[0]}.json`;
                 link.click();
-                
+
                 URL.revokeObjectURL(url);
                 this.showToast('Data exported successfully!', 'success');
             } else {
@@ -934,12 +1153,12 @@ class MathDrillWeb {
             }
         }
     }
-    
+
     async importUserData(file) {
         try {
             const text = await file.text();
             const data = JSON.parse(text);
-            
+
             if (window.realtimeManager) {
                 const result = await window.realtimeManager.importData(data);
                 if (result && result.success) {
@@ -958,7 +1177,7 @@ class MathDrillWeb {
             this.showToast('Invalid file format', 'error');
         }
     }
-    
+
     showToast(message, type = 'info') {
         // Simple toast implementation
         const toast = document.createElement('div');
@@ -977,15 +1196,15 @@ class MathDrillWeb {
             transform: translateY(20px);
             transition: all 0.3s ease;
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         // Animate in
         setTimeout(() => {
             toast.style.opacity = '1';
             toast.style.transform = 'translateY(0)';
         }, 100);
-        
+
         // Remove after 3 seconds
         setTimeout(() => {
             toast.style.opacity = '0';
@@ -1002,7 +1221,7 @@ class MathDrillWeb {
         const color = type === 'success' ? 'var(--success-color)' : 'var(--error-color)';
         this.questionText.style.backgroundColor = color;
         this.questionText.style.transition = 'background-color 0.3s ease';
-        
+
         setTimeout(() => {
             this.questionText.style.backgroundColor = 'transparent';
         }, 300);
@@ -1017,8 +1236,8 @@ class MathDrillWeb {
 
     openModal(type) {
         this.modalOverlay.style.display = 'flex';
-        
-        switch(type) {
+
+        switch (type) {
             case 'result':
                 this.resultModal.style.display = 'block';
                 break;
@@ -1026,13 +1245,13 @@ class MathDrillWeb {
     }
 
     closeModal(type) {
-        switch(type) {
+        switch (type) {
             case 'result':
                 this.resultModal.style.display = 'none';
                 this.resetSession();
                 break;
         }
-        
+
         this.closeAllModals();
         this.answerInput.focus();
     }
@@ -1051,7 +1270,7 @@ class MathDrillWeb {
     showAchievementToast(badges) {
         const toast = this.achievementToast;
         const message = document.getElementById('toastMessage');
-        
+
         message.innerHTML = badges.map(b => `<p>UNLOCKED: ${b.name}<br>${b.desc}</p>`).join('');
         toast.style.display = 'block';
     }
@@ -1061,9 +1280,9 @@ class MathDrillWeb {
         console.log('sendToPython called:', action, data);
         if (window.pythonBridge) {
             const callbackId = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
+
             console.log('Generated callback ID:', callbackId);
-            
+
             if (callback) {
                 // Store callback for later execution
                 if (!window.pythonBridge.callbacks) {
@@ -1071,7 +1290,7 @@ class MathDrillWeb {
                 }
                 window.pythonBridge.callbacks[callbackId] = callback;
             }
-            
+
             // Send the message
             console.log('Sending to Python bridge...');
             window.pythonBridge.send(action, JSON.stringify(data), callbackId);
@@ -1082,9 +1301,9 @@ class MathDrillWeb {
 }
 
 // Global function for Python to call
-window.updateFromPython = function(action, data) {
+window.updateFromPython = function (action, data) {
     if (window.mathDrill) {
-        switch(action) {
+        switch (action) {
             case 'updateStats':
                 window.mathDrill.updateStats();
                 break;

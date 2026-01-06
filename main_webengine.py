@@ -20,6 +20,7 @@ class FileLogger:
         self.log_file = log_file
         self.original_stdout = sys.stdout
         self.original_stderr = sys.stderr
+        self.encoding = 'utf-8' # Required by aqt.webview
         
         # Create log file with timestamp
         self._write_log(f"\n{'='*60}")
@@ -85,9 +86,9 @@ except ImportError:
     from database_api import adaptive_learning
 
 try:
-    from .analytics import get_today_stats
+    from .analytics import get_today_stats, get_learning_velocity
 except ImportError:
-    from analytics import get_today_stats
+    from analytics import get_today_stats, get_learning_velocity
 
 try:
     from .coach import SmartCoach
@@ -132,7 +133,7 @@ class PythonBridge(QObject):
             if action == 'reset_session':
                 self.reset_session(data)
             elif action == 'start_session':
-                self.start_session(data)
+                self.start_session(data, callback_id)
             elif action == 'test_direct_log':
                 print("=== Testing direct attempt logging ===")
                 test_data = {
@@ -151,7 +152,7 @@ class PythonBridge(QObject):
                 self.send_to_js('test_bridge_result', {'status': 'success', 'message': 'Bridge working!'}, callback_id)
             elif action == 'log_attempt':
                 print("=== Handling log_attempt action ===")
-                self.log_attempt(data)
+                self.log_attempt(data, callback_id)
             elif action == 'end_session':
                 self.end_session(data, callback_id)
             elif action == 'play_sound':
@@ -193,22 +194,72 @@ class PythonBridge(QObject):
                 self.export_user_data(data, callback_id)
             elif action == 'import_data':
                 self.import_user_data(data, callback_id)
+            elif action == 'get_level_question':
+                self.get_level_question(callback_id)
+            elif action == 'get_levels':
+                self.get_levels(callback_id)
+            elif action == 'get_level_details':
+                self.get_level_details(data, callback_id)
+            elif action == 'complete_level':
+                self.complete_level(data, callback_id)
+            elif action == 'get_current_level':
+                self.get_current_level(callback_id)
+            elif action == 'get_level_completion_data':
+                self.get_level_completion_data(callback_id)
+            elif action == 'save_level_completion':
+                self.save_level_completion(data, callback_id)
+            elif action == 'navigate_to_levels':
+                self.navigate_to_levels()
+            elif action == 'navigate_to_level_progress':
+                self.navigate_to_level_progress()
+            elif action == 'navigate_to_level_complete':
+                self.navigate_to_level_complete()
+            elif action == 'retry_level':
+                self.retry_level()
+            elif action == 'time_up':
+                self.handle_time_up()
+            elif action == 'navigate_to_main':
+                self.navigate_to_main()
             elif action == 'get_adaptive_difficulty':
                 self.get_adaptive_difficulty(data, callback_id)
             elif action == 'update_adaptive_performance':
                 self.update_adaptive_performance(data, callback_id)
             elif action == 'get_adaptive_recommendations':
-                self.get_adaptive_recommendations(data, callback_id)
+                self.get_adaptive_recommendations(callback_id)
             elif action == 'get_learning_path':
                 self.get_learning_path(data, callback_id)
             elif action == 'get_adaptive_insights':
                 self.get_adaptive_insights(callback_id)
-            elif action == 'get_adaptive_report':
-                self.get_adaptive_report(callback_id)
+            elif action == 'get_active_session':
+                self.get_active_session(callback_id)
+            elif action == 'end_session':
+                self.end_session(data, callback_id)
+            elif action == 'get_stats':
+                self.get_stats(callback_id)
+            elif action == 'play_sound':
+                self.play_sound(data)
+            elif action == 'log_attempt':
+                self.log_attempt(data, callback_id)
             elif action == 'get_adaptive_recommendations_summary':
                 self.get_adaptive_recommendations_summary(callback_id)
             elif action == 'export_adaptive_data':
                 self.export_adaptive_data(callback_id)
+            elif action == 'get_storage_stats':
+                self.get_storage_stats(callback_id)
+            elif action == 'export_data':
+                self.export_user_data(data, callback_id)
+            elif action == 'import_data':
+                self.import_user_data(data, callback_id)
+            elif action == 'get_settings':
+                self.get_settings(callback_id)
+            elif action == 'save_settings':
+                self.save_settings(data, callback_id)
+            elif action == 'get_achievements':
+                self.get_achievements(callback_id)
+            elif action == 'get_daily_goals':
+                self.get_daily_goals(callback_id)
+            elif action == 'set_daily_goals':
+                self.set_daily_goals(data, callback_id)
         except Exception as e:
             print(f"Error handling action {action}: {e}")
     
@@ -217,7 +268,7 @@ class PythonBridge(QObject):
         if hasattr(self.parent_dialog, 'reset_session'):
             self.parent_dialog.reset_session()
     
-    def log_attempt(self, data):
+    def log_attempt(self, data, callback_id=None):
         """Log a practice attempt with adaptive learning integration"""
         print(f"=== Python log_attempt called ===")
         print(f"Received data: {data}")
@@ -234,6 +285,27 @@ class PythonBridge(QObject):
             correct_answer = data.get('correct_answer')
             
             print(f"Parsed: operation={operation}, digits={digits}, correct={correct}, time_taken={time_taken}, session_id={session_id}")
+            
+            # Update level session stats if this is a level session
+            if hasattr(self.parent_dialog, 'session_stats') and self.parent_dialog.session_stats.get('level_id'):
+                self.parent_dialog.session_stats['questions_answered'] += 1
+                if correct:
+                    self.parent_dialog.session_stats['correct_answers'] += 1
+                self.parent_dialog.session_stats['total_time'] += time_taken
+                
+                # Calculate current accuracy
+                accuracy = (self.parent_dialog.session_stats['correct_answers'] / 
+                           self.parent_dialog.session_stats['questions_answered']) * 100
+                
+                # Update level progress page if it's active
+                if hasattr(self.parent_dialog, 'current_page') and self.parent_dialog.current_page == "level_progress":
+                    progress_script = f"""
+                    if (window.updateProgress) {{
+                        updateProgress({self.parent_dialog.session_stats['questions_answered']}, 
+                                     {self.parent_dialog.session_stats['total_time']});
+                    }}
+                    """
+                    self.parent_dialog.web_view.page().runJavaScript(progress_script)
             
             # Test database API connection
             try:
@@ -304,13 +376,15 @@ class PythonBridge(QObject):
                 print(f"❌ Error triggering real-time sync: {e}")
             
             print("✅ All logging operations completed successfully")
+            if callback_id:
+                self.send_to_js('log_attempt_result', {'status': 'success'}, callback_id)
             
         except Exception as e:
             print(f"❌ Critical error logging attempt: {e}")
             import traceback
             traceback.print_exc()
     
-    def start_session(self, data):
+    def start_session(self, data, callback_id):
         """Handle session start"""
         if hasattr(self.parent_dialog, 'start_session'):
             self.parent_dialog.start_session(data['mode'], data['operation'], data['digits'])
@@ -318,15 +392,62 @@ class PythonBridge(QObject):
             session_id = db_api.create_session(
                 mode=data['mode'], 
                 operation=data['operation'], 
-                digits=data['digits']
+                digits=data['digits'],
+                target_value=data.get('target_value', 0)
             )
             self.current_session_id = session_id
+            
+            # If this is a Level session, store the level ID and criteria in the parent
+            if data.get('mode') == 'Level':
+                if hasattr(self.parent_dialog, 'active_level_id'):
+                    self.parent_dialog.active_level_id = data.get('level_id')
+                    print(f"Started Level Session: {self.parent_dialog.active_level_id}")
+                
+                # Initialize session stats for level tracking
+                if hasattr(self.parent_dialog, 'session_stats'):
+                    self.parent_dialog.session_stats = {
+                        'level_id': data.get('level_id'),
+                        'questions_answered': 0,
+                        'correct_answers': 0,
+                        'total_time': 0,
+                        'start_time': time.time(),
+                        'criteria': data.get('criteria', {})
+                    }
+                else:
+                    # Add session_stats attribute if it doesn't exist
+                    setattr(self.parent_dialog, 'session_stats', {
+                        'level_id': data.get('level_id'),
+                        'questions_answered': 0,
+                        'correct_answers': 0,
+                        'total_time': 0,
+                        'start_time': time.time(),
+                        'criteria': data.get('criteria', {})
+                    })
+            
+            self.send_to_js('start_session_result', {'success': True, 'session_id': session_id}, callback_id)
+
+    def get_active_session(self, callback_id):
+        """Get current active session details if any"""
+        if hasattr(self, 'current_session_id') and self.current_session_id:
+            session_data = db_api.get_session_stats(self.current_session_id)
+            if session_data:
+                # Add level_id if available
+                if hasattr(self.parent_dialog, 'active_level_id'):
+                    session_data['level_id'] = self.parent_dialog.active_level_id
+                
+                self.send_to_js('active_session_result', {'active': True, 'session': session_data}, callback_id)
+                return
+        
+        self.send_to_js('active_session_result', {'active': False}, callback_id)
     
     def end_session(self, data, callback_id):
         """Handle session end and return results"""
+        # Always use MathDrillWebEngine's end_session for unified logic
         if hasattr(self.parent_dialog, 'end_session'):
             result = self.parent_dialog.end_session(data)
             self.send_to_js('end_session_result', result, callback_id)
+        else:
+            self.send_to_js('end_session_result', {'success': False, 'error': 'Parent dialog end_session not found'}, callback_id)
     
     def play_sound(self, data):
         """Play sound effect"""
@@ -367,17 +488,26 @@ class PythonBridge(QObject):
     
     def get_settings(self, callback_id):
         """Get current settings"""
-        settings = {
-            'soundEnabled': self.settings_manager.sound_enabled
-        }
+        settings = self.settings_manager.get_all()
+        # Ensure backward compatibility for soundEnabled
+        settings['soundEnabled'] = settings.get('sound', True)
         self.send_to_js('settings_result', settings, callback_id)
+
+    def save_settings(self, data, callback_id):
+        """Save settings from frontend"""
+        try:
+            settings_dict = data if isinstance(data, dict) else json.loads(data)
+            success = self.settings_manager.save_settings(settings_dict)
+            self.send_to_js('save_settings_result', {'success': success}, callback_id)
+        except Exception as e:
+            print(f"Error saving settings: {e}")
+            self.send_to_js('save_settings_result', {'success': False, 'error': str(e)}, callback_id)
     
     def toggle_sound(self, callback_id):
         """Toggle sound settings"""
         self.settings_manager.sound_enabled = not self.settings_manager.sound_enabled
-        settings = {
-            'soundEnabled': self.settings_manager.sound_enabled
-        }
+        settings = self.settings_manager.get_all()
+        settings['soundEnabled'] = self.settings_manager.sound_enabled
         self.send_to_js('settings_result', settings, callback_id)
     
     def get_achievements(self, callback_id):
@@ -555,13 +685,15 @@ class PythonBridge(QObject):
                     chart_data.append({
                         'label': chart_date.strftime('%a'),
                         'accuracy': day_data['accuracy'],
-                        'speed': day_data['avg_time']
+                        'speed': day_data['avg_time'],
+                        'questions': day_data['attempts']
                     })
                 else:
                     chart_data.append({
                         'label': chart_date.strftime('%a'),
                         'accuracy': 0,
-                        'speed': 0
+                        'speed': 0,
+                        'questions': 0
                     })
             
             # Prepare recent activity data
@@ -585,6 +717,11 @@ class PythonBridge(QObject):
                         'avgSpeed': activity['avg_time'] or 0
                     })
             
+            # Get additional analytical data
+            learning_velocity = get_learning_velocity(days=30)
+            adaptive_insights = db_api.get_adaptive_insights()
+            goal_history = db_api.get_goal_history(days=30)
+            
             # Fast progress data with real statistics
             progress_data = {
                 'stats': {
@@ -601,7 +738,10 @@ class PythonBridge(QObject):
                 'achievements': [],  # Will be filled by background update
                 'personalBests': {},  # Will be filled by background update
                 'operationBreakdown': stats_data['operation_breakdown'],
-                'difficultyProgression': stats_data['difficulty_progression']
+                'difficultyProgression': stats_data['difficulty_progression'],
+                'learningVelocity': learning_velocity,
+                'adaptiveInsights': adaptive_insights,
+                'goalHistory': goal_history
             }
             
             print(f"Real progress data generated: {basic_stats['total_attempts']} total, {(basic_stats['total_correct'] / basic_stats['total_attempts'] * 100) if basic_stats['total_attempts'] > 0 else 0:.1f}% accuracy")
@@ -859,7 +999,7 @@ class PythonBridge(QObject):
             
             # Notify JavaScript about the update
             if hasattr(self.parent_dialog, 'web_view') and self.parent_dialog.web_view:
-                update_script = f"if(window.updateHeavyData) {{ window.updateHeavyData({json.dumps(progress_data)}); }}"
+                update_script = f"if(window.progressPage && window.progressPage.updateHeavyData) {{ window.progressPage.updateHeavyData({json.dumps(progress_data)}); }}"
                 self.parent_dialog.web_view.page().runJavaScript(update_script)
                 
         except Exception as e:
@@ -1051,7 +1191,7 @@ class PythonBridge(QObject):
         except Exception as e:
             print(f"Error exporting data: {e}")
             self.send_to_js('export_data_result', {'error': str(e)}, callback_id)
-    
+
     def import_user_data(self, data, callback_id):
         """Import user data from backup"""
         try:
@@ -1061,7 +1201,6 @@ class PythonBridge(QObject):
             success = db_api.import_data(import_data, merge)
             
             if success:
-                
                 # Trigger real-time sync
                 self._trigger_realtime_sync('data_imported', {
                     'merge': merge,
@@ -1072,6 +1211,294 @@ class PythonBridge(QObject):
         except Exception as e:
             print(f"Error importing data: {e}")
             self.send_to_js('import_data_result', {'success': False, 'error': str(e)}, callback_id)
+    
+    # === Navigation Methods ===
+    def navigate_to_main(self):
+        """Navigate back to main page"""
+        if hasattr(self.parent_dialog, 'navigate_to_main'):
+            self.parent_dialog.navigate_to_main()
+
+    def navigate_to_levels(self):
+        """Navigate to levels page"""
+        if hasattr(self.parent_dialog, 'navigate_to_levels'):
+            self.parent_dialog.navigate_to_levels()
+
+    def navigate_to_level_progress(self):
+        """Navigate to level progress page"""
+        if hasattr(self.parent_dialog, 'navigate_to_level_progress'):
+            self.parent_dialog.navigate_to_level_progress()
+
+    def navigate_to_level_complete(self):
+        """Navigate to level completion page"""
+        if hasattr(self.parent_dialog, 'navigate_to_level_complete'):
+            self.parent_dialog.navigate_to_level_complete()
+
+    def navigate_to_progress(self):
+        """Navigate to progress page"""
+        if hasattr(self.parent_dialog, 'navigate_to_progress'):
+            self.parent_dialog.navigate_to_progress()
+
+    def get_adaptive_insights(self, callback_id):
+        """Get comprehensive adaptive insights"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            insights = adaptive_analytics.get_comprehensive_adaptive_report()
+            self.send_to_js('adaptive_insights_result', insights, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive insights: {e}")
+            self.send_to_js('adaptive_insights_result', {}, callback_id)
+
+    def get_adaptive_report(self, callback_id):
+        """Get detailed adaptive report"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            report = adaptive_analytics.get_comprehensive_adaptive_report()
+            self.send_to_js('adaptive_report_result', report, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive report: {e}")
+            self.send_to_js('adaptive_report_result', {}, callback_id)
+
+    def get_adaptive_recommendations_summary(self, callback_id):
+        """Get summary of adaptive recommendations"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            summary = adaptive_analytics.get_adaptive_recommendations_summary()
+            self.send_to_js('adaptive_recommendations_summary_result', summary, callback_id)
+        except Exception as e:
+            print(f"Error getting adaptive recommendations summary: {e}")
+            self.send_to_js('adaptive_recommendations_summary_result', {}, callback_id)
+
+    def export_adaptive_data(self, callback_id):
+        """Export adaptive learning data"""
+        try:
+            from .adaptive_analytics import adaptive_analytics
+            export_data = adaptive_analytics.export_adaptive_data()
+            self.send_to_js('export_adaptive_data_result', export_data, callback_id)
+        except Exception as e:
+            print(f"Error exporting adaptive data: {e}")
+            self.send_to_js('export_adaptive_data_result', {}, callback_id)
+
+    # === Level System Methods ===
+    def get_levels(self, callback_id):
+        """Get all levels with progress"""
+        try:
+            levels = db_api.get_all_levels()
+            self.send_to_js('levels_result', levels, callback_id)
+        except Exception as e:
+            print(f"Error getting levels: {e}")
+            self.send_to_js('levels_result', [], callback_id)
+
+    def get_level_details(self, data, callback_id):
+        """Get details for a specific level"""
+        try:
+            level_id = data.get('level_id')
+            level = db_api.get_level_details(level_id)
+            self.send_to_js('level_details_result', level, callback_id)
+        except Exception as e:
+            print(f"Error getting level details: {e}")
+            self.send_to_js('level_details_result', {}, callback_id)
+
+    def complete_level(self, data, callback_id):
+        """Complete a level attempt"""
+        try:
+            level_id = data.get('level_id')
+            session_stats = data.get('stats')
+            result = db_api.complete_level(level_id, session_stats)
+            self.send_to_js('level_complete_result', result, callback_id)
+        except Exception as e:
+            print(f"Error completing level: {e}")
+            self.send_to_js('level_complete_result', {'success': False, 'message': str(e)}, callback_id)
+
+    def get_current_level(self, callback_id):
+        """Get current level data for progress page"""
+        try:
+            # Get the active level from the parent dialog
+            if hasattr(self.parent_dialog, 'active_level_id'):
+                level_id = self.parent_dialog.active_level_id
+                level = db_api.get_level_details(level_id)
+                self.send_to_js('current_level_result', level, callback_id)
+            else:
+                self.send_to_js('current_level_result', {}, callback_id)
+        except Exception as e:
+            print(f"Error getting current level: {e}")
+            self.send_to_js('current_level_result', {}, callback_id)
+
+    def get_level_question(self, callback_id):
+        """Generate a question for the current level session"""
+        try:
+            # Get the active level session data
+            if hasattr(self.parent_dialog, 'active_level_id') and hasattr(self.parent_dialog, 'session_stats'):
+                level_id = self.parent_dialog.active_level_id
+                level = db_api.get_level_details(level_id)
+                
+                if level:
+                    # Generate question based on level criteria
+                    operation = level['operation']
+                    digits = level['digits']
+                    
+                    # Import the question generation logic
+                    import random
+                    
+                    if operation == 'Mixed':
+                        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division']
+                        operation = random.choice(operations)
+                    
+                    # Generate numbers based on digit level
+                    low = 2 if digits == 1 else 10 ** (digits - 1)
+                    high = 10 ** digits - 1
+                    
+                    a, b, answer, symbol = 0, 0, 0, ''
+                    
+                    if operation == 'Division':
+                        # Ensure clean division with appropriate digit levels
+                        b_low = 2
+                        b_high = 12 if digits == 1 else (20 if digits == 2 else 50)
+                        b = random.randint(b_low, b_high)
+                        answer = random.randint(2, min(high, 20))
+                        a = b * answer
+                        
+                        # Ensure the dividend (a) also respects digit level
+                        max_dividend = min(high, 99)  # Cap at 99 to keep it reasonable
+                        if a > max_dividend:
+                            # Recalculate with smaller numbers
+                            b = random.randint(b_low, min(b_high, 9))
+                            answer = random.randint(2, min(max_dividend // b, 20))
+                            a = b * answer
+                        
+                        symbol = '÷'
+                    elif operation == 'Addition':
+                        a = random.randint(low, high)
+                        b = random.randint(low, high)
+                        answer = a + b
+                        symbol = '+'
+                    elif operation == 'Subtraction':
+                        a = random.randint(low, high)
+                        b = random.randint(low, high)
+                        if a < b:
+                            a, b = b, a
+                        answer = a - b
+                        symbol = '-'
+                    elif operation == 'Multiplication':
+                        # Use smaller numbers for multiplication to keep it manageable
+                        if digits > 1:
+                            a = random.randint(low, min(high, 20))
+                            b = random.randint(low, min(high, 20))
+                        else:
+                            a = random.randint(low, high)
+                            b = random.randint(low, high)
+                        answer = a * b
+                        symbol = '×'
+                    
+                    question_text = f"{a} {symbol} {b} = ?"
+                    
+                    result = {
+                        'question': question_text,
+                        'answer': answer,
+                        'operation': operation,
+                        'digits': digits
+                    }
+                    
+                    self.send_to_js('level_question_result', result, callback_id)
+                else:
+                    self.send_to_js('level_question_result', {}, callback_id)
+            else:
+                self.send_to_js('level_question_result', {}, callback_id)
+        except Exception as e:
+            print(f"Error generating level question: {e}")
+            self.send_to_js('level_question_result', {}, callback_id)
+
+    def get_level_completion_data(self, callback_id):
+        """Get level completion data for completion page"""
+        try:
+            if hasattr(self.parent_dialog, 'active_level_id') and hasattr(self.parent_dialog, 'session_stats'):
+                level_id = self.parent_dialog.active_level_id
+                level = db_api.get_level_details(level_id)
+                session_stats = self.parent_dialog.session_stats
+                
+                completion_data = {
+                    'level': level,
+                    'stats': session_stats
+                }
+                self.send_to_js('level_completion_data_result', completion_data, callback_id)
+            else:
+                self.send_to_js('level_completion_data_result', {}, callback_id)
+        except Exception as e:
+            print(f"Error getting level completion data: {e}")
+            self.send_to_js('level_completion_data_result', {}, callback_id)
+
+    def save_level_completion(self, data, callback_id):
+        """Save level completion data to JSON file"""
+        try:
+            completion_file = os.path.join(os.path.dirname(__file__), 'data', 'level_completion_data.json')
+            
+            # Load existing data
+            existing_data = []
+            if os.path.exists(completion_file):
+                try:
+                    with open(completion_file, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                except:
+                    existing_data = []
+            
+            # Add new completion record
+            completion_record = {
+                'level_id': data['level']['id'],
+                'level_title': data['level']['title'],
+                'operation': data['level']['operation'],
+                'digits': data['level']['digits'],
+                'stars_earned': data['stats']['stars'],
+                'questions_answered': data['stats']['questions_answered'],
+                'accuracy': data['stats']['accuracy'],
+                'time_taken': data['stats']['total_time'],
+                'completed_at': datetime.now().isoformat()
+            }
+            
+            existing_data.append(completion_record)
+            
+            # Save to file
+            os.makedirs(os.path.dirname(completion_file), exist_ok=True)
+            with open(completion_file, 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, indent=2)
+            
+            self.send_to_js('save_level_completion_result', {'success': True}, callback_id)
+        except Exception as e:
+            print(f"Error saving level completion: {e}")
+            self.send_to_js('save_level_completion_result', {'success': False, 'message': str(e)}, callback_id)
+
+    def retry_level(self):
+        """Retry the current level"""
+        try:
+            if hasattr(self.parent_dialog, 'active_level_id'):
+                level_id = self.parent_dialog.active_level_id
+                level = db_api.get_level_details(level_id)
+                
+                # Start a new session with the same level settings
+                session_data = {
+                    'mode': 'Level',
+                    'operation': level['operation'],
+                    'digits': level['digits'],
+                    'target_value': level['criteria']['questions'],
+                    'level_id': level['id'],
+                    'criteria': level['criteria']
+                }
+                
+                self.start_session(session_data, '')
+                self.navigate_to_level_progress()
+        except Exception as e:
+            print(f"Error retrying level: {e}")
+
+    def handle_time_up(self):
+        """Handle time up event"""
+        try:
+            # End the current session and navigate to completion
+            if hasattr(self.parent_dialog, 'session_stats'):
+                # Mark as failed due to time
+                self.parent_dialog.session_stats['time_up'] = True
+                self.end_session({}, '')
+                self.navigate_to_level_complete()
+        except Exception as e:
+            print(f"Error handling time up: {e}")
+
 
 
 class WebEnginePage(QWebEnginePage):
@@ -1151,7 +1578,9 @@ class MathDrillWebEngine(QDialog):
         self.current_focus_area = None
         self.focus_session_count = 0
         self.current_pb = None
+        self.current_pb = None
         self.streak = 0
+        self.active_level_id = None # Track active level
         
         # Settings and achievements
         self.settings_manager = AppSettings()
@@ -1327,46 +1756,88 @@ class MathDrillWebEngine(QDialog):
     def end_session(self, data):
         """End session and log to database"""
         try:
-            # Log session to database
-            sid = db_api.create_session(
-                mode=data['mode'], 
-                operation=data['operation'], 
-                digits=data['digits'], 
-                target_value=self.session_target
-            )
+            # Use current session ID if available, otherwise create new
+            sid = getattr(self.web_page.bridge, 'current_session_id', None)
+            if not sid:
+                sid = db_api.create_session(
+                    mode=data['mode'], 
+                    operation=data['operation'], 
+                    digits=data['digits'], 
+                    target_value=self.session_target
+                )
             
-            # Update session with actual stats
+            # If this was a level, check for completion
+            level_completed = False
+            level_stars = 0
+            if data.get('mode') == 'Level' and (self.active_level_id or (hasattr(self, 'session_stats') and self.session_stats.get('level_id'))):
+                level_id = self.active_level_id or self.session_stats.get('level_id')
+                print(f"Checking level completion for Level {level_id}")
+                
+                # Use data from frontend for completion check
+                level_result = db_api.complete_level(level_id, {
+                    'questions': data['total'],
+                    'accuracy': (data['correct'] / data['total'] * 100) if data['total'] > 0 else 0,
+                    'total_time': data.get('totalTime', 0),
+                    'timestamp': datetime.now().isoformat()
+                })
+                
+                if level_result['success']:
+                    level_completed = True
+                    level_stars = level_result.get('stars', 0)
+                    print(f"Level Completed! Stars: {level_stars}")
+                    
+                # Store results in session_stats for Completion Page
+                if hasattr(self, 'session_stats'):
+                    self.session_stats.update({
+                        'accuracy': round((data['correct'] / data['total'] * 100) if data['total'] > 0 else 0, 1),
+                        'stars': level_stars,
+                        'success': level_completed,
+                        'questions_answered': data['total'],
+                        'correct_answers': data['correct'],
+                        'total_time': data.get('totalTime', 0)
+                    })
+            
+            # Update session with actual stats in database
             db_api.update_session(
                 session_id=sid,
-                total_attempts=data['total'], 
-                correct_count=data['correct'], 
-                avg_speed=data['avgSpeed']
+                correct=data['correct'],
+                total=data['total'],
+                total_time=data.get('totalTime', 0),
+                mistakes_data=data.get('mistakes', [])
             )
             
-            # Check achievements
-            session_data = {
+            # Check for badges
+            new_badges = self.achievements.check_achievements({
                 'mode': data['mode'],
                 'total': data['total'],
                 'correct': data['correct'],
-                'avg_speed': data['avgSpeed'],
-                'total_time': data['totalTime'],
-                'mistakes': len(data['mistakes']),
+                'avg_speed': data.get('totalTime', 0) / data['total'] if data['total'] > 0 else 0,
+                'total_time': data.get('totalTime', 0),
+                'mistakes': data['total'] - data['correct'],
                 'operation': data['operation'],
                 'digits': data['digits'],
                 'max_streak': data.get('maxStreak', 0)
-            }
+            })
             
-            new_badges = self.achievements.check_achievements(session_data)
+            # Navigate to level complete page if it's a level
+            if data.get('mode') == 'Level':
+                self.navigate_to_level_complete()
             
-            # Reset session
-            self.reset_session()
+            # Reset session state (but don't clear session_stats yet if we need it for completion page)
+            self.session_active = False
+            if hasattr(self.web_page.bridge, 'current_session_id'):
+                self.web_page.bridge.current_session_id = None
             
             return {
                 'success': True,
-                'newBadges': new_badges
+                'newBadges': new_badges,
+                'levelCompleted': level_completed,
+                'levelStars': level_stars
             }
         except Exception as e:
             print(f"Error ending session: {e}")
+            import traceback
+            traceback.print_exc()
             return {
                 'success': False,
                 'error': str(e)
@@ -1467,94 +1938,87 @@ class MathDrillWebEngine(QDialog):
             print("Main page loaded successfully")
         else:
             print(f"Main HTML file not found: {main_html_path}")
-    
-    # === Adaptive Learning Methods ===
-    
-    def get_adaptive_difficulty(self, data, callback_id):
-        """Get adaptive difficulty for a specific skill"""
-        try:
-            operation = data.get('operation', 'Addition')
-            digits = data.get('digits', 1)
+
+    def navigate_to_levels(self):
+        """Navigate to levels page"""
+        print("Navigating to levels page...")
+        self.current_page = "levels"
+        
+        # Load the levels HTML file
+        levels_html_path = os.path.join(os.path.dirname(__file__), "web", "levels.html")
+        print(f"Loading levels HTML from: {levels_html_path}")
+        
+        if os.path.exists(levels_html_path):
+            file_url = QUrl.fromLocalFile(os.path.abspath(levels_html_path))
+            self.web_view.load(file_url)
             
-            difficulty_data = self.adaptive_learning.get_adaptive_difficulty(operation, digits)
-            self.send_to_js('adaptive_difficulty_result', difficulty_data, callback_id)
-        except Exception as e:
-            print(f"Error getting adaptive difficulty: {e}")
-            self.send_to_js('adaptive_difficulty_result', {}, callback_id)
-
-    def update_adaptive_performance(self, data, callback_id):
-        """Update adaptive performance and return new settings"""
-        try:
-            operation = data.get('operation', 'Addition')
-            digits = data.get('digits', 1)
-            correct = data.get('correct', False)
-            time_taken = data.get('time_taken', 0.0)
+            # Update window title
+            self.setWindowTitle("Math Drill - Levels")
             
-            new_settings = self.adaptive_learning.update_adaptive_performance(
-                operation, digits, correct, time_taken
-            )
-            self.send_to_js('adaptive_performance_result', new_settings, callback_id)
-        except Exception as e:
-            print(f"Error updating adaptive performance: {e}")
-            self.send_to_js('adaptive_performance_result', {}, callback_id)
+            # Re-set up bridge for levels page
+            self.channel.registerObject("pythonBridge", self.web_page.bridge)
+            self.web_view.page().setWebChannel(self.channel)
+            
+            print("Levels page loaded successfully")
+        else:
+            print(f"Levels HTML file not found: {levels_html_path}")
 
-    def get_adaptive_recommendations(self, callback_id):
-        """Get personalized adaptive recommendations"""
-        try:
-            recommendations = self.adaptive_learning.get_personalized_recommendations(10)
-            self.send_to_js('adaptive_recommendations_result', recommendations, callback_id)
-        except Exception as e:
-            print(f"Error getting adaptive recommendations: {e}")
-            self.send_to_js('adaptive_recommendations_result', [], callback_id)
+    def navigate_to_level_progress(self):
+        """Navigate to level progress page"""
+        print("Navigating to level progress page...")
+        self.current_page = "level_progress"
+        
+        # Load the level progress HTML file
+        progress_html_path = os.path.join(os.path.dirname(__file__), "web", "level_progress.html")
+        print(f"Loading level progress HTML from: {progress_html_path}")
+        
+        if os.path.exists(progress_html_path):
+            # Add level ID as URL parameter if available
+            file_url = QUrl.fromLocalFile(os.path.abspath(progress_html_path))
+            if hasattr(self, 'active_level_id'):
+                file_url.setQuery(f"level_id={self.active_level_id}")
+                print(f"Setting level_id parameter: {self.active_level_id}")
+            
+            self.web_view.load(file_url)
+            
+            # Update window title
+            self.setWindowTitle("Math Drill - Level Progress")
+            
+            # Re-set up bridge for progress page
+            self.channel.registerObject("pythonBridge", self.web_page.bridge)
+            self.web_view.page().setWebChannel(self.channel)
+            
+            print("Level progress page loaded successfully")
+        else:
+            print(f"Level progress HTML file not found: {progress_html_path}")
 
-    def get_learning_path(self, data, callback_id):
-        """Get personalized learning path"""
-        try:
-            learning_path = self.adaptive_learning.get_learning_path()
-            self.send_to_js('learning_path_result', learning_path, callback_id)
-        except Exception as e:
-            print(f"Error getting learning path: {e}")
-            self.send_to_js('learning_path_result', [], callback_id)
+    def navigate_to_level_complete(self):
+        """Navigate to level completion page"""
+        print("Navigating to level completion page...")
+        self.current_page = "level_complete"
+        
+        # Load the level completion HTML file
+        complete_html_path = os.path.join(os.path.dirname(__file__), "web", "level_complete.html")
+        print(f"Loading level completion HTML from: {complete_html_path}")
+        
+        if os.path.exists(complete_html_path):
+            file_url = QUrl.fromLocalFile(os.path.abspath(complete_html_path))
+            self.web_view.load(file_url)
+            
+            # Update window title
+            self.setWindowTitle("Math Drill - Level Complete!")
+            
+            # Re-set up bridge for completion page
+            self.channel.registerObject("pythonBridge", self.web_page.bridge)
+            self.web_view.page().setWebChannel(self.channel)
+            
+            print("Level completion page loaded successfully")
+        else:
+            print(f"Level completion HTML file not found: {complete_html_path}")
 
-    def get_adaptive_insights(self, callback_id):
-        """Get comprehensive adaptive insights"""
-        try:
-            from .adaptive_analytics import adaptive_analytics
-            insights = adaptive_analytics.get_comprehensive_adaptive_report()
-            self.send_to_js('adaptive_insights_result', insights, callback_id)
-        except Exception as e:
-            print(f"Error getting adaptive insights: {e}")
-            self.send_to_js('adaptive_insights_result', {}, callback_id)
-
-    def get_adaptive_report(self, callback_id):
-        """Get detailed adaptive report"""
-        try:
-            from .adaptive_analytics import adaptive_analytics
-            report = adaptive_analytics.get_comprehensive_adaptive_report()
-            self.send_to_js('adaptive_report_result', report, callback_id)
-        except Exception as e:
-            print(f"Error getting adaptive report: {e}")
-            self.send_to_js('adaptive_report_result', {}, callback_id)
-
-    def get_adaptive_recommendations_summary(self, callback_id):
-        """Get summary of adaptive recommendations"""
-        try:
-            from .adaptive_analytics import adaptive_analytics
-            summary = adaptive_analytics.get_adaptive_recommendations_summary()
-            self.send_to_js('adaptive_recommendations_summary_result', summary, callback_id)
-        except Exception as e:
-            print(f"Error getting adaptive recommendations summary: {e}")
-            self.send_to_js('adaptive_recommendations_summary_result', {}, callback_id)
-
-    def export_adaptive_data(self, callback_id):
-        """Export adaptive learning data"""
-        try:
-            from .adaptive_analytics import adaptive_analytics
-            export_data = adaptive_analytics.export_adaptive_data()
-            self.send_to_js('export_adaptive_data_result', export_data, callback_id)
-        except Exception as e:
-            print(f"Error exporting adaptive data: {e}")
-            self.send_to_js('export_adaptive_data_result', {}, callback_id)
+    def open_progress_page(self):
+        """Open the progress page in a window"""
+        if not self.progress_window or not self.progress_window.isVisible():
             self.progress_window = QDialog(self)
             self.progress_window.setWindowTitle("Math Drill - Progress")
             self.progress_window.setMinimumSize(1200, 800)
@@ -1602,6 +2066,9 @@ class MathDrillWebEngine(QDialog):
             self.progress_window.raise_()
             self.progress_window.activateWindow()
     
+
+
+
     def closeEvent(self, event):
         """Handle close event"""
         self.update_timer.stop()

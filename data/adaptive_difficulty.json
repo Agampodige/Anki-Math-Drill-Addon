@@ -3,22 +3,265 @@
     "id": 1,
     "operation": "Addition",
     "digits": 2,
-    "current_difficulty": 1.1,
-    "success_rate": 1.0,
-    "avg_response_time": 8.693399906158447,
-    "total_attempts": 2,
+    "current_difficulty": 2.6799999999999997,
+    "success_rate": 0.4,
+    "avg_response_time": 3.5536950528917473,
+    "total_attempts": 91,
     "recent_performance": [
       {
-        "correct": true,
-        "time_taken": 9.882999897003174,
+        "correct": false,
+        "time_taken": 0.9930000305175781,
         "timestamp": "2026-01-04"
       },
       {
         "correct": true,
-        "time_taken": 3.934999942779541,
+        "time_taken": 7.437999963760376,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": false,
+        "time_taken": 2.2230000495910645,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 3.309000015258789,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 3.5370001792907715,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 4.252000093460083,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": false,
+        "time_taken": 9.211999893188477,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": false,
+        "time_taken": 2.3489999771118164,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": false,
+        "time_taken": 1.941999912261963,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": false,
+        "time_taken": 0.9179999828338623,
         "timestamp": "2026-01-04"
       }
     ],
-    "last_adjusted": "2026-01-04T10:37:40.055660"
+    "last_adjusted": "2026-01-04T22:57:20.412382"
+  },
+  {
+    "id": 2,
+    "operation": "Mixed",
+    "digits": 1,
+    "current_difficulty": 1.0,
+    "success_rate": 0.0,
+    "avg_response_time": 2.261000156402588,
+    "total_attempts": 1,
+    "recent_performance": [
+      {
+        "correct": false,
+        "time_taken": 2.261000156402588,
+        "timestamp": "2026-01-04"
+      }
+    ],
+    "last_adjusted": "2026-01-04T20:56:48.902868"
+  },
+  {
+    "id": 3,
+    "operation": "Addition",
+    "digits": 3,
+    "current_difficulty": 3.0,
+    "success_rate": 1.0,
+    "avg_response_time": 8.411532266882729,
+    "total_attempts": 30,
+    "recent_performance": [
+      {
+        "correct": true,
+        "time_taken": 4.825999975204468,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 8.501999855041504,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 13.875,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 19.39299988746643,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 4.852999925613403,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 5.358000040054321,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 6.109000205993652,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 6.822000026702881,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 9.54800009727478,
+        "timestamp": "2026-01-04"
+      },
+      {
+        "correct": true,
+        "time_taken": 7.598999977111816,
+        "timestamp": "2026-01-04"
+      }
+    ],
+    "last_adjusted": "2026-01-04T21:46:07.010094"
+  },
+  {
+    "id": 4,
+    "operation": "Addition",
+    "digits": 1,
+    "current_difficulty": 3.0,
+    "success_rate": 1.0,
+    "avg_response_time": 102.20789272587592,
+    "total_attempts": 48,
+    "recent_performance": [
+      {
+        "correct": true,
+        "time_taken": 94.151,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 96.74,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 101.945,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 103.813,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 105.78,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 108.052,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 110.516,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 113.43,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 116.9,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 119.271,
+        "timestamp": "2026-01-06"
+      }
+    ],
+    "last_adjusted": "2026-01-06T08:58:03.001591"
+  },
+  {
+    "id": 5,
+    "operation": "Subtraction",
+    "digits": 1,
+    "current_difficulty": 3.0,
+    "success_rate": 1.0,
+    "avg_response_time": 1.9474615104665896,
+    "total_attempts": 28,
+    "recent_performance": [
+      {
+        "correct": true,
+        "time_taken": 5.58,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.692,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.508,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.81,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.665,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.371,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.268,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 0.996,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.652,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.512,
+        "timestamp": "2026-01-06"
+      }
+    ],
+    "last_adjusted": "2026-01-06T09:14:25.393970"
   }
 ]

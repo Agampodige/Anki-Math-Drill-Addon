@@ -473,6 +473,26 @@ def get_daily_goal_status() -> Dict:
             'achieved': False
         }
 
+def get_goal_history(days: int = 30) -> List[Dict]:
+    """Get daily goal history for the last X days"""
+    goals = _load_json_file(DAILY_GOALS_FILE, {})
+    
+    start_date = (date.today() - timedelta(days=days)).isoformat()
+    history = []
+    
+    for date_str, goal_data in goals.items():
+        if date_str >= start_date:
+            history.append({
+                'date': date_str,
+                'questions_completed': goal_data.get('questions_completed', 0),
+                'time_spent': goal_data.get('time_spent_minutes', 0.0),
+                'achieved': goal_data.get('achieved', False)
+            })
+    
+    # Sort by date
+    history.sort(key=lambda x: x['date'])
+    return history
+
 # === Adaptive Difficulty ===
 
 def get_adaptive_difficulty(operation: str, digits: int) -> Dict:

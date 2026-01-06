@@ -9,14 +9,17 @@ from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional, Tuple, Any
 try:
     from . import json_storage
+    from .levels import LevelManager
 except ImportError:
     import json_storage
+    from levels import LevelManager
 
 class DatabaseAPI:
     """Enhanced database API with JSON file storage"""
     
     def __init__(self):
         self._init_database()
+        self.level_manager = LevelManager()
     
     def _init_database(self):
         """Initialize JSON storage"""
@@ -31,16 +34,22 @@ class DatabaseAPI:
         """Create a new practice session"""
         return json_storage.log_session(mode, operation, digits, target_value, 0, 0, 0.0)
     
-    def update_session(self, session_id: int, total_attempts: int, correct_count: int, avg_speed: float) -> bool:
+    def update_session(self, session_id: int, total_attempts: int = None, correct_count: int = None, avg_speed: float = None, **kwargs) -> bool:
         """Update session statistics"""
+        # Support alternative parameter names
+        total = kwargs.get('total', total_attempts)
+        correct = kwargs.get('correct', correct_count)
+        
         sessions = json_storage._load_json_file(json_storage.SESSIONS_FILE, [])
         for session in sessions:
             if session.get('id') == session_id:
-                session.update({
-                    'total_attempts': total_attempts,
-                    'correct_count': correct_count,
-                    'avg_speed': avg_speed
-                })
+                update_data = {}
+                if total is not None: update_data['total_attempts'] = total
+                if correct is not None: update_data['correct_count'] = correct
+                if avg_speed is not None: update_data['avg_speed'] = avg_speed
+                if 'mistakes_data' in kwargs: update_data['mistakes'] = kwargs['mistakes_data']
+                
+                session.update(update_data)
                 return json_storage._save_json_file(json_storage.SESSIONS_FILE, sessions)
         return False
     
@@ -111,9 +120,23 @@ class DatabaseAPI:
         """Unlock an achievement"""
         return json_storage.unlock_achievement(code, name, description, category)
     
-    def get_achievements(self) -> List[Dict]:
-        """Get all unlocked achievements"""
-        return json_storage.get_unlocked_achievements()
+    def get_unlocked_achievements(self):
+        """Get all unlocked achievements with details"""
+        return get_unlocked_achievements_data()
+
+    # === Level System Methods ===
+    
+    def get_all_levels(self):
+        """Get all levels with progress"""
+        return self.level_manager.get_all_levels()
+        
+    def get_level_details(self, level_id):
+        """Get details for a specific level"""
+        return self.level_manager.get_level_by_id(level_id)
+        
+    def complete_level(self, level_id, session_stats):
+        """Check level completion and save progress"""
+        return self.level_manager.complete_level(level_id, session_stats)
     
     def check_achievement_unlocked(self, code: str) -> bool:
         """Check if an achievement is unlocked"""
@@ -510,13 +533,25 @@ class DatabaseAPI:
 db_api = DatabaseAPI()
 
 # Create simple adaptive learning instance to avoid circular imports
+# Create simple adaptive learning instance to avoid circular imports
 class AdaptiveLearning:
     def __init__(self):
-        self.db_api = db_api
+        try:
+            from .adaptive_analytics import adaptive_analytics
+        except ImportError:
+            from adaptive_analytics import adaptive_analytics
+            
+        self.adaptive_analytics = adaptive_analytics
+        self.level_manager = LevelManager()
     
     def update_adaptive_performance(self, operation, digits, correct, time_taken):
         """Update adaptive performance"""
         return self.db_api.update_adaptive_difficulty(operation, digits, correct, time_taken)
+    
+    @property
+    def db_api(self):
+        # Access global db_api dynamically
+        return db_api
     
     def get_personalized_recommendations(self, limit=5):
         """Get personalized recommendations"""

@@ -1,45 +1,107 @@
 class SettingsManager {
     constructor() {
-        this.settings = this.loadSettings();
-        // Don't initialize UI immediately - wait for DOM to be ready
+        this.settings = this.getDefaultSettings();
+        this.bridgeAvailable = false;
+
+        // Initial load from localStorage (fast)
+        this.loadFromLocalStorage();
+
+        // Initialize UI and sync with backend
+        this.init();
+    }
+
+    async init() {
+        // Wait for DOM
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeSettings());
-        } else {
-            // DOM is already ready
-            setTimeout(() => this.initializeSettings(), 0);
+            await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+        }
+
+        // Try to sync with Python
+        await this.syncWithBackend();
+
+        this.initializeSettings();
+    }
+
+    async syncWithBackend() {
+        if (!window.pythonBridge) {
+            console.log('🐍 Python bridge not available, using localStorage only');
+            return;
+        }
+
+        this.bridgeAvailable = true;
+        console.log('🐍 Syncing settings with Python backend...');
+
+        try {
+            const data = await this.sendToPythonAsync('get_settings');
+            if (data && Object.keys(data).length > 0) {
+                console.log('✅ Settings received from Python:', data);
+                // Merge Python settings into current settings
+                this.settings = { ...this.settings, ...data };
+                // Also update localStorage to stay in sync
+                localStorage.setItem('mathDrillSettings', JSON.stringify(this.settings));
+                this.notifySettingsChanged();
+            }
+        } catch (error) {
+            console.error('❌ Error syncing with Python:', error);
         }
     }
 
-    // Default settings
-    getDefaultSettings() {
-        return {
-            theme: 'light',
-            themeColor: 'green',
-            sound: true,
-            hints: true,
-            difficulty: 'intermediate',
-            timer: true,
-            animations: true,
-            autosave: true,
-            shortcuts: true
-        };
+    sendToPythonAsync(action, data = {}) {
+        return new Promise((resolve, reject) => {
+            const callbackId = `cb_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+
+            const handler = (event) => {
+                if (event.detail && event.detail.callbackId === callbackId) {
+                    window.removeEventListener(`python_${action}_result`, handler);
+                    resolve(event.detail.data);
+                }
+            };
+
+            window.addEventListener(`python_${action}_result`, handler);
+
+            // Timeout after 2 seconds
+            setTimeout(() => {
+                window.removeEventListener(`python_${action}_result`, handler);
+                reject(new Error(`Bridge timeout for ${action}`));
+            }, 2000);
+
+            if (window.pythonBridge && window.pythonBridge.send) {
+                window.pythonBridge.send(action, JSON.stringify(data), callbackId);
+            } else {
+                reject(new Error('Python bridge not available'));
+            }
+        });
     }
 
     // Load settings from localStorage
-    loadSettings() {
+    loadFromLocalStorage() {
         try {
             const saved = localStorage.getItem('mathDrillSettings');
-            return saved ? { ...this.getDefaultSettings(), ...JSON.parse(saved) } : this.getDefaultSettings();
+            if (saved) {
+                this.settings = { ...this.getDefaultSettings(), ...JSON.parse(saved) };
+            }
         } catch (error) {
-            console.error('Error loading settings:', error);
-            return this.getDefaultSettings();
+            console.error('Error loading settings from localStorage:', error);
         }
     }
 
-    // Save settings to localStorage
-    saveSettings() {
+    // Load settings (legacy/compatibility)
+    loadSettings() {
+        return this.settings;
+    }
+
+    // Save settings to localStorage and Python
+    async saveSettings() {
         try {
+            // Save to localStorage
             localStorage.setItem('mathDrillSettings', JSON.stringify(this.settings));
+
+            // Save to Python if available
+            if (window.pythonBridge) {
+                console.log('🐍 Saving settings to Python backend...');
+                window.pythonBridge.send('save_settings', JSON.stringify(this.settings), `save_${Date.now()}`);
+            }
+
             this.notifySettingsChanged();
         } catch (error) {
             console.error('Error saving settings:', error);
@@ -48,35 +110,38 @@ class SettingsManager {
 
     // Initialize UI elements with current settings
     initializeSettings() {
-        // Theme
-        this.updateThemeToggle();
-        this.updateThemeColor();
-        // Apply theme color immediately on load
-        this.applyThemeColor(this.settings.themeColor);
+        // Only initialize UI elements if we're on the settings page
+        if (window.location.pathname.includes('settings.html')) {
+            // Theme
+            this.updateThemeToggle();
+            this.updateThemeColor();
+            // Apply theme color immediately on load
+            this.applyThemeColor(this.settings.themeColor);
 
-        // Sound
-        this.updateToggle('soundToggle', this.settings.sound);
+            // Sound
+            this.updateToggle('soundToggle', this.settings.sound);
 
-        // Hints
-        this.updateToggle('hintsToggle', this.settings.hints);
+            // Hints
+            this.updateToggle('hintsToggle', this.settings.hints);
 
-        // Difficulty
-        const diffSelect = document.getElementById('difficultySelect');
-        if (diffSelect) {
-            diffSelect.value = this.settings.difficulty;
+            // Difficulty
+            const diffSelect = document.getElementById('difficultySelect');
+            if (diffSelect) {
+                diffSelect.value = this.settings.difficulty;
+            }
+
+            // Timer
+            this.updateToggle('timerToggle', this.settings.timer);
+
+            // Animations
+            this.updateToggle('animationsToggle', this.settings.animations);
+
+            // Autosave
+            this.updateToggle('autosaveToggle', this.settings.autosave);
+
+            // Shortcuts
+            this.updateToggle('shortcutsToggle', this.settings.shortcuts);
         }
-
-        // Timer
-        this.updateToggle('timerToggle', this.settings.timer);
-
-        // Animations
-        this.updateToggle('animationsToggle', this.settings.animations);
-
-        // Autosave
-        this.updateToggle('autosaveToggle', this.settings.autosave);
-
-        // Shortcuts
-        this.updateToggle('shortcutsToggle', this.settings.shortcuts);
     }
 
     // Update toggle switch UI
@@ -111,7 +176,7 @@ class SettingsManager {
                 option.classList.remove('selected');
             }
         });
-        
+
         // Apply the color to CSS variables
         this.applyThemeColor(this.settings.themeColor);
     }
@@ -147,13 +212,13 @@ class SettingsManager {
         };
 
         const selectedColor = colors[color] || colors.green;
-        
+
         // Update CSS variables
         root.style.setProperty('--primary', selectedColor.primary);
         root.style.setProperty('--primary-hover', selectedColor.primaryHover);
         root.style.setProperty('--primary-light', selectedColor.primaryLight);
-        root.style.setProperty('--gradient-primary', selectedColor.gradient);
-        
+        root.style.setProperty('--primary-gradient', selectedColor.gradient);
+
         console.log(`Applied theme color ${color}:`, selectedColor);
     }
 
@@ -262,10 +327,10 @@ class SettingsManager {
                     localStorage.removeItem(key);
                 }
             });
-            
+
             // Clear session storage
             sessionStorage.clear();
-            
+
             this.showNotification('Cache cleared successfully', 'success');
         } catch (error) {
             console.error('Error clearing cache:', error);
@@ -302,25 +367,25 @@ class SettingsManager {
 
     resetData() {
         const confirmation = confirm('⚠️ WARNING: This will permanently delete ALL your practice data, progress, achievements, and settings. This action cannot be undone.\n\nType "DELETE" to confirm:');
-        
+
         if (confirmation === true) {
             const secondConfirmation = prompt('Please type "DELETE" to confirm permanent data deletion:');
-            
+
             if (secondConfirmation === 'DELETE') {
                 try {
                     // Clear all localStorage
                     localStorage.clear();
                     sessionStorage.clear();
-                    
+
                     // Reset to default settings
                     this.settings = this.getDefaultSettings();
                     this.saveSettings();
-                    
+
                     // Reload page to reset everything
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
-                    
+
                     this.showNotification('All data has been permanently deleted. Page will reload...', 'success');
                 } catch (error) {
                     console.error('Error resetting data:', error);

@@ -1,0 +1,2796 @@
+[
+    {
+        "id": 1,
+        "title": "First Steps",
+        "description": "Start your journey with simple addition.",
+        "operation": "Addition",
+        "digits": 1,
+        "criteria": {
+            "questions": 10,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 30
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 2,
+        "title": "Taking Away",
+        "description": "Learn subtraction with single digits.",
+        "operation": "Subtraction",
+        "digits": 1,
+        "criteria": {
+            "questions": 10,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 30
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 3,
+        "title": "Speed Addition",
+        "description": "Solve 15 addition problems quickly!",
+        "operation": "Addition",
+        "digits": 1,
+        "criteria": {
+            "questions": 15,
+            "time_limit": 60,
+            "min_accuracy": 90,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 45
+            },
+            "2": {
+                "min_accuracy": 95,
+                "max_time": 55
+            },
+            "1": {
+                "min_accuracy": 90,
+                "max_time": 60
+            }
+        }
+    },
+    {
+        "id": 4,
+        "title": "Double Trouble",
+        "description": "Step up to 2-digit addition.",
+        "operation": "Addition",
+        "digits": 2,
+        "criteria": {
+            "questions": 10,
+            "time_limit": 0,
+            "min_accuracy": 70,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 90,
+                "max_time": 60
+            },
+            "2": {
+                "min_accuracy": 80,
+                "max_time": 90
+            },
+            "1": {
+                "min_accuracy": 70,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 5,
+        "title": "Multiplication Basics",
+        "description": "Introduction to multiplication tables.",
+        "operation": "Multiplication",
+        "digits": 1,
+        "criteria": {
+            "questions": 15,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 45
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 60
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 6,
+        "title": "Survival Mode",
+        "description": "Complete 20 mixed questions with perfect accuracy.",
+        "operation": "Mixed",
+        "digits": 1,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 100,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 60
+            },
+            "2": {
+                "min_accuracy": 100,
+                "max_time": 90
+            },
+            "1": {
+                "min_accuracy": 100,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 7,
+        "title": "Level 7",
+        "description": "Subtraction practice with 1 digit.",
+        "operation": "Subtraction",
+        "digits": 1,
+        "required_stars": 12,
+        "criteria": {
+            "questions": 10,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 8,
+        "title": "Level 8",
+        "description": "Multiplication practice with 1 digit.",
+        "operation": "Multiplication",
+        "digits": 1,
+        "required_stars": 14,
+        "criteria": {
+            "questions": 10,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 9,
+        "title": "Level 9",
+        "description": "Division practice with 1 digit.",
+        "operation": "Division",
+        "digits": 1,
+        "required_stars": 16,
+        "criteria": {
+            "questions": 10,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 10,
+        "title": "Mastery Challenge 10",
+        "description": "Mixed practice with 1 digit.",
+        "operation": "Mixed",
+        "digits": 1,
+        "required_stars": 18,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 48,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 36
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 11,
+        "title": "Level 11",
+        "description": "Addition practice with 1 digit.",
+        "operation": "Addition",
+        "digits": 1,
+        "required_stars": 20,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 12,
+        "title": "Level 12",
+        "description": "Subtraction practice with 1 digit.",
+        "operation": "Subtraction",
+        "digits": 1,
+        "required_stars": 22,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 13,
+        "title": "Level 13",
+        "description": "Multiplication practice with 1 digit.",
+        "operation": "Multiplication",
+        "digits": 1,
+        "required_stars": 24,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 14,
+        "title": "Level 14",
+        "description": "Division practice with 1 digit.",
+        "operation": "Division",
+        "digits": 1,
+        "required_stars": 26,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 15,
+        "title": "Speed Run 15",
+        "description": "Mixed practice with 1 digit.",
+        "operation": "Mixed",
+        "digits": 1,
+        "required_stars": 28,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 48,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 36
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 16,
+        "title": "Level 16",
+        "description": "Addition practice with 1 digit.",
+        "operation": "Addition",
+        "digits": 1,
+        "required_stars": 30,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 17,
+        "title": "Level 17",
+        "description": "Subtraction practice with 1 digit.",
+        "operation": "Subtraction",
+        "digits": 1,
+        "required_stars": 32,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 18,
+        "title": "Level 18",
+        "description": "Multiplication practice with 1 digit.",
+        "operation": "Multiplication",
+        "digits": 1,
+        "required_stars": 34,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 19,
+        "title": "Level 19",
+        "description": "Division practice with 1 digit.",
+        "operation": "Division",
+        "digits": 1,
+        "required_stars": 36,
+        "criteria": {
+            "questions": 12,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 20,
+        "title": "Mastery Challenge 20",
+        "description": "Mixed practice with 2 digits.",
+        "operation": "Mixed",
+        "digits": 2,
+        "required_stars": 38,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 56,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 42
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 21,
+        "title": "Level 21",
+        "description": "Addition practice with 2 digits.",
+        "operation": "Addition",
+        "digits": 2,
+        "required_stars": 40,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 22,
+        "title": "Level 22",
+        "description": "Subtraction practice with 2 digits.",
+        "operation": "Subtraction",
+        "digits": 2,
+        "required_stars": 42,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 23,
+        "title": "Level 23",
+        "description": "Multiplication practice with 2 digits.",
+        "operation": "Multiplication",
+        "digits": 2,
+        "required_stars": 44,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 24,
+        "title": "Level 24",
+        "description": "Division practice with 2 digits.",
+        "operation": "Division",
+        "digits": 2,
+        "required_stars": 46,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 25,
+        "title": "Speed Run 25",
+        "description": "Mixed practice with 2 digits.",
+        "operation": "Mixed",
+        "digits": 2,
+        "required_stars": 48,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 56,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 42
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 26,
+        "title": "Level 26",
+        "description": "Addition practice with 2 digits.",
+        "operation": "Addition",
+        "digits": 2,
+        "required_stars": 50,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 27,
+        "title": "Level 27",
+        "description": "Subtraction practice with 2 digits.",
+        "operation": "Subtraction",
+        "digits": 2,
+        "required_stars": 52,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 28,
+        "title": "Level 28",
+        "description": "Multiplication practice with 2 digits.",
+        "operation": "Multiplication",
+        "digits": 2,
+        "required_stars": 54,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 29,
+        "title": "Level 29",
+        "description": "Division practice with 2 digits.",
+        "operation": "Division",
+        "digits": 2,
+        "required_stars": 56,
+        "criteria": {
+            "questions": 14,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 30,
+        "title": "Mastery Challenge 30",
+        "description": "Mixed practice with 2 digits.",
+        "operation": "Mixed",
+        "digits": 2,
+        "required_stars": 58,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 64,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 48
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 31,
+        "title": "Level 31",
+        "description": "Addition practice with 2 digits.",
+        "operation": "Addition",
+        "digits": 2,
+        "required_stars": 60,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 32,
+        "title": "Level 32",
+        "description": "Subtraction practice with 2 digits.",
+        "operation": "Subtraction",
+        "digits": 2,
+        "required_stars": 62,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 33,
+        "title": "Level 33",
+        "description": "Multiplication practice with 2 digits.",
+        "operation": "Multiplication",
+        "digits": 2,
+        "required_stars": 64,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 34,
+        "title": "Level 34",
+        "description": "Division practice with 2 digits.",
+        "operation": "Division",
+        "digits": 2,
+        "required_stars": 66,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 35,
+        "title": "Speed Run 35",
+        "description": "Mixed practice with 2 digits.",
+        "operation": "Mixed",
+        "digits": 2,
+        "required_stars": 68,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 64,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 48
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 36,
+        "title": "Level 36",
+        "description": "Addition practice with 2 digits.",
+        "operation": "Addition",
+        "digits": 2,
+        "required_stars": 70,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 37,
+        "title": "Level 37",
+        "description": "Subtraction practice with 2 digits.",
+        "operation": "Subtraction",
+        "digits": 2,
+        "required_stars": 72,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 38,
+        "title": "Level 38",
+        "description": "Multiplication practice with 2 digits.",
+        "operation": "Multiplication",
+        "digits": 2,
+        "required_stars": 74,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 39,
+        "title": "Level 39",
+        "description": "Division practice with 2 digits.",
+        "operation": "Division",
+        "digits": 2,
+        "required_stars": 76,
+        "criteria": {
+            "questions": 16,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 40,
+        "title": "Mastery Challenge 40",
+        "description": "Mixed practice with 3 digits.",
+        "operation": "Mixed",
+        "digits": 3,
+        "required_stars": 78,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 72,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 54
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 41,
+        "title": "Level 41",
+        "description": "Addition practice with 3 digits.",
+        "operation": "Addition",
+        "digits": 3,
+        "required_stars": 80,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 42,
+        "title": "Level 42",
+        "description": "Subtraction practice with 3 digits.",
+        "operation": "Subtraction",
+        "digits": 3,
+        "required_stars": 82,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 43,
+        "title": "Level 43",
+        "description": "Multiplication practice with 3 digits.",
+        "operation": "Multiplication",
+        "digits": 3,
+        "required_stars": 84,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 44,
+        "title": "Level 44",
+        "description": "Division practice with 3 digits.",
+        "operation": "Division",
+        "digits": 3,
+        "required_stars": 86,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 45,
+        "title": "Speed Run 45",
+        "description": "Mixed practice with 3 digits.",
+        "operation": "Mixed",
+        "digits": 3,
+        "required_stars": 88,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 72,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 54
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 46,
+        "title": "Level 46",
+        "description": "Addition practice with 3 digits.",
+        "operation": "Addition",
+        "digits": 3,
+        "required_stars": 90,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 47,
+        "title": "Level 47",
+        "description": "Subtraction practice with 3 digits.",
+        "operation": "Subtraction",
+        "digits": 3,
+        "required_stars": 92,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 48,
+        "title": "Level 48",
+        "description": "Multiplication practice with 3 digits.",
+        "operation": "Multiplication",
+        "digits": 3,
+        "required_stars": 94,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 49,
+        "title": "Level 49",
+        "description": "Division practice with 3 digits.",
+        "operation": "Division",
+        "digits": 3,
+        "required_stars": 96,
+        "criteria": {
+            "questions": 18,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 50,
+        "title": "Mastery Challenge 50",
+        "description": "Mixed practice with 3 digits.",
+        "operation": "Mixed",
+        "digits": 3,
+        "required_stars": 98,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 80,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 60
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 51,
+        "title": "Level 51",
+        "description": "Addition practice with 3 digits.",
+        "operation": "Addition",
+        "digits": 3,
+        "required_stars": 100,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 52,
+        "title": "Level 52",
+        "description": "Subtraction practice with 3 digits.",
+        "operation": "Subtraction",
+        "digits": 3,
+        "required_stars": 102,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 53,
+        "title": "Level 53",
+        "description": "Multiplication practice with 3 digits.",
+        "operation": "Multiplication",
+        "digits": 3,
+        "required_stars": 104,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 54,
+        "title": "Level 54",
+        "description": "Division practice with 3 digits.",
+        "operation": "Division",
+        "digits": 3,
+        "required_stars": 106,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 55,
+        "title": "Speed Run 55",
+        "description": "Mixed practice with 3 digits.",
+        "operation": "Mixed",
+        "digits": 3,
+        "required_stars": 108,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 80,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 60
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 56,
+        "title": "Level 56",
+        "description": "Addition practice with 3 digits.",
+        "operation": "Addition",
+        "digits": 3,
+        "required_stars": 110,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 57,
+        "title": "Level 57",
+        "description": "Subtraction practice with 3 digits.",
+        "operation": "Subtraction",
+        "digits": 3,
+        "required_stars": 112,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 58,
+        "title": "Level 58",
+        "description": "Multiplication practice with 3 digits.",
+        "operation": "Multiplication",
+        "digits": 3,
+        "required_stars": 114,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 59,
+        "title": "Level 59",
+        "description": "Division practice with 3 digits.",
+        "operation": "Division",
+        "digits": 3,
+        "required_stars": 116,
+        "criteria": {
+            "questions": 20,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 60,
+        "title": "Mastery Challenge 60",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 118,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 88,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 66
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 61,
+        "title": "Level 61",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 120,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 62,
+        "title": "Level 62",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 122,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 63,
+        "title": "Level 63",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 124,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 64,
+        "title": "Level 64",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 126,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 65,
+        "title": "Speed Run 65",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 128,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 88,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 66
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 66,
+        "title": "Level 66",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 130,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 67,
+        "title": "Level 67",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 132,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 68,
+        "title": "Level 68",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 134,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 69,
+        "title": "Level 69",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 136,
+        "criteria": {
+            "questions": 22,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 70,
+        "title": "Mastery Challenge 70",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 138,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 96,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 72
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 71,
+        "title": "Level 71",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 140,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 72,
+        "title": "Level 72",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 142,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 73,
+        "title": "Level 73",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 144,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 74,
+        "title": "Level 74",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 146,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 75,
+        "title": "Speed Run 75",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 148,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 96,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 72
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 76,
+        "title": "Level 76",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 150,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 77,
+        "title": "Level 77",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 152,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 78,
+        "title": "Level 78",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 154,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 79,
+        "title": "Level 79",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 156,
+        "criteria": {
+            "questions": 24,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 80,
+        "title": "Mastery Challenge 80",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 158,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 104,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 78
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 81,
+        "title": "Level 81",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 160,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 82,
+        "title": "Level 82",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 162,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 83,
+        "title": "Level 83",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 164,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 84,
+        "title": "Level 84",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 166,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 85,
+        "title": "Speed Run 85",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 168,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 104,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 78
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 86,
+        "title": "Level 86",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 170,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 87,
+        "title": "Level 87",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 172,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 88,
+        "title": "Level 88",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 174,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 89,
+        "title": "Level 89",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 176,
+        "criteria": {
+            "questions": 26,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 90,
+        "title": "Mastery Challenge 90",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 178,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 112,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 84
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 91,
+        "title": "Level 91",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 180,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 92,
+        "title": "Level 92",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 182,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 93,
+        "title": "Level 93",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 184,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 94,
+        "title": "Level 94",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 186,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 95,
+        "title": "Speed Run 95",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 188,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 112,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 84
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 96,
+        "title": "Level 96",
+        "description": "Addition practice with 4 digits.",
+        "operation": "Addition",
+        "digits": 4,
+        "required_stars": 190,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 97,
+        "title": "Level 97",
+        "description": "Subtraction practice with 4 digits.",
+        "operation": "Subtraction",
+        "digits": 4,
+        "required_stars": 192,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 98,
+        "title": "Level 98",
+        "description": "Multiplication practice with 4 digits.",
+        "operation": "Multiplication",
+        "digits": 4,
+        "required_stars": 194,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 99,
+        "title": "Level 99",
+        "description": "Division practice with 4 digits.",
+        "operation": "Division",
+        "digits": 4,
+        "required_stars": 196,
+        "criteria": {
+            "questions": 28,
+            "time_limit": 0,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 0
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    },
+    {
+        "id": 100,
+        "title": "Mastery Challenge 100",
+        "description": "Mixed practice with 4 digits.",
+        "operation": "Mixed",
+        "digits": 4,
+        "required_stars": 198,
+        "criteria": {
+            "questions": 30,
+            "time_limit": 120,
+            "min_accuracy": 80,
+            "max_time_per_question": 0
+        },
+        "stars_criteria": {
+            "3": {
+                "min_accuracy": 100,
+                "max_time": 90
+            },
+            "2": {
+                "min_accuracy": 90,
+                "max_time": 0
+            },
+            "1": {
+                "min_accuracy": 80,
+                "max_time": 0
+            }
+        }
+    }
+]

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign · Math Drill</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="theme-loader.js"></script>
+    <style>
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .level-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+        }
+
+        .level-card:hover:not(.locked) {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .level-card.locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: #2a2a2a;
+            border-color: #444;
+        }
+
+        .level-card.completed {
+            border-color: #ffd700;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), var(--card-bg));
+        }
+
+        .level-id {
+            font-size: 3em;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .level-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.4em;
+            color: var(--text-primary);
+        }
+
+        .level-info p {
+            margin: 0 0 15px 0;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .level-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.addition {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.15);
+        }
+
+        .tag.subtraction {
+            color: #f44336;
+            background: rgba(244, 67, 54, 0.15);
+        }
+
+        .tag.multiplication {
+            color: #FFC107;
+            background: rgba(255, 193, 7, 0.15);
+        }
+
+        .tag.division {
+            color: #2196F3;
+            background: rgba(33, 150, 243, 0.15);
+        }
+
+        .tag.mixed {
+            color: #9C27B0;
+            background: rgba(156, 39, 176, 0.15);
+        }
+
+        .level-stars {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 12px;
+            margin-top: auto;
+        }
+
+        .star {
+            font-size: 1.2em;
+            color: #444;
+            transition: color 0.3s ease;
+        }
+
+        .star.filled {
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            backdrop-filter: blur(2px);
+            z-index: 10;
+        }
+
+        .lock-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .lock-req {
+            font-size: 0.9em;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid #666;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-5px);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .level-modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .level-modal {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .criteria-list {
+            background: var(--dark-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .criteria-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .play-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .play-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">Campaign</h1>
+                <div class="header-actions">
+                    <nav class="nav">
+                        <a href="index.html" class="nav-link" title="Home">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            </svg>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Select a Level</h1>
+                <p class="page-subtitle">Complete challenges to unlock new levels and earn stars!</p>
+            </div>
+
+            <div id="loading" style="text-align: center; padding: 40px; color: var(--text-tertiary);">
+                Loading levels...
+            </div>
+
+            <div id="levelsGrid" class="levels-grid"></div>
+        </main>
+    </div>
+
+    <!-- Level Detail Modal -->
+    <div id="levelModal" class="modal-overlay">
+        <div class="level-modal">
+            <div class="close-modal" onclick="closeLevelModal()">✕</div>
+            <h2 id="modalTitle" style="font-size: 24px; margin-bottom: 5px;">Level Title</h2>
+            <div id="modalMeta"
+                style="color: var(--accent-color); font-weight: 600; font-size: 14px; margin-bottom: 15px;">Addition • 1
+                Digit</div>
+            <p id="modalDesc" style="color: var(--text-secondary); line-height: 1.5;">Description goes here.</p>
+
+            <div class="criteria-list">
+                <div class="criteria-item">
+                    <span>🎯</span> <span id="modalGoal">10 Questions</span>
+                </div>
+                <div class="criteria-item">
+                    <span>✅</span> <span id="modalAcc">Min 80% Accuracy</span>
+                </div>
+                <div class="criteria-item" id="modalTimeContainer">
+                    <span>⏱️</span> <span id="modalTime">No Time Limit</span>
+                </div>
+            </div>
+
+            <button class="play-btn" id="startLevelBtn">Start Level</button>
+        </div>
+    </div>
+
+    <!-- Qt Bridge -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            if (typeof qt !== 'undefined' && qt.webChannelTransport) {
+                new QWebChannel(qt.webChannelTransport, function (channel) {
+                    window.pythonBridge = channel.objects.pythonBridge;
+                    window.levelsPage = new LevelsPage();
+                });
+            } else {
+                // Standalone test mode
+                window.levelsPage = new LevelsPage();
+            }
+        });
+    </script>
+    <script src="levels.js"></script>
+</body>
+
+</html>

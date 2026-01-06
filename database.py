@@ -332,5 +332,6 @@ def get_adaptive_learning_insights() -> Dict:
             'struggling_skills': struggling_skills
         },
         'operation_trends': operation_trends,
-        'difficulty_progression': difficulty_progression
+        'difficulty_progression': difficulty_progression,
+        'suggestions': get_adaptive_recommendations(limit=3)
     }
