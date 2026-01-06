@@ -190,6 +190,10 @@ class DatabaseAPI:
             month_ago = (date.today() - timedelta(days=30)).isoformat()
             attempts = [a for a in attempts if a.get('created', '') >= month_ago]
             sessions = [s for s in sessions if (s.get('created') or '')[:10] >= month_ago[:10]]
+        elif period == 'year':
+            year_ago = (date.today() - timedelta(days=365)).isoformat()
+            attempts = [a for a in attempts if a.get('created', '') >= year_ago]
+            sessions = [s for s in sessions if (s.get('created') or '')[:10] >= year_ago[:10]]
         elif period == 'today':
             today = date.today().isoformat()
             attempts = [a for a in attempts if a.get('created', '') == today]

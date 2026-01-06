@@ -422,9 +422,9 @@ class MathDrillWeb {
 
         // Update UI
         this.updateStreakDisplay();
-        this.ghostLine.style.display = 'none';
-        this.timerDisplay.style.display = 'none';
-        this.progressContainer.style.display = 'none';
+        if (this.ghostLine) this.ghostLine.style.display = 'none';
+        if (this.timerDisplay) this.timerDisplay.style.display = 'none';
+        if (this.progressContainer) this.progressContainer.style.display = 'none';
         this.questionText.textContent = 'Ready?';
         this.feedback.textContent = 'Press Enter to Start';
         this.answerInput.value = '';
@@ -437,24 +437,28 @@ class MathDrillWeb {
         this.digitsBox.disabled = mode === 'Adaptive Coach';
 
         if (mode === 'Adaptive Coach') {
-            this.coachLabel.style.display = 'block';
-            this.coachLabel.textContent = 'Coach is analyzing your skills...';
+            if (this.coachLabel) {
+                this.coachLabel.style.display = 'block';
+                this.coachLabel.textContent = 'Coach is analyzing your skills...';
+            }
         } else {
-            this.coachLabel.style.display = 'none';
+            if (this.coachLabel) {
+                this.coachLabel.style.display = 'none';
+            }
         }
 
         // Setup progress bar and timer
         if (mode.includes('Drill')) {
-            this.progressContainer.style.display = 'block';
-            this.progressLabel.textContent = '0 / 20 Questions';
-            this.timerDisplay.style.display = 'block';
+            if (this.progressContainer) this.progressContainer.style.display = 'block';
+            if (this.progressLabel) this.progressLabel.textContent = '0 / 20 Questions';
+            if (this.timerDisplay) this.timerDisplay.style.display = 'block';
         } else if (mode.includes('Sprint')) {
-            this.progressContainer.style.display = 'block';
-            this.progressLabel.textContent = '60s Remaining';
-            this.timerDisplay.style.display = 'block';
+            if (this.progressContainer) this.progressContainer.style.display = 'block';
+            if (this.progressLabel) this.progressLabel.textContent = '60s Remaining';
+            if (this.timerDisplay) this.timerDisplay.style.display = 'block';
         } else {
-            this.progressContainer.style.display = 'none';
-            this.timerDisplay.style.display = 'none';
+            if (this.progressContainer) this.progressContainer.style.display = 'none';
+            if (this.timerDisplay) this.timerDisplay.style.display = 'none';
         }
 
         // Notify Python
@@ -499,12 +503,14 @@ class MathDrillWeb {
         if (banner) {
             banner.style.display = 'block';
             const title = session.level_id ? `Level ${session.level_id}` : 'Level Challenge';
-            document.getElementById('focusLevelTitle').textContent = title;
+            const focusLevelTitle = document.getElementById('focusLevelTitle');
+            if (focusLevelTitle) focusLevelTitle.textContent = title;
 
             // Set initial progress
             const current = session.questions_completed || 0;
             const total = session.target_questions || 20; // Default or from session
-            document.getElementById('focusProgress').textContent = `${current}/${total}`;
+            const focusProgress = document.getElementById('focusProgress');
+            if (focusProgress) focusProgress.textContent = `${current}/${total}`;
             const pct = (current / total) * 100;
             const focusProgressFill = document.getElementById('focusProgressFill');
             if (focusProgressFill) focusProgressFill.style.width = `${pct}%`;
@@ -941,8 +947,8 @@ class MathDrillWeb {
         this.answerInput.readOnly = true;
 
         // Hide timer and progress when session ends
-        this.timerDisplay.style.display = 'none';
-        this.progressContainer.style.display = 'none';
+        if (this.timerDisplay) this.timerDisplay.style.display = 'none';
+        if (this.progressContainer) this.progressContainer.style.display = 'none';
 
         const total = this.sessionAttempts.length;
         const correct = this.sessionAttempts.filter(a => a.correct).length;
@@ -981,45 +987,27 @@ class MathDrillWeb {
         const modal = this.resultModal;
         const accuracy = sessionData.total > 0 ? (sessionData.correct / sessionData.total) * 100 : 0;
 
-        document.getElementById('resultAccuracy').textContent = `${accuracy.toFixed(1)}%`;
-        document.getElementById('resultSpeed').textContent = `${sessionData.avgSpeed.toFixed(2)}s`;
-        document.getElementById('resultTotal').textContent = sessionData.total;
-        document.getElementById('resultTime').textContent = `${sessionData.totalTime.toFixed(1)}s`;
+        const resultAccuracy = document.getElementById('resultAccuracy');
+        const resultSpeed = document.getElementById('resultSpeed');
+        const resultTotal = document.getElementById('resultTotal');
+        const resultTime = document.getElementById('resultTime');
+        
+        if (resultAccuracy) resultAccuracy.textContent = `${accuracy.toFixed(1)}%`;
+        if (resultSpeed) resultSpeed.textContent = `${sessionData.avgSpeed.toFixed(2)}s`;
+        if (resultTotal) resultTotal.textContent = sessionData.total;
+        if (resultTime) resultTime.textContent = `${sessionData.totalTime.toFixed(1)}s`;
 
-        const mistakesSection = document.getElementById('mistakesSection');
-        const mistakesList = document.getElementById('mistakesList');
-        const retakeBtn = document.getElementById('retakeBtn');
-
-        if (sessionData.mistakes.length > 0) {
-            mistakesSection.style.display = 'block';
-            mistakesList.innerHTML = '';
-
-            sessionData.mistakes.forEach(mistake => {
-                const item = document.createElement('div');
-                item.className = 'mistake-item';
-                item.textContent = `• ${mistake[0]} = ${mistake[1]} (You: ${mistake[2]})`;
-                mistakesList.appendChild(item);
-            });
-
-            retakeBtn.style.display = 'block';
-        } else {
-            mistakesSection.style.display = 'none';
-            retakeBtn.style.display = 'none';
+        if (sessionData.mistakes.length === 0) {
+            if (mistakesSection) mistakesSection.style.display = 'none';
+            if (retakeBtn) retakeBtn.style.display = 'none';
 
             // Show perfect message
             const perfectMsg = document.createElement('div');
-            perfectMsg.style.color = 'var(--accent-color)';
-            perfectMsg.style.fontSize = '18px';
             perfectMsg.style.fontWeight = 'bold';
             perfectMsg.style.textAlign = 'center';
             perfectMsg.style.marginBottom = '20px';
-            perfectMsg.textContent = 'Perfect Session! 🎉';
-            mistakesSection.parentNode.insertBefore(perfectMsg, mistakesSection);
-        }
-
-        this.openModal('result');
-
-        if (newBadges && newBadges.length > 0) {
+            perfectMsg.textContent = 'Perfect Session! ';
+            if (mistakesSection) mistakesSection.parentNode.insertBefore(perfectMsg, mistakesSection);
             setTimeout(() => this.showAchievementToast(newBadges), 500);
         }
     }

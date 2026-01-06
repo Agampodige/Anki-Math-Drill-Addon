@@ -668,7 +668,12 @@ class PythonBridge(QObject):
         
         try:
             # Get comprehensive stats using enhanced API
-            stats_data = db_api.get_comprehensive_stats('week' if period == 'week' else 'all')
+            if period == 'week':
+                stats_data = db_api.get_comprehensive_stats('week')
+            elif period == 'month':
+                stats_data = db_api.get_comprehensive_stats('month')
+            else:  # year or any other period
+                stats_data = db_api.get_comprehensive_stats('all')
             basic_stats = stats_data['basic_stats']
             recent_activity = stats_data['recent_activity']
             
@@ -705,7 +710,9 @@ class PythonBridge(QObject):
             
             # Prepare recent activity data
             recent_activity_formatted = []
-            for activity in recent_activity[:10]:  # Last 10 days
+            # Take more days for month/year views
+            days_to_show = 30 if period == 'week' else 90  # 30 days for week, 90 for month/year
+            for activity in recent_activity[:days_to_show]:
                 if activity['questions'] > 0:
                     created_date = datetime.strptime(activity['date'], '%Y-%m-%d').date()
                     delta = today - created_date

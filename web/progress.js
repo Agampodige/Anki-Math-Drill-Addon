@@ -880,12 +880,16 @@ class ProgressPage {
         }
 
         if (chartData.length === 0) {
-            this.chartCanvas.style.display = 'none';
+            if (this.chartCanvas) {
+                this.chartCanvas.style.display = 'none';
+            }
             const noDataMsg = document.createElement('div');
             noDataMsg.className = 'no-data-msg';
             noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
             noDataMsg.textContent = 'No data available for the selected period.';
-            container.appendChild(noDataMsg);
+            if (container) {
+                container.appendChild(noDataMsg);
+            }
             return;
         }
 
@@ -895,16 +899,22 @@ class ProgressPage {
         const showQuestions = document.getElementById('toggleQuestions')?.checked ?? true;
 
         if (!showAccuracy && !showSpeed && !showQuestions) {
-            this.chartCanvas.style.display = 'none';
+            if (this.chartCanvas) {
+                this.chartCanvas.style.display = 'none';
+            }
             const noDataMsg = document.createElement('div');
             noDataMsg.className = 'no-data-msg';
             noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
             noDataMsg.textContent = 'Please select at least one metric to display.';
-            container.appendChild(noDataMsg);
+            if (container) {
+                container.appendChild(noDataMsg);
+            }
             return;
         }
 
-        this.chartCanvas.style.display = 'block';
+        if (this.chartCanvas) {
+            this.chartCanvas.style.display = 'block';
+        }
 
         // Canvas Setup
         const ctx = this.chartCanvas.getContext('2d');
@@ -1103,9 +1113,11 @@ class ProgressPage {
                 if (Math.abs(mouseX - x) < (chartWidth / labels.length / 2)) {
                     found = true;
 
-                    tooltip.style.display = 'block';
-                    tooltip.style.left = `${e.clientX + 10}px`;
-                    tooltip.style.top = `${e.clientY + 10}px`;
+                    if (tooltip) {
+                        tooltip.style.display = 'block';
+                        tooltip.style.left = `${e.clientX + 10}px`;
+                        tooltip.style.top = `${e.clientY + 10}px`;
+                    }
 
                     let content = `<strong>${item.label}</strong><br>`;
                     if (showAccuracy) content += `<span style="color:#2ECC71">●</span> Acc: ${item.accuracy.toFixed(1)}%<br>`;
@@ -1119,11 +1131,13 @@ class ProgressPage {
                 }
             });
 
-            if (!found) tooltip.style.display = 'none';
+            if (!found && tooltip) tooltip.style.display = 'none';
         };
 
         this._chartLeaveHandler = () => {
-            tooltip.style.display = 'none';
+            if (tooltip) {
+                tooltip.style.display = 'none';
+            }
         };
 
         canvas.addEventListener('mousemove', this._chartMoveHandler);
@@ -1275,20 +1289,33 @@ class ProgressPage {
     }
 
     renderActivityHeatmap() {
-        if (!this.activityHeatmap) return;
+        console.log('🔥 Heatmap Debug: this.activityHeatmap element:', this.activityHeatmap);
+        if (!this.activityHeatmap) {
+            console.log('🔥 Heatmap Debug: activityHeatmap element not found!');
+            return;
+        }
 
-        const goalHistory = this.progressData.goalHistory || [];
+        // Use daily attempts data instead of goal history
+        const recentActivity = this.progressData.recentActivity || [];
+        console.log('🔥 Heatmap Debug: recentActivity length:', recentActivity.length);
+        console.log('🔥 Heatmap Debug: recentActivity data:', recentActivity);
         const heatmapData = new Map();
+
+        // Populate heatmap with daily attempt counts
+        recentActivity.forEach(item => {
+            heatmapData.set(item.date, item.questions || 0);
+        });
+
+        // Update debug to show actual data being used
+        console.log('🔥 Heatmap Debug: Using daily attempts data, values:', Array.from(heatmapData.values()));
 
         // Determine timeframe
         const isYear = this.heatmapView === 'year';
         const dayCount = isYear ? 364 : 28; // Multiples of 7 (52 weeks or 4 weeks)
 
+        // Generate all required dates for the timeframe
         const today = new Date();
         const dates = [];
-
-        // Match day of week for grid alignment (starting on Sunday/Monday)
-        // For simplicity, we'll just go back dayCount days
         for (let i = dayCount - 1; i >= 0; i--) {
             const d = new Date(today);
             d.setDate(today.getDate() - i);
@@ -1298,8 +1325,9 @@ class ProgressPage {
             dates.push(`${year}-${month}-${day}`);
         }
 
-        goalHistory.forEach(item => {
-            heatmapData.set(item.date, item.questions_completed || 0);
+        // Populate heatmap with daily attempt counts
+        recentActivity.forEach(item => {
+            heatmapData.set(item.date, item.questions || 0);
         });
 
         // Find max value for dynamic scaling
@@ -1309,14 +1337,16 @@ class ProgressPage {
         this.activityHeatmap.innerHTML = '';
 
         // Update Grid layout
-        if (isYear) {
-            this.activityHeatmap.style.gridTemplateColumns = 'repeat(52, 1fr)';
-            this.activityHeatmap.style.maxWidth = '1000px';
-            this.activityHeatmap.style.gap = '2px';
-        } else {
-            this.activityHeatmap.style.gridTemplateColumns = 'repeat(7, 1fr)';
-            this.activityHeatmap.style.maxWidth = '250px';
-            this.activityHeatmap.style.gap = '6px';
+        if (this.activityHeatmap) {
+            if (isYear) {
+                this.activityHeatmap.style.gridTemplateColumns = 'repeat(52, 1fr)';
+                this.activityHeatmap.style.maxWidth = '1000px';
+                this.activityHeatmap.style.gap = '2px';
+            } else {
+                this.activityHeatmap.style.gridTemplateColumns = 'repeat(7, 1fr)';
+                this.activityHeatmap.style.maxWidth = '250px';
+                this.activityHeatmap.style.gap = '6px';
+            }
         }
 
         dates.forEach(date => {
@@ -1340,8 +1370,11 @@ class ProgressPage {
                 }
             }
 
-            this.activityHeatmap.appendChild(cell);
+            if (this.activityHeatmap) {
+                this.activityHeatmap.appendChild(cell);
+            }
         });
+        console.log('🔥 Heatmap Debug: Render completed, cells created:', dates.length);
     }
 
     updateAdaptiveInsights() {
@@ -1351,12 +1384,18 @@ class ProgressPage {
         const suggestions = insights.suggestions || [];
 
         if (suggestions.length === 0) {
-            this.adaptiveInsightsCard.style.display = 'none';
+            if (this.adaptiveInsightsCard) {
+                this.adaptiveInsightsCard.style.display = 'none';
+            }
             return;
         }
 
-        this.adaptiveInsightsCard.style.display = 'block';
-        this.adaptiveInsightsList.innerHTML = '';
+        if (this.adaptiveInsightsCard) {
+            this.adaptiveInsightsCard.style.display = 'block';
+        }
+        if (this.adaptiveInsightsList) {
+            this.adaptiveInsightsList.innerHTML = '';
+        }
 
         suggestions.slice(0, 3).forEach(suggestion => {
             const card = document.createElement('div');
@@ -1365,7 +1404,9 @@ class ProgressPage {
                 <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; font-size: 14px;">${suggestion.title || 'Recommendation'}</div>
                 <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">${suggestion.text || suggestion}</div>
             `;
-            this.adaptiveInsightsList.appendChild(card);
+            if (this.adaptiveInsightsList) {
+                this.adaptiveInsightsList.appendChild(card);
+            }
         });
     }
 }
