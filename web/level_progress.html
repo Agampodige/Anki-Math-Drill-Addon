@@ -362,11 +362,50 @@
         .hidden {
             display: none !important;
         }
+
+        .exit-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: var(--surface-glass);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .exit-btn:hover {
+            background: var(--surface-glass-hover);
+            color: var(--text-primary);
+            border-color: var(--error);
+            transform: translateX(-2px);
+        }
+
+        .exit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
     </style>
 </head>
 
 <body>
     <div class="level-progress-container">
+        <button class="exit-btn" onclick="exitLevel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Exit
+        </button>
+
         <div class="level-header">
             <h1 class="level-title" id="levelTitle">Loading...</h1>
             <div class="level-operation" id="levelOperation">Loading...</div>
@@ -1016,6 +1055,38 @@
         function checkAnswer() {
             window.levelProgress.checkAnswer();
         }
+
+        async function exitLevel() {
+            const isActive = window.levelProgress && sessionActive;
+            if (isActive) {
+                if (confirm("Are you sure you want to quit this challenge? Your progress for this attempt will be lost.")) {
+                    try {
+                        // Reset session state on backend before navigating
+                        await window.levelProgress.sendToPythonWithRetry('reset_session');
+                        await window.levelProgress.sendToPythonWithRetry('navigate_to_main');
+                    } catch (e) {
+                        console.error("Failed to navigate back", e);
+                        window.history.back();
+                    }
+                }
+            } else {
+                try {
+                    // Even if not "active" in the UI, ensure backend is cleared
+                    await window.levelProgress.sendToPythonWithRetry('reset_session');
+                    await window.levelProgress.sendToPythonWithRetry('navigate_to_main');
+                } catch (e) {
+                    console.error("Failed to navigate back", e);
+                    window.history.back();
+                }
+            }
+        }
+
+        // Add Escape key handler for exit
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                exitLevel();
+            }
+        });
     </script>
 </body>
 

@@ -263,5 +263,32 @@
       }
     ],
     "last_adjusted": "2026-01-06T09:14:25.393970"
+  },
+  {
+    "id": 6,
+    "operation": "Addition",
+    "digits": null,
+    "current_difficulty": 0.76,
+    "success_rate": 0.0,
+    "avg_response_time": 2.7772401142120366,
+    "total_attempts": 3,
+    "recent_performance": [
+      {
+        "correct": false,
+        "time_taken": 3.6130001544952393,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": false,
+        "time_taken": 1.7269999980926514,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": false,
+        "time_taken": 0.943000078201294,
+        "timestamp": "2026-01-06"
+      }
+    ],
+    "last_adjusted": "2026-01-06T10:28:52.168675"
   }
 ]

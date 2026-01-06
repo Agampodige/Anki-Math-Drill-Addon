@@ -122,7 +122,11 @@ class DatabaseAPI:
     
     def get_unlocked_achievements(self):
         """Get all unlocked achievements with details"""
-        return get_unlocked_achievements_data()
+        return json_storage.get_unlocked_achievements()
+
+    def get_achievements(self):
+        """Alias for compatibility with PythonBridge"""
+        return self.get_unlocked_achievements()
 
     # === Level System Methods ===
     
@@ -181,11 +185,15 @@ class DatabaseAPI:
         if period == 'week':
             week_ago = (date.today() - timedelta(days=7)).isoformat()
             attempts = [a for a in attempts if a.get('created', '') >= week_ago]
-            sessions = [s for s in sessions if s.get('created', '')[:10] >= week_ago[:10]]
+            sessions = [s for s in sessions if (s.get('created') or '')[:10] >= week_ago[:10]]
         elif period == 'month':
             month_ago = (date.today() - timedelta(days=30)).isoformat()
             attempts = [a for a in attempts if a.get('created', '') >= month_ago]
-            sessions = [s for s in sessions if s.get('created', '')[:10] >= month_ago[:10]]
+            sessions = [s for s in sessions if (s.get('created') or '')[:10] >= month_ago[:10]]
+        elif period == 'today':
+            today = date.today().isoformat()
+            attempts = [a for a in attempts if a.get('created', '') == today]
+            sessions = [s for s in sessions if (s.get('created') or '')[:10] == today]
         
         # Basic stats
         total_attempts = len(attempts)
@@ -228,7 +236,7 @@ class DatabaseAPI:
             difficulty_stats[digits]['time_total'] += attempt.get('time_taken', 0) or 0
         
         difficulty_progression = []
-        for digits, stats in sorted(difficulty_stats.items()):
+        for digits, stats in sorted(difficulty_stats.items(), key=lambda x: x[0] or 0):
             count = stats['count']
             accuracy = (stats['correct'] / count * 100) if count > 0 else 0
             avg_time = stats['time_total'] / count if count > 0 else 0
@@ -256,7 +264,7 @@ class DatabaseAPI:
         
         # Generate recent activity data
         recent_activity = []
-        for date_str in sorted(daily_stats.keys(), reverse=True)[:7]:  # Last 7 days
+        for date_str in sorted([k for k in daily_stats.keys() if k and len(k) == 10], reverse=True)[:7]:  # Last 7 days
             stats = daily_stats[date_str]
             count = stats['count']
             recent_activity.append({
@@ -301,7 +309,7 @@ class DatabaseAPI:
         
         # Convert to trend data
         trends = []
-        for date_str in sorted(daily_stats.keys()):
+        for date_str in sorted([k for k in daily_stats.keys() if k and len(k) == 10]):
             stats = daily_stats[date_str]
             count = stats['count']
             accuracy = (stats['correct'] / count * 100) if count > 0 else 0
@@ -437,7 +445,8 @@ class DatabaseAPI:
                 except ValueError:
                     continue
         
-        history.sort(key=lambda x: x['date'], reverse=True)
+        # Sort by date (only valid dates)
+        history.sort(key=lambda x: x.get('date', ''))
         return history
     
     # === Data Export/Import ===

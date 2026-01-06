@@ -1000,5 +1000,38 @@
     "avg_speed": 0.0,
     "created": "2026-01-06T09:13:58.952086",
     "mistakes": []
+  },
+  {
+    "id": 92,
+    "mode": "Level",
+    "operation": "Addition",
+    "digits": 1,
+    "target_value": 10,
+    "total_attempts": 0,
+    "correct_count": 0,
+    "avg_speed": 0.0,
+    "created": "2026-01-06T10:28:37.688687"
+  },
+  {
+    "id": 93,
+    "mode": "Level",
+    "operation": "Addition",
+    "digits": 1,
+    "target_value": 10,
+    "total_attempts": 0,
+    "correct_count": 0,
+    "avg_speed": 0.0,
+    "created": "2026-01-06T10:29:19.883838"
+  },
+  {
+    "id": 94,
+    "mode": "Level",
+    "operation": "Addition",
+    "digits": 1,
+    "target_value": 10,
+    "total_attempts": 0,
+    "correct_count": 0,
+    "avg_speed": 0.0,
+    "created": "2026-01-06T10:35:33.539019"
   }
 ]

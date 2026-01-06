@@ -279,12 +279,24 @@ def get_personal_best(mode: str, operation: str, digits: int) -> Optional[float]
     
     if "Drill" in mode:
         # PB is lowest total time (total_attempts * avg_speed)
-        valid_sessions = [s for s in filtered if s.get('correct_count', 0) >= s.get('total_attempts', 0)]
-        if valid_sessions:
-            return min(s.get('total_attempts', 0) * s.get('avg_speed', 0) for s in valid_sessions)
+        # Handle None values and ensure they don't break comparisons
+        valid_sessions = []
+        for s in filtered:
+            total = s.get('total_attempts')
+            correct = s.get('correct_count')
+            speed = s.get('avg_speed')
+            
+            # Ensure all required values are present and valid
+            if total is not None and correct is not None and speed is not None:
+                if correct >= total:
+                    valid_sessions.append(total * speed)
+        
+        return min(valid_sessions) if valid_sessions else None
+        
     elif "Sprint" in mode:
         # PB is highest correct_count
-        return max(s.get('correct_count', 0) for s in filtered)
+        counts = [s.get('correct_count') for s in filtered if s.get('correct_count') is not None]
+        return max(counts) if counts else None
     
     return None
 

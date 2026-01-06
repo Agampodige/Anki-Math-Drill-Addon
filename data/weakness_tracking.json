@@ -63,5 +63,18 @@
     "total_correct": 27,
     "avg_time": 2.062535714285714,
     "first_practiced": "2026-01-06"
+  },
+  {
+    "id": 6,
+    "operation": "Addition",
+    "digits": null,
+    "weakness_score": 90.0,
+    "consecutive_correct": 0,
+    "last_practiced": "2026-01-06",
+    "mastery_level": "Novice",
+    "total_attempts": 3,
+    "total_correct": 0,
+    "avg_time": 2.0943334102630615,
+    "first_practiced": "2026-01-06"
   }
 ]

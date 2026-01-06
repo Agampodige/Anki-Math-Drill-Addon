@@ -2770,5 +2770,47 @@
     "correct_answer": 2,
     "difficulty_level": 1,
     "timestamp": "2026-01-06T09:14:25.365274"
+  },
+  {
+    "id": 199,
+    "operation": "Addition",
+    "digits": null,
+    "correct": false,
+    "time_taken": 3.6130001544952393,
+    "created": "2026-01-06",
+    "session_id": 92,
+    "question_text": "NaN + NaN =",
+    "user_answer": 3,
+    "correct_answer": null,
+    "difficulty_level": 1,
+    "timestamp": "2026-01-06T10:28:48.678492"
+  },
+  {
+    "id": 200,
+    "operation": "Addition",
+    "digits": null,
+    "correct": false,
+    "time_taken": 1.7269999980926514,
+    "created": "2026-01-06",
+    "session_id": 92,
+    "question_text": "NaN + NaN =",
+    "user_answer": 213,
+    "correct_answer": null,
+    "difficulty_level": 1,
+    "timestamp": "2026-01-06T10:28:50.702285"
+  },
+  {
+    "id": 201,
+    "operation": "Addition",
+    "digits": null,
+    "correct": false,
+    "time_taken": 0.943000078201294,
+    "created": "2026-01-06",
+    "session_id": 92,
+    "question_text": "NaN + NaN =",
+    "user_answer": 321,
+    "correct_answer": null,
+    "difficulty_level": 1,
+    "timestamp": "2026-01-06T10:28:52.140521"
   }
 ]

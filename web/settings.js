@@ -10,6 +10,21 @@ class SettingsManager {
         this.init();
     }
 
+    // Get default settings
+    getDefaultSettings() {
+        return {
+            theme: 'light',
+            themeColor: 'green',
+            sound: true,
+            hints: true,
+            difficulty: 'medium',
+            timer: true,
+            animations: true,
+            autosave: true,
+            shortcuts: true
+        };
+    }
+
     async init() {
         // Wait for DOM
         if (document.readyState === 'loading') {

@@ -506,7 +506,8 @@ class MathDrillWeb {
             const total = session.target_questions || 20; // Default or from session
             document.getElementById('focusProgress').textContent = `${current}/${total}`;
             const pct = (current / total) * 100;
-            document.getElementById('focusProgressFill').style.width = `${pct}%`;
+            const focusProgressFill = document.getElementById('focusProgressFill');
+            if (focusProgressFill) focusProgressFill.style.width = `${pct}%`;
         }
 
         // Configure game input
@@ -595,7 +596,7 @@ class MathDrillWeb {
             const elapsed = (Date.now() - this.sessionStartTime) / 1000;
             const remaining = Math.max(0, 60 - elapsed);
 
-            this.progressFill.style.width = `${((60 - remaining) / 60) * 100}%`;
+            if (this.progressFill) this.progressFill.style.width = `${((60 - remaining) / 60) * 100}%`;
             this.progressLabel.textContent = `${Math.ceil(remaining)}s Remaining`;
 
             if (remaining <= 0) {
@@ -901,11 +902,12 @@ class MathDrillWeb {
 
             document.getElementById('focusProgress').textContent = `${current}/${total}`;
             const pct = Math.min((current / total) * 100, 100);
-            document.getElementById('focusProgressFill').style.width = `${pct}%`;
+            const focusProgressFill = document.getElementById('focusProgressFill');
+            if (focusProgressFill) focusProgressFill.style.width = `${pct}%`;
         }
 
         if (mode.includes('Drill')) {
-            this.progressFill.style.width = `${(count / 20) * 100}%`;
+            if (this.progressFill) this.progressFill.style.width = `${(count / 20) * 100}%`;
             this.progressLabel.textContent = `${count} / 20`;
 
             if (count >= 20) {
@@ -916,7 +918,7 @@ class MathDrillWeb {
             this.sendToPython('get_active_session', {}, (response) => {
                 if (response.active && response.session.target_value) {
                     const target = response.session.target_value;
-                    this.progressFill.style.width = `${(count / target) * 100}%`;
+                    if (this.progressFill) this.progressFill.style.width = `${(count / target) * 100}%`;
                     this.progressLabel.textContent = `${count} / ${target}`;
 
                     // Auto-end session when target is reached
@@ -969,6 +971,7 @@ class MathDrillWeb {
         } else {
             // Regular sessions show the result modal
             this.sendToPython('end_session', sessionData, (response) => {
+                this.updateStats(); // Refresh stats on main page
                 this.showResultModal(sessionData, response.newBadges);
             });
         }

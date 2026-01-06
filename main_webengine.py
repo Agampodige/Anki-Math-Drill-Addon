@@ -131,7 +131,7 @@ class PythonBridge(QObject):
             data = json.loads(data_str) if data_str else {}
             
             if action == 'reset_session':
-                self.reset_session(data)
+                self.reset_session(data, callback_id)
             elif action == 'start_session':
                 self.start_session(data, callback_id)
             elif action == 'test_direct_log':
@@ -209,17 +209,17 @@ class PythonBridge(QObject):
             elif action == 'save_level_completion':
                 self.save_level_completion(data, callback_id)
             elif action == 'navigate_to_levels':
-                self.navigate_to_levels()
+                self.navigate_to_levels(callback_id)
             elif action == 'navigate_to_level_progress':
-                self.navigate_to_level_progress()
+                self.navigate_to_level_progress(callback_id)
             elif action == 'navigate_to_level_complete':
-                self.navigate_to_level_complete()
+                self.navigate_to_level_complete(callback_id)
             elif action == 'retry_level':
-                self.retry_level()
+                self.retry_level(callback_id)
             elif action == 'time_up':
-                self.handle_time_up()
+                self.handle_time_up(callback_id)
             elif action == 'navigate_to_main':
-                self.navigate_to_main()
+                self.navigate_to_main(callback_id)
             elif action == 'get_adaptive_difficulty':
                 self.get_adaptive_difficulty(data, callback_id)
             elif action == 'update_adaptive_performance':
@@ -263,10 +263,17 @@ class PythonBridge(QObject):
         except Exception as e:
             print(f"Error handling action {action}: {e}")
     
-    def reset_session(self, data):
+    def reset_session(self, data, callback_id=None):
         """Handle session reset"""
+        # Clear local bridge session ID
+        if hasattr(self, 'current_session_id'):
+            self.current_session_id = None
+            
         if hasattr(self.parent_dialog, 'reset_session'):
             self.parent_dialog.reset_session()
+            
+        if callback_id:
+            self.send_to_js('reset_session_result', {'success': True}, callback_id)
     
     def log_attempt(self, data, callback_id=None):
         """Log a practice attempt with adaptive learning integration"""
@@ -805,7 +812,7 @@ class PythonBridge(QObject):
                 
                 if count and count > 0:
                     created_dt = datetime.strptime(created_date, '%Y-%m-%d').date()
-                    delta = today - created_date
+                    delta = today - created_dt
                     if delta.days == 0:
                         time_ago = "Today"
                     elif delta.days == 1:
@@ -1213,30 +1220,50 @@ class PythonBridge(QObject):
             self.send_to_js('import_data_result', {'success': False, 'error': str(e)}, callback_id)
     
     # === Navigation Methods ===
-    def navigate_to_main(self):
+    def navigate_to_main(self, callback_id=None):
         """Navigate back to main page"""
         if hasattr(self.parent_dialog, 'navigate_to_main'):
             self.parent_dialog.navigate_to_main()
+            if callback_id:
+                self.send_to_js('navigation_result', {'success': True}, callback_id)
+        elif callback_id:
+            self.send_to_js('navigation_result', {'success': False}, callback_id)
 
-    def navigate_to_levels(self):
+    def navigate_to_levels(self, callback_id=None):
         """Navigate to levels page"""
         if hasattr(self.parent_dialog, 'navigate_to_levels'):
             self.parent_dialog.navigate_to_levels()
+            if callback_id:
+                self.send_to_js('navigation_result', {'success': True}, callback_id)
+        elif callback_id:
+            self.send_to_js('navigation_result', {'success': False}, callback_id)
 
-    def navigate_to_level_progress(self):
+    def navigate_to_level_progress(self, callback_id=None):
         """Navigate to level progress page"""
         if hasattr(self.parent_dialog, 'navigate_to_level_progress'):
             self.parent_dialog.navigate_to_level_progress()
+            if callback_id:
+                self.send_to_js('navigation_result', {'success': True}, callback_id)
+        elif callback_id:
+            self.send_to_js('navigation_result', {'success': False}, callback_id)
 
-    def navigate_to_level_complete(self):
+    def navigate_to_level_complete(self, callback_id=None):
         """Navigate to level completion page"""
         if hasattr(self.parent_dialog, 'navigate_to_level_complete'):
             self.parent_dialog.navigate_to_level_complete()
+            if callback_id:
+                self.send_to_js('navigation_result', {'success': True}, callback_id)
+        elif callback_id:
+            self.send_to_js('navigation_result', {'success': False}, callback_id)
 
-    def navigate_to_progress(self):
+    def navigate_to_progress(self, callback_id=None):
         """Navigate to progress page"""
         if hasattr(self.parent_dialog, 'navigate_to_progress'):
             self.parent_dialog.navigate_to_progress()
+            if callback_id:
+                self.send_to_js('navigation_result', {'success': True}, callback_id)
+        elif callback_id:
+            self.send_to_js('navigation_result', {'success': False}, callback_id)
 
     def get_adaptive_insights(self, callback_id):
         """Get comprehensive adaptive insights"""
@@ -1741,6 +1768,7 @@ class MathDrillWebEngine(QDialog):
         self.current_focus_area = None
         self.focus_session_count = 0
         self.current_pb = None
+        self.active_level_id = None  # Clear level ID on reset
     
     def start_session(self, mode, operation, digits):
         """Start a new session"""
