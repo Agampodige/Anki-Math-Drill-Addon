@@ -6,6 +6,7 @@ class ProgressPage {
         this.heatmapView = 'month'; // 'month' or 'year'
         this.progressData = {};
         this.chart = null;
+        this.hasReceivedBackendData = false; // Track if we got data from backend
 
         // Check if bridge is ready, if so initialize now
         if (window.pythonBridge) {
@@ -95,6 +96,17 @@ class ProgressPage {
         document.getElementById('toggleSpeed')?.addEventListener('change', () => this.updatePerformanceChart());
         document.getElementById('toggleQuestions')?.addEventListener('change', () => this.updatePerformanceChart());
 
+        // Period selector buttons
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.currentPeriod = e.target.dataset.period;
+                // Reload progress data for the new period
+                this.loadProgressData();
+            });
+        });
+
         // Heatmap Toggles
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -138,7 +150,7 @@ class ProgressPage {
             // Request data from Python with timeout
             const data = await Promise.race([
                 this.sendToPythonAsync('get_progress_data', { period: this.currentPeriod }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Bridge timeout')), 1000)) // Reduced from 5000ms to 1000ms
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Bridge timeout')), 2000)) // Increased to 2000ms to allow push to arrive
             ]);
 
             console.log('📊 Received data:', data);
@@ -147,6 +159,7 @@ class ProgressPage {
             if (data && Object.keys(data).length > 0) {
                 console.log('⚡ Displaying data instantly.');
                 this.progressData = data;
+                this.hasReceivedBackendData = true; // Mark that we've received data from the backend
                 this.updateAllSections();
                 this.showLoading(false);
                 // Heavy data spinners will be turned off by updateHeavyData when it's pushed
@@ -156,6 +169,17 @@ class ProgressPage {
             }
 
         } catch (error) {
+            // Wait a bit before falling back to give the backend push a chance to arrive
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Check if we already received data via push before falling back
+            if (this.hasReceivedBackendData || (this.progressData && this.progressData.chartData && this.progressData.chartData.length > 0)) {
+                console.log('✅ Already have data from backend push, skipping fallback');
+                this.showLoading(false);
+                this.showHeavyDataLoading(false);
+                return;
+            }
+
             console.error('❌ Error loading progress data:', error);
             console.log('🔄 Loading real data as fallback...');
             const fallbackStart = performance.now();
@@ -237,7 +261,7 @@ class ProgressPage {
             const processStart = performance.now();
             const dailyStats = new Map();
             const masteryStats = new Map();
-            const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
+            const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Linear Algebra'];
 
             let totalCorrect = 0;
             let totalSumTime = 0;
@@ -333,12 +357,55 @@ class ProgressPage {
                 });
             });
 
-            // Create chart data (simplified)
-            const chartData = recentActivity.slice(0, 7).reverse().map(activity => ({
-                label: new Date(activity.date).toLocaleDateString('en', { weekday: 'short' }),
-                accuracy: activity.accuracy,
-                speed: activity.avgSpeed
-            }));
+            // Create continuous timeline chart data matching backend behavior
+            // Determine days range based on current period
+            let daysRange = 7; // default to week
+            if (this.currentPeriod === 'month') daysRange = 30;
+            else if (this.currentPeriod === 'year') daysRange = 365;
+            else if (this.currentPeriod === 'all') daysRange = 730;
+
+            const chartData = [];
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            // Create continuous timeline for the period
+            for (let i = daysRange - 1; i >= 0; i--) {
+                const chartDate = new Date(currentDate);
+                chartDate.setDate(currentDate.getDate() - i);
+                const dateStr = chartDate.toISOString().split('T')[0];
+
+                // Find matching daily data
+                const dayStats = dailyStats.get(dateStr);
+
+                // Determine label format
+                let label;
+                if (daysRange <= 7) {
+                    label = chartDate.toLocaleDateString('en', { weekday: 'short' });
+                } else {
+                    label = chartDate.toLocaleDateString('en', { month: '2-digit', day: '2-digit' });
+                }
+
+                if (dayStats) {
+                    // Real data available
+                    chartData.push({
+                        date: dateStr,
+                        label: label,
+                        accuracy: (dayStats.correct / dayStats.count) * 100,
+                        speed: dayStats.timeSum / dayStats.count,
+                        questions: dayStats.count
+                    });
+                } else {
+                    // No data for this day - show as zero
+                    chartData.push({
+                        date: dateStr,
+                        label: label,
+                        accuracy: 0,
+                        speed: 0,
+                        questions: 0
+                    });
+                }
+            }
+
 
             const processTime = performance.now() - processStart;
             const totalTime = performance.now() - startTime;
@@ -392,6 +459,7 @@ class ProgressPage {
         console.log('Received fast data push from Python:', data);
         if (data && Object.keys(data).length > 0) {
             this.progressData = data;
+            this.hasReceivedBackendData = true; // Mark that we received backend data
 
             // Update fast sections
             this.updateStatsOverview();
@@ -443,7 +511,7 @@ class ProgressPage {
                         });
 
                         // Operations
-                        ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
+                        ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Linear Algebra'].forEach(op => {
                             const opLabel = document.createElement('div');
                             opLabel.className = 'operation-label';
                             opLabel.textContent = op;
@@ -635,7 +703,7 @@ class ProgressPage {
         });
 
         // Operations
-        ['Addition', 'Subtraction', 'Multiplication', 'Division'].forEach(op => {
+        ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Linear Algebra'].forEach(op => {
             const opLabel = document.createElement('div');
             opLabel.className = 'operation-label';
             opLabel.textContent = op;
@@ -868,85 +936,106 @@ class ProgressPage {
         });
     }
 
-    updatePerformanceChart() {
-        const chartData = this.progressData.chartData || [];
-        const container = this.chartCanvas.parentNode;
-        const tooltip = document.getElementById('chartTooltip');
+    getFilteredChartData() {
+        const allChartData = this.progressData.chartData || [];
 
-        // Remove any existing no-data message
-        const existingMsg = container.querySelector('.no-data-msg');
-        if (existingMsg) {
-            existingMsg.remove();
+        console.log('🔍 Chart data debug:', {
+            totalData: allChartData.length,
+            currentPeriod: this.currentPeriod,
+            sampleData: allChartData.slice(0, 3),
+            fullSample: allChartData.slice(0, 1).map(d => ({
+                date: d.date,
+                label: d.label,
+                accuracy: d.accuracy,
+                speed: d.speed,
+                questions: d.questions
+            }))
+        });
+
+        // The backend already filters data by period, so we just return it
+        // But we still need to handle the case where frontend period differs from backend
+        if (allChartData.length === 0) {
+            console.warn('⚠️ No chart data available');
+            return [];
         }
 
-        if (chartData.length === 0) {
-            if (this.chartCanvas) {
-                this.chartCanvas.style.display = 'none';
+        // For performance, if we have too many data points, sample them intelligently
+        const maxPoints = 100; // Increased back to 100 for better data resolution
+        if (allChartData.length > maxPoints) {
+            // Use smart sampling that preserves important data points
+            const step = Math.ceil(allChartData.length / maxPoints);
+            const sampled = [];
+
+            // Always include first and last points
+            sampled.push(allChartData[0]);
+
+            // Sample intermediate points
+            for (let i = step; i < allChartData.length - 1; i += step) {
+                sampled.push(allChartData[i]);
             }
-            const noDataMsg = document.createElement('div');
-            noDataMsg.className = 'no-data-msg';
-            noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
-            noDataMsg.textContent = 'No data available for the selected period.';
-            if (container) {
-                container.appendChild(noDataMsg);
+
+            // Always include last point if not already included
+            if (sampled[sampled.length - 1] !== allChartData[allChartData.length - 1]) {
+                sampled.push(allChartData[allChartData.length - 1]);
             }
-            return;
+
+            console.log(`📊 Smart data sampling: ${allChartData.length} -> ${sampled.length} points`);
+            return sampled;
         }
 
-        // Check if any metric is actually active
-        const showAccuracy = document.getElementById('toggleAccuracy')?.checked ?? true;
-        const showSpeed = document.getElementById('toggleSpeed')?.checked ?? true;
-        const showQuestions = document.getElementById('toggleQuestions')?.checked ?? true;
+        return allChartData;
+    }
 
-        if (!showAccuracy && !showSpeed && !showQuestions) {
-            if (this.chartCanvas) {
-                this.chartCanvas.style.display = 'none';
-            }
-            const noDataMsg = document.createElement('div');
-            noDataMsg.className = 'no-data-msg';
-            noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
-            noDataMsg.textContent = 'Please select at least one metric to display.';
-            if (container) {
-                container.appendChild(noDataMsg);
-            }
-            return;
-        }
-
-        if (this.chartCanvas) {
-            this.chartCanvas.style.display = 'block';
-        }
-
-        // Canvas Setup
-        const ctx = this.chartCanvas.getContext('2d');
-        const canvas = this.chartCanvas;
-        // Use container dimensions for responsiveness
-        const rect = container.getBoundingClientRect();
-        // Handle high DPI displays
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = rect.width * dpr;
-        canvas.height = 250 * dpr; // Fixed height in CSS is 250px
-        canvas.style.width = `${rect.width}px`;
-        canvas.style.height = '250px';
-        ctx.scale(dpr, dpr);
-
-        const width = rect.width;
-        const height = 250;
+    drawBaseChart(ctx, width, height, padding, chartData, showAccuracy, showSpeed, showQuestions) {
+        console.log('🎨 drawBaseChart called:', {
+            chartDataLength: chartData.length,
+            showAccuracy,
+            showSpeed,
+            showQuestions,
+            canvasSize: { width, height },
+            firstDataPoint: chartData[0],
+            lastDataPoint: chartData[chartData.length - 1]
+        });
 
         // Clear canvas
         ctx.clearRect(0, 0, width, height);
 
-        // Get Toggle States (Already fetched above, but keeping structure)
-        // Prepare data
+        // Get Toggle States
         const labels = chartData.map(d => d.label);
         const accuracyData = chartData.map(d => d.accuracy);
         const speedData = chartData.map(d => d.speed);
         const questionsData = chartData.map(d => d.questions || 0);
 
+        console.log('🎨 Processed data arrays:', {
+            labelsCount: labels.length,
+            accuracyDataSample: accuracyData.slice(0, 3),
+            speedDataSample: speedData.slice(0, 3),
+            questionsDataSample: questionsData.slice(0, 3)
+        });
+
+        // Validate data before drawing
+        if (chartData.length === 0 || !chartData[0]) {
+            console.warn('⚠️ No valid chart data to draw');
+            return;
+        }
+
+        // Check if all data points have valid values
+        const invalidPoints = chartData.filter(d =>
+            typeof d.accuracy !== 'number' ||
+            typeof d.speed !== 'number' ||
+            typeof d.questions !== 'number'
+        );
+
+        if (invalidPoints.length > 0) {
+            console.warn('⚠️ Invalid data points found:', invalidPoints.length);
+        }
+
         const maxAccuracy = 100; // Always 100%
         const maxSpeed = Math.max(...speedData, 10) * 1.2; // Add some headroom
         const maxQuestions = Math.max(...questionsData, 20) * 1.2;
 
-        const padding = { top: 20, right: 40, bottom: 30, left: 40 };
+        console.log('🎨 Chart bounds:', { maxAccuracy, maxSpeed, maxQuestions });
+
         const chartWidth = width - (padding.left + padding.right);
         const chartHeight = height - (padding.top + padding.bottom);
 
@@ -970,9 +1059,7 @@ class ProgressPage {
             ctx.stroke();
         }
 
-        // -----------------------
         // Draw Questions Line (Background layer)
-        // -----------------------
         if (showQuestions) {
             ctx.strokeStyle = '#818cf8'; // Primary indigo
             ctx.lineWidth = 3;
@@ -1008,9 +1095,7 @@ class ProgressPage {
             });
         }
 
-        // -----------------------
         // Draw Accuracy Line
-        // -----------------------
         if (showAccuracy) {
             ctx.strokeStyle = '#2ECC71'; // Success Color
             ctx.lineWidth = 3;
@@ -1046,9 +1131,7 @@ class ProgressPage {
             });
         }
 
-        // -----------------------
         // Draw Speed Line
-        // -----------------------
         if (showSpeed) {
             ctx.strokeStyle = '#e0af68'; // Warning Color
             ctx.lineWidth = 3;
@@ -1075,9 +1158,7 @@ class ProgressPage {
             });
         }
 
-        // -----------------------
         // Labels
-        // -----------------------
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
         ctx.font = '11px Inter';
         ctx.textAlign = 'center';
@@ -1089,6 +1170,149 @@ class ProgressPage {
                 ctx.fillText(label, x, height - 10);
             }
         });
+
+        console.log('✅ Chart drawing completed successfully', {
+            linesDrawn: showAccuracy ? 1 : 0 + showSpeed ? 1 : 0 + showQuestions ? 1 : 0,
+            totalLabels: labels.length,
+            canvasState: 'drawn'
+        });
+    }
+
+    updatePerformanceChart() {
+        const chartData = this.getFilteredChartData();
+        const container = this.chartCanvas.parentNode;
+        const tooltip = document.getElementById('chartTooltip');
+
+        console.log('🎨 Chart Update Debug:', {
+            chartDataLength: chartData.length,
+            chartDataSample: chartData.slice(0, 2),
+            canvasExists: !!this.chartCanvas,
+            containerExists: !!container
+        });
+
+        // Remove any existing no-data message
+        const existingMsg = container.querySelector('.no-data-msg');
+        if (existingMsg) {
+            existingMsg.remove();
+        }
+
+        if (chartData.length === 0) {
+            if (this.chartCanvas) {
+                this.chartCanvas.style.display = 'none';
+            }
+            const noDataMsg = document.createElement('div');
+            noDataMsg.className = 'no-data-msg';
+            noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
+            noDataMsg.textContent = 'No data available for the selected period.';
+            if (container) {
+                container.appendChild(noDataMsg);
+            }
+            return;
+        }
+
+        // Check if any metric is actually active
+        const showAccuracy = document.getElementById('toggleAccuracy')?.checked ?? true;
+        const showSpeed = document.getElementById('toggleSpeed')?.checked ?? true;
+        const showQuestions = document.getElementById('toggleQuestions')?.checked ?? true;
+
+        console.log('🎛 Toggle States Debug:', {
+            showAccuracy,
+            showSpeed,
+            showQuestions,
+            accuracyElement: document.getElementById('toggleAccuracy'),
+            speedElement: document.getElementById('toggleSpeed'),
+            questionsElement: document.getElementById('toggleQuestions')
+        });
+
+        if (!showAccuracy && !showSpeed && !showQuestions) {
+            if (this.chartCanvas) {
+                this.chartCanvas.style.display = 'none';
+            }
+            const noDataMsg = document.createElement('div');
+            noDataMsg.className = 'no-data-msg';
+            noDataMsg.style.cssText = 'text-align: center; color: var(--text-tertiary); padding: 40px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--border-color);';
+            noDataMsg.textContent = 'Please select at least one metric to display.';
+            if (container) {
+                container.appendChild(noDataMsg);
+            }
+            return;
+        }
+
+        if (this.chartCanvas) {
+            this.chartCanvas.style.display = 'block';
+        }
+
+        // Canvas Setup
+        const ctx = this.chartCanvas.getContext('2d');
+        const canvas = this.chartCanvas;
+
+        console.log('🎨 Canvas Setup Debug:', {
+            ctx: !!ctx,
+            canvas: !!canvas,
+            canvasRect: canvas ? canvas.getBoundingClientRect() : null,
+            containerRect: container ? container.getBoundingClientRect() : null
+        });
+
+        // Use container dimensions for responsiveness
+        const rect = container.getBoundingClientRect();
+        console.log('🎨 Container Rect:', rect);
+
+        // Handle high DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = 250 * dpr; // Fixed height in CSS is 250px
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = '250px';
+        ctx.scale(dpr, dpr);
+
+        const width = rect.width;
+        const height = 250;
+        const padding = { top: 20, right: 40, bottom: 30, left: 40 };
+
+        console.log('🎨 Canvas Dimensions:', { width, height, dpr, padding });
+
+        // Helper functions for hover interaction
+        const chartWidth = width - (padding.left + padding.right);
+        const chartHeight = height - (padding.top + padding.bottom);
+        const labels = chartData.map(d => d.label);
+        const accuracyData = chartData.map(d => d.accuracy);
+        const speedData = chartData.map(d => d.speed);
+        const questionsData = chartData.map(d => d.questions || 0);
+        const maxAccuracy = 100;
+        const maxSpeed = Math.max(...speedData, 10) * 1.2;
+        const maxQuestions = Math.max(...questionsData, 20) * 1.2;
+
+        console.log('🎨 Data Mapping Debug:', {
+            chartDataLength: chartData.length,
+            labels: labels.slice(0, 3),
+            accuracyData: accuracyData.slice(0, 3),
+            speedData: speedData.slice(0, 3),
+            questionsData: questionsData.slice(0, 3),
+            chartDimensions: { chartWidth, chartHeight }
+        });
+
+        const getX = (index) => padding.left + (index / (labels.length - 1)) * chartWidth;
+        const getYAccuracy = (val) => padding.top + chartHeight - (val / maxAccuracy) * chartHeight;
+        const getYSpeed = (val) => padding.top + chartHeight - (val / maxSpeed) * chartHeight;
+        const getYQuestions = (val) => padding.top + chartHeight - (val / maxQuestions) * chartHeight;
+
+        // Use the new drawBaseChart method
+        this.drawBaseChart(ctx, width, height, padding, chartData, showAccuracy, showSpeed, showQuestions);
+
+        // Add fallback display if chart data exists but canvas might not be visible
+        if (chartData.length > 0) {
+            console.log('🎨 Chart rendered with data:', {
+                dataPoints: chartData.length,
+                firstPoint: chartData[0],
+                lastPoint: chartData[chartData.length - 1]
+            });
+
+            // Force canvas to be visible
+            if (this.chartCanvas) {
+                this.chartCanvas.style.display = 'block';
+                this.chartCanvas.style.visibility = 'visible';
+            }
+        }
 
         // -----------------------
         // Interaction (Tooltips)
@@ -1105,33 +1329,121 @@ class ProgressPage {
             const mouseY = (e.clientY - rect.top);
 
             let found = false;
+            let closestIndex = -1;
+            let closestDistance = Infinity;
 
-            // Find closest point
+            // Find closest point with better accuracy
             chartData.forEach((item, index) => {
                 const x = getX(index);
-                // Check if mouse is near this X column
-                if (Math.abs(mouseX - x) < (chartWidth / labels.length / 2)) {
+                const distance = Math.abs(mouseX - x);
+
+                // Check if mouse is near this X column (within half the column width)
+                const columnWidth = chartWidth / Math.max(labels.length - 1, 1);
+                if (distance < columnWidth / 2 && distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
                     found = true;
-
-                    if (tooltip) {
-                        tooltip.style.display = 'block';
-                        tooltip.style.left = `${e.clientX + 10}px`;
-                        tooltip.style.top = `${e.clientY + 10}px`;
-                    }
-
-                    let content = `<strong>${item.label}</strong><br>`;
-                    if (showAccuracy) content += `<span style="color:#2ECC71">●</span> Acc: ${item.accuracy.toFixed(1)}%<br>`;
-                    if (showSpeed) content += `<span style="color:#e0af68">●</span> Speed: ${item.speed.toFixed(2)}s<br>`;
-                    if (showQuestions) content += `<span style="color:#818cf8">●</span> Questions: ${item.questions || 0}`;
-
-                    tooltip.innerHTML = content;
-
-                    // Highlight vertical line (optional)
-                    // ...
                 }
             });
 
-            if (!found && tooltip) tooltip.style.display = 'none';
+            if (found && closestIndex >= 0 && tooltip) {
+                const item = chartData[closestIndex];
+
+                // Better tooltip positioning - keep within viewport
+                let tooltipX = e.clientX + 10;
+                let tooltipY = e.clientY + 10;
+
+                // Prevent tooltip from going off screen
+                if (tooltipX + 200 > window.innerWidth) {
+                    tooltipX = e.clientX - 210;
+                }
+                if (tooltipY + 150 > window.innerHeight) {
+                    tooltipY = e.clientY - 160;
+                }
+
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${tooltipX}px`;
+                tooltip.style.top = `${tooltipY}px`;
+
+                let content = `<strong>${item.label || 'N/A'}</strong><br>`;
+
+                // Add data validation and better formatting
+                if (showAccuracy && typeof item.accuracy === 'number' && !isNaN(item.accuracy)) {
+                    content += `<span style="color:#2ECC71">●</span> Accuracy: ${item.accuracy.toFixed(1)}%<br>`;
+                }
+                if (showSpeed && typeof item.speed === 'number' && !isNaN(item.speed) && item.speed > 0) {
+                    content += `<span style="color:#e0af68">●</span> Speed: ${item.speed.toFixed(2)}s<br>`;
+                }
+                if (showQuestions && typeof item.questions === 'number' && !isNaN(item.questions) && item.questions >= 0) {
+                    content += `<span style="color:#818cf8">●</span> Questions: ${item.questions}`;
+                }
+
+                // If no valid data found, show a message
+                if (content === `<strong>${item.label || 'N/A'}</strong><br>`) {
+                    content += '<span style="color:#888">No data available</span>';
+                }
+
+                tooltip.innerHTML = content;
+
+                // Store original chart data to avoid recursion
+                const originalChartData = chartData;
+                const originalShowAccuracy = showAccuracy;
+                const originalShowSpeed = showSpeed;
+                const originalShowQuestions = showQuestions;
+
+                // Redraw the base chart without highlights
+                this.drawBaseChart(ctx, width, height, padding, originalChartData, originalShowAccuracy, originalShowSpeed, originalShowQuestions);
+
+                // Then add visual feedback - highlight the point and draw vertical line
+                ctx.save();
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                const highlightX = getX(closestIndex);
+
+                // Draw vertical line at hover position
+                ctx.beginPath();
+                ctx.moveTo(highlightX, padding.top);
+                ctx.lineTo(highlightX, height - padding.bottom);
+                ctx.stroke();
+                ctx.restore();
+
+                // Draw highlight circle at the data point
+                ctx.save();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 1)';
+                ctx.lineWidth = 2;
+
+                // Highlight each active metric point with validation
+                if (showAccuracy && typeof item.accuracy === 'number' && !isNaN(item.accuracy)) {
+                    const y = getYAccuracy(item.accuracy);
+                    ctx.beginPath();
+                    ctx.arc(highlightX, y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                if (showSpeed && typeof item.speed === 'number' && !isNaN(item.speed) && item.speed > 0) {
+                    const y = getYSpeed(item.speed);
+                    ctx.beginPath();
+                    ctx.arc(highlightX, y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                if (showQuestions && typeof item.questions === 'number' && !isNaN(item.questions) && item.questions >= 0) {
+                    const y = getYQuestions(item.questions);
+                    ctx.beginPath();
+                    ctx.arc(highlightX, y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                ctx.restore();
+            } else {
+                if (tooltip) tooltip.style.display = 'none';
+                // Redraw base chart to clear highlights when mouse leaves
+                if (chartData.length > 0) {
+                    this.drawBaseChart(ctx, width, height, padding, chartData, showAccuracy, showSpeed, showQuestions);
+                }
+            }
         };
 
         this._chartLeaveHandler = () => {

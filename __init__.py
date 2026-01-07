@@ -3,6 +3,14 @@ from aqt.qt import QAction, QMessageBox
 import traceback
 
 from .main_webengine import MathDrillWebEngine  # Use WebEngine version
+from .json_storage import init_json_storage  # Initialize settings storage
+
+# Initialize settings storage when addon loads
+try:
+    init_json_storage()
+    print("Math Drill: Settings storage initialized")
+except Exception as e:
+    print(f"Math Drill: Warning - Could not initialize settings storage: {e}")
 
 def open_math_drill():
     try:

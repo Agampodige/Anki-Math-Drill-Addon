@@ -136,6 +136,16 @@
                 <div class="question" id="questionText" aria-live="assertive" role="math">Ready?</div>
                 <input type="text" id="answerInput" class="answer-field" placeholder="Answer..." autocomplete="off"
                     inputmode="numeric" aria-describedby="feedback">
+                
+                <!-- Multi-variable answer inputs for Linear Algebra -->
+                <div id="multiVariableAnswers" class="multi-variable-answers" style="display: none;">
+                    <div class="variable-input-group">
+                        <input type="text" id="xInput" class="variable-input" placeholder="x = ?" autocomplete="off">
+                        <input type="text" id="yInput" class="variable-input" placeholder="y = ?" autocomplete="off" style="display: none;">
+                        <input type="text" id="zInput" class="variable-input" placeholder="z = ?" autocomplete="off" style="display: none;">
+                    </div>
+                </div>
+                
                 <div class="feedback" id="feedback" aria-live="polite">Press Enter to Start</div>
             </section>
 
@@ -155,6 +165,7 @@
                         <option value="Multiplication">Multiplication</option>
                         <option value="Division">Division</option>
                         <option value="Mixed">Mixed</option>
+                        <option value="Linear Algebra">Linear Algebra</option>
                     </select>
                     <select id="digitsBox" class="control-select">
                         <option value="1 digit">1 digit</option>

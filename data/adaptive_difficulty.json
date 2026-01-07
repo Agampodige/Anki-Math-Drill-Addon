@@ -3,80 +3,125 @@
     "id": 1,
     "operation": "Addition",
     "digits": 2,
-    "current_difficulty": 2.6799999999999997,
-    "success_rate": 0.4,
-    "avg_response_time": 3.5536950528917473,
-    "total_attempts": 91,
+    "current_difficulty": 3.0,
+    "success_rate": 0.9,
+    "avg_response_time": 5.990955218959194,
+    "total_attempts": 103,
     "recent_performance": [
       {
-        "correct": false,
-        "time_taken": 0.9930000305175781,
-        "timestamp": "2026-01-04"
+        "correct": true,
+        "time_taken": 5.929,
+        "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 7.437999963760376,
-        "timestamp": "2026-01-04"
-      },
-      {
-        "correct": false,
-        "time_taken": 2.2230000495910645,
-        "timestamp": "2026-01-04"
+        "time_taken": 3.974,
+        "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 3.309000015258789,
-        "timestamp": "2026-01-04"
+        "time_taken": 4.03,
+        "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 3.5370001792907715,
-        "timestamp": "2026-01-04"
+        "time_taken": 3.41,
+        "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 4.252000093460083,
-        "timestamp": "2026-01-04"
+        "time_taken": 4.143,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 3.411,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 5.119,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 7.548,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 9.581,
+        "timestamp": "2026-01-06"
       },
       {
         "correct": false,
-        "time_taken": 9.211999893188477,
-        "timestamp": "2026-01-04"
-      },
-      {
-        "correct": false,
-        "time_taken": 2.3489999771118164,
-        "timestamp": "2026-01-04"
-      },
-      {
-        "correct": false,
-        "time_taken": 1.941999912261963,
-        "timestamp": "2026-01-04"
-      },
-      {
-        "correct": false,
-        "time_taken": 0.9179999828338623,
-        "timestamp": "2026-01-04"
+        "time_taken": 4.422999858856201,
+        "timestamp": "2026-01-07"
       }
     ],
-    "last_adjusted": "2026-01-04T22:57:20.412382"
+    "last_adjusted": "2026-01-07T07:41:51.438481"
   },
   {
     "id": 2,
     "operation": "Mixed",
     "digits": 1,
-    "current_difficulty": 1.0,
-    "success_rate": 0.0,
-    "avg_response_time": 2.261000156402588,
-    "total_attempts": 1,
+    "current_difficulty": 3.0,
+    "success_rate": 1.0,
+    "avg_response_time": 2.851011603870114,
+    "total_attempts": 41,
     "recent_performance": [
       {
-        "correct": false,
-        "time_taken": 2.261000156402588,
-        "timestamp": "2026-01-04"
+        "correct": true,
+        "time_taken": 2.575,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 12.016,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.928,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.817,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.191,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.343,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 3.711,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.715,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.572,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.637,
+        "timestamp": "2026-01-06"
       }
     ],
-    "last_adjusted": "2026-01-04T20:56:48.902868"
+    "last_adjusted": "2026-01-06T16:07:02.262242"
   },
   {
     "id": 3,
@@ -146,61 +191,61 @@
     "digits": 1,
     "current_difficulty": 3.0,
     "success_rate": 1.0,
-    "avg_response_time": 102.20789272587592,
-    "total_attempts": 48,
+    "avg_response_time": 5.166652969351888,
+    "total_attempts": 63,
     "recent_performance": [
       {
         "correct": true,
-        "time_taken": 94.151,
+        "time_taken": 1.438,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 96.74,
+        "time_taken": 1.355,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 101.945,
+        "time_taken": 1.953,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 103.813,
+        "time_taken": 1.628,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 105.78,
+        "time_taken": 1.686,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 108.052,
+        "time_taken": 2.04,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 110.516,
+        "time_taken": 1.295,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 113.43,
+        "time_taken": 1.296,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 116.9,
+        "time_taken": 1.874,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 119.271,
+        "time_taken": 1.497,
         "timestamp": "2026-01-06"
       }
     ],
-    "last_adjusted": "2026-01-06T08:58:03.001591"
+    "last_adjusted": "2026-01-06T16:01:19.542052"
   },
   {
     "id": 5,
@@ -208,61 +253,61 @@
     "digits": 1,
     "current_difficulty": 3.0,
     "success_rate": 1.0,
-    "avg_response_time": 1.9474615104665896,
-    "total_attempts": 28,
+    "avg_response_time": 4.01053094152182,
+    "total_attempts": 38,
     "recent_performance": [
       {
         "correct": true,
-        "time_taken": 5.58,
+        "time_taken": 3.245,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 1.692,
+        "time_taken": 1.489,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 1.508,
+        "time_taken": 2.889,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 1.81,
+        "time_taken": 1.256,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 1.665,
+        "time_taken": 1.904,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 1.371,
+        "time_taken": 20.552,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 1.268,
+        "time_taken": 2.449,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 0.996,
+        "time_taken": 2.629,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 2.652,
+        "time_taken": 1.964,
         "timestamp": "2026-01-06"
       },
       {
         "correct": true,
-        "time_taken": 2.512,
+        "time_taken": 3.837,
         "timestamp": "2026-01-06"
       }
     ],
-    "last_adjusted": "2026-01-06T09:14:25.393970"
+    "last_adjusted": "2026-01-06T16:08:02.859183"
   },
   {
     "id": 6,
@@ -290,5 +335,67 @@
       }
     ],
     "last_adjusted": "2026-01-06T10:28:52.168675"
+  },
+  {
+    "id": 7,
+    "operation": "Multiplication",
+    "digits": 1,
+    "current_difficulty": 3.0,
+    "success_rate": 0.9,
+    "avg_response_time": 4.722694841491838,
+    "total_attempts": 25,
+    "recent_performance": [
+      {
+        "correct": true,
+        "time_taken": 4.399,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.747,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 3.526,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": false,
+        "time_taken": 3.289,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.149,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 18.689,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 1.718,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.182,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 6.624,
+        "timestamp": "2026-01-06"
+      },
+      {
+        "correct": true,
+        "time_taken": 2.718,
+        "timestamp": "2026-01-06"
+      }
+    ],
+    "last_adjusted": "2026-01-06T16:10:19.801007"
   }
 ]

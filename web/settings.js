@@ -38,8 +38,14 @@ class SettingsManager {
     }
 
     async syncWithBackend() {
+        // Wait for Python bridge to be available
         if (!window.pythonBridge) {
-            console.log('🐍 Python bridge not available, using localStorage only');
+            console.log('🐍 Python bridge not available, waiting for bridge...');
+            await this.waitForBridge();
+        }
+
+        if (!window.pythonBridge) {
+            console.log('🐍 Python bridge still not available, using localStorage only');
             return;
         }
 
@@ -59,6 +65,25 @@ class SettingsManager {
         } catch (error) {
             console.error('❌ Error syncing with Python:', error);
         }
+    }
+
+    waitForBridge() {
+        return new Promise((resolve) => {
+            const checkInterval = setInterval(() => {
+                if (window.pythonBridge) {
+                    clearInterval(checkInterval);
+                    console.log('🐍 Python bridge is now available');
+                    resolve();
+                }
+            }, 50);
+
+            // Timeout after 3 seconds
+            setTimeout(() => {
+                clearInterval(checkInterval);
+                console.log('🐍 Bridge wait timeout, proceeding without bridge');
+                resolve();
+            }, 3000);
+        });
     }
 
     sendToPythonAsync(action, data = {}) {
@@ -112,9 +137,16 @@ class SettingsManager {
             localStorage.setItem('mathDrillSettings', JSON.stringify(this.settings));
 
             // Save to Python if available
+            if (!window.pythonBridge) {
+                console.log('🐍 Python bridge not available, waiting for bridge before saving...');
+                await this.waitForBridge();
+            }
+
             if (window.pythonBridge) {
                 console.log('🐍 Saving settings to Python backend...');
                 window.pythonBridge.send('save_settings', JSON.stringify(this.settings), `save_${Date.now()}`);
+            } else {
+                console.log('🐍 Python bridge still not available, settings saved to localStorage only');
             }
 
             this.notifySettingsChanged();

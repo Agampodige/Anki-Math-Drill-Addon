@@ -97,5 +97,82 @@
     "accuracy": 100,
     "time_taken": 21.054000000000006,
     "completed_at": "2026-01-06T09:14:26.622044"
+  },
+  {
+    "level_id": 3,
+    "level_title": "Speed Addition",
+    "operation": "Addition",
+    "digits": 1,
+    "stars_earned": 3,
+    "questions_answered": 15,
+    "accuracy": 100,
+    "time_taken": 26.843,
+    "completed_at": "2026-01-06T16:01:20.656997"
+  },
+  {
+    "level_id": 4,
+    "level_title": "Double Trouble",
+    "operation": "Addition",
+    "digits": 2,
+    "stars_earned": 2,
+    "questions_answered": 10,
+    "accuracy": 100,
+    "time_taken": 74.29400000000001,
+    "completed_at": "2026-01-06T16:02:53.512491"
+  },
+  {
+    "level_id": 5,
+    "level_title": "Multiplication Basics",
+    "operation": "Multiplication",
+    "digits": 1,
+    "stars_earned": 1,
+    "questions_answered": 15,
+    "accuracy": 86.7,
+    "time_taken": 65.458,
+    "completed_at": "2026-01-06T16:04:18.318767"
+  },
+  {
+    "level_id": 6,
+    "level_title": "Survival Mode",
+    "operation": "Mixed",
+    "digits": 1,
+    "stars_earned": 0,
+    "questions_answered": 20,
+    "accuracy": 95,
+    "time_taken": 55.22899999999999,
+    "completed_at": "2026-01-06T16:05:38.404096"
+  },
+  {
+    "level_id": 6,
+    "level_title": "Survival Mode",
+    "operation": "Mixed",
+    "digits": 1,
+    "stars_earned": 2,
+    "questions_answered": 20,
+    "accuracy": 100,
+    "time_taken": 63.108000000000004,
+    "completed_at": "2026-01-06T16:07:03.385315"
+  },
+  {
+    "level_id": 7,
+    "level_title": "Level 7",
+    "operation": "Subtraction",
+    "digits": 1,
+    "stars_earned": 3,
+    "questions_answered": 10,
+    "accuracy": 100,
+    "time_taken": 42.214,
+    "completed_at": "2026-01-06T16:08:03.997066"
+  },
+  {
+    "level_id": 8,
+    "level_title": "Level 8",
+    "operation": "Multiplication",
+    "digits": 1,
+    "stars_earned": 2,
+    "questions_answered": 10,
+    "accuracy": 90,
+    "time_taken": 48.041,
+    "completed_at": "2026-01-06T16:10:20.923758"
   }
 ]

@@ -105,7 +105,7 @@ class LevelsPage {
                     <h3>${level.title}</h3>
                     <p>${level.description}</p>
                     <div class="level-meta">
-                        <span class="tag ${level.operation.toLowerCase()}">${level.operation}</span>
+                        <span class="tag ${level.operation.toLowerCase().replace(' ', '-')}">${level.operation}</span>
                         <span class="tag">${level.digits} Digit${level.digits > 1 ? 's' : ''}</span>
                     </div>
                 </div>

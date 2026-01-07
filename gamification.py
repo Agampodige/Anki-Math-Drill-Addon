@@ -292,14 +292,22 @@ class AppSettings:
         self.settings = self.load_settings()
 
     def load_settings(self) -> dict:
-        """Load settings from database, falling back to defaults"""
+        """Load settings from database, falling back to defaults and saving them"""
         settings = {}
+        needs_save = False
+        
         for key, default_value in self.default_settings.items():
             val = self.db.get_setting(key)
             if val is not None:
                 settings[key] = val
             else:
                 settings[key] = default_value
+                needs_save = True  # First time setting this key
+        
+        # Save defaults to database if this is first load
+        if needs_save:
+            self.save_settings(settings)
+            
         return settings
 
     def save_settings(self, new_settings: dict) -> bool:
@@ -308,7 +316,9 @@ class AppSettings:
         for key, value in new_settings.items():
             if key in self.default_settings:
                 success &= self.db.set_setting(key, value)
-                self.settings[key] = value
+                # Only update self.settings if it exists
+                if hasattr(self, 'settings'):
+                    self.settings[key] = value
         return success
 
     def get_all(self) -> dict:

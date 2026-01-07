@@ -37,15 +37,15 @@
   "2026-01-06": {
     "target_questions": 20,
     "target_time_minutes": 10,
-    "questions_completed": 28,
-    "time_spent_minutes": 18.0,
+    "questions_completed": 129,
+    "time_spent_minutes": 24.315766663742057,
     "achieved": true
   },
   "2026-01-07": {
     "target_questions": 20,
     "target_time_minutes": 10,
-    "questions_completed": 20,
-    "time_spent_minutes": 11.0,
+    "questions_completed": 21,
+    "time_spent_minutes": 11.07371666431427,
     "achieved": true
   }
 }

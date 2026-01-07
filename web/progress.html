@@ -97,24 +97,32 @@
 
             <!-- Performance Chart -->
             <div class="card" style="padding-bottom: 32px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
                     <h3 class="section-title" style="margin-bottom: 0; font-weight: 700;">Performance History</h3>
-                    <div class="chart-controls" style="display: flex; gap: 16px;">
-                        <label class="toggle-label"
-                            style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
-                            <input type="checkbox" id="toggleAccuracy" checked style="accent-color: #2ECC71;">
-                            <span style="color: var(--text-secondary);">Accuracy</span>
-                        </label>
-                        <label class="toggle-label"
-                            style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
-                            <input type="checkbox" id="toggleSpeed" checked style="accent-color: #e0af68;">
-                            <span style="color: var(--text-secondary);">Speed</span>
-                        </label>
-                        <label class="toggle-label"
-                            style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
-                            <input type="checkbox" id="toggleQuestions" checked style="accent-color: #818cf8;">
-                            <span style="color: var(--text-secondary);">Questions</span>
-                        </label>
+                    <div class="chart-controls" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <div class="period-selector" style="display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 2px; border-radius: 6px;">
+                            <button class="period-btn active" data-period="week" style="padding: 6px 12px; font-size: 12px; border: none; background: var(--primary); color: white; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Weekly</button>
+                            <button class="period-btn" data-period="month" style="padding: 6px 12px; font-size: 12px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: all 0.2s;">Monthly</button>
+                            <button class="period-btn" data-period="year" style="padding: 6px 12px; font-size: 12px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: all 0.2s;">Yearly</button>
+                            <button class="period-btn" data-period="all" style="padding: 6px 12px; font-size: 12px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: all 0.2s;">All Time</button>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <label class="toggle-label"
+                                style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
+                                <input type="checkbox" id="toggleAccuracy" checked style="accent-color: #2ECC71;">
+                                <span style="color: var(--text-secondary);">Accuracy</span>
+                            </label>
+                            <label class="toggle-label"
+                                style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
+                                <input type="checkbox" id="toggleSpeed" checked style="accent-color: #e0af68;">
+                                <span style="color: var(--text-secondary);">Speed</span>
+                            </label>
+                            <label class="toggle-label"
+                                style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
+                                <input type="checkbox" id="toggleQuestions" checked style="accent-color: #818cf8;">
+                                <span style="color: var(--text-secondary);">Questions</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <!-- Interactive Canvas Container -->
@@ -266,6 +274,63 @@
             background: var(--primary) !important;
             color: white !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .period-btn.active {
+            background: var(--primary) !important;
+            color: white !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .period-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        .period-btn.active:hover {
+            background: var(--primary) !important;
+            transform: translateY(0px);
+        }
+        .period-btn {
+            transition: all 0.2s ease, transform 0.2s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chart-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .period-selector {
+                justify-content: center;
+                order: -1;
+            }
+            .toggle-controls {
+                order: 1;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .period-btn {
+                font-size: 11px;
+                padding: 5px 10px;
+                min-width: 60px;
+            }
+            .toggle-label {
+                font-size: 12px;
+                white-space: nowrap;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chart-controls {
+                gap: 8px;
+            }
+            .period-btn {
+                font-size: 10px;
+                padding: 4px 8px;
+                min-width: 50px;
+            }
+            .toggle-label span {
+                font-size: 11px;
+            }
         }
     </style>
     <script src="progress.js"></script>

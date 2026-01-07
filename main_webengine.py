@@ -638,13 +638,13 @@ class PythonBridge(QObject):
                 daemon=True
             ).start()
             
-            # Send immediate empty response to prevent JS timeout
-            if callback_id:
-                self.send_to_js('progress_data_result', {}, callback_id)
+        # Don't send empty response - let the background thread handle it
             
         except Exception as e:
             print(f"Error in instant progress data: {e}")
-            self.send_to_js('progress_data_result', {}, callback_id)
+            # Send empty data on error to stop loading spinner
+            if callback_id:
+                self.send_to_js('progress_data_result', {}, callback_id)
     
     def _generate_progress_worker(self, period, streak, callback_id):
         """Worker method to run in background thread"""
@@ -677,36 +677,72 @@ class PythonBridge(QObject):
             basic_stats = stats_data['basic_stats']
             recent_activity = stats_data['recent_activity']
             
-            # Get performance trends for charts
-            trends_data = db_api.get_performance_trends(days=7)
+            # Get performance trends for charts based on period
+            if period == 'week':
+                trends_data = db_api.get_performance_trends(days=7)
+                days_range = 7
+            elif period == 'month':
+                trends_data = db_api.get_performance_trends(days=30)
+                days_range = 30
+            elif period == 'year':
+                trends_data = db_api.get_performance_trends(days=365)
+                days_range = 365
+            else:  # all time
+                trends_data = db_api.get_performance_trends(days=730)  # ~2 years
+                days_range = 730
+            
             daily_data = trends_data
             
-            # Prepare chart data from real daily performance
+            # Prepare chart data showing continuous timeline for the period
             chart_data = []
             today = date.today()
             
-            # Create chart data for last 7 days
-            for i in range(6, -1, -1):
+            # Create a continuous timeline for the selected period
+            # This shows ALL days in the range, with actual data or zeros
+            for i in range(days_range - 1, -1, -1):
                 chart_date = today - timedelta(days=i)
                 date_str = chart_date.isoformat()
                 
                 # Find matching daily data
                 day_data = next((d for d in daily_data if d['date'] == date_str), None)
                 
+                # Determine label format based on period
+                if days_range <= 7:
+                    # Weekly: show day names (Mon, Tue, etc.)
+                    label = chart_date.strftime('%a')
+                elif days_range <= 30:
+                    # Monthly: show dates (01/04, 01/05, etc.)
+                    label = chart_date.strftime('%m/%d')
+                else:
+                    # Yearly/All time: show dates
+                    label = chart_date.strftime('%m/%d')
+                
                 if day_data and day_data['attempts'] > 0:
+                    # Real data available
                     chart_data.append({
-                        'label': chart_date.strftime('%a'),
+                        'date': date_str,
+                        'label': label,
                         'accuracy': day_data['accuracy'],
                         'speed': day_data['avg_time'],
                         'questions': day_data['attempts']
                     })
                 else:
+                    # No data for this day - show as zero
                     chart_data.append({
-                        'label': chart_date.strftime('%a'),
+                        'date': date_str,
+                        'label': label,
                         'accuracy': 0,
                         'speed': 0,
                         'questions': 0
                     })
+            
+            # Debug: Log chart data generation
+            print(f"📊 Chart data generated for period '{period}': {len(chart_data)} data points")
+            if chart_data:
+                print(f"   First point: {chart_data[0]}")
+                print(f"   Last point: {chart_data[-1]}")
+                non_zero_count = sum(1 for d in chart_data if d['questions'] > 0)
+                print(f"   Non-zero days: {non_zero_count}/{len(chart_data)}")
             
             # Prepare recent activity data
             recent_activity_formatted = []
@@ -1374,7 +1410,7 @@ class PythonBridge(QObject):
                     import random
                     
                     if operation == 'Mixed':
-                        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division']
+                        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Linear Algebra']
                         operation = random.choice(operations)
                     
                     # Generate numbers based on digit level
@@ -1422,8 +1458,181 @@ class PythonBridge(QObject):
                             b = random.randint(low, high)
                         answer = a * b
                         symbol = '×'
+                    elif operation == 'Linear Algebra':
+                        # Generate different types of equations based on digit level
+                        equation_type = random.choice(['linear_system', 'single_linear', 'quadratic', 'system_three_vars'])
+                        
+                        if equation_type == 'linear_system':
+                            # 2x2 linear system
+                            if digits == 1:
+                                a = random.randint(1, 5)
+                                b = random.randint(1, 5)
+                                c = random.randint(1, 20)
+                                d = random.randint(1, 5)
+                                e = random.randint(1, 5)
+                                f = random.randint(1, 20)
+                                
+                                determinant = a * e - b * d
+                                if determinant != 0:
+                                    x = (c * e - b * f) // determinant
+                                    y = (a * f - c * d) // determinant
+                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
+                                    answer = f"x={x}, y={y}"
+                                else:
+                                    # Regenerate if determinant is zero
+                                    a = random.randint(1, 5)
+                                    b = random.randint(1, 5)
+                                    c = random.randint(1, 20)
+                                    d = random.randint(1, 5)
+                                    e = random.randint(1, 5)
+                                    f = random.randint(1, 20)
+                                    determinant = a * e - b * d
+                                    x = (c * e - b * f) // determinant
+                                    y = (a * f - c * d) // determinant
+                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
+                                    answer = f"x={x}, y={y}"
+                            elif digits == 2:
+                                a = random.randint(10, 50)
+                                b = random.randint(10, 50)
+                                c = random.randint(10, 200)
+                                d = random.randint(10, 50)
+                                e = random.randint(10, 50)
+                                f = random.randint(10, 200)
+                                
+                                determinant = a * e - b * d
+                                if determinant != 0:
+                                    x = (c * e - b * f) // determinant
+                                    y = (a * f - c * d) // determinant
+                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
+                                    answer = f"x={x}, y={y}"
+                                else:
+                                    # Regenerate if determinant is zero
+                                    a = random.randint(10, 50)
+                                    b = random.randint(10, 50)
+                                    c = random.randint(10, 200)
+                                    d = random.randint(10, 50)
+                                    e = random.randint(10, 50)
+                                    f = random.randint(10, 200)
+                                    determinant = a * e - b * d
+                                    x = (c * e - b * f) // determinant
+                                    y = (a * f - c * d) // determinant
+                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
+                                    answer = f"x={x}, y={y}"
+                            else:
+                                a = random.randint(1, 20)
+                                b = random.randint(1, 20)
+                                c = random.randint(1, 100)
+                                d = random.randint(1, 20)
+                                e = random.randint(1, 20)
+                                f = random.randint(1, 100)
+                                
+                                determinant = a * e - b * d
+                                if determinant != 0:
+                                    x = (c * e - b * f) // determinant
+                                    y = (a * f - c * d) // determinant
+                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
+                                    answer = f"x={x}, y={y}"
+                                else:
+                                    # Regenerate if determinant is zero
+                                    a = random.randint(1, 20)
+                                    b = random.randint(1, 20)
+                                    c = random.randint(1, 100)
+                                    d = random.randint(1, 20)
+                                    e = random.randint(1, 20)
+                                    f = random.randint(1, 100)
+                                    determinant = a * e - b * d
+                                    x = (c * e - b * f) // determinant
+                                    y = (a * f - c * d) // determinant
+                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
+                                    answer = f"x={x}, y={y}"
+                                    
+                        elif equation_type == 'single_linear':
+                            # Single linear equation
+                            if digits == 1:
+                                a = random.randint(2, 10)
+                                b = random.randint(1, 20)
+                                x = b // a
+                                question_text = f"Solve: {a}x = {b}"
+                                answer = f"x={x}"
+                            elif digits == 2:
+                                a = random.randint(10, 50)
+                                b = random.randint(10, 200)
+                                x = b // a
+                                question_text = f"Solve: {a}x = {b}"
+                                answer = f"x={x}"
+                            else:
+                                a = random.randint(1, 20)
+                                b = random.randint(1, 100)
+                                x = b // a
+                                question_text = f"Solve: {a}x = {b}"
+                                answer = f"x={x}"
+                                
+                        elif equation_type == 'quadratic':
+                            # Simple quadratic equations (perfect squares)
+                            if digits == 1:
+                                x = random.randint(1, 5)
+                                a = 1
+                                b = -2 * x
+                                c = x * x
+                                question_text = f"Solve: x² + {b}x + {c} = 0"
+                                answer = f"x={x}"
+                            elif digits == 2:
+                                x = random.randint(5, 10)
+                                a = 1
+                                b = -2 * x
+                                c = x * x
+                                question_text = f"Solve: x² + {b}x + {c} = 0"
+                                answer = f"x={x}"
+                            else:
+                                x = random.randint(1, 15)
+                                a = 1
+                                b = -2 * x
+                                c = x * x
+                                question_text = f"Solve: x² + {b}x + {c} = 0"
+                                answer = f"x={x}"
+                                
+                        else:  # system_three_vars
+                            # Simple 3-variable system (with one variable eliminated)
+                            if digits == 1:
+                                # System: x + y = a, y + z = b, x + z = c
+                                x = random.randint(1, 5)
+                                y = random.randint(1, 5)
+                                z = random.randint(1, 5)
+                                a = x + y
+                                b = y + z
+                                c = x + z
+                                question_text = f"Solve: x + y = {a}, y + z = {b}, x + z = {c}"
+                                answer = f"x={x}, y={y}, z={z}"
+                            elif digits == 2:
+                                x = random.randint(5, 15)
+                                y = random.randint(5, 15)
+                                z = random.randint(5, 15)
+                                a = x + y
+                                b = y + z
+                                c = x + z
+                                question_text = f"Solve: x + y = {a}, y + z = {b}, x + z = {c}"
+                                answer = f"x={x}, y={y}, z={z}"
+                            else:
+                                x = random.randint(10, 25)
+                                y = random.randint(10, 25)
+                                z = random.randint(10, 25)
+                                a = x + y
+                                b = y + z
+                                c = x + z
+                                question_text = f"Solve: x + y = {a}, y + z = {b}, x + z = {c}"
+                                answer = f"x={x}, y={y}, z={z}"
+                        
+                        symbol = 'LA'  # Linear Algebra indicator
                     
-                    question_text = f"{a} {symbol} {b} = ?"
+                    # Initialize a and b for Linear Algebra to avoid undefined issues
+                    if operation == 'Linear Algebra':
+                        a, b = 1, 1  # Dummy values for fallback
+                    
+                    if operation == 'Linear Algebra':
+                        # question_text is already set above
+                        pass
+                    else:
+                        question_text = f"{a} {symbol} {b} = ?"
                     
                     result = {
                         'question': question_text,

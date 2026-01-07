@@ -31,12 +31,12 @@ class LevelManager:
         # Determine the last used ID from static levels
         last_id = max([l['id'] for l in levels]) if levels else 0
         
-        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Mixed']
+        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Mixed', 'Linear Algebra']
         
         for lvl_num in range(last_id + 1, 101):
             # Calculate difficulty parameters based on level number
             # Cycle through operations
-            op_idx = (lvl_num - 1) % 5
+            op_idx = (lvl_num - 1) % 6
             operation = operations[op_idx]
             
             # Digits increase every 20 levels roughly

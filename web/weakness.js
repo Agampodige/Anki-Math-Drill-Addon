@@ -246,7 +246,8 @@ class WeaknessPage {
             'Addition': 'Focus on number grouping, practice with smaller numbers first',
             'Subtraction': 'Work on borrowing techniques, use number lines for visualization',
             'Multiplication': 'Break down large numbers, practice multiplication tables',
-            'Division': 'Learn common divisors, practice estimation skills'
+            'Division': 'Learn common divisors, practice estimation skills',
+            'Linear Algebra': 'Master equation solving techniques, practice step-by-step solutions'
         };
         return suggestions[operation] || 'Practice fundamental skills, start with easier problems';
     }
@@ -256,7 +257,8 @@ class WeaknessPage {
             'Addition': 'Improve mental math speed, try different addition strategies',
             'Subtraction': 'Practice with larger numbers, work on speed',
             'Multiplication': 'Use multiplication tricks, learn common patterns',
-            'Division': 'Practice long division, memorize common division facts'
+            'Division': 'Practice long division, memorize common division facts',
+            'Linear Algebra': 'Work on complex systems, learn matrix operations and quadratic formulas'
         };
         return suggestions[operation] || 'Build on existing skills, increase practice frequency';
     }
@@ -266,7 +268,8 @@ class WeaknessPage {
             'Addition': 'Focus on speed, try advanced mental math techniques',
             'Subtraction': 'Work on complex problems, improve accuracy',
             'Multiplication': 'Practice with larger numbers, learn advanced tricks',
-            'Division': 'Tackle complex divisions, work on efficiency'
+            'Division': 'Tackle complex divisions, work on efficiency',
+            'Linear Algebra': 'Challenge with advanced systems, explore polynomial equations'
         };
         return suggestions[operation] || 'Maintain skills, challenge yourself with harder problems';
     }
