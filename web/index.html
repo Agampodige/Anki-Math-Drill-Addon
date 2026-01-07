@@ -136,16 +136,6 @@
                 <div class="question" id="questionText" aria-live="assertive" role="math">Ready?</div>
                 <input type="text" id="answerInput" class="answer-field" placeholder="Answer..." autocomplete="off"
                     inputmode="numeric" aria-describedby="feedback">
-                
-                <!-- Multi-variable answer inputs for Linear Algebra -->
-                <div id="multiVariableAnswers" class="multi-variable-answers" style="display: none;">
-                    <div class="variable-input-group">
-                        <input type="text" id="xInput" class="variable-input" placeholder="x = ?" autocomplete="off">
-                        <input type="text" id="yInput" class="variable-input" placeholder="y = ?" autocomplete="off" style="display: none;">
-                        <input type="text" id="zInput" class="variable-input" placeholder="z = ?" autocomplete="off" style="display: none;">
-                    </div>
-                </div>
-                
                 <div class="feedback" id="feedback" aria-live="polite">Press Enter to Start</div>
             </section>
 
@@ -165,7 +155,6 @@
                         <option value="Multiplication">Multiplication</option>
                         <option value="Division">Division</option>
                         <option value="Mixed">Mixed</option>
-                        <option value="Linear Algebra">Linear Algebra</option>
                     </select>
                     <select id="digitsBox" class="control-select">
                         <option value="1 digit">1 digit</option>
@@ -234,6 +223,39 @@
                 new QWebChannel(qt.webChannelTransport, function (channel) {
                     window.pythonBridge = channel.objects.pythonBridge;
                     console.log('✅ Python bridge initialized successfully');
+
+                    // Set up hot reload message handler
+                    window.pythonBridge.hot_reload = function(data) {
+                        console.log('🔥 Hot reload detected:', data);
+                        // Show a subtle notification to the user
+                        const notification = document.createElement('div');
+                        notification.style.cssText = `
+                            position: fixed;
+                            top: 10px;
+                            right: 10px;
+                            background: #10B981;
+                            color: white;
+                            padding: 8px 12px;
+                            border-radius: 6px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            z-index: 9999;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                            transition: opacity 0.3s ease;
+                        `;
+                        notification.textContent = '🔥 Hot reloaded';
+                        document.body.appendChild(notification);
+                        
+                        // Remove notification after 2 seconds
+                        setTimeout(() => {
+                            notification.style.opacity = '0';
+                            setTimeout(() => {
+                                if (notification.parentNode) {
+                                    notification.parentNode.removeChild(notification);
+                                }
+                            }, 300);
+                        }, 2000);
+                    };
 
                     // Initialize the main app after bridge is ready
                     if (typeof MathDrillWeb !== 'undefined') {

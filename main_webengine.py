@@ -1410,7 +1410,7 @@ class PythonBridge(QObject):
                     import random
                     
                     if operation == 'Mixed':
-                        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Linear Algebra']
+                        operations = ['Addition', 'Subtraction', 'Multiplication', 'Division']
                         operation = random.choice(operations)
                     
                     # Generate numbers based on digit level
@@ -1458,181 +1458,8 @@ class PythonBridge(QObject):
                             b = random.randint(low, high)
                         answer = a * b
                         symbol = '×'
-                    elif operation == 'Linear Algebra':
-                        # Generate different types of equations based on digit level
-                        equation_type = random.choice(['linear_system', 'single_linear', 'quadratic', 'system_three_vars'])
-                        
-                        if equation_type == 'linear_system':
-                            # 2x2 linear system
-                            if digits == 1:
-                                a = random.randint(1, 5)
-                                b = random.randint(1, 5)
-                                c = random.randint(1, 20)
-                                d = random.randint(1, 5)
-                                e = random.randint(1, 5)
-                                f = random.randint(1, 20)
-                                
-                                determinant = a * e - b * d
-                                if determinant != 0:
-                                    x = (c * e - b * f) // determinant
-                                    y = (a * f - c * d) // determinant
-                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
-                                    answer = f"x={x}, y={y}"
-                                else:
-                                    # Regenerate if determinant is zero
-                                    a = random.randint(1, 5)
-                                    b = random.randint(1, 5)
-                                    c = random.randint(1, 20)
-                                    d = random.randint(1, 5)
-                                    e = random.randint(1, 5)
-                                    f = random.randint(1, 20)
-                                    determinant = a * e - b * d
-                                    x = (c * e - b * f) // determinant
-                                    y = (a * f - c * d) // determinant
-                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
-                                    answer = f"x={x}, y={y}"
-                            elif digits == 2:
-                                a = random.randint(10, 50)
-                                b = random.randint(10, 50)
-                                c = random.randint(10, 200)
-                                d = random.randint(10, 50)
-                                e = random.randint(10, 50)
-                                f = random.randint(10, 200)
-                                
-                                determinant = a * e - b * d
-                                if determinant != 0:
-                                    x = (c * e - b * f) // determinant
-                                    y = (a * f - c * d) // determinant
-                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
-                                    answer = f"x={x}, y={y}"
-                                else:
-                                    # Regenerate if determinant is zero
-                                    a = random.randint(10, 50)
-                                    b = random.randint(10, 50)
-                                    c = random.randint(10, 200)
-                                    d = random.randint(10, 50)
-                                    e = random.randint(10, 50)
-                                    f = random.randint(10, 200)
-                                    determinant = a * e - b * d
-                                    x = (c * e - b * f) // determinant
-                                    y = (a * f - c * d) // determinant
-                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
-                                    answer = f"x={x}, y={y}"
-                            else:
-                                a = random.randint(1, 20)
-                                b = random.randint(1, 20)
-                                c = random.randint(1, 100)
-                                d = random.randint(1, 20)
-                                e = random.randint(1, 20)
-                                f = random.randint(1, 100)
-                                
-                                determinant = a * e - b * d
-                                if determinant != 0:
-                                    x = (c * e - b * f) // determinant
-                                    y = (a * f - c * d) // determinant
-                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
-                                    answer = f"x={x}, y={y}"
-                                else:
-                                    # Regenerate if determinant is zero
-                                    a = random.randint(1, 20)
-                                    b = random.randint(1, 20)
-                                    c = random.randint(1, 100)
-                                    d = random.randint(1, 20)
-                                    e = random.randint(1, 20)
-                                    f = random.randint(1, 100)
-                                    determinant = a * e - b * d
-                                    x = (c * e - b * f) // determinant
-                                    y = (a * f - c * d) // determinant
-                                    question_text = f"Solve: {a}x + {b}y = {c}, {d}x + {e}y = {f}"
-                                    answer = f"x={x}, y={y}"
-                                    
-                        elif equation_type == 'single_linear':
-                            # Single linear equation
-                            if digits == 1:
-                                a = random.randint(2, 10)
-                                b = random.randint(1, 20)
-                                x = b // a
-                                question_text = f"Solve: {a}x = {b}"
-                                answer = f"x={x}"
-                            elif digits == 2:
-                                a = random.randint(10, 50)
-                                b = random.randint(10, 200)
-                                x = b // a
-                                question_text = f"Solve: {a}x = {b}"
-                                answer = f"x={x}"
-                            else:
-                                a = random.randint(1, 20)
-                                b = random.randint(1, 100)
-                                x = b // a
-                                question_text = f"Solve: {a}x = {b}"
-                                answer = f"x={x}"
-                                
-                        elif equation_type == 'quadratic':
-                            # Simple quadratic equations (perfect squares)
-                            if digits == 1:
-                                x = random.randint(1, 5)
-                                a = 1
-                                b = -2 * x
-                                c = x * x
-                                question_text = f"Solve: x² + {b}x + {c} = 0"
-                                answer = f"x={x}"
-                            elif digits == 2:
-                                x = random.randint(5, 10)
-                                a = 1
-                                b = -2 * x
-                                c = x * x
-                                question_text = f"Solve: x² + {b}x + {c} = 0"
-                                answer = f"x={x}"
-                            else:
-                                x = random.randint(1, 15)
-                                a = 1
-                                b = -2 * x
-                                c = x * x
-                                question_text = f"Solve: x² + {b}x + {c} = 0"
-                                answer = f"x={x}"
-                                
-                        else:  # system_three_vars
-                            # Simple 3-variable system (with one variable eliminated)
-                            if digits == 1:
-                                # System: x + y = a, y + z = b, x + z = c
-                                x = random.randint(1, 5)
-                                y = random.randint(1, 5)
-                                z = random.randint(1, 5)
-                                a = x + y
-                                b = y + z
-                                c = x + z
-                                question_text = f"Solve: x + y = {a}, y + z = {b}, x + z = {c}"
-                                answer = f"x={x}, y={y}, z={z}"
-                            elif digits == 2:
-                                x = random.randint(5, 15)
-                                y = random.randint(5, 15)
-                                z = random.randint(5, 15)
-                                a = x + y
-                                b = y + z
-                                c = x + z
-                                question_text = f"Solve: x + y = {a}, y + z = {b}, x + z = {c}"
-                                answer = f"x={x}, y={y}, z={z}"
-                            else:
-                                x = random.randint(10, 25)
-                                y = random.randint(10, 25)
-                                z = random.randint(10, 25)
-                                a = x + y
-                                b = y + z
-                                c = x + z
-                                question_text = f"Solve: x + y = {a}, y + z = {b}, x + z = {c}"
-                                answer = f"x={x}, y={y}, z={z}"
-                        
-                        symbol = 'LA'  # Linear Algebra indicator
                     
-                    # Initialize a and b for Linear Algebra to avoid undefined issues
-                    if operation == 'Linear Algebra':
-                        a, b = 1, 1  # Dummy values for fallback
-                    
-                    if operation == 'Linear Algebra':
-                        # question_text is already set above
-                        pass
-                    else:
-                        question_text = f"{a} {symbol} {b} = ?"
+                    question_text = f"{a} {symbol} {b} = ?"
                     
                     result = {
                         'question': question_text,
@@ -1847,6 +1674,63 @@ class MathDrillWebEngine(QDialog):
         self.update_timer = QTimer(self)
         self.update_timer.timeout.connect(self.update_stats_from_timer)
         self.update_timer.start(5000)  # Update every 5 seconds
+        
+        # Initialize hot reload
+        self.init_hot_reload()
+        
+    def init_hot_reload(self):
+        """Initialize hot reload functionality"""
+        try:
+            from .hot_reload import get_hot_reloader
+            hot_reloader = get_hot_reloader()
+            if hot_reloader:
+                hot_reloader.file_changed.connect(self.handle_file_changed)
+                print("MathDrillWebEngine: Hot reload connected")
+        except Exception as e:
+            print(f"MathDrillWebEngine: Could not connect hot reload: {e}")
+    
+    def handle_file_changed(self, file_info):
+        """Handle file change events from hot reload system"""
+        try:
+            if file_info.startswith("web:"):
+                # Web file changed - reload the current page
+                file_path = file_info[4:]  # Remove "web:" prefix
+                print(f"MathDrillWebEngine: Web file changed: {file_path}, reloading page...")
+                self.reload_current_page()
+            elif file_info.startswith("module:"):
+                # Python module changed
+                module_name = file_info[7:]  # Remove "module:" prefix
+                print(f"MathDrillWebEngine: Python module reloaded: {module_name}")
+                # You could add specific handling for different modules here
+        except Exception as e:
+            print(f"MathDrillWebEngine: Error handling file change: {e}")
+    
+    def reload_current_page(self):
+        """Reload the current web page"""
+        try:
+            if hasattr(self, 'web_view') and self.web_view:
+                # Get current URL to preserve it
+                current_url = self.web_view.url().toString()
+                print(f"MathDrillWebEngine: Reloading page: {current_url}")
+                
+                # Reload the page
+                self.web_view.reload()
+                
+                # Also notify JavaScript about the reload
+                QTimer.singleShot(1000, self.notify_js_reload)
+        except Exception as e:
+            print(f"MathDrillWebEngine: Error reloading page: {e}")
+    
+    def notify_js_reload(self):
+        """Notify JavaScript that a hot reload occurred"""
+        try:
+            if hasattr(self, 'web_page') and self.web_page.bridge:
+                self.web_page.bridge.send_to_js('hot_reload', {
+                    'message': 'Files were hot reloaded',
+                    'timestamp': datetime.now().isoformat()
+                })
+        except Exception as e:
+            print(f"MathDrillWebEngine: Error notifying JS of reload: {e}")
         
     def keyPressEvent(self, event):
         """Handle key press events including F12 for developer tools"""

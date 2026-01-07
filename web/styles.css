@@ -389,6 +389,19 @@ main.main-content {
     transform: translateY(-1px);
 }
 
+.variable-input.error {
+    border-color: var(--error);
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.3);
+    background: rgba(127, 29, 29, 0.2);
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
 .variable-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
     font-size: 14px;

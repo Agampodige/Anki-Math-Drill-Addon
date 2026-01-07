@@ -2792,33 +2792,5 @@
                 "max_time": 0
             }
         }
-    },
-    {
-        "id": 101,
-        "title": "Linear Algebra Basics",
-        "description": "Solve various types of equations and systems.",
-        "operation": "Linear Algebra",
-        "digits": 1,
-        "required_stars": 12,
-        "criteria": {
-            "questions": 10,
-            "time_limit": 0,
-            "min_accuracy": 80,
-            "max_time_per_question": 0
-        },
-        "stars_criteria": {
-            "3": {
-                "min_accuracy": 100,
-                "max_time": 0
-            },
-            "2": {
-                "min_accuracy": 90,
-                "max_time": 0
-            },
-            "1": {
-                "min_accuracy": 80,
-                "max_time": 0
-            }
-        }
     }
 ]

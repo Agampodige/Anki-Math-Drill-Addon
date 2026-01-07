@@ -122,11 +122,7 @@ class MathDrillWeb {
         this.answerInput = document.getElementById('answerInput');
         this.feedback = document.getElementById('feedback');
         
-        // Multi-variable inputs
-        this.multiVariableAnswers = document.getElementById('multiVariableAnswers');
-        this.xInput = document.getElementById('xInput');
-        this.yInput = document.getElementById('yInput');
-        this.zInput = document.getElementById('zInput');
+        // Multi-variable inputs (removed - no longer needed)
 
         // Modal elements
         this.modalOverlay = document.getElementById('modalOverlay');
@@ -140,6 +136,11 @@ class MathDrillWeb {
         if (missing.length > 0) {
             console.error('Missing critical elements:', missing);
             throw new Error(`Missing critical DOM elements: ${missing.join(', ')}`);
+        }
+        
+        // Initialize timer display to be always visible
+        if (this.timerDisplay) {
+            this.timerDisplay.style.display = 'flex';
         }
     }
 
@@ -157,16 +158,34 @@ class MathDrillWeb {
         
         // Multi-variable inputs
         if (this.xInput) {
-            this.xInput.addEventListener('keydown', (e) => this.handleKeydown(e));
-            this.xInput.addEventListener('input', (e) => this.handleInput(e));
+            this.xInput.addEventListener('keydown', (e) => {
+                console.log('xInput keydown event:', e.key);
+                this.handleKeydown(e);
+            });
+            this.xInput.addEventListener('input', (e) => {
+                this.clearInputHighlights();
+                this.handleInput(e);
+            });
         }
         if (this.yInput) {
-            this.yInput.addEventListener('keydown', (e) => this.handleKeydown(e));
-            this.yInput.addEventListener('input', (e) => this.handleInput(e));
+            this.yInput.addEventListener('keydown', (e) => {
+                console.log('yInput keydown event:', e.key);
+                this.handleKeydown(e);
+            });
+            this.yInput.addEventListener('input', (e) => {
+                this.clearInputHighlights();
+                this.handleInput(e);
+            });
         }
         if (this.zInput) {
-            this.zInput.addEventListener('keydown', (e) => this.handleKeydown(e));
-            this.zInput.addEventListener('input', (e) => this.handleInput(e));
+            this.zInput.addEventListener('keydown', (e) => {
+                console.log('zInput keydown event:', e.key);
+                this.handleKeydown(e);
+            });
+            this.zInput.addEventListener('input', (e) => {
+                this.clearInputHighlights();
+                this.handleInput(e);
+            });
         }
         
         // Initialize input visibility
@@ -207,9 +226,11 @@ class MathDrillWeb {
 
     handleKeydown(e) {
         const key = e.key;
+        console.log('handleKeydown called with key:', key);
 
         // Allow Enter for submitting
         if (key === 'Enter') {
+            console.log('Enter key pressed, calling checkAnswer...');
             e.preventDefault();
             this.checkAnswer();
             return;
@@ -277,15 +298,8 @@ class MathDrillWeb {
         // Set initial input visibility based on current operation
         const currentOperation = this.operationBox ? this.operationBox.value : 'Addition';
         
-        if (currentOperation === 'Linear Algebra') {
-            // For Linear Algebra, hide main input and multi-variable inputs initially
-            if (this.answerInput) this.answerInput.style.display = 'none';
-            if (this.multiVariableAnswers) this.multiVariableAnswers.style.display = 'none';
-        } else {
-            // For other operations, show main input and hide multi-variable inputs
-            if (this.answerInput) this.answerInput.style.display = 'block';
-            if (this.multiVariableAnswers) this.multiVariableAnswers.style.display = 'none';
-        }
+        // Always show main input for all operations
+        if (this.answerInput) this.answerInput.style.display = 'block';
     }
 
     handleGlobalKeydown(e) {
@@ -444,7 +458,6 @@ class MathDrillWeb {
         else if (operation === 'Subtraction') baseLevel = 2;
         else if (operation === 'Multiplication') baseLevel = 3;
         else if (operation === 'Division') baseLevel = 4;
-        else if (operation === 'Linear Algebra') baseLevel = 5;
         else if (operation === 'Mixed') baseLevel = 3;
 
         // Digit multiplier
@@ -467,20 +480,11 @@ class MathDrillWeb {
         this.currentFocusArea = null;
         this.focusSessionCount = 0;
         
-        // Clear multi-variable inputs
-        if (this.xInput) this.xInput.value = '';
-        if (this.yInput) this.yInput.value = '';
-        if (this.zInput) this.zInput.value = '';
+        // Clear main input
+        if (this.answerInput) this.answerInput.value = '';
         
-        // Reset input visibility based on current operation
-        const currentOperation = this.operationBox ? this.operationBox.value : 'Addition';
-        if (currentOperation === 'Linear Algebra') {
-            if (this.multiVariableAnswers) this.multiVariableAnswers.style.display = 'none';
-            if (this.answerInput) this.answerInput.style.display = 'none';
-        } else {
-            if (this.multiVariableAnswers) this.multiVariableAnswers.style.display = 'none';
-            if (this.answerInput) this.answerInput.style.display = 'block';
-        }
+        // Always show main input
+        if (this.answerInput) this.answerInput.style.display = 'block';
 
         // cleanup focus mode
         if (this.focusTimerInterval) {
@@ -501,46 +505,17 @@ class MathDrillWeb {
         // Update UI
         this.updateStreakDisplay();
         if (this.ghostLine) this.ghostLine.style.display = 'none';
-        if (this.timerDisplay) this.timerDisplay.style.display = 'none';
+        // Always show timer, even when session is reset
+        if (this.timerDisplay) this.timerDisplay.style.display = 'flex';
         if (this.progressContainer) this.progressContainer.style.display = 'none';
         this.questionText.textContent = 'Ready?';
         this.feedback.textContent = 'Press Enter to Start';
         this.answerInput.value = '';
         this.answerInput.readOnly = false;
         
-        // Set focus to appropriate input based on operation
-        const selectedOperation = this.operationBox ? this.operationBox.value : 'Addition';
-        if (selectedOperation === 'Linear Algebra') {
-            // Show multi-variable inputs and focus on first visible one
-            if (this.multiVariableAnswers) {
-                this.multiVariableAnswers.style.display = 'block';
-                this.answerInput.style.display = 'none';
-                
-                // Initialize all inputs as visible for linear algebra mode
-                if (this.xInput) {
-                    this.xInput.style.display = 'block';
-                    this.xInput.value = '';
-                }
-                if (this.yInput) {
-                    this.yInput.style.display = 'block';
-                    this.yInput.value = '';
-                }
-                if (this.zInput) {
-                    this.zInput.style.display = 'block';
-                    this.zInput.value = '';
-                }
-                
-                // Focus on first input
-                if (this.xInput) {
-                    this.xInput.focus();
-                }
-            }
-        } else {
-            // Hide multi-variable inputs and focus on main input
-            if (this.multiVariableAnswers) this.multiVariableAnswers.style.display = 'none';
-            this.answerInput.style.display = 'block';
-            this.answerInput.focus();
-        }
+        // Set focus to main input
+        this.answerInput.style.display = 'block';
+        this.answerInput.focus();
 
         // Enable/disable controls based on mode
         const mode = this.modeBox.value;
@@ -562,14 +537,15 @@ class MathDrillWeb {
         if (mode.includes('Drill')) {
             if (this.progressContainer) this.progressContainer.style.display = 'block';
             if (this.progressLabel) this.progressLabel.textContent = '0 / 20 Questions';
-            if (this.timerDisplay) this.timerDisplay.style.display = 'block';
+            if (this.timerDisplay) this.timerDisplay.style.display = 'flex';
         } else if (mode.includes('Sprint')) {
             if (this.progressContainer) this.progressContainer.style.display = 'block';
             if (this.progressLabel) this.progressLabel.textContent = '60s Remaining';
-            if (this.timerDisplay) this.timerDisplay.style.display = 'block';
+            if (this.timerDisplay) this.timerDisplay.style.display = 'flex';
         } else {
             if (this.progressContainer) this.progressContainer.style.display = 'none';
-            if (this.timerDisplay) this.timerDisplay.style.display = 'none';
+            // Always show timer for all modes including Free Play
+            if (this.timerDisplay) this.timerDisplay.style.display = 'flex';
         }
 
         // Notify Python
@@ -801,23 +777,10 @@ class MathDrillWeb {
         this.answerInput.value = '';
         
         // Clear multi-variable inputs
-        if (this.xInput) this.xInput.value = '';
-        if (this.yInput) this.yInput.value = '';
-        if (this.zInput) this.zInput.value = '';
+        if (this.answerInput) this.answerInput.value = '';
         
-        // Set focus to appropriate input
-        if (this.multiVariableAnswers && this.multiVariableAnswers.style.display === 'block') {
-            // Focus on first visible variable input
-            if (this.xInput && this.xInput.style.display !== 'none') {
-                this.xInput.focus();
-            } else if (this.yInput && this.yInput.style.display !== 'none') {
-                this.yInput.focus();
-            } else if (this.zInput && this.zInput.style.display !== 'none') {
-                this.zInput.focus();
-            }
-        } else {
-            this.answerInput.focus();
-        }
+        // Set focus to main input
+        if (this.answerInput) this.answerInput.focus();
 
         // Clear previous feedback classes and set neutral state
         this.answerInput.classList.remove('correct', 'incorrect');
@@ -834,7 +797,7 @@ class MathDrillWeb {
         const digits = parseInt(this.digitsBox.value);
 
         if (operation === 'Mixed') {
-            const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division', 'Linear Algebra'];
+            const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
             operation = operations[Math.floor(Math.random() * operations.length)];
         }
 
@@ -873,139 +836,15 @@ class MathDrillWeb {
                 }
                 answer = a * b;
                 symbol = '×';
-            } else if (operation === 'Linear Algebra') {
-                // Generate different types of algebra problems
-                const equationType = Math.floor(Math.random() * 4); // 0-3
-                
-                // Show multi-variable inputs container
-                this.multiVariableAnswers.style.display = 'block';
-                
-                if (equationType === 0) {
-                    // Single linear equation: ax = b
-                    a = Math.floor(Math.random() * (Math.min(high, 20) - 2 + 1)) + 2;
-                    b = Math.floor(Math.random() * (Math.min(high, 100) - 1 + 1)) + 1;
-                    answer = Math.floor(b / a);
-                    this.questionText.textContent = `Solve: ${a}x = ${b}`;
-                    this.currentAnswer = `x=${answer}`;
-                    
-                    // Show only x input
-                    this.xInput.style.display = 'block';
-                    this.yInput.style.display = 'none';
-                    this.zInput.style.display = 'none';
-                    this.xInput.placeholder = 'x = ?';
-                    
-                    return; // Early return for Linear Algebra
-                } else if (equationType === 1) {
-                    // Quadratic equation: x² + bx + c = 0 (perfect square)
-                    const x = Math.floor(Math.random() * (digits === 1 ? 5 : 10)) + 1;
-                    const bCoeff = -2 * x;
-                    const cCoeff = x * x;
-                    this.questionText.textContent = `Solve: x² + ${bCoeff}x + ${cCoeff} = 0`;
-                    this.currentAnswer = `x=${x}`;
-                    
-                    // Show only x input
-                    this.xInput.style.display = 'block';
-                    this.yInput.style.display = 'none';
-                    this.zInput.style.display = 'none';
-                    this.xInput.placeholder = 'x = ?';
-                    
-                    return; // Early return for Linear Algebra
-                } else if (equationType === 2) {
-                    // 2x2 linear system
-                    let attempts = 0;
-                    const maxAttempts = 10;
-                    
-                    while (attempts < maxAttempts) {
-                        const a1 = Math.floor(Math.random() * (digits === 1 ? 5 : 20)) + 1;
-                        const b1 = Math.floor(Math.random() * (digits === 1 ? 5 : 20)) + 1;
-                        const c1 = Math.floor(Math.random() * (digits === 1 ? 20 : 100)) + 1;
-                        const a2 = Math.floor(Math.random() * (digits === 1 ? 5 : 20)) + 1;
-                        const b2 = Math.floor(Math.random() * (digits === 1 ? 5 : 20)) + 1;
-                        const c2 = Math.floor(Math.random() * (digits === 1 ? 20 : 100)) + 1;
-                        
-                        const determinant = a1 * b2 - b1 * a2;
-                        if (Math.abs(determinant) > 0.001) { // Avoid floating point issues
-                            const x = Math.round((c1 * b2 - b1 * c2) / determinant);
-                            const y = Math.round((a1 * c2 - c1 * a2) / determinant);
-                            
-                            // Ensure reasonable answer ranges
-                            if (Math.abs(x) <= 50 && Math.abs(y) <= 50) {
-                                this.questionText.textContent = `Solve: ${a1}x + ${b1}y = ${c1}, ${a2}x + ${b2}y = ${c2}`;
-                                this.currentAnswer = `x=${x}, y=${y}`;
-                                
-                                // Show x and y inputs
-                                this.xInput.style.display = 'block';
-                                this.yInput.style.display = 'block';
-                                this.zInput.style.display = 'none';
-                                this.xInput.placeholder = 'x = ?';
-                                this.yInput.placeholder = 'y = ?';
-                                
-                                return; // Early return for Linear Algebra
-                            }
-                        }
-                        attempts++;
-                    }
-                    
-                    // Fallback to simple system if generation fails
-                    const x = Math.floor(Math.random() * 10) + 1;
-                    const y = Math.floor(Math.random() * 10) + 1;
-                    const a1 = 1, b1 = 1, c1 = x + y;
-                    const a2 = 1, b2 = -1, c2 = x - y;
-                    
-                    this.questionText.textContent = `Solve: ${a1}x + ${b1}y = ${c1}, ${a2}x + ${b2}y = ${c2}`;
-                    this.currentAnswer = `x=${x}, y=${y}`;
-                    
-                    this.xInput.style.display = 'block';
-                    this.yInput.style.display = 'block';
-                    this.zInput.style.display = 'none';
-                    this.xInput.placeholder = 'x = ?';
-                    this.yInput.placeholder = 'y = ?';
-                    
-                    return;
-                } else {
-                    // Three variable system: x + y = a, y + z = b, x + z = c
-                    const x = Math.floor(Math.random() * (digits === 1 ? 5 : 15)) + 1;
-                    const y = Math.floor(Math.random() * (digits === 1 ? 5 : 15)) + 1;
-                    const z = Math.floor(Math.random() * (digits === 1 ? 5 : 15)) + 1;
-                    const a = x + y;
-                    const b = y + z;
-                    const c = x + z;
-                    this.questionText.textContent = `Solve: x + y = ${a}, y + z = ${b}, x + z = ${c}`;
-                    this.currentAnswer = `x=${x}, y=${y}, z=${z}`;
-                    
-                    // Show all three inputs
-                    this.xInput.style.display = 'block';
-                    this.yInput.style.display = 'block';
-                    this.zInput.style.display = 'block';
-                    this.xInput.placeholder = 'x = ?';
-                    this.yInput.placeholder = 'y = ?';
-                    this.zInput.placeholder = 'z = ?';
-                    
-                    return; // Early return for Linear Algebra
-                }
-                
-                // Fallback if none of the above worked
-                a = 1;
-                b = 1;
-                answer = 1;
-                symbol = 'LA';
             }
         }
 
-        // Hide multi-variable inputs for non-Linear Algebra operations
-        if (operation !== 'Linear Algebra') {
-            this.multiVariableAnswers.style.display = 'none';
-            this.answerInput.style.display = 'block'; // Show main input
-        } else {
-            // For Linear Algebra, hide the main answer input
-            this.answerInput.style.display = 'none';
-        }
-
-        // Only set fallback answer and question text if not Linear Algebra
-        if (operation !== 'Linear Algebra') {
-            this.currentAnswer = answer;
-            this.questionText.textContent = `${a} ${symbol} ${b} = ?`;
-        }
+        // Always use main input
+        this.answerInput.style.display = 'block';
+        
+        // Set question text and answer
+        this.currentAnswer = answer;
+        this.questionText.textContent = `${a} ${symbol} ${b} = ?`;
 
         // Update question number
         const count = this.sessionAttempts.length + 1;
@@ -1031,6 +870,7 @@ class MathDrillWeb {
         }, 50);
     }
 
+
     checkAnswer() {
         console.log('=== checkAnswer called ===');
         console.log('startTime:', this.startTime);
@@ -1045,42 +885,6 @@ class MathDrillWeb {
         const userText = this.answerInput.value.trim();
         console.log('userText:', userText);
         
-        // For Linear Algebra, collect from multi-variable inputs instead
-        if (this.multiVariableAnswers && this.multiVariableAnswers.style.display === 'block') {
-            let userAnswer = '';
-            
-            // Collect values from visible inputs
-            if (this.xInput && this.xInput.style.display !== 'none') {
-                const xValue = this.xInput.value.trim();
-                if (xValue) userAnswer += `x=${xValue}`;
-            }
-            
-            if (this.yInput && this.yInput.style.display !== 'none') {
-                const yValue = this.yInput.value.trim();
-                if (yValue) {
-                    if (userAnswer) userAnswer += ', ';
-                    userAnswer += `y=${yValue}`;
-                }
-            }
-            
-            if (this.zInput && this.zInput.style.display !== 'none') {
-                const zValue = this.zInput.value.trim();
-                if (zValue) {
-                    if (userAnswer) userAnswer += ', ';
-                    userAnswer += `z=${zValue}`;
-                }
-            }
-            
-            // Use the collected answer for Linear Algebra
-            if (!userAnswer) {
-                console.log('No input in multi-variable fields, returning...');
-                return;
-            }
-            
-            // Update userText for answer checking
-            userText = userAnswer;
-        }
-        
         if (!userText) {
             console.log('userText is empty, returning...');
             return;
@@ -1089,33 +893,17 @@ class MathDrillWeb {
         const elapsed = (Date.now() / 1000) - this.startTime;
         let correct = false;
 
-        // Check if this is a Linear Algebra question (string answer)
-        if (typeof this.currentAnswer === 'string' && this.currentAnswer.includes('=')) {
-            // Linear Algebra answers are strings like "x=5" or "x=3, y=2"
-            // Normalize both answers for comparison
-            const normalizeAnswer = (answer) => {
-                return answer.trim()
-                    .toLowerCase()
-                    .replace(/\s+/g, '') // Remove all spaces
-                    .replace(/,+/g, ', ') // Ensure single comma with space
-                    .replace(/,\s*$/, '') // Remove trailing comma
-                    .replace(/,\s*,/g, ',') // Remove double commas
-                    .trim();
-            };
-            
-            correct = normalizeAnswer(userText) === normalizeAnswer(this.currentAnswer);
-        } else {
-            // Regular numeric answers
-            try {
-                const val = parseFloat(userText);
-                correct = Math.abs(val - this.currentAnswer) < 0.001;
-            } catch (e) {
-                correct = false;
-            }
+        // Regular numeric answers
+        try {
+            const val = parseFloat(userText);
+            correct = Math.abs(val - this.currentAnswer) < 0.001;
+        } catch (e) {
+            correct = false;
         }
 
         console.log('elapsed:', elapsed);
         console.log('correct:', correct);
+        console.log('About to show feedback...');
 
         const questionText = this.questionText.textContent;
         const userAnswer = userText;
@@ -1137,9 +925,6 @@ class MathDrillWeb {
 
         // Clear previous feedback classes
         this.answerInput.classList.remove('correct', 'incorrect');
-        this.xInput.classList.remove('correct', 'incorrect');
-        this.yInput.classList.remove('correct', 'incorrect');
-        this.zInput.classList.remove('correct', 'incorrect');
         this.feedback.classList.remove('success', 'error', 'neutral');
 
         if (correct) {
@@ -1147,14 +932,7 @@ class MathDrillWeb {
             this.updateStreakDisplay();
 
             // Enhanced correct answer feedback
-            if (this.multiVariableAnswers.style.display === 'block') {
-                // Apply to visible multi-variable inputs
-                if (this.xInput.style.display !== 'none') this.xInput.classList.add('correct');
-                if (this.yInput.style.display !== 'none') this.yInput.classList.add('correct');
-                if (this.zInput.style.display !== 'none') this.zInput.classList.add('correct');
-            } else {
-                this.answerInput.classList.add('correct');
-            }
+            this.answerInput.classList.add('correct');
             this.feedback.classList.add('success');
             this.feedback.innerHTML = `✅ Correct! (${elapsed.toFixed(2)}s)${this.streak > 1 ? ` • 🔥 Streak: ${this.streak}` : ''}`;
 
@@ -1163,23 +941,8 @@ class MathDrillWeb {
             
             // Clear inputs after a delay for better UX
             setTimeout(() => {
-                if (this.multiVariableAnswers.style.display === 'block') {
-                    if (this.xInput.style.display !== 'none') this.xInput.value = '';
-                    if (this.yInput.style.display !== 'none') this.yInput.value = '';
-                    if (this.zInput.style.display !== 'none') this.zInput.value = '';
-                    
-                    // Refocus on first visible input for linear algebra
-                    if (this.xInput.style.display !== 'none') {
-                        this.xInput.focus();
-                    } else if (this.yInput.style.display !== 'none') {
-                        this.yInput.focus();
-                    } else if (this.zInput.style.display !== 'none') {
-                        this.zInput.focus();
-                    }
-                } else {
-                    this.answerInput.value = '';
-                    this.answerInput.focus();
-                }
+                this.answerInput.value = '';
+                this.answerInput.focus();
                 this.answerInput.readOnly = false;
             }, 500);
 
@@ -1213,14 +976,7 @@ class MathDrillWeb {
             this.sessionMistakes.push([currQText, this.currentAnswer, userText]);
 
             // Enhanced incorrect answer feedback
-            if (this.multiVariableAnswers.style.display === 'block') {
-                // Apply to visible multi-variable inputs
-                if (this.xInput.style.display !== 'none') this.xInput.classList.add('incorrect');
-                if (this.yInput.style.display !== 'none') this.yInput.classList.add('incorrect');
-                if (this.zInput.style.display !== 'none') this.zInput.classList.add('incorrect');
-            } else {
-                this.answerInput.classList.add('incorrect');
-            }
+            this.answerInput.classList.add('incorrect');
             this.feedback.classList.add('error');
             this.feedback.innerHTML = `❌ Incorrect. The answer is ${this.currentAnswer}. Your answer: ${userText}`;
 
@@ -1230,13 +986,7 @@ class MathDrillWeb {
             this.startTime = null;
             
             // Clear appropriate inputs
-            if (this.multiVariableAnswers.style.display === 'block') {
-                if (this.xInput.style.display !== 'none') this.xInput.value = '';
-                if (this.yInput.style.display !== 'none') this.yInput.value = '';
-                if (this.zInput.style.display !== 'none') this.zInput.value = '';
-            } else {
-                this.answerInput.value = '';
-            }
+            this.answerInput.value = '';
 
             if (this.retakActive) {
                 this.retakeMastery[currQText] = 0;

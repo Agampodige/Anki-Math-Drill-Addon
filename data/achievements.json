@@ -78,5 +78,13 @@
     "description": "",
     "category": "general",
     "unlocked_at": "2026-01-06T16:07:03.305594"
+  },
+  {
+    "id": 11,
+    "code": "subtraction_master",
+    "name": "Subtraction Master",
+    "description": "",
+    "category": "general",
+    "unlocked_at": "2026-01-07T19:58:33.632444"
   }
 ]
