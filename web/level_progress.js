@@ -281,11 +281,19 @@ class LevelProgress {
         if (this.levelTimeRemaining !== null) {
             this.levelTimerInterval = setInterval(() => this.updateLevelTimer(), 1000);
         }
+
+        // Ensure input is focused after a short delay
+        setTimeout(() => {
+            document.getElementById('answerInput').focus();
+        }, 100);
     }
 
     displayQuestion() {
         if (this.currentQuestion >= this.questions.length) {
-            this.completeLevel();
+            // Don't complete immediately - let the feedback show first
+            setTimeout(() => {
+                this.completeLevel();
+            }, 2000); // Give time for final feedback to be seen
             return;
         }
 
@@ -294,12 +302,16 @@ class LevelProgress {
 
         document.getElementById('questionPrompt').textContent = question.prompt;
         document.getElementById('answerInput').value = '';
-        document.getElementById('answerInput').focus();
 
         // Hide feedback, show input
         document.getElementById('feedbackArea').style.display = 'none';
         document.getElementById('answerInput').disabled = false;
         document.getElementById('submitButton').disabled = false;
+
+        // Focus input with slight delay to ensure DOM is ready
+        setTimeout(() => {
+            document.getElementById('answerInput').focus();
+        }, 50);
 
         this.updateProgressBar();
     }
@@ -332,22 +344,43 @@ class LevelProgress {
         answerInput.disabled = true;
         document.getElementById('submitButton').disabled = true;
 
-        // Auto-advance after delay
-        const delay = isCorrect ? 1500 : 2000;
-        let remaining = delay / 1000;
+        // Check if this is the last question (using 1-indexed logic)
+        const isLastQuestion = this.currentQuestion >= this.questions.length - 1;
 
-        this.timerInterval = setInterval(() => {
-            remaining -= 0.1;
-            if (remaining <= 0) {
-                clearInterval(this.timerInterval);
-                this.nextQuestion();
-            }
-        }, 100);
+        console.log('DEBUG: isLastQuestion:', isLastQuestion, 'currentQuestion:', this.currentQuestion, 'questions.length:', this.questions.length);
+
+        if (isLastQuestion) {
+            // For the last question, show feedback and then complete level
+            const delay = isCorrect ? 1500 : 2000;
+            console.log('DEBUG: Final question, completing level after', delay, 'ms');
+            
+            // Ensure feedback is visible
+            this.showFeedback(isCorrect);
+            
+            setTimeout(() => {
+                console.log('DEBUG: Calling completeLevel()');
+                this.completeLevel();
+            }, delay);
+        } else {
+            // Auto-advance after delay for non-final questions
+            const delay = isCorrect ? 1500 : 2000;
+            let remaining = delay / 1000;
+
+            this.timerInterval = setInterval(() => {
+                remaining -= 0.1;
+                if (remaining <= 0) {
+                    clearInterval(this.timerInterval);
+                    this.nextQuestion();
+                }
+            }, 100);
+        }
     }
 
     showFeedback(isCorrect) {
+        console.log('DEBUG: showFeedback called with isCorrect:', isCorrect);
         const feedbackArea = document.getElementById('feedbackArea');
         const feedbackMessage = document.getElementById('feedbackMessage');
+        const nextButton = document.getElementById('nextButton');
 
         if (isCorrect) {
             feedbackMessage.innerHTML = '<span style="color: var(--success-color);">✓ Correct!</span>';
@@ -356,7 +389,14 @@ class LevelProgress {
             feedbackMessage.innerHTML = `<span style="color: var(--danger-color);">✗ Wrong! Answer: ${question.answer}</span>`;
         }
 
+        // Hide next button if this is the last question
+        const isLastQuestion = this.currentQuestion >= this.questions.length - 1;
+        if (nextButton) {
+            nextButton.style.display = isLastQuestion ? 'none' : 'block';
+        }
+
         feedbackArea.style.display = 'block';
+        console.log('DEBUG: Feedback area display set to block, isLastQuestion:', isLastQuestion);
     }
 
     nextQuestion() {
@@ -366,13 +406,15 @@ class LevelProgress {
     }
 
     updateProgressBar() {
-        const progress = (this.currentQuestion / this.questions.length) * 100;
+        // Show current question as 1-indexed for display
+        const displayQuestion = this.currentQuestion + 1;
+        const progress = (displayQuestion / this.questions.length) * 100;
         document.getElementById('progressBar').style.width = progress + '%';
-        document.getElementById('progressText').textContent = `${this.currentQuestion}/${this.questions.length}`;
+        document.getElementById('progressText').textContent = `${displayQuestion}/${this.questions.length}`;
 
         // Update accuracy
         const accuracy = this.questions.length > 0 
-            ? Math.round((this.correctAnswers / (this.currentQuestion + 1)) * 100) 
+            ? Math.round((this.correctAnswers / displayQuestion) * 100) 
             : 0;
         document.getElementById('accuracyText').textContent = accuracy + '%';
     }

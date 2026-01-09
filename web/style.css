@@ -564,12 +564,11 @@ h1 {
 }
 
 /* ============================================
-   PAGE-SPECIFIC STYLES
+   LEVELS PAGE STYLES (Clean & Modern)
    ============================================ */
 
-/* Back Button */
-.back-button {
-    background-color: var(--text-light);
+/* Levels Header */
+.levels-header {
     color: var(--bg-light);
     padding: var(--spacing-lg) var(--spacing-xl);
     border-radius: var(--border-radius-lg);

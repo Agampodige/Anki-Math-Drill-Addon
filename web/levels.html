@@ -4,27 +4,54 @@
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Levels</title>
+    <title>Levels - Math Drill</title>
 </head>
 <body>
     <main>
         <div class="page-container active">
+            <!-- Modern Header -->
             <div class="levels-header">
-                <h1>Levels</h1>
-                <div class="progression-stats">
-                    <div class="stat">
-                        <span class="label">Total Stars:</span>
-                        <span id="totalStars" class="value">0</span>
+                <div class="header-content">
+                    <h1 class="page-title">🏆 Levels</h1>
+                    <p class="page-subtitle">Progress through math challenges</p>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalStars">0</span>
+                            <span class="stat-label">Stars</span>
+                        </div>
                     </div>
-                    <div class="stat">
-                        <span class="label">Completed:</span>
-                        <span id="completedCount" class="value">0</span>/<span id="totalCount" class="value">0</span>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value"><span id="completedCount">0</span>/<span id="totalCount">0</span></span>
+                            <span class="stat-label">Completed</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Levels Grid -->
             <div id="levelsContainer" class="levels-grid">
-                <div class="loading-spinner">Loading levels...</div>
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading levels...</p>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="overall-progress">
+                <div class="progress-info">
+                    <span class="progress-label">Overall Progress</span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
             </div>
 
             <button id="backBtn" class="back-button">← Back to Home</button>
