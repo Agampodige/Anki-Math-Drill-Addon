@@ -1446,3 +1446,167 @@ h1 {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
+
+/* ============================================
+   CHARTS AND ANALYTICS STYLES
+   ============================================ */
+
+.charts-section {
+    margin: var(--spacing-2xl) 0;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.chart-container {
+    background: var(--bg-light);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.chart-container canvas {
+    max-height: 400px;
+}
+
+/* Result badge styling */
+.result-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    font-weight: bold;
+    font-size: var(--font-size-sm);
+}
+
+.result-badge.correct {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: var(--success-color);
+}
+
+.result-badge.incorrect {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: var(--accent-color);
+}
+
+/* Correct/Incorrect row highlighting */
+.correct-row {
+    background-color: rgba(46, 204, 113, 0.05);
+}
+
+.incorrect-row {
+    background-color: rgba(231, 76, 60, 0.05);
+}
+
+/* Analytics stat cards enhancement */
+.stat-card {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+    border: none;
+}
+
+.stat-card:nth-child(2) {
+    background: linear-gradient(135deg, var(--secondary-light), var(--secondary-color));
+}
+
+.stat-card:nth-child(3) {
+    background: linear-gradient(135deg, #f1c40f, var(--warning-color));
+}
+
+.stat-card:nth-child(4) {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.stat-card:nth-child(5) {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+}
+
+.stat-card:nth-child(6) {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+}
+
+/* Operation stats card styling */
+.operation-stat-card {
+    background: var(--bg-light);
+    border-left: 4px solid var(--primary-color);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.operation-stat-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-md);
+}
+
+.operation-stat-card h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--text-color);
+    font-size: var(--font-size-lg);
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+    border-bottom: 1px solid var(--bg-color);
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-row strong {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Empty state styling */
+.loading {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-light);
+    font-size: var(--font-size-lg);
+    font-style: italic;
+}
+
+/* Responsive design for charts */
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-container {
+        padding: var(--spacing-md);
+    }
+
+    .chart-container canvas {
+        max-height: 300px;
+    }
+
+    .stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-row {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+}

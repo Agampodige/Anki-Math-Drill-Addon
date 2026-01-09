@@ -3,7 +3,51 @@ class LevelsManager {
         this.levels = [];
         this.stats = {};
         this.initializeEventListeners();
+        this.setupBridge();
         this.loadLevels();
+    }
+
+    setupBridge() {
+        // Don't block on bridge setup
+        try {
+            if (typeof QWebChannel !== 'undefined' && typeof qt !== 'undefined') {
+                new QWebChannel(qt.webChannelTransport, (channel) => {
+                    window.pybridge = channel.objects.pybridge;
+                    
+                    if (window.pybridge && window.pybridge.messageReceived) {
+                        window.pybridge.messageReceived.connect((response) => {
+                            this.handlePythonResponse(response);
+                        });
+                    }
+                    console.log('✓ Bridge ready');
+                });
+            }
+        } catch (e) {
+            console.warn('Bridge not available yet');
+        }
+    }
+
+    handlePythonResponse(response) {
+        try {
+            console.log('📩 Received response:', response.substring(0, 200));
+            const data = JSON.parse(response);
+            console.log('✓ Parsed response type:', data.type);
+            
+            if (data.type === 'load_levels_response') {
+                this.levels = data.payload.levels || [];
+                this.stats = data.payload.stats || {};
+                console.log('✓ Loaded', this.levels.length, 'levels');
+                this.displayLevels();
+                this.updateStats();
+            } else if (data.type === 'error') {
+                console.error('Error from Python:', data.payload.message);
+                document.getElementById('levelsContainer').innerHTML = '<p class="no-levels">Error: ' + data.payload.message + '</p>';
+            } else {
+                console.warn('Unknown response type:', data.type);
+            }
+        } catch (e) {
+            console.error('Error parsing Python response:', e, response);
+        }
     }
 
     initializeEventListeners() {
@@ -13,30 +57,30 @@ class LevelsManager {
     }
 
     loadLevels() {
-        // Request levels from Python backend
-        const message = {
-            type: 'load_levels',
-            payload: {}
+        // Retry until bridge is ready
+        const attemptLoad = () => {
+            if (!window.pybridge) {
+                console.warn('⏳ Bridge not ready, retrying...');
+                setTimeout(attemptLoad, 100);
+                return;
+            }
+
+            console.log('🚀 Sending load_levels message');
+            const message = {
+                type: 'load_levels',
+                payload: {}
+            };
+
+            try {
+                window.pybridge.sendMessage(JSON.stringify(message));
+                console.log('📤 Levels load request sent');
+            } catch (e) {
+                console.error('❌ Error:', e);
+            }
         };
 
-        window.pybridge.sendMessage(JSON.stringify(message));
-
-        // Listen for response
-        if (window.pybridge && window.pybridge.messageReceived) {
-            window.pybridge.messageReceived.connect((response) => {
-                try {
-                    const data = JSON.parse(response);
-                    if (data.type === 'load_levels_response') {
-                        this.levels = data.payload.levels || [];
-                        this.stats = data.payload.stats || {};
-                        this.displayLevels();
-                        this.updateStats();
-                    }
-                } catch (e) {
-                    console.error('Error loading levels:', e);
-                }
-            });
-        }
+        // Start trying after a small delay
+        setTimeout(attemptLoad, 50);
     }
 
     displayLevels() {
@@ -135,22 +179,6 @@ class LevelsManager {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Setup WebChannel
-    if (typeof QWebChannel !== 'undefined') {
-        new QWebChannel(qt.webChannelTransport, (channel) => {
-            window.pybridge = channel.objects.pybridge;
-            new LevelsManager();
-        });
-    } else {
-        // Fallback if WebChannel not immediately available
-        window.addEventListener('load', () => {
-            if (typeof QWebChannel !== 'undefined') {
-                new QWebChannel(qt.webChannelTransport, (channel) => {
-                    window.pybridge = channel.objects.pybridge;
-                    new LevelsManager();
-                });
-            }
-        });
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    window.levelsManager = new LevelsManager();
 });

@@ -33,10 +33,12 @@ class LevelsManager:
                 with open(self.level_data_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     self.levels_data = data.get("levels", [])
+                print(f"✓ Loaded {len(self.levels_data)} levels from {self.level_data_path}")
             else:
+                print(f"✗ Level data file not found: {self.level_data_path}")
                 self.levels_data = []
         except Exception as e:
-            print(f"Error loading level data: {e}")
+            print(f"✗ Error loading level data: {e}")
             self.levels_data = []
 
     def load_completions(self) -> None:
@@ -47,10 +49,12 @@ class LevelsManager:
                     data = json.load(f)
                     # Index by level ID for quick lookup
                     self.completions = {item['levelId']: item for item in data.get('completions', [])}
+                print(f"✓ Loaded {len(self.completions)} level completions")
             else:
+                print(f"  No completion data yet: {self.completion_path}")
                 self.completions = {}
         except Exception as e:
-            print(f"Error loading completions: {e}")
+            print(f"✗ Error loading completions: {e}")
             self.completions = {}
 
     def save_completions(self) -> None:

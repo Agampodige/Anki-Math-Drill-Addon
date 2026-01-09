@@ -1,18 +1,26 @@
+<!-- Test file for Analytics Dashboard with sample data -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics</title>
+    <title>Analytics Test</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 <body>
     <main>
         <div class="page-container active">
             <div class="analytics-header">
-                <h1>📊 Analytics Dashboard</h1>
-                <p class="subtitle">Track your math practice performance</p>
+                <h1>📊 Analytics Dashboard (Test)</h1>
+                <p class="subtitle">Testing with sample data</p>
+            </div>
+
+            <!-- Button to generate sample data -->
+            <div style="margin: 20px 0; text-align: center;">
+                <button onclick="generateSampleData()" style="padding: 10px 20px; font-size: 16px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Generate Sample Data for Testing
+                </button>
             </div>
 
             <!-- Overall Statistics -->
@@ -73,7 +81,7 @@
             <div class="analytics-section">
                 <h2>Performance by Operation</h2>
                 <div id="operationStats" class="operation-stats">
-                    <p class="loading">Loading statistics...</p>
+                    <p class="loading">No data available</p>
                 </div>
             </div>
 
@@ -94,24 +102,40 @@
                             </tr>
                         </thead>
                         <tbody id="attemptsBody">
-                            <tr><td colspan="7" class="loading">Loading attempts...</td></tr>
+                            <tr><td colspan="7" class="loading">No attempts yet</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- Action Buttons -->
-            <div class="analytics-actions">
-                <button id="refreshBtn" class="submit-button">🔄 Refresh Data</button>
-                <button id="exportBtn" class="submit-button">📥 Export Data</button>
-                <button id="clearBtn" class="reset-button">🗑️ Clear All Data</button>
-            </div>
-
-            <button id="backBtn" class="back-button">← Back to Home</button>
         </div>
     </main>
-    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
-    <script src="app.js"></script>
+
     <script src="analytics.js"></script>
+    <script>
+        function generateSampleData() {
+            const sampleData = {
+                attempts: [
+                    { id: 1, operation: 'addition', question: '5 + 3', userAnswer: '8', correctAnswer: '8', isCorrect: true, timeTaken: 2.5 },
+                    { id: 2, operation: 'addition', question: '7 + 2', userAnswer: '9', correctAnswer: '9', isCorrect: true, timeTaken: 1.8 },
+                    { id: 3, operation: 'subtraction', question: '10 - 4', userAnswer: '6', correctAnswer: '6', isCorrect: true, timeTaken: 3.2 },
+                    { id: 4, operation: 'subtraction', question: '8 - 5', userAnswer: '2', correctAnswer: '3', isCorrect: false, timeTaken: 4.1 },
+                    { id: 5, operation: 'multiplication', question: '3 × 4', userAnswer: '12', correctAnswer: '12', isCorrect: true, timeTaken: 2.0 },
+                    { id: 6, operation: 'multiplication', question: '6 × 7', userAnswer: '42', correctAnswer: '42', isCorrect: true, timeTaken: 2.8 },
+                    { id: 7, operation: 'division', question: '12 ÷ 3', userAnswer: '4', correctAnswer: '4', isCorrect: true, timeTaken: 3.5 },
+                    { id: 8, operation: 'division', question: '15 ÷ 5', userAnswer: '3', correctAnswer: '3', isCorrect: true, timeTaken: 2.9 },
+                    { id: 9, operation: 'addition', question: '15 + 8', userAnswer: '23', correctAnswer: '23', isCorrect: true, timeTaken: 1.5 },
+                    { id: 10, operation: 'multiplication', question: '9 × 8', userAnswer: '72', correctAnswer: '72', isCorrect: true, timeTaken: 2.3 },
+                    { id: 11, operation: 'division', question: '20 ÷ 4', userAnswer: '5', correctAnswer: '5', isCorrect: true, timeTaken: 3.0 },
+                    { id: 12, operation: 'subtraction', question: '20 - 7', userAnswer: '13', correctAnswer: '13', isCorrect: true, timeTaken: 2.7 },
+                ]
+            };
+            
+            localStorage.setItem('mathDrillAttempts', JSON.stringify(sampleData));
+            if (window.analyticsManager) {
+                window.analyticsManager.loadStatistics();
+            }
+            alert('✅ Sample data generated! Analytics updated.');
+        }
+    </script>
 </body>
 </html>

@@ -15,7 +15,57 @@ class LevelProgress {
         this.estimatedStars = 1;
 
         this.initializeEventListeners();
+        this.setupBridge();
         this.loadLevel();
+    }
+
+    setupBridge() {
+        // Don't block on bridge setup, it might not be ready yet
+        try {
+            if (typeof QWebChannel !== 'undefined' && typeof qt !== 'undefined') {
+                new QWebChannel(qt.webChannelTransport, (channel) => {
+                    window.pybridge = channel.objects.pybridge;
+                    
+                    if (window.pybridge && window.pybridge.messageReceived) {
+                        window.pybridge.messageReceived.connect((response) => {
+                            this.handlePythonResponse(response);
+                        });
+                    }
+                    console.log('✓ Bridge ready');
+                });
+            }
+        } catch (e) {
+            console.warn('Bridge not available yet');
+        }
+    }
+
+    handlePythonResponse(response) {
+        try {
+            console.log('📩 Received response:', response.substring(0, 200));
+            const data = JSON.parse(response);
+            console.log('✓ Parsed response type:', data.type);
+            
+            if (data.type === 'get_level_response') {
+                this.currentLevel = data.payload;
+                console.log('✓ Loaded level:', this.currentLevel.name);
+                this.initializeLevelUI();
+                this.generateQuestions();
+                this.startLevel();
+            } else if (data.type === 'complete_level_response') {
+                const result = data.payload;
+                if (result.success) {
+                    console.log('✓ Level completed with', result.starsEarned, 'stars');
+                    this.showCompletionModal(result);
+                }
+            } else if (data.type === 'error') {
+                console.error('Error from Python:', data.payload.message);
+                document.getElementById('levelTitle').textContent = 'Error: ' + data.payload.message;
+            } else {
+                console.warn('Unknown response type:', data.type);
+            }
+        } catch (e) {
+            console.error('Error parsing Python response:', e, response);
+        }
     }
 
     initializeEventListeners() {
@@ -35,26 +85,32 @@ class LevelProgress {
         const params = new URLSearchParams(window.location.search);
         this.levelId = parseInt(params.get('levelId')) || 1;
 
-        // Send message to Python to load level
-        const message = {
-            type: 'get_level',
-            payload: { levelId: this.levelId }
+        console.log('Loading level:', this.levelId);
+
+        // Retry until bridge is ready
+        const attemptLoad = () => {
+            if (!window.pybridge) {
+                console.warn('⏳ Bridge not ready, retrying...');
+                setTimeout(attemptLoad, 100);
+                return;
+            }
+
+            console.log('🚀 Sending get_level message for level', this.levelId);
+            const message = {
+                type: 'get_level',
+                payload: { levelId: this.levelId }
+            };
+
+            try {
+                window.pybridge.sendMessage(JSON.stringify(message));
+                console.log('📤 Level load request sent');
+            } catch (e) {
+                console.error('❌ Error:', e);
+            }
         };
 
-        window.pybridge.sendMessage(JSON.stringify(message));
-
-        // Listen for response
-        if (window.pybridge && window.pybridge.messageReceived) {
-            window.pybridge.messageReceived.connect((response) => {
-                const data = JSON.parse(response);
-                if (data.type === 'get_level_response') {
-                    this.currentLevel = data.payload;
-                    this.initializeLevelUI();
-                    this.generateQuestions();
-                    this.startLevel();
-                }
-            });
-        }
+        // Start trying after a small delay
+        setTimeout(attemptLoad, 50);
     }
 
     initializeLevelUI() {
@@ -372,7 +428,11 @@ class LevelProgress {
         clearInterval(this.levelTimerInterval);
         clearInterval(this.timerInterval);
 
-        // Send completion to Python backend
+        if (!window.pybridge) {
+            console.error('Bridge not available');
+            return;
+        }
+
         const message = {
             type: 'complete_level',
             payload: {
@@ -383,19 +443,10 @@ class LevelProgress {
             }
         };
 
-        window.pybridge.sendMessage(JSON.stringify(message));
-
-        // Listen for response
-        if (window.pybridge && window.pybridge.messageReceived) {
-            window.pybridge.messageReceived.connect((response) => {
-                const data = JSON.parse(response);
-                if (data.type === 'complete_level_response') {
-                    const result = data.payload;
-                    if (result.success) {
-                        this.showCompletionModal(result);
-                    }
-                }
-            });
+        try {
+            window.pybridge.sendMessage(JSON.stringify(message));
+        } catch (e) {
+            console.error('Error sending completion:', e);
         }
     }
 
@@ -459,6 +510,6 @@ class LevelProgress {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    new LevelProgress();
+document.addEventListener('DOMContentLoaded', function() {
+    window.levelProgress = new LevelProgress();
 });

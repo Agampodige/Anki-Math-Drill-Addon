@@ -25,6 +25,8 @@ class Bridge(QObject):
             msg_type = data.get('type', '')
             payload = data.get('payload', {})
             
+            print(f"DEBUG: Received message type: {msg_type}")
+            
             if msg_type == 'hello':
                 self._handle_hello(payload)
             elif msg_type == 'get_cards':
@@ -180,6 +182,9 @@ class Bridge(QObject):
             levels = self.levels_manager.get_all_levels()
             stats = self.levels_manager.get_progression_stats()
             
+            print(f"DEBUG: Loading levels - found {len(levels)} levels")
+            print(f"DEBUG: Stats: {stats}")
+            
             response = {
                 'type': 'load_levels_response',
                 'payload': {
@@ -187,8 +192,16 @@ class Bridge(QObject):
                     'stats': stats
                 }
             }
-            self.messageReceived.emit(json.dumps(response))
+            
+            # Ensure response is JSON serializable
+            response_json = json.dumps(response)
+            print(f"DEBUG: Response JSON length: {len(response_json)}")
+            self.messageReceived.emit(response_json)
+            
         except Exception as e:
+            import traceback
+            print(f"ERROR in _handle_load_levels: {e}")
+            traceback.print_exc()
             response = {
                 'type': 'error',
                 'payload': {
@@ -204,10 +217,13 @@ class Bridge(QObject):
                 raise Exception('Levels manager not initialized')
             
             level_id = payload.get('levelId')
+            print(f"DEBUG: Getting level {level_id}")
             level = self.levels_manager.get_level(level_id)
             
             if not level:
                 raise Exception(f'Level {level_id} not found')
+            
+            print(f"DEBUG: Found level: {level.get('name')}")
             
             response = {
                 'type': 'get_level_response',
@@ -215,6 +231,9 @@ class Bridge(QObject):
             }
             self.messageReceived.emit(json.dumps(response))
         except Exception as e:
+            import traceback
+            print(f"ERROR in _handle_get_level: {e}")
+            traceback.print_exc()
             response = {
                 'type': 'error',
                 'payload': {
@@ -234,9 +253,13 @@ class Bridge(QObject):
             total_questions = payload.get('totalQuestions', 0)
             time_taken = payload.get('timeTaken', 0)
             
+            print(f"DEBUG: Completing level {level_id} - {correct_answers}/{total_questions} correct, {time_taken}s")
+            
             result = self.levels_manager.complete_level(
                 level_id, correct_answers, total_questions, time_taken
             )
+            
+            print(f"DEBUG: Level completion result: {result}")
             
             response = {
                 'type': 'complete_level_response',
@@ -244,6 +267,9 @@ class Bridge(QObject):
             }
             self.messageReceived.emit(json.dumps(response))
         except Exception as e:
+            import traceback
+            print(f"ERROR in _handle_complete_level: {e}")
+            traceback.print_exc()
             response = {
                 'type': 'error',
                 'payload': {
