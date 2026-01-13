@@ -1,12 +1,12 @@
 from aqt import mw
-from aqt.qt import QDialog, QVBoxLayout, QWebEngineView, QUrl
+from aqt.qt import QDialog, QVBoxLayout, QWebEngineView, QUrl, QWebEngineSettings
 from .bridge import Bridge
 from .attempts_manager import AttemptsManager
 from .levels_manager import LevelsManager
 import os
 
 class AddonDialog(QDialog):
-    def __init__(self):
+    def __init__(self, page="index.html"):
         super().__init__(mw)
         self.setWindowTitle("Math Drill")
         self.setMinimumSize(800, 600)
@@ -16,6 +16,7 @@ class AddonDialog(QDialog):
         
         # Create web view
         self.web = QWebEngineView()
+        self.web.settings().setAttribute(QWebEngineSettings.DeveloperExtrasEnabled, True)
         layout.addWidget(self.web)
         
         # Initialize managers
@@ -28,12 +29,12 @@ class AddonDialog(QDialog):
         self.web.page().setWebChannel(self.bridge.channel)
         
         # Load HTML file
-        html_path = os.path.join(addon_folder, "web", "index.html")
+        html_path = os.path.join(addon_folder, "web", page)
         self.web.load(QUrl.fromLocalFile(html_path))
         
         self.setLayout(layout)
 
-def show_addon_dialog():
+def show_addon_dialog(page="index.html"):
     """Show the addon dialog"""
-    dialog = AddonDialog()
+    dialog = AddonDialog(page)
     dialog.exec()

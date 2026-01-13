@@ -84,7 +84,7 @@ class PracticeMode {
         document.getElementById('settingsPanel').style.display = 'block';
         document.getElementById('practiceArea').style.display = 'none';
         document.getElementById('practiceControls').style.display = 'none';
-        document.getElementById('backBtn').style.display = 'block';
+        document.getElementById('backBtn').style.display = 'flex';
         
         // Reset UI
         this.hideFeedback();

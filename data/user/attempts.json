@@ -1,5 +1,5 @@
 {
-  "lastId": 961,
+  "lastId": 962,
   "attempts": [
     {
       "id": 1,
@@ -10571,8 +10571,19 @@
       "isCorrect": true,
       "timeTaken": 6.781,
       "timestamp": "2026-01-13T18:14:19.448Z"
+    },
+    {
+      "id": 962,
+      "operation": "subtraction",
+      "digits": 2,
+      "question": "45 − 11",
+      "userAnswer": 35,
+      "correctAnswer": 34,
+      "isCorrect": false,
+      "timeTaken": 5.245,
+      "timestamp": "2026-01-13T18:39:26.030Z"
     }
   ],
-  "lastSaved": "2026-01-13T23:44:19.457502",
-  "totalAttempts": 961
+  "lastSaved": "2026-01-14T00:09:26.038271",
+  "totalAttempts": 962
 }

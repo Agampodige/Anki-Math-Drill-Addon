@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link href="style.css" rel="stylesheet">
+    <link href="levels.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Levels - Math Drill</title>
 </head>
+
 <body>
     <main>
         <div class="page-container active">
@@ -14,8 +17,9 @@
                 <!-- Navigation Bar -->
                 <div class="levels-nav-bar">
                     <button id="backBtn" class="levels-back-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
                     </button>
                     <h1 class="levels-title">Math Challenges</h1>
@@ -34,7 +38,8 @@
                     <div class="stat-item">
                         <div class="stat-icon">✓</div>
                         <div class="stat-details">
-                            <span class="stat-value"><span id="completedCount">0</span>/<span id="totalCount">0</span></span>
+                            <span class="stat-value"><span id="completedCount">0</span>/<span
+                                    id="totalCount">0</span></span>
                             <span class="stat-name">Completed</span>
                         </div>
                     </div>
@@ -71,4 +76,5 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script src="levels.js"></script>
 </body>
+
 </html>
