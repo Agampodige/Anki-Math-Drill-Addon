@@ -1,213 +1,254 @@
+/**
+ * LevelsManager handles the fetching and display of level data.
+ * Refactored for modularity and performance.
+ */
 class LevelsManager {
     constructor() {
         this.levels = [];
         this.stats = {};
+        this.bridge = null;
+
+        this.init();
+    }
+
+    init() {
         this.initializeEventListeners();
         this.setupBridge();
-        this.loadLevels();
-    }
-
-    setupBridge() {
-        // Don't block on bridge setup
-        try {
-            if (typeof QWebChannel !== 'undefined' && typeof qt !== 'undefined') {
-                new QWebChannel(qt.webChannelTransport, (channel) => {
-                    window.pybridge = channel.objects.pybridge;
-                    
-                    if (window.pybridge && window.pybridge.messageReceived) {
-                        window.pybridge.messageReceived.connect((response) => {
-                            this.handlePythonResponse(response);
-                        });
-                    }
-                    console.log('✓ Bridge ready');
-                });
-            }
-        } catch (e) {
-            console.warn('Bridge not available yet');
-        }
-    }
-
-    handlePythonResponse(response) {
-        try {
-            console.log('📩 Received response:', response.substring(0, 200));
-            const data = JSON.parse(response);
-            console.log('✓ Parsed response type:', data.type);
-            
-            if (data.type === 'load_levels_response') {
-                this.levels = data.payload.levels || [];
-                this.stats = data.payload.stats || {};
-                console.log('✓ Loaded', this.levels.length, 'levels');
-                this.displayLevels();
-                this.updateStats();
-            } else if (data.type === 'error') {
-                console.error('Error from Python:', data.payload.message);
-                document.getElementById('levelsContainer').innerHTML = '<p class="no-levels">Error: ' + data.payload.message + '</p>';
-            } else {
-                console.warn('Unknown response type:', data.type);
-            }
-        } catch (e) {
-            console.error('Error parsing Python response:', e, response);
-        }
     }
 
     initializeEventListeners() {
-        document.getElementById('backBtn').addEventListener('click', () => {
+        document.getElementById('backBtn')?.addEventListener('click', () => {
             window.location.href = 'index.html';
         });
     }
 
-    loadLevels() {
-        // Retry until bridge is ready
-        const attemptLoad = () => {
-            if (!window.pybridge) {
-                console.warn('⏳ Bridge not ready, retrying...');
-                setTimeout(attemptLoad, 100);
-                return;
-            }
+    // --- Bridge & Data Loading ---
 
-            console.log('🚀 Sending load_levels message');
-            const message = {
-                type: 'load_levels',
-                payload: {}
-            };
-
-            try {
-                window.pybridge.sendMessage(JSON.stringify(message));
-                console.log('📤 Levels load request sent');
-            } catch (e) {
-                console.error('❌ Error:', e);
+    setupBridge() {
+        // Safe bridge initialization with retry logic
+        const initBridge = () => {
+            if (typeof QWebChannel !== 'undefined' && typeof qt !== 'undefined') {
+                new QWebChannel(qt.webChannelTransport, (channel) => {
+                    this.bridge = channel.objects.pybridge;
+                    if (this.bridge) {
+                        this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
+                        console.log('✓ Bridge connected');
+                        this.loadLevels();
+                    }
+                });
+            } else {
+                console.warn('Bridge not ready, retrying...');
+                setTimeout(initBridge, 100);
             }
         };
-
-        // Start trying after a small delay
-        setTimeout(attemptLoad, 50);
+        initBridge();
     }
 
-    displayLevels() {
+    loadLevels() {
+        if (!this.bridge) return;
+
+        console.log('🚀 Requesting levels...');
+        this.bridge.sendMessage(JSON.stringify({
+            type: 'load_levels',
+            payload: {}
+        }));
+    }
+
+    handlePythonResponse(responseStr) {
+        try {
+            const data = JSON.parse(responseStr);
+            if (data.type === 'load_levels_response') {
+                this.levels = data.payload.levels || [];
+                this.stats = data.payload.stats || {};
+                this.render();
+            } else if (data.type === 'error') {
+                this.showError(data.payload.message);
+            }
+        } catch (e) {
+            console.error('Failed to parse response:', e);
+        }
+    }
+
+    // --- Rendering ---
+
+    render() {
+        this.renderStats();
+        this.renderLevelList();
+    }
+
+    renderStats() {
+        if (!this.stats) return;
+
+        // Update top stats bar
+        this.setText('totalStars', this.stats.totalStars || 0);
+        this.setText('completedCount', this.stats.completedLevels || 0);
+        this.setText('totalCount', this.stats.totalLevels || 0);
+
+        const percent = this.stats.progressPercentage || 0;
+        this.setText('progressPercentage', `${percent}%`);
+        this.setText('progressText', `${percent}%`);
+
+        const fill = document.getElementById('progressFill');
+        if (fill) fill.style.width = `${percent}%`;
+    }
+
+    renderLevelList() {
         const container = document.getElementById('levelsContainer');
+        if (!container) return;
+
         container.innerHTML = '';
 
-        if (!this.levels || this.levels.length === 0) {
-            container.innerHTML = '<p class="no-levels">No levels found. Check your configuration.</p>';
+        if (this.levels.length === 0) {
+            container.innerHTML = '<div class="empty-state">No levels available.</div>';
             return;
         }
 
-        this.levels.forEach((level) => {
-            const card = this.createLevelCard(level);
-            container.appendChild(card);
+        const fragment = document.createDocumentFragment();
+        this.levels.forEach(level => {
+            fragment.appendChild(this.createLevelCard(level));
         });
+        container.appendChild(fragment);
     }
 
     createLevelCard(level) {
         const card = document.createElement('div');
-        card.className = 'level-card';
+        card.className = `level-card ${this.getCardStateClass(level)}`;
 
-        if (level.isLocked) {
-            card.classList.add('locked');
-        } else if (level.isCompleted) {
-            card.classList.add('completed');
-        }
-
-        // Create stars display for completed levels
-        let starsHtml = '';
-        if (level.isCompleted) {
-            starsHtml = '<div class="level-stars">';
-            for (let i = 0; i < level.starsEarned; i++) {
-                starsHtml += '<span class="star-filled">★</span>';
-            }
-            for (let i = level.starsEarned; i < 3; i++) {
-                starsHtml += '<span class="star-empty">☆</span>';
-            }
-            starsHtml += '</div>';
-        }
-
-        // Create lock badge and unlock overlay if locked
-        let lockHtml = '';
-        let unlockOverlay = '';
-        if (level.isLocked) {
-            lockHtml = '<div class="lock-badge">🔒</div>';
-            const starsNeeded = this.extractStarsNeeded(level.unlockCondition);
-            if (starsNeeded) {
-                const starIcon = starsNeeded === 1 ? '⭐' : '⭐'.repeat(Math.min(starsNeeded, 5));
-                unlockOverlay = `<div class="lock-overlay"><div class="unlock-text">${starsNeeded} ${starsNeeded === 1 ? 'Star' : 'Stars'} Needed<br>${starIcon}</div></div>`;
-            }
-        }
-
-        // Create difficulty badge
-        const diffColor = this.getDifficultyColor(level.difficulty);
-        const diffBadge = `<span class="difficulty-badge" style="background-color: ${diffColor};">${level.difficulty}</span>`;
-
-        const completionText = level.isCompleted 
-            ? `<p class="completion-date">Completed</p>`
-            : `<p class="requirements">Complete ${level.requirements.minCorrect}/${level.requirements.totalQuestions} questions</p>`;
-
-        card.innerHTML = `
-            <div class="level-card-header">
-                <h3>${level.name}</h3>
-                ${diffBadge}
-            </div>
-            <p class="level-description">${level.description}</p>
-            ${completionText}
-            ${starsHtml}
-            ${lockHtml}
-            ${unlockOverlay}
+        // Header
+        const header = document.createElement('div');
+        header.className = 'level-card-header';
+        header.innerHTML = `
+            <h3>${level.name}</h3>
+            <span class="difficulty-badge" style="background-color: ${this.getDifficultyColor(level.difficulty)}">
+                ${level.difficulty}
+            </span>
         `;
+        card.appendChild(header);
 
-        // Add click handler only if unlocked
-        if (!level.isLocked) {
+        // Description
+        const desc = document.createElement('p');
+        desc.className = 'level-description';
+        desc.textContent = level.description;
+        card.appendChild(desc);
+
+        // Requirements or Completion Status
+        const status = document.createElement('div');
+        status.innerHTML = level.isCompleted
+            ? `<p class="completion-date">Completed</p>`
+            : `<p class="requirements">Goal: ${level.requirements.minCorrect}/${level.requirements.totalQuestions} correct</p>`;
+        card.appendChild(status);
+
+        // Stars (if completed)
+        if (level.isCompleted) {
+            card.appendChild(this.createStarDisplay(level.starsEarned));
+        }
+
+        // Lock Overlay (if locked)
+        if (level.isLocked) {
+            card.appendChild(this.createLockOverlay(level));
+        } else {
+            // Clickable if unlocked
             card.style.cursor = 'pointer';
+            // Use dataset for event delegation if we wanted, but closure is fine here for simplicity
             card.addEventListener('click', () => this.startLevel(level.id));
         }
 
         return card;
     }
 
-    extractStarsNeeded(unlockCondition) {
-        // Extract number from "total_stars_X" format
-        if (unlockCondition && unlockCondition.startsWith('total_stars_')) {
-            try {
-                return parseInt(unlockCondition.split('_')[2]);
-            } catch (e) {
-                return null;
-            }
+    createStarDisplay(earned) {
+        const container = document.createElement('div');
+        container.className = 'level-stars';
+
+        let html = '';
+        // 3 stars max
+        for (let i = 1; i <= 3; i++) {
+            const isFilled = i <= earned;
+            html += `<span class="${isFilled ? 'star-filled' : 'star-empty'}">${isFilled ? '★' : '☆'}</span>`;
         }
-        return null;
+        container.innerHTML = html;
+        return container;
     }
 
+    createLockOverlay(level) {
+        const overlay = document.createElement('div');
+        overlay.className = 'lock-overlay'; // This needs to be styled in CSS to cover the card
 
-    getDifficultyColor(difficulty) {
+        // Lock Icon
+        let content = '<div class="lock-icon">🔒</div>';
+
+        // Unlock Requirement Text
+        const needed = this.getStarsNeeded(level.unlockCondition);
+        if (needed) {
+            content += `<div class="unlock-text">Need ${needed} Stars</div>`;
+        }
+
+        // We ensure the card has "position: relative" via CSS class "locked" usually
+        // But we add the overlay as a child.
+
+        // NOTE: The previous code had lock icon separate from overlay. 
+        // We'll combine them or keep separate based on existing CSS.
+        // Assuming existing CSS handles .lock-badge and .lock-overlay separately?
+        // Let's stick to a cleaner single overlay approach if possible, 
+        // but to handle existing CSS, I will replicate structure if needed.
+        // Replicating previous structure:
+
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = `
+            <div class="lock-badge">🔒</div>
+            ${needed ? `
+            <div class="lock-overlay">
+                <div class="unlock-text">
+                    ${needed} ${needed === 1 ? 'Star' : 'Stars'} Needed<br>
+                    ${'⭐'.repeat(Math.min(needed, 3))}
+                </div>
+            </div>` : ''}
+        `;
+
+        return wrapper;
+    }
+
+    // --- Helpers ---
+
+    getCardStateClass(level) {
+        if (level.isLocked) return 'locked';
+        if (level.isCompleted) return 'completed';
+        return '';
+    }
+
+    getDifficultyColor(diff) {
         const colors = {
             'Easy': '#4CAF50',
             'Medium': '#FF9800',
             'Hard': '#FF5722',
             'Extreme': '#9C27B0'
         };
-        return colors[difficulty] || '#999';
+        return colors[diff] || '#999';
     }
 
-    startLevel(levelId) {
-        window.location.href = `level_progress.html?levelId=${levelId}`;
+    getStarsNeeded(condition) {
+        if (condition && condition.startsWith('total_stars_')) {
+            return parseInt(condition.split('_')[2]) || null;
+        }
+        return null;
     }
 
-    updateStats() {
-        if (!this.stats) return;
+    setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    }
 
-        document.getElementById('totalStars').textContent = this.stats.totalStars || 0;
-        document.getElementById('completedCount').textContent = this.stats.completedLevels || 0;
-        document.getElementById('totalCount').textContent = this.stats.totalLevels || 0;
-        
-        // Calculate and update progress percentage
-        const totalLevels = this.stats.totalLevels || 0;
-        const completedLevels = this.stats.completedLevels || 0;
-        const progressPercentage = totalLevels > 0 ? Math.round((completedLevels / totalLevels) * 100) : 0;
-        
-        document.getElementById('progressPercentage').textContent = progressPercentage + '%';
-        document.getElementById('progressText').textContent = progressPercentage + '%';
-        document.getElementById('progressFill').style.width = progressPercentage + '%';
+    showError(msg) {
+        const container = document.getElementById('levelsContainer');
+        if (container) container.innerHTML = `<p class="error">Error: ${msg}</p>`;
+    }
+
+    startLevel(id) {
+        window.location.href = `level_progress.html?levelId=${id}`;
     }
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+// Init
+document.addEventListener('DOMContentLoaded', () => {
     window.levelsManager = new LevelsManager();
 });

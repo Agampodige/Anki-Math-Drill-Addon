@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-14T00:22:44.370579",
+  "lastUpdated": "2026-01-14T08:18:09.179261",
   "completions": [
     {
       "levelId": 1,
@@ -10,6 +10,16 @@
       "bestTime": 24.393,
       "completionDate": "2026-01-14T00:22:44.369521",
       "isNewRecord": false
+    },
+    {
+      "levelId": 2,
+      "starsEarned": 1,
+      "correctAnswers": 7,
+      "totalQuestions": 8,
+      "bestAccuracy": 87.5,
+      "bestTime": 32.47,
+      "completionDate": "2026-01-14T08:18:09.179243",
+      "isNewRecord": true
     }
   ]
 }

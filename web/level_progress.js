@@ -1,617 +1,403 @@
+/**
+ * LevelProgress manages the gameplay within a level.
+ * Refactored for robust state management and precise timing.
+ */
 class LevelProgress {
     constructor() {
+        // State
         this.levelId = null;
-        this.currentLevel = null;
-        this.currentQuestion = 0;
-        this.correctAnswers = 0;
+        this.levelData = null;
         this.questions = [];
-        this.startTime = null;
-        this.questionStartTime = null;
-        this.totalQuestionTime = 0;
-        this.timerInterval = null;
-        this.levelTimerInterval = null;
-        this.levelTimeRemaining = null;
-        this.maxStars = 3;
-        this.estimatedStars = 1;
+        this.currentQuestionIndex = 0;
+        this.correctCount = 0;
 
-        this.initializeEventListeners();
+        // Timing
+        this.levelStartTime = 0;
+        this.questionStartTime = 0;
+        this.totalTimeTaken = 0; // accumulated time
+        this.timerInterval = null;
+        this.autoAdvanceTimer = null;
+
+        // UI State
+        this.state = 'LOADING'; // LOADING, READY, PLAYING, FEEDBACK, FINISHED
+
+        this.bridge = null;
+
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
         this.setupBridge();
-        this.loadLevel();
+    }
+
+    setupEventListeners() {
+        // Navigation
+        this.bindClick('backButton', () => this.goBack());
+        this.bindClick('backToLevelsBtn', () => this.goBack());
+
+        // Game Actions
+        this.bindClick('submitButton', () => this.submitAnswer());
+        this.bindClick('nextButton', () => this.nextQuestion()); // Manual advance if needed
+
+        // Modal Actions
+        this.bindClick('nextLevelBtn', () => this.goToNextLevel());
+        this.bindClick('retryLevelBtn', () => this.retryLevel());
+
+        // Input
+        const input = document.getElementById('answerInput');
+        if (input) {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.submitAnswer();
+            });
+        }
+    }
+
+    bindClick(id, handler) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', handler);
     }
 
     setupBridge() {
-        // Don't block on bridge setup, it might not be ready yet
-        try {
+        const initBridge = () => {
             if (typeof QWebChannel !== 'undefined' && typeof qt !== 'undefined') {
                 new QWebChannel(qt.webChannelTransport, (channel) => {
-                    window.pybridge = channel.objects.pybridge;
-
-                    if (window.pybridge && window.pybridge.messageReceived) {
-                        window.pybridge.messageReceived.connect((response) => {
-                            this.handlePythonResponse(response);
-                        });
+                    this.bridge = channel.objects.pybridge;
+                    if (this.bridge) {
+                        this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
+                        this.loadLevelData();
                     }
-                    console.log('✓ Bridge ready');
                 });
-            }
-        } catch (e) {
-            console.warn('Bridge not available yet');
-        }
-    }
-
-    handlePythonResponse(response) {
-        try {
-            console.log('📩 Received response:', response.substring(0, 200));
-            const data = JSON.parse(response);
-            console.log('✓ Parsed response type:', data.type);
-
-            if (data.type === 'get_level_response') {
-                this.currentLevel = data.payload;
-                console.log('✓ Loaded level:', this.currentLevel.name);
-                this.initializeLevelUI();
-                this.generateQuestions();
-                this.startLevel();
-            } else if (data.type === 'complete_level_response') {
-                const result = data.payload;
-                console.log('DEBUG: Complete level response received:', result);
-                // Always show modal, whether success or failure
-                console.log('DEBUG: Calling showCompletionModal with:', result);
-                this.showCompletionModal(result);
-            } else if (data.type === 'error') {
-                console.error('Error from Python:', data.payload.message);
-                document.getElementById('levelTitle').textContent = 'Error: ' + data.payload.message;
             } else {
-                console.warn('Unknown response type:', data.type);
+                setTimeout(initBridge, 100);
             }
-        } catch (e) {
-            console.error('Error parsing Python response:', e, response);
-        }
+        };
+        initBridge();
     }
 
-    initializeEventListeners() {
-        document.getElementById('backButton').addEventListener('click', () => this.goBackToLevels());
-        document.getElementById('answerInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.submitAnswer();
-        });
-        document.getElementById('submitButton').addEventListener('click', () => this.submitAnswer());
-        document.getElementById('nextButton').addEventListener('click', () => this.nextQuestion());
-        document.getElementById('nextLevelBtn').addEventListener('click', () => this.goToNextLevel());
-        document.getElementById('retryLevelBtn').addEventListener('click', () => this.retryLevel());
-        document.getElementById('backToLevelsBtn').addEventListener('click', () => this.goBackToLevels());
-    }
-
-    loadLevel() {
-        // Get level ID from URL parameter
+    loadLevelData() {
         const params = new URLSearchParams(window.location.search);
         this.levelId = parseInt(params.get('levelId')) || 1;
 
-        console.log('Loading level:', this.levelId);
-
-        // Retry until bridge is ready
-        const attemptLoad = () => {
-            if (!window.pybridge) {
-                console.warn('⏳ Bridge not ready, retrying...');
-                setTimeout(attemptLoad, 100);
-                return;
-            }
-
-            console.log('🚀 Sending get_level message for level', this.levelId);
-            const message = {
-                type: 'get_level',
-                payload: { levelId: this.levelId }
-            };
-
-            try {
-                window.pybridge.sendMessage(JSON.stringify(message));
-                console.log('📤 Level load request sent');
-            } catch (e) {
-                console.error('❌ Error:', e);
-            }
-        };
-
-        // Start trying after a small delay
-        setTimeout(attemptLoad, 50);
+        this.sendToPython({
+            type: 'get_level',
+            payload: { levelId: this.levelId }
+        });
     }
 
-    initializeLevelUI() {
-        if (!this.currentLevel) return;
+    handlePythonResponse(responseStr) {
+        try {
+            const data = JSON.parse(responseStr);
+            const type = data.type;
+            const payload = data.payload;
 
-        document.getElementById('levelTitle').textContent = this.currentLevel.name;
-        document.getElementById('levelDescription').textContent = this.currentLevel.description_long || this.currentLevel.description;
-
-        // Show timer if time-based level
-        const timeLimit = this.currentLevel.requirements.timeLimit;
-        if (timeLimit) {
-            document.getElementById('timerStatDiv').style.display = 'flex';
-            this.levelTimeRemaining = timeLimit;
-            this.updateTimerDisplay();
+            if (type === 'get_level_response') {
+                this.startLevel(payload);
+            } else if (type === 'complete_level_response') {
+                this.showCompletionModal(payload);
+            } else if (type === 'error') {
+                console.error('Backend Error:', payload.message);
+                alert('Error: ' + payload.message); // Simple fallback
+            }
+        } catch (e) {
+            console.error('Response parse error:', e);
         }
     }
 
-    generateQuestions() {
-        if (!this.currentLevel) return;
-
-        const total = this.currentLevel.requirements.totalQuestions;
-        const operation = this.currentLevel.operation;
-        const digits = this.currentLevel.digits;
-
-        this.questions = [];
-
-        for (let i = 0; i < total; i++) {
-            const question = this.generateSingleQuestion(operation, digits);
-            this.questions.push(question);
+    sendToPython(msg) {
+        if (this.bridge) {
+            this.bridge.sendMessage(JSON.stringify(msg));
         }
-
-        this.currentQuestion = 0;
     }
 
-    generateSingleQuestion(operation, digits) {
+    // --- Game Logic ---
+
+    startLevel(data) {
+        this.levelData = data;
+        this.questions = this.generateQuestions(data);
+        this.currentQuestionIndex = 0;
+        this.correctCount = 0;
+        this.totalTimeTaken = 0;
+
+        this.updateHeaderUI();
+        this.setState('PLAYING');
+        this.loadQuestion(0);
+
+        this.levelStartTime = Date.now();
+        // If level has a total time limit, we could track it here
+        if (this.levelData.requirements.timeLimit) {
+            this.startLevelTimer(this.levelData.requirements.timeLimit);
+        }
+    }
+
+    generateQuestions(level) {
+        // Generate robust questions based on ops
+        const count = level.requirements.totalQuestions;
+        const qs = [];
+        for (let i = 0; i < count; i++) {
+            qs.push(this.createQuestion(level.operation, level.digits));
+        }
+        return qs;
+    }
+
+    createQuestion(op, digits) {
         const max = Math.pow(10, digits);
         const min = Math.pow(10, digits - 1);
 
-        if (operation === 'addition') {
-            const a = Math.floor(Math.random() * (max - min)) + min;
-            const b = Math.floor(Math.random() * (max - min)) + min;
-            return {
-                prompt: `${a} + ${b} = ?`,
-                answer: a + b,
-                operation: 'addition'
-            };
-        } else if (operation === 'subtraction') {
-            const a = Math.floor(Math.random() * (max - min)) + min;
-            const b = Math.floor(Math.random() * (max - min)) + min;
+        // Helper
+        const rand = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
+        if (op === 'addition') {
+            const a = rand(min, max);
+            const b = rand(min, max);
+            return { prompt: `${a} + ${b} = ?`, answer: a + b };
+        }
+        else if (op === 'subtraction') {
+            const a = rand(min, max);
+            const b = rand(min, max);
             return {
                 prompt: `${Math.max(a, b)} - ${Math.min(a, b)} = ?`,
-                answer: Math.max(a, b) - Math.min(a, b),
-                operation: 'subtraction'
+                answer: Math.max(a, b) - Math.min(a, b)
             };
-        } else if (operation === 'multiplication') {
-            const a = Math.floor(Math.random() * (Math.pow(10, Math.ceil(digits / 2)) - 1)) + 2;
-            const b = Math.floor(Math.random() * (Math.pow(10, Math.ceil(digits / 2)) - 1)) + 2;
-            return {
-                prompt: `${a} × ${b} = ?`,
-                answer: a * b,
-                operation: 'multiplication'
-            };
-        } else if (operation === 'division') {
-            const divisor = Math.floor(Math.random() * (Math.pow(10, Math.ceil(digits / 2)) - 2)) + 2;
-            const quotient = Math.floor(Math.random() * (max - min)) + min;
+        }
+        else if (op === 'multiplication') {
+            // For mult, we might want smaller numbers for sanity if digits is large,
+            // but let's stick to the digits rule or cap it like original
+            const limit = Math.pow(10, Math.ceil(digits / 2)) - 1;
+            const a = rand(2, limit);
+            const b = rand(2, limit);
+            return { prompt: `${a} × ${b} = ?`, answer: a * b };
+        }
+        else if (op === 'division') {
+            // inverse of mult
+            const limit = Math.pow(10, Math.ceil(digits / 2)) - 2;
+            const divisor = rand(2, limit);
+            const quotient = rand(min, max);
             const dividend = divisor * quotient;
             return {
                 prompt: `${dividend} ÷ ${divisor} = ?`,
-                answer: quotient,
-                operation: 'division'
+                answer: quotient
             };
-        } else if (operation === 'complex') {
-            return this.generateComplexQuestion(digits);
+        }
+        else if (op === 'complex') {
+            return this.createComplexQuestion(digits);
         }
 
-        return { prompt: '0 + 0 = ?', answer: 0, operation: 'addition' };
+        return { prompt: '0 + 0 = ?', answer: 0 };
     }
 
-    generateComplexQuestion(digits) {
-        const patterns = [
-            () => {
-                const a = Math.floor(Math.random() * 100) + 10;
-                const b = Math.floor(Math.random() * 100) + 10;
-                const c = Math.floor(Math.random() * 10) + 1;
-                return {
-                    prompt: `(${a} + ${b}) × ${c} = ?`,
-                    answer: (a + b) * c
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 100) + 50;
-                const b = Math.floor(Math.random() * 50) + 10;
-                const c = Math.floor(Math.random() * 5) + 2;
-                return {
-                    prompt: `(${a} - ${b}) ÷ ${c} = ?`,
-                    answer: Math.floor((a - b) / c)
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 20) + 2;
-                const b = Math.floor(Math.random() * 20) + 2;
-                const c = Math.floor(Math.random() * 10) + 1;
-                return {
-                    prompt: `${a} × ${b} + ${c} = ?`,
-                    answer: (a * b) + c
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 200) + 100;
-                const b = Math.floor(Math.random() * 50) + 20;
-                const c = Math.floor(Math.random() * 10) + 2;
-                return {
-                    prompt: `${a} ÷ ${c} + ${b} = ?`,
-                    answer: Math.floor(a / c) + b
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 30) + 10;
-                const b = Math.floor(Math.random() * 30) + 10;
-                const c = Math.floor(Math.random() * 30) + 10;
-                return {
-                    prompt: `${a} + ${b} + ${c} = ?`,
-                    answer: a + b + c
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 50) + 50;
-                const b = Math.floor(Math.random() * 30) + 10;
-                const c = Math.floor(Math.random() * 30) + 10;
-                return {
-                    prompt: `${a} - ${b} + ${c} = ?`,
-                    answer: a - b + c
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 15) + 2;
-                const b = Math.floor(Math.random() * 15) + 2;
-                const c = Math.floor(Math.random() * 10) + 1;
-                return {
-                    prompt: `${a} × ${b} - ${c} = ?`,
-                    answer: (a * b) - c
-                };
-            },
-            () => {
-                const a = Math.floor(Math.random() * 200) + 100;
-                const b = Math.floor(Math.random() * 50) + 50;
-                const c = Math.floor(Math.random() * 5) + 2;
-                return {
-                    prompt: `(${a} + ${b}) ÷ ${c} = ?`,
-                    answer: Math.floor((a + b) / c)
-                };
-            }
+    createComplexQuestion(digits) {
+        // Simple random complex ops
+        const a = Math.floor(Math.random() * 20) + 1;
+        const b = Math.floor(Math.random() * 20) + 1;
+        const c = Math.floor(Math.random() * 10) + 1;
+
+        const types = [
+            () => ({ prompt: `(${a} + ${b}) × ${c} = ?`, answer: (a + b) * c }),
+            () => ({ prompt: `${a} × ${b} + ${c} = ?`, answer: a * b + c }),
+            () => ({ prompt: `${a} + ${b} + ${c} = ?`, answer: a + b + c }),
         ];
 
-        const pattern = patterns[Math.floor(Math.random() * patterns.length)];
-        const q = pattern();
-        return {
-            ...q,
-            operation: 'complex'
-        };
+        const type = types[Math.floor(Math.random() * types.length)];
+        return type();
     }
 
-    startLevel() {
-        this.startTime = Date.now();
-        this.displayQuestion();
-
-        // Start level timer if time-based
-        if (this.levelTimeRemaining !== null) {
-            this.levelTimerInterval = setInterval(() => this.updateLevelTimer(), 1000);
-        }
-
-        // Ensure input is focused after a short delay
-        setTimeout(() => {
-            document.getElementById('answerInput').focus();
-        }, 100);
-    }
-
-    displayQuestion() {
-        if (this.currentQuestion >= this.questions.length) {
-            // Don't complete immediately - let the feedback show first
-            setTimeout(() => {
-                this.completeLevel();
-            }, 2000); // Give time for final feedback to be seen
+    loadQuestion(index) {
+        if (index >= this.questions.length) {
+            this.finishLevel();
             return;
         }
 
-        const question = this.questions[this.currentQuestion];
+        const q = this.questions[index];
+        this.currentQuestionIndex = index;
         this.questionStartTime = Date.now();
 
-        document.getElementById('questionPrompt').textContent = question.prompt;
-        document.getElementById('answerInput').value = '';
+        // UI
+        this.setText('questionPrompt', q.prompt);
+        this.setValue('answerInput', '');
+        this.setText('progressText', `${index + 1}/${this.questions.length}`);
 
-        // Hide feedback, show input
-        document.getElementById('feedbackArea').style.display = 'none';
-        document.getElementById('answerInput').disabled = false;
+        const feedback = document.getElementById('feedbackArea');
+        if (feedback) feedback.style.display = 'none';
+
+        const input = document.getElementById('answerInput');
+        if (input) {
+            input.disabled = false;
+            input.focus();
+        }
         document.getElementById('submitButton').disabled = false;
-
-        // Focus input with slight delay to ensure DOM is ready
-        setTimeout(() => {
-            document.getElementById('answerInput').focus();
-        }, 50);
 
         this.updateProgressBar();
     }
 
     submitAnswer() {
-        const answerInput = document.getElementById('answerInput');
-        const answer = parseInt(answerInput.value);
+        if (this.state !== 'PLAYING') return;
 
-        if (isNaN(answer)) {
-            answerInput.focus();
-            return;
+        const input = document.getElementById('answerInput');
+        const val = parseFloat(input.value);
+        if (isNaN(val)) return; // Valid numeric check
+
+        const q = this.questions[this.currentQuestionIndex];
+        const correct = Math.abs(val - q.answer) < 0.001; // Float tolerance
+
+        // Accumulate time
+        const now = Date.now();
+        const duration = (now - this.questionStartTime) / 1000;
+        this.totalTimeTaken += duration;
+
+        if (correct) {
+            this.correctCount++;
         }
 
-        const question = this.questions[this.currentQuestion];
-        const isCorrect = answer === question.answer;
-
-        // Track time for this question (not including future auto-advance delay)
-        const questionTime = (Date.now() - this.questionStartTime) / 1000;
-        this.totalQuestionTime += questionTime;
-
-        if (isCorrect) {
-            this.correctAnswers++;
-            this.updateStarsEstimate();
-        }
-
-        // Show feedback
-        this.showFeedback(isCorrect);
-
-        // Disable input
-        answerInput.disabled = true;
-        document.getElementById('submitButton').disabled = true;
-
-        // Check if this is the last question (using 1-indexed logic)
-        const isLastQuestion = this.currentQuestion >= this.questions.length - 1;
-
-        console.log('DEBUG: isLastQuestion:', isLastQuestion, 'currentQuestion:', this.currentQuestion, 'questions.length:', this.questions.length);
-
-        if (isLastQuestion) {
-            // For the last question, show feedback and then complete level
-            const delay = isCorrect ? 1500 : 2000;
-            console.log('DEBUG: Final question, completing level after', delay, 'ms');
-
-            // Ensure feedback is visible
-            this.showFeedback(isCorrect);
-
-            setTimeout(() => {
-                console.log('DEBUG: Calling completeLevel()');
-                this.completeLevel();
-            }, delay);
-        } else {
-            // Auto-advance after delay for non-final questions
-            const delay = isCorrect ? 1500 : 2000;
-            let remaining = delay / 1000;
-
-            this.timerInterval = setInterval(() => {
-                remaining -= 0.1;
-                if (remaining <= 0) {
-                    clearInterval(this.timerInterval);
-                    this.nextQuestion();
-                }
-            }, 100);
-        }
+        this.setState('FEEDBACK');
+        this.showFeedback(correct, q.answer);
     }
 
-    showFeedback(isCorrect) {
-        console.log('DEBUG: showFeedback called with isCorrect:', isCorrect);
-        const feedbackArea = document.getElementById('feedbackArea');
-        const feedbackMessage = document.getElementById('feedbackMessage');
-        const nextButton = document.getElementById('nextButton');
+    showFeedback(isCorrect, correctAnswer) {
+        const area = document.getElementById('feedbackArea');
+        const msg = document.getElementById('feedbackMessage');
 
-        if (isCorrect) {
-            feedbackMessage.innerHTML = '<span style="color: var(--success-color);">✓ Correct!</span>';
-        } else {
-            const question = this.questions[this.currentQuestion];
-            feedbackMessage.innerHTML = `<span style="color: var(--danger-color);">✗ Wrong! Answer: ${question.answer}</span>`;
+        if (area && msg) {
+            area.style.display = 'block';
+            msg.innerHTML = isCorrect
+                ? '<span class="success">✓ Correct!</span>'
+                : `<span class="error">✗ Wrong! Answer: ${correctAnswer}</span>`;
         }
 
-        // Hide next button if this is the last question
-        const isLastQuestion = this.currentQuestion >= this.questions.length - 1;
-        if (nextButton) {
-            nextButton.style.display = isLastQuestion ? 'none' : 'block';
-        }
+        // Lock input
+        document.getElementById('answerInput').disabled = true;
+        document.getElementById('submitButton').disabled = true;
 
-        feedbackArea.style.display = 'block';
-        console.log('DEBUG: Feedback area display set to block, isLastQuestion:', isLastQuestion);
+        // Auto Advance
+        const delay = isCorrect ? 1000 : 2000;
+        this.autoAdvanceTimer = setTimeout(() => {
+            this.nextQuestion();
+        }, delay);
+
+        // Update stats
+        this.updateStatsUI();
     }
 
     nextQuestion() {
-        clearInterval(this.timerInterval);
-        this.currentQuestion++;
-        this.displayQuestion();
+        if (this.autoAdvanceTimer) clearTimeout(this.autoAdvanceTimer);
+
+        this.setState('PLAYING');
+        this.loadQuestion(this.currentQuestionIndex + 1);
     }
 
-    updateProgressBar() {
-        // Show current question as 1-indexed for display
-        const displayQuestion = this.currentQuestion + 1;
-        const progress = (displayQuestion / this.questions.length) * 100;
-        document.getElementById('progressBar').style.width = progress + '%';
+    finishLevel() {
+        this.setState('FINISHED');
+        if (this.timerInterval) clearInterval(this.timerInterval);
 
-        // Update progress text in both locations
-        const progressText = `${displayQuestion}/${this.questions.length}`;
-        const progressElement = document.getElementById('progressText');
-        if (progressElement) {
-            progressElement.textContent = progressText;
-        }
-        const progressText2 = document.getElementById('progressText2');
-        if (progressText2) {
-            progressText2.textContent = progressText;
-        }
-
-        // Update accuracy
-        const accuracy = this.questions.length > 0
-            ? Math.round((this.correctAnswers / displayQuestion) * 100)
-            : 0;
-        document.getElementById('accuracyText').textContent = accuracy + '%';
-    }
-
-    updateStarsEstimate() {
-        const accuracy = (this.correctAnswers / (this.currentQuestion + 1)) * 100;
-
-        // Stricter thresholds to match backend
-        // 3 stars: 98%+ (near perfect)
-        // 2 stars: 93-97% (very good)
-        // 1 star: below 93% (acceptable but needs improvement)
-        if (accuracy >= 98) {
-            this.estimatedStars = 3;
-        } else if (accuracy >= 93) {
-            this.estimatedStars = 2;
-        } else {
-            this.estimatedStars = 1;
-        }
-
-        this.updateStarsDisplay(this.estimatedStars, true);
-    }
-
-    updateStarsDisplay(stars, isEstimate = false) {
-        const starsDisplay = document.getElementById('starsDisplay');
-        starsDisplay.innerHTML = '';
-
-        for (let i = 0; i < 3; i++) {
-            const star = document.createElement('span');
-            star.className = i < stars ? 'star filled' : 'star empty';
-            star.textContent = i < stars ? '★' : '☆';
-            starsDisplay.appendChild(star);
-        }
-    }
-
-    updateLevelTimer() {
-        this.levelTimeRemaining--;
-
-        if (this.levelTimeRemaining <= 0) {
-            clearInterval(this.levelTimerInterval);
-            this.completeLevel();
-            return;
-        }
-
-        this.updateTimerDisplay();
-    }
-
-    updateTimerDisplay() {
-        if (this.levelTimeRemaining === null) return;
-
-        const minutes = Math.floor(this.levelTimeRemaining / 60);
-        const seconds = this.levelTimeRemaining % 60;
-        document.getElementById('timerText').textContent =
-            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    completeLevel() {
-        clearInterval(this.levelTimerInterval);
-        clearInterval(this.timerInterval);
-
-        if (!window.pybridge) {
-            console.error('Bridge not available');
-            return;
-        }
-
-        const message = {
+        this.sendToPython({
             type: 'complete_level',
             payload: {
                 levelId: this.levelId,
-                correctAnswers: this.correctAnswers,
+                correctAnswers: this.correctCount,
                 totalQuestions: this.questions.length,
-                timeTaken: this.totalQuestionTime
+                timeTaken: this.totalTimeTaken
             }
-        };
+        });
+    }
 
-        try {
-            window.pybridge.sendMessage(JSON.stringify(message));
-        } catch (e) {
-            console.error('Error sending completion:', e);
-        }
+    // --- UI Updates ---
+
+    updateHeaderUI() {
+        this.setText('levelTitle', this.levelData.name);
+        this.setText('levelDescription', this.levelData.description);
+    }
+
+    updateProgressBar() {
+        const pct = ((this.currentQuestionIndex) / this.questions.length) * 100;
+        const bar = document.getElementById('progressBar');
+        if (bar) bar.style.width = `${pct}%`;
+    }
+
+    updateStatsUI() {
+        const acc = Math.round((this.correctCount / (this.currentQuestionIndex + 1)) * 100);
+        this.setText('accuracyText', `${acc}%`);
     }
 
     showCompletionModal(result) {
-        console.log('DEBUG: showCompletionModal called with result:', result);
+        const modal = document.getElementById('completionModal');
+        const overlay = document.getElementById('modalOverlay');
 
-        const accuracy = result.accuracy !== undefined ? result.accuracy : 0;
-        const starsEarned = result.starsEarned !== undefined ? result.starsEarned : 0;
-        const timeTaken = Math.round(result.timeTaken || 0);
+        // Update Content
+        this.setText('finalAccuracy', `${Math.round(result.accuracy)}%`);
+        this.setText('finalTime', `${Math.round(result.timeTaken)}s`);
 
-        // Update modal content
-        document.getElementById('finalAccuracy').textContent = Math.round(accuracy) + '%';
-        document.getElementById('finalTime').textContent = timeTaken + 's';
-
-        // Update Modal Title
-        const modalTitle = document.querySelector('#completionModal h2');
-        if (modalTitle) {
-            modalTitle.textContent = result.success ? 'Level Complete!' : 'Level Failed';
-            modalTitle.style.color = result.success ? 'var(--text-color)' : 'var(--danger-color)';
+        const title = modal.querySelector('h2');
+        if (title) {
+            title.textContent = result.success ? 'Level Complete!' : 'Level Failed';
+            title.style.color = result.success ? 'var(--text-color)' : 'var(--danger-color)';
         }
 
-        // Display earned stars
-        const earnedStarsDiv = document.getElementById('earnedStars');
-        earnedStarsDiv.innerHTML = '';
-
-        if (result.success) {
-            for (let i = 0; i < starsEarned; i++) {
-                const star = document.createElement('span');
-                star.className = 'star-lg';
-                star.textContent = '★';
-                earnedStarsDiv.appendChild(star);
-            }
-        } else {
-            // Show empty stars or a sad face for failure? 
-            // Let's just show 3 empty large stars to indicate 0 earned
-            for (let i = 0; i < 3; i++) {
-                const star = document.createElement('span');
-                star.className = 'star-lg empty';
-                star.textContent = '☆';
-                star.style.color = '#ccc'; // Grey out
-                earnedStarsDiv.appendChild(star);
-            }
+        const stars = document.getElementById('earnedStars');
+        stars.innerHTML = '';
+        const limit = result.success ? result.starsEarned : 3;
+        for (let i = 0; i < limit; i++) {
+            const s = document.createElement('span');
+            s.className = 'star-lg' + (result.success && i < result.starsEarned ? '' : ' empty');
+            s.textContent = result.success && i < result.starsEarned ? '★' : '☆';
+            stars.appendChild(s);
         }
 
-        // Update completion text
-        let message = '';
-        if (!result.success) {
-            message = result.error || 'Keep practicing! You can do it!';
-        } else {
-            if (starsEarned === 3) {
-                message = 'Perfect! You earned 3 stars!';
-            } else if (starsEarned === 2) {
-                message = 'Excellent! You earned 2 stars!';
-            } else {
-                message = 'Good effort! You earned 1 star!';
-            }
-        }
-        document.getElementById('completionText').textContent = message;
+        const nextBtn = document.getElementById('nextLevelBtn');
+        if (nextBtn) nextBtn.style.display = (result.success && result.nextLevelId) ? 'inline-block' : 'none';
 
-        // Show/hide next level button
-        const nextLevelBtn = document.getElementById('nextLevelBtn');
-        // Only show next level button if success AND there is a next level
-        if (result.success && result.nextLevelId) {
-            nextLevelBtn.style.display = 'inline-block';
-            console.log('DEBUG: Next level ID found:', result.nextLevelId);
-        } else {
-            nextLevelBtn.style.display = 'none';
-            console.log('DEBUG: No next level or level failed');
-        }
-
-        // Show modal
-        const modalOverlay = document.getElementById('modalOverlay');
-        const completionModal = document.getElementById('completionModal');
-
-        console.log('DEBUG: Modal overlay element:', modalOverlay);
-        console.log('DEBUG: Completion modal element:', completionModal);
-
-        if (modalOverlay) {
-            modalOverlay.style.display = 'block';
-            console.log('DEBUG: Modal overlay display set to block');
-        } else {
-            console.error('DEBUG: Modal overlay element not found!');
-        }
-
-        if (completionModal) {
-            completionModal.style.display = 'block';
-            console.log('DEBUG: Completion modal display set to block');
-        } else {
-            console.error('DEBUG: Completion modal element not found!');
-        }
+        if (modal) modal.style.display = 'block';
+        if (overlay) overlay.style.display = 'block';
     }
 
-    goToNextLevel() {
-        const nextLevelId = this.currentLevel.rewards.unlocksLevel;
-        if (nextLevelId) {
-            window.location.href = `level_progress.html?levelId=${nextLevelId}`;
-        }
+    // --- Helpers ---
+
+    setState(newState) {
+        this.state = newState;
+    }
+
+    setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    }
+
+    setValue(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+    }
+
+    startLevelTimer(limit) {
+        // Simple countdown
+        const timerText = document.getElementById('timerText');
+        const timerDiv = document.getElementById('timerStatDiv');
+        if (timerDiv) timerDiv.style.display = 'flex';
+
+        let remaining = limit;
+        this.timerInterval = setInterval(() => {
+            remaining--;
+            if (timerText) timerText.textContent = `${Math.floor(remaining / 60)}:${(remaining % 60).toString().padStart(2, '0')}`;
+            if (remaining <= 0) {
+                clearInterval(this.timerInterval);
+                this.finishLevel();
+            }
+        }, 1000);
+    }
+
+    goBack() {
+        window.location.href = 'levels.html';
     }
 
     retryLevel() {
-        window.location.href = `level_progress.html?levelId=${this.levelId}`;
+        window.location.reload();
     }
 
-    goBackToLevels() {
+    goToNextLevel() {
+        // In a real app we'd get the ID from result, assume we handled it in modal logic or stored it
+        // For now, reload to levels or handle via param if passed
+        // Simplest: go back to list, they will see next unlocked
         window.location.href = 'levels.html';
     }
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     window.levelProgress = new LevelProgress();
 });

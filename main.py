@@ -16,7 +16,18 @@ class AddonDialog(QDialog):
         
         # Create web view
         self.web = QWebEngineView()
-        self.web.settings().setAttribute(QWebEngineSettings.DeveloperExtrasEnabled, True)
+        try:
+            # Try to enable developer tools - handles different PyQt versions/Anki environments
+            settings = self.web.settings()
+            if hasattr(QWebEngineSettings, 'WebAttribute') and hasattr(QWebEngineSettings.WebAttribute, 'DeveloperExtrasEnabled'):
+                settings.setAttribute(QWebEngineSettings.WebAttribute.DeveloperExtrasEnabled, True)
+            elif hasattr(QWebEngineSettings, 'DeveloperExtrasEnabled'):
+                settings.setAttribute(QWebEngineSettings.DeveloperExtrasEnabled, True)
+            else:
+                print("Warning: Could not find DeveloperExtrasEnabled attribute")
+                # print(f"Available attributes on QWebEngineSettings: {dir(QWebEngineSettings)}")
+        except Exception as e:
+            print(f"Error enabling developer tools: {e}")
         layout.addWidget(self.web)
         
         # Initialize managers

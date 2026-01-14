@@ -21,7 +21,7 @@
       },
       "unlockCondition": "none",
       "description_long": "Get comfortable with adding single digit numbers. You need to answer at least 4 out of 5 questions correctly.",
-        "starThresholds": {
+      "starThresholds": {
         "gold": 98,
         "silver": 93,
         "bronze": 80
@@ -676,7 +676,3906 @@
         "silver": 94,
         "bronze": 92
       }
+    },
+    {
+      "id": 27,
+      "name": "Level 27: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": 50,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 28,
+        "pointsReward": 100
+      },
+      "unlockCondition": "complete_level_26_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 28,
+      "name": "Level 28: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": null,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 29,
+        "pointsReward": 110
+      },
+      "unlockCondition": "complete_level_27_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 29,
+      "name": "Level 29: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": null,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 30,
+        "pointsReward": 120
+      },
+      "unlockCondition": "complete_level_28_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 30,
+      "name": "Level 30: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": 50,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 31,
+        "pointsReward": 130
+      },
+      "unlockCondition": "complete_level_29_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 31,
+      "name": "Level 31: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": null,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 32,
+        "pointsReward": 140
+      },
+      "unlockCondition": "complete_level_30_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 32,
+      "name": "Level 32: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": null,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 33,
+        "pointsReward": 150
+      },
+      "unlockCondition": "complete_level_31_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 33,
+      "name": "Level 33: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": 50,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 34,
+        "pointsReward": 160
+      },
+      "unlockCondition": "complete_level_32_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 34,
+      "name": "Level 34: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": null,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 35,
+        "pointsReward": 170
+      },
+      "unlockCondition": "complete_level_33_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 35,
+      "name": "Level 35: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": null,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 36,
+        "pointsReward": 180
+      },
+      "unlockCondition": "complete_level_34_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 36,
+      "name": "Level 36: Easy Addition",
+      "description": "Master addition problems with 1 digit numbers.",
+      "operation": "addition",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 10,
+        "minAccuracy": 70,
+        "timeLimit": 50,
+        "minCorrect": 7
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 37,
+        "pointsReward": 190
+      },
+      "unlockCondition": "complete_level_35_total_stars_1",
+      "starThresholds": {
+        "gold": 9,
+        "silver": 9,
+        "bronze": 7
+      }
+    },
+    {
+      "id": 37,
+      "name": "Level 37: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 38,
+        "pointsReward": 200
+      },
+      "unlockCondition": "complete_level_36_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 38,
+      "name": "Level 38: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 39,
+        "pointsReward": 210
+      },
+      "unlockCondition": "complete_level_37_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 39,
+      "name": "Level 39: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": 60,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 40,
+        "pointsReward": 220
+      },
+      "unlockCondition": "complete_level_38_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 40,
+      "name": "Level 40: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 41,
+        "pointsReward": 230
+      },
+      "unlockCondition": "complete_level_39_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 41,
+      "name": "Level 41: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 42,
+        "pointsReward": 240
+      },
+      "unlockCondition": "complete_level_40_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 42,
+      "name": "Level 42: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": 60,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 43,
+        "pointsReward": 250
+      },
+      "unlockCondition": "complete_level_41_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 43,
+      "name": "Level 43: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 44,
+        "pointsReward": 260
+      },
+      "unlockCondition": "complete_level_42_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 44,
+      "name": "Level 44: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 45,
+        "pointsReward": 270
+      },
+      "unlockCondition": "complete_level_43_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 45,
+      "name": "Level 45: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": 60,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 46,
+        "pointsReward": 280
+      },
+      "unlockCondition": "complete_level_44_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 46,
+      "name": "Level 46: Easy Subtraction",
+      "description": "Master subtraction problems with 1 digit numbers.",
+      "operation": "subtraction",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 12,
+        "minAccuracy": 71,
+        "timeLimit": null,
+        "minCorrect": 8
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 47,
+        "pointsReward": 290
+      },
+      "unlockCondition": "complete_level_45_total_stars_1",
+      "starThresholds": {
+        "gold": 11,
+        "silver": 11,
+        "bronze": 8
+      }
+    },
+    {
+      "id": 47,
+      "name": "Level 47: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 48,
+        "pointsReward": 300
+      },
+      "unlockCondition": "complete_level_46_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 48,
+      "name": "Level 48: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": 70,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 49,
+        "pointsReward": 310
+      },
+      "unlockCondition": "complete_level_47_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 49,
+      "name": "Level 49: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 50,
+        "pointsReward": 320
+      },
+      "unlockCondition": "complete_level_48_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 50,
+      "name": "Level 50: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 51,
+        "pointsReward": 330
+      },
+      "unlockCondition": "complete_level_49_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 51,
+      "name": "Level 51: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": 70,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 52,
+        "pointsReward": 340
+      },
+      "unlockCondition": "complete_level_50_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 52,
+      "name": "Level 52: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 53,
+        "pointsReward": 350
+      },
+      "unlockCondition": "complete_level_51_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 53,
+      "name": "Level 53: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 54,
+        "pointsReward": 360
+      },
+      "unlockCondition": "complete_level_52_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 54,
+      "name": "Level 54: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": 70,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 55,
+        "pointsReward": 370
+      },
+      "unlockCondition": "complete_level_53_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 55,
+      "name": "Level 55: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 56,
+        "pointsReward": 380
+      },
+      "unlockCondition": "complete_level_54_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 56,
+      "name": "Level 56: Easy Multiplication",
+      "description": "Master multiplication problems with 1 digit numbers.",
+      "operation": "multiplication",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 14,
+        "minAccuracy": 72,
+        "timeLimit": null,
+        "minCorrect": 10
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 57,
+        "pointsReward": 390
+      },
+      "unlockCondition": "complete_level_55_total_stars_1",
+      "starThresholds": {
+        "gold": 13,
+        "silver": 13,
+        "bronze": 10
+      }
+    },
+    {
+      "id": 57,
+      "name": "Level 57: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": 80,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 58,
+        "pointsReward": 400
+      },
+      "unlockCondition": "complete_level_56_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 58,
+      "name": "Level 58: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": null,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 59,
+        "pointsReward": 410
+      },
+      "unlockCondition": "complete_level_57_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 59,
+      "name": "Level 59: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": null,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 60,
+        "pointsReward": 420
+      },
+      "unlockCondition": "complete_level_58_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 60,
+      "name": "Level 60: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": 80,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 61,
+        "pointsReward": 430
+      },
+      "unlockCondition": "complete_level_59_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 61,
+      "name": "Level 61: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": null,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 62,
+        "pointsReward": 440
+      },
+      "unlockCondition": "complete_level_60_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 62,
+      "name": "Level 62: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": null,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 63,
+        "pointsReward": 450
+      },
+      "unlockCondition": "complete_level_61_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 63,
+      "name": "Level 63: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": 80,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 64,
+        "pointsReward": 460
+      },
+      "unlockCondition": "complete_level_62_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 64,
+      "name": "Level 64: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": null,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 65,
+        "pointsReward": 470
+      },
+      "unlockCondition": "complete_level_63_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 65,
+      "name": "Level 65: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": null,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 66,
+        "pointsReward": 480
+      },
+      "unlockCondition": "complete_level_64_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 66,
+      "name": "Level 66: Easy Division",
+      "description": "Master division problems with 1 digit numbers.",
+      "operation": "division",
+      "digits": 1,
+      "difficulty": "Easy",
+      "requirements": {
+        "totalQuestions": 16,
+        "minAccuracy": 73,
+        "timeLimit": 80,
+        "minCorrect": 11
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 67,
+        "pointsReward": 490
+      },
+      "unlockCondition": "complete_level_65_total_stars_1",
+      "starThresholds": {
+        "gold": 15,
+        "silver": 14,
+        "bronze": 11
+      }
+    },
+    {
+      "id": 67,
+      "name": "Level 67: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 68,
+        "pointsReward": 500
+      },
+      "unlockCondition": "complete_level_66_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 68,
+      "name": "Level 68: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 69,
+        "pointsReward": 510
+      },
+      "unlockCondition": "complete_level_67_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 69,
+      "name": "Level 69: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": 54,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 70,
+        "pointsReward": 520
+      },
+      "unlockCondition": "complete_level_68_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 70,
+      "name": "Level 70: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 71,
+        "pointsReward": 530
+      },
+      "unlockCondition": "complete_level_69_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 71,
+      "name": "Level 71: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 72,
+        "pointsReward": 540
+      },
+      "unlockCondition": "complete_level_70_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 72,
+      "name": "Level 72: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": 54,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 73,
+        "pointsReward": 550
+      },
+      "unlockCondition": "complete_level_71_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 73,
+      "name": "Level 73: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 74,
+        "pointsReward": 560
+      },
+      "unlockCondition": "complete_level_72_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 74,
+      "name": "Level 74: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 75,
+        "pointsReward": 570
+      },
+      "unlockCondition": "complete_level_73_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 75,
+      "name": "Level 75: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": 54,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 76,
+        "pointsReward": 580
+      },
+      "unlockCondition": "complete_level_74_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 76,
+      "name": "Level 76: Medium Complex",
+      "description": "Master complex problems with 2 digit numbers.",
+      "operation": "complex",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 18,
+        "minAccuracy": 74,
+        "timeLimit": null,
+        "minCorrect": 13
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 77,
+        "pointsReward": 590
+      },
+      "unlockCondition": "complete_level_75_total_stars_1",
+      "starThresholds": {
+        "gold": 17,
+        "silver": 16,
+        "bronze": 13
+      }
+    },
+    {
+      "id": 77,
+      "name": "Level 77: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 78,
+        "pointsReward": 600
+      },
+      "unlockCondition": "complete_level_76_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 78,
+      "name": "Level 78: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": 60,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 79,
+        "pointsReward": 610
+      },
+      "unlockCondition": "complete_level_77_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 79,
+      "name": "Level 79: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 80,
+        "pointsReward": 620
+      },
+      "unlockCondition": "complete_level_78_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 80,
+      "name": "Level 80: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 81,
+        "pointsReward": 630
+      },
+      "unlockCondition": "complete_level_79_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 81,
+      "name": "Level 81: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": 60,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 82,
+        "pointsReward": 640
+      },
+      "unlockCondition": "complete_level_80_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 82,
+      "name": "Level 82: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 83,
+        "pointsReward": 650
+      },
+      "unlockCondition": "complete_level_81_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 83,
+      "name": "Level 83: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 84,
+        "pointsReward": 660
+      },
+      "unlockCondition": "complete_level_82_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 84,
+      "name": "Level 84: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": 60,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 85,
+        "pointsReward": 670
+      },
+      "unlockCondition": "complete_level_83_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 85,
+      "name": "Level 85: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 86,
+        "pointsReward": 680
+      },
+      "unlockCondition": "complete_level_84_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 86,
+      "name": "Level 86: Medium Addition",
+      "description": "Master addition problems with 2 digit numbers.",
+      "operation": "addition",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 20,
+        "minAccuracy": 75,
+        "timeLimit": null,
+        "minCorrect": 15
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 87,
+        "pointsReward": 690
+      },
+      "unlockCondition": "complete_level_85_total_stars_1",
+      "starThresholds": {
+        "gold": 19,
+        "silver": 18,
+        "bronze": 15
+      }
+    },
+    {
+      "id": 87,
+      "name": "Level 87: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": 66,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 88,
+        "pointsReward": 700
+      },
+      "unlockCondition": "complete_level_86_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 88,
+      "name": "Level 88: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": null,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 89,
+        "pointsReward": 710
+      },
+      "unlockCondition": "complete_level_87_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 89,
+      "name": "Level 89: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": null,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 90,
+        "pointsReward": 720
+      },
+      "unlockCondition": "complete_level_88_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 90,
+      "name": "Level 90: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": 66,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 91,
+        "pointsReward": 730
+      },
+      "unlockCondition": "complete_level_89_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 91,
+      "name": "Level 91: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": null,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 92,
+        "pointsReward": 740
+      },
+      "unlockCondition": "complete_level_90_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 92,
+      "name": "Level 92: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": null,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 93,
+        "pointsReward": 750
+      },
+      "unlockCondition": "complete_level_91_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 93,
+      "name": "Level 93: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": 66,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 94,
+        "pointsReward": 760
+      },
+      "unlockCondition": "complete_level_92_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 94,
+      "name": "Level 94: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": null,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 95,
+        "pointsReward": 770
+      },
+      "unlockCondition": "complete_level_93_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 95,
+      "name": "Level 95: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": null,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 96,
+        "pointsReward": 780
+      },
+      "unlockCondition": "complete_level_94_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 96,
+      "name": "Level 96: Medium Subtraction",
+      "description": "Master subtraction problems with 2 digit numbers.",
+      "operation": "subtraction",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 22,
+        "minAccuracy": 76,
+        "timeLimit": 66,
+        "minCorrect": 16
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 97,
+        "pointsReward": 790
+      },
+      "unlockCondition": "complete_level_95_total_stars_1",
+      "starThresholds": {
+        "gold": 21,
+        "silver": 20,
+        "bronze": 16
+      }
+    },
+    {
+      "id": 97,
+      "name": "Level 97: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 98,
+        "pointsReward": 800
+      },
+      "unlockCondition": "complete_level_96_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 98,
+      "name": "Level 98: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 99,
+        "pointsReward": 810
+      },
+      "unlockCondition": "complete_level_97_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 99,
+      "name": "Level 99: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": 72,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 100,
+        "pointsReward": 820
+      },
+      "unlockCondition": "complete_level_98_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 100,
+      "name": "Level 100: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 101,
+        "pointsReward": 830
+      },
+      "unlockCondition": "complete_level_99_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 101,
+      "name": "Level 101: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 102,
+        "pointsReward": 840
+      },
+      "unlockCondition": "complete_level_100_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 102,
+      "name": "Level 102: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": 72,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 103,
+        "pointsReward": 850
+      },
+      "unlockCondition": "complete_level_101_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 103,
+      "name": "Level 103: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 104,
+        "pointsReward": 860
+      },
+      "unlockCondition": "complete_level_102_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 104,
+      "name": "Level 104: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 105,
+        "pointsReward": 870
+      },
+      "unlockCondition": "complete_level_103_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 105,
+      "name": "Level 105: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": 72,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 106,
+        "pointsReward": 880
+      },
+      "unlockCondition": "complete_level_104_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 106,
+      "name": "Level 106: Medium Multiplication",
+      "description": "Master multiplication problems with 2 digit numbers.",
+      "operation": "multiplication",
+      "digits": 2,
+      "difficulty": "Medium",
+      "requirements": {
+        "totalQuestions": 24,
+        "minAccuracy": 77,
+        "timeLimit": null,
+        "minCorrect": 18
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 107,
+        "pointsReward": 890
+      },
+      "unlockCondition": "complete_level_105_total_stars_1",
+      "starThresholds": {
+        "gold": 23,
+        "silver": 22,
+        "bronze": 18
+      }
+    },
+    {
+      "id": 107,
+      "name": "Level 107: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 108,
+        "pointsReward": 900
+      },
+      "unlockCondition": "complete_level_106_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 108,
+      "name": "Level 108: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": 78,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 109,
+        "pointsReward": 910
+      },
+      "unlockCondition": "complete_level_107_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 109,
+      "name": "Level 109: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 110,
+        "pointsReward": 920
+      },
+      "unlockCondition": "complete_level_108_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 110,
+      "name": "Level 110: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 111,
+        "pointsReward": 930
+      },
+      "unlockCondition": "complete_level_109_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 111,
+      "name": "Level 111: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": 78,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 112,
+        "pointsReward": 940
+      },
+      "unlockCondition": "complete_level_110_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 112,
+      "name": "Level 112: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 113,
+        "pointsReward": 950
+      },
+      "unlockCondition": "complete_level_111_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 113,
+      "name": "Level 113: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 114,
+        "pointsReward": 960
+      },
+      "unlockCondition": "complete_level_112_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 114,
+      "name": "Level 114: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": 78,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 115,
+        "pointsReward": 970
+      },
+      "unlockCondition": "complete_level_113_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 115,
+      "name": "Level 115: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 116,
+        "pointsReward": 980
+      },
+      "unlockCondition": "complete_level_114_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 116,
+      "name": "Level 116: Hard Division",
+      "description": "Master division problems with 3 digit numbers.",
+      "operation": "division",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 26,
+        "minAccuracy": 78,
+        "timeLimit": null,
+        "minCorrect": 20
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 117,
+        "pointsReward": 990
+      },
+      "unlockCondition": "complete_level_115_total_stars_1",
+      "starThresholds": {
+        "gold": 25,
+        "silver": 24,
+        "bronze": 20
+      }
+    },
+    {
+      "id": 117,
+      "name": "Level 117: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": 84,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 118,
+        "pointsReward": 1000
+      },
+      "unlockCondition": "complete_level_116_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 118,
+      "name": "Level 118: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": null,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 119,
+        "pointsReward": 1010
+      },
+      "unlockCondition": "complete_level_117_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 119,
+      "name": "Level 119: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": null,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 120,
+        "pointsReward": 1020
+      },
+      "unlockCondition": "complete_level_118_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 120,
+      "name": "Level 120: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": 84,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 121,
+        "pointsReward": 1030
+      },
+      "unlockCondition": "complete_level_119_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 121,
+      "name": "Level 121: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": null,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 122,
+        "pointsReward": 1040
+      },
+      "unlockCondition": "complete_level_120_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 122,
+      "name": "Level 122: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": null,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 123,
+        "pointsReward": 1050
+      },
+      "unlockCondition": "complete_level_121_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 123,
+      "name": "Level 123: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": 84,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 124,
+        "pointsReward": 1060
+      },
+      "unlockCondition": "complete_level_122_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 124,
+      "name": "Level 124: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": null,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 125,
+        "pointsReward": 1070
+      },
+      "unlockCondition": "complete_level_123_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 125,
+      "name": "Level 125: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": null,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 126,
+        "pointsReward": 1080
+      },
+      "unlockCondition": "complete_level_124_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 126,
+      "name": "Level 126: Hard Complex",
+      "description": "Master complex problems with 3 digit numbers.",
+      "operation": "complex",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 28,
+        "minAccuracy": 79,
+        "timeLimit": 84,
+        "minCorrect": 22
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 127,
+        "pointsReward": 1090
+      },
+      "unlockCondition": "complete_level_125_total_stars_1",
+      "starThresholds": {
+        "gold": 27,
+        "silver": 26,
+        "bronze": 22
+      }
+    },
+    {
+      "id": 127,
+      "name": "Level 127: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 128,
+        "pointsReward": 1100
+      },
+      "unlockCondition": "complete_level_126_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 128,
+      "name": "Level 128: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 129,
+        "pointsReward": 1110
+      },
+      "unlockCondition": "complete_level_127_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 129,
+      "name": "Level 129: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": 90,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 130,
+        "pointsReward": 1120
+      },
+      "unlockCondition": "complete_level_128_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 130,
+      "name": "Level 130: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 131,
+        "pointsReward": 1130
+      },
+      "unlockCondition": "complete_level_129_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 131,
+      "name": "Level 131: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 132,
+        "pointsReward": 1140
+      },
+      "unlockCondition": "complete_level_130_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 132,
+      "name": "Level 132: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": 90,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 133,
+        "pointsReward": 1150
+      },
+      "unlockCondition": "complete_level_131_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 133,
+      "name": "Level 133: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 134,
+        "pointsReward": 1160
+      },
+      "unlockCondition": "complete_level_132_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 134,
+      "name": "Level 134: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 135,
+        "pointsReward": 1170
+      },
+      "unlockCondition": "complete_level_133_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 135,
+      "name": "Level 135: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": 90,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 136,
+        "pointsReward": 1180
+      },
+      "unlockCondition": "complete_level_134_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 136,
+      "name": "Level 136: Hard Addition",
+      "description": "Master addition problems with 3 digit numbers.",
+      "operation": "addition",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 30,
+        "minAccuracy": 80,
+        "timeLimit": null,
+        "minCorrect": 24
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 137,
+        "pointsReward": 1190
+      },
+      "unlockCondition": "complete_level_135_total_stars_1",
+      "starThresholds": {
+        "gold": 29,
+        "silver": 27,
+        "bronze": 24
+      }
+    },
+    {
+      "id": 137,
+      "name": "Level 137: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 138,
+        "pointsReward": 1200
+      },
+      "unlockCondition": "complete_level_136_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 138,
+      "name": "Level 138: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": 96,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 139,
+        "pointsReward": 1210
+      },
+      "unlockCondition": "complete_level_137_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 139,
+      "name": "Level 139: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 140,
+        "pointsReward": 1220
+      },
+      "unlockCondition": "complete_level_138_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 140,
+      "name": "Level 140: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 141,
+        "pointsReward": 1230
+      },
+      "unlockCondition": "complete_level_139_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 141,
+      "name": "Level 141: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": 96,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 142,
+        "pointsReward": 1240
+      },
+      "unlockCondition": "complete_level_140_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 142,
+      "name": "Level 142: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 143,
+        "pointsReward": 1250
+      },
+      "unlockCondition": "complete_level_141_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 143,
+      "name": "Level 143: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 144,
+        "pointsReward": 1260
+      },
+      "unlockCondition": "complete_level_142_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 144,
+      "name": "Level 144: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": 96,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 145,
+        "pointsReward": 1270
+      },
+      "unlockCondition": "complete_level_143_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 145,
+      "name": "Level 145: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 146,
+        "pointsReward": 1280
+      },
+      "unlockCondition": "complete_level_144_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 146,
+      "name": "Level 146: Hard Subtraction",
+      "description": "Master subtraction problems with 3 digit numbers.",
+      "operation": "subtraction",
+      "digits": 3,
+      "difficulty": "Hard",
+      "requirements": {
+        "totalQuestions": 32,
+        "minAccuracy": 81,
+        "timeLimit": null,
+        "minCorrect": 25
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 147,
+        "pointsReward": 1290
+      },
+      "unlockCondition": "complete_level_145_total_stars_1",
+      "starThresholds": {
+        "gold": 31,
+        "silver": 29,
+        "bronze": 25
+      }
+    },
+    {
+      "id": 147,
+      "name": "Level 147: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": 102,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 148,
+        "pointsReward": 1300
+      },
+      "unlockCondition": "complete_level_146_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 148,
+      "name": "Level 148: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": null,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 149,
+        "pointsReward": 1310
+      },
+      "unlockCondition": "complete_level_147_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 149,
+      "name": "Level 149: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": null,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 150,
+        "pointsReward": 1320
+      },
+      "unlockCondition": "complete_level_148_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 150,
+      "name": "Level 150: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": 102,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 151,
+        "pointsReward": 1330
+      },
+      "unlockCondition": "complete_level_149_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 151,
+      "name": "Level 151: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": null,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 152,
+        "pointsReward": 1340
+      },
+      "unlockCondition": "complete_level_150_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 152,
+      "name": "Level 152: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": null,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 153,
+        "pointsReward": 1350
+      },
+      "unlockCondition": "complete_level_151_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 153,
+      "name": "Level 153: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": 102,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 154,
+        "pointsReward": 1360
+      },
+      "unlockCondition": "complete_level_152_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 154,
+      "name": "Level 154: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": null,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 155,
+        "pointsReward": 1370
+      },
+      "unlockCondition": "complete_level_153_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 155,
+      "name": "Level 155: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": null,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 156,
+        "pointsReward": 1380
+      },
+      "unlockCondition": "complete_level_154_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 156,
+      "name": "Level 156: Extreme Multiplication",
+      "description": "Master multiplication problems with 3 digit numbers.",
+      "operation": "multiplication",
+      "digits": 3,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 34,
+        "minAccuracy": 82,
+        "timeLimit": 102,
+        "minCorrect": 27
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 157,
+        "pointsReward": 1390
+      },
+      "unlockCondition": "complete_level_155_total_stars_1",
+      "starThresholds": {
+        "gold": 33,
+        "silver": 31,
+        "bronze": 27
+      }
+    },
+    {
+      "id": 157,
+      "name": "Level 157: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 158,
+        "pointsReward": 1400
+      },
+      "unlockCondition": "complete_level_156_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 158,
+      "name": "Level 158: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 159,
+        "pointsReward": 1410
+      },
+      "unlockCondition": "complete_level_157_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 159,
+      "name": "Level 159: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": 108,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 160,
+        "pointsReward": 1420
+      },
+      "unlockCondition": "complete_level_158_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 160,
+      "name": "Level 160: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 161,
+        "pointsReward": 1430
+      },
+      "unlockCondition": "complete_level_159_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 161,
+      "name": "Level 161: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 162,
+        "pointsReward": 1440
+      },
+      "unlockCondition": "complete_level_160_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 162,
+      "name": "Level 162: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": 108,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 163,
+        "pointsReward": 1450
+      },
+      "unlockCondition": "complete_level_161_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 163,
+      "name": "Level 163: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 164,
+        "pointsReward": 1460
+      },
+      "unlockCondition": "complete_level_162_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 164,
+      "name": "Level 164: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 165,
+        "pointsReward": 1470
+      },
+      "unlockCondition": "complete_level_163_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 165,
+      "name": "Level 165: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": 108,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 166,
+        "pointsReward": 1480
+      },
+      "unlockCondition": "complete_level_164_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 166,
+      "name": "Level 166: Extreme Division",
+      "description": "Master division problems with 4 digit numbers.",
+      "operation": "division",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 36,
+        "minAccuracy": 83,
+        "timeLimit": null,
+        "minCorrect": 29
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 167,
+        "pointsReward": 1490
+      },
+      "unlockCondition": "complete_level_165_total_stars_1",
+      "starThresholds": {
+        "gold": 35,
+        "silver": 33,
+        "bronze": 29
+      }
+    },
+    {
+      "id": 167,
+      "name": "Level 167: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 168,
+        "pointsReward": 1500
+      },
+      "unlockCondition": "complete_level_166_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 168,
+      "name": "Level 168: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": 114,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 169,
+        "pointsReward": 1510
+      },
+      "unlockCondition": "complete_level_167_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 169,
+      "name": "Level 169: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 170,
+        "pointsReward": 1520
+      },
+      "unlockCondition": "complete_level_168_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 170,
+      "name": "Level 170: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 171,
+        "pointsReward": 1530
+      },
+      "unlockCondition": "complete_level_169_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 171,
+      "name": "Level 171: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": 114,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 172,
+        "pointsReward": 1540
+      },
+      "unlockCondition": "complete_level_170_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 172,
+      "name": "Level 172: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 173,
+        "pointsReward": 1550
+      },
+      "unlockCondition": "complete_level_171_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 173,
+      "name": "Level 173: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 174,
+        "pointsReward": 1560
+      },
+      "unlockCondition": "complete_level_172_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 174,
+      "name": "Level 174: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": 114,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 175,
+        "pointsReward": 1570
+      },
+      "unlockCondition": "complete_level_173_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 175,
+      "name": "Level 175: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 176,
+        "pointsReward": 1580
+      },
+      "unlockCondition": "complete_level_174_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
+    },
+    {
+      "id": 176,
+      "name": "Level 176: Extreme Complex",
+      "description": "Master complex problems with 4 digit numbers.",
+      "operation": "complex",
+      "digits": 4,
+      "difficulty": "Extreme",
+      "requirements": {
+        "totalQuestions": 38,
+        "minAccuracy": 84,
+        "timeLimit": null,
+        "minCorrect": 31
+      },
+      "rewards": {
+        "starsPerQuestion": 1,
+        "maxStars": 3,
+        "unlocksLevel": 177,
+        "pointsReward": 1590
+      },
+      "unlockCondition": "complete_level_175_total_stars_1",
+      "starThresholds": {
+        "gold": 37,
+        "silver": 35,
+        "bronze": 31
+      }
     }
   ]
 }
-   
