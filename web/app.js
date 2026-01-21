@@ -283,11 +283,17 @@ function handlePythonMessage(message) {
                 break;
             case 'load_settings_response':
                 console.log(`⚙️ Settings loaded from backend:`, payload.settings);
-                if (payload.settings && Object.keys(payload.settings).length > 0) {
-                    // Merge backend settings with localStorage
-                    const currentSettings = loadSettings ? loadSettings() : {};
+                if (payload.settings) {
+                    // Merge backend settings with current localStorage
+                    // We don't have DEFAULT_SETTINGS here, but we can preserve what's in localStorage
+                    const saved = localStorage.getItem('appSettings');
+                    const currentSettings = saved ? JSON.parse(saved) : {};
                     const mergedSettings = { ...currentSettings, ...payload.settings };
+
                     localStorage.setItem('appSettings', JSON.stringify(mergedSettings));
+
+                    // If we're on the settings page, window.handleBridgeMessage should handle it.
+                    // If not, we still want to apply theme etc.
                     if (typeof applySettings === 'function') {
                         applySettings(mergedSettings);
                     }

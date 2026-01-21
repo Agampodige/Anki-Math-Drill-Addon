@@ -200,16 +200,23 @@ document.addEventListener('DOMContentLoaded', function () {
     window.handleBridgeMessage = function (messageStr) {
         try {
             const message = JSON.parse(messageStr);
-            console.log('Received bridge message:', message);
+            console.log('Received bridge message in settings:', message);
 
             if (message.type === 'load_settings_response' && message.payload.success) {
                 const backendSettings = message.payload.settings;
-                if (backendSettings && Object.keys(backendSettings).length > 0) {
-                    console.log('Applying backend settings:', backendSettings);
-                    localStorage.setItem('appSettings', JSON.stringify(backendSettings));
-                    applySettings(backendSettings);
-                    updateUI(backendSettings);
-                }
+
+                // Merge sequence: defaults -> current local -> backend
+                const currentSettings = loadSettings();
+                const mergedSettings = {
+                    ...DEFAULT_SETTINGS,
+                    ...currentSettings,
+                    ...backendSettings
+                };
+
+                console.log('Applying merged settings:', mergedSettings);
+                localStorage.setItem('appSettings', JSON.stringify(mergedSettings));
+                applySettings(mergedSettings);
+                updateUI(mergedSettings);
             } else if (message.type === 'export_data_response' && message.payload.success) {
                 const dataStr = JSON.stringify(message.payload.data, null, 4);
                 const blob = new Blob([dataStr], { type: 'application/json' });
