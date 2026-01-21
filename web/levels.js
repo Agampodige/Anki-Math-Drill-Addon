@@ -34,6 +34,33 @@ class LevelsManager {
             window.location.href = 'index.html';
         });
 
+        // Filter Toggle
+        const filterToggleBtn = document.getElementById('filterToggleBtn');
+        const searchFilterSection = document.getElementById('searchFilterSection');
+        const toggleText = document.querySelector('.toggle-text');
+        const filterIcon = document.querySelector('.filter-icon');
+        const closeIcon = document.querySelector('.close-icon');
+        
+        let isFilterVisible = false;
+        
+        filterToggleBtn?.addEventListener('click', () => {
+            isFilterVisible = !isFilterVisible;
+            
+            if (isFilterVisible) {
+                searchFilterSection.style.display = 'block';
+                filterToggleBtn.classList.add('active');
+                toggleText.textContent = 'Hide Filters';
+                filterIcon.style.display = 'none';
+                closeIcon.style.display = 'block';
+            } else {
+                searchFilterSection.style.display = 'none';
+                filterToggleBtn.classList.remove('active');
+                toggleText.textContent = 'Show Filters';
+                filterIcon.style.display = 'block';
+                closeIcon.style.display = 'none';
+            }
+        });
+
         // Search
         // Search with debounce
         const debounce = (fn, delay) => {

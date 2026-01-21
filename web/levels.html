@@ -52,8 +52,22 @@
                     </div>
                 </div>
 
+                <!-- Search and Filters Toggle -->
+                <div class="filter-toggle-container">
+                    <button id="filterToggleBtn" class="filter-toggle-btn">
+                        <svg class="toggle-icon filter-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 4.5h14M3 9h14M3 13.5h14M3 18h14"/>
+                        </svg>
+                        <svg class="toggle-icon close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        <span class="toggle-text">Show Filters</span>
+                    </button>
+                </div>
+
                 <!-- Search and Filters -->
-                <div class="search-filter-section">
+                <div class="search-filter-section" id="searchFilterSection" style="display: none;">
                     <div class="search-bar">
                         <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2">
