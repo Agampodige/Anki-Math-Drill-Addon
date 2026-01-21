@@ -4,6 +4,7 @@ class AnalyticsManager {
         this.statistics = null;
         this.attempts = [];
         this.charts = {};
+        this.currentRange = 7;
 
         this.initializeEventListeners();
         this.loadStatistics();
@@ -13,6 +14,21 @@ class AnalyticsManager {
         document.getElementById('refreshBtn')?.addEventListener('click', () => this.loadStatistics());
         document.getElementById('exportBtn')?.addEventListener('click', () => this.exportData());
         document.getElementById('clearBtn')?.addEventListener('click', () => this.clearAllData());
+
+        // Range selector for daily progress
+        document.getElementById('progressRangeSelector')?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.range-btn');
+            if (!btn) return;
+
+            // UI Update
+            document.querySelectorAll('#progressRangeSelector .range-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Re-render chart
+            const days = parseInt(btn.dataset.range);
+            this.currentRange = days;
+            this.createDailyProgressChart(this.attempts, days);
+        });
         // Back button handled by inline onclick in HTML or app.js
 
         // Listen for bridge connection
@@ -142,6 +158,9 @@ class AnalyticsManager {
 
         // Render Activity Heatmap
         this.renderActivityHeatmap(this.attempts);
+
+        // Render Daily Progress Chart
+        this.createDailyProgressChart(this.attempts, this.currentRange);
     }
 
     renderActivityHeatmap(attempts) {
@@ -195,7 +214,10 @@ class AnalyticsManager {
                     lastMonth = month;
                 }
 
-                const dayStr = d.toISOString().split('T')[0];
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                const dayStr = `${y}-${m}-${dd}`;
                 const count = counts[dayStr] || 0;
 
                 let level = 0;
@@ -423,6 +445,8 @@ class AnalyticsManager {
         this.displayChartsFromAggregates(this.aggregateFromAttempts(byOperation));
         // Trend chart needs raw attempts
         this.createTrendChart(this.attempts);
+        // Daily progress chart
+        this.createDailyProgressChart(this.attempts, this.currentRange);
     }
 
     groupByOperation() {
@@ -454,7 +478,7 @@ class AnalyticsManager {
 
     displayChartsFromAggregates(byOperation) {
         // Destroy existing charts
-        ['accuracy', 'attempts', 'time', 'trend'].forEach(key => {
+        ['accuracy', 'attempts', 'time', 'trend', 'dailyProgress'].forEach(key => {
             if (this.charts[key]) {
                 this.charts[key].destroy();
                 this.charts[key] = null;
@@ -649,6 +673,154 @@ class AnalyticsManager {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+    }
+
+    createDailyProgressChart(attempts, days = 7) {
+        if (!attempts || attempts.length === 0) return;
+
+        const ctx = document.getElementById('dailyProgressChart');
+        if (!ctx) return;
+
+        // Process attempts into day maps "YYYY-MM-DD" -> count/correct
+        const counts = {};
+        const correctCounts = {};
+
+        const getLocalDayStr = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        attempts.forEach(a => {
+            let date;
+            const ts = a.timestamp || a.date;
+            if (!ts) return;
+
+            try {
+                if (typeof ts === 'number') {
+                    date = new Date(ts * 1000);
+                } else {
+                    date = new Date(ts);
+                }
+                if (isNaN(date.getTime())) return;
+            } catch (e) { return; }
+
+            const dayStr = getLocalDayStr(date);
+            counts[dayStr] = (counts[dayStr] || 0) + 1;
+            if (a.isCorrect) {
+                correctCounts[dayStr] = (correctCounts[dayStr] || 0) + 1;
+            }
+        });
+
+        // Generate date labels based on range
+        const labels = [];
+        const totalData = [];
+        const correctData = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = days - 1; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            const dayStr = getLocalDayStr(d);
+
+            let label;
+            if (days <= 14) {
+                // For a few days, show month and day
+                label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            } else if (days <= 91) {
+                // For a month or three, show every few days or just day
+                if (i % Math.ceil(days / 10) === 0 || i === 0 || i === days - 1) {
+                    label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                } else {
+                    label = '';
+                }
+            } else {
+                // For a year, show month
+                if (i % 30 === 0 || i === 0 || i === days - 1) {
+                    label = d.toLocaleDateString('en-US', { month: 'short' });
+                } else {
+                    label = '';
+                }
+            }
+
+            labels.push(label);
+            totalData.push(counts[dayStr] || 0);
+            correctData.push(correctCounts[dayStr] || 0);
+        }
+
+        if (this.charts.dailyProgress) {
+            this.charts.dailyProgress.destroy();
+        }
+
+        this.charts.dailyProgress = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Correct Cards',
+                        data: correctData,
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        order: 1,
+                        z: 10
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Total Attempts',
+                        data: totalData,
+                        backgroundColor: '#8B5CF6',
+                        borderRadius: 4,
+                        order: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#e0e0e0',
+                            font: { size: 10 },
+                            usePointStyle: true,
+                            padding: 10
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0, color: '#b0b0b0' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#b0b0b0',
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 0
+                        },
+                        grid: { display: false }
+                    }
+                }
             }
         });
     }

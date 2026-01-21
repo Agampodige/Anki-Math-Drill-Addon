@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeTheme();
     setupThemeListener();
     updateThemeToggleIcon();
+
+    // Home page specific initialization
+    if (document.getElementById('greetingText')) {
+        updateHomeUI();
+    }
 });
 
 // Also setup on window load as backup
@@ -48,6 +53,98 @@ window.addEventListener('load', function () {
     setupNavigation();
     updateThemeToggleIcon();
 });
+
+function updateHomeUI() {
+    // 1. Set Greeting
+    const greetingText = document.getElementById('greetingText');
+    const greetingEmoji = document.getElementById('greetingEmoji');
+    if (greetingText) {
+        const { text, emoji } = getGreeting();
+        greetingText.textContent = text;
+        if (greetingEmoji) greetingEmoji.textContent = emoji;
+    }
+
+    // 2. Load and Display Stats
+    const stats = calculateHomeStats();
+    if (document.getElementById('homeStatTotalAttempts')) {
+        document.getElementById('homeStatTotalAttempts').textContent = stats.total;
+        document.getElementById('homeStatAccuracy').textContent = stats.accuracy + '%';
+        document.getElementById('homeStatStreak').textContent = stats.streak;
+    }
+}
+
+function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) return { text: 'Good Morning', emoji: '🌅' };
+    if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', emoji: '☀️' };
+    if (hour >= 17 && hour < 21) return { text: 'Good Evening', emoji: '🌇' };
+    return { text: 'Good Night', emoji: '🌙' };
+}
+
+function calculateHomeStats() {
+    // Try to load attempts from localStorage set by analytics or practice
+    const attemptsStr = localStorage.getItem('mathDrillAttempts');
+    let attempts = [];
+    try {
+        if (attemptsStr) attempts = JSON.parse(attemptsStr);
+    } catch (e) {
+        console.error('Error parsing attempts for home stats:', e);
+    }
+
+    if (!attempts || attempts.length === 0) {
+        return { total: 0, accuracy: 0, streak: 0 };
+    }
+
+    const total = attempts.length;
+    const correct = attempts.filter(a => a.isCorrect).length;
+    const accuracy = Math.round((correct / total) * 100);
+
+    // Calculate daily streak
+    const dates = new Set();
+    attempts.forEach(a => {
+        const ts = a.timestamp || a.date;
+        if (!ts) return;
+        const d = typeof ts === 'number' ? new Date(ts * 1000) : new Date(ts);
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        dates.add(dateStr);
+    });
+
+    let streak = 0;
+    const today = new Date();
+    const checkDate = new Date(today);
+
+    while (true) {
+        const dateStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+        if (dates.has(dateStr)) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+            // If it's today and no attempts yet, check yesterday to continue streak
+            if (streak === 0) {
+                checkDate.setDate(checkDate.getDate() - 1);
+                const yesterdayStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+                if (dates.has(yesterdayStr)) {
+                    // Start streak count from 1 if yesterday was active
+                    // wait, if today is not in set but yesterday is, streak is the streak ending yesterday.
+                    // Let's just count backwards from yesterday.
+                    let yesterdayStreak = 0;
+                    let tempDate = new Date(checkDate);
+                    while (true) {
+                        const s = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`;
+                        if (dates.has(s)) {
+                            yesterdayStreak++;
+                            tempDate.setDate(tempDate.getDate() - 1);
+                        } else break;
+                    }
+                    streak = yesterdayStreak;
+                }
+            }
+            break;
+        }
+    }
+
+    return { total, accuracy, streak };
+}
 
 function navigateToPage(pageName) {
     const pages = {

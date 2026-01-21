@@ -1,5 +1,5 @@
 from aqt import mw
-from aqt.qt import QDialog, QVBoxLayout, QWebEngineView, QUrl, QWebEngineSettings, QShortcut, QKeySequence
+from aqt.qt import QDialog, QVBoxLayout, QWebEngineView, QUrl, QWebEngineSettings, QShortcut, QKeySequence, Qt
 from .bridge import Bridge
 from .attempts_manager import AttemptsManager
 from .levels_manager import LevelsManager
@@ -10,6 +10,17 @@ class AddonDialog(QDialog):
         super().__init__(mw)
         self.setWindowTitle("Math Drill")
         self.setMinimumSize(3, 600)
+        
+        # Aggressive approach to force maximize/minimize buttons on Linux/PyQt6
+        # By setting the type to 'Window' instead of 'Dialog', we encourage full decorations
+        if hasattr(Qt, "WindowType"):
+            flags = Qt.WindowType.Window | Qt.WindowType.WindowMinMaxButtonsHint | Qt.WindowType.WindowSystemMenuHint | Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowCloseButtonHint
+            flags &= ~Qt.WindowType.WindowContextHelpButtonHint
+        else:
+            flags = Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowSystemMenuHint | Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowCloseButtonHint
+            flags &= ~Qt.WindowContextHelpButtonHint
+            
+        self.setWindowFlags(flags)
         
         # Create layout
         layout = QVBoxLayout(self)

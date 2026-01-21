@@ -143,9 +143,17 @@
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>Learning Trend</h3>
+                        <div class="chart-header-row">
+                            <h3>Daily Learning Progress</h3>
+                            <div class="range-selector" id="progressRangeSelector">
+                                <button class="range-btn active" data-range="7">Week</button>
+                                <button class="range-btn" data-range="30">Month</button>
+                                <button class="range-btn" data-range="90">3 Mo</button>
+                                <button class="range-btn" data-range="365">Year</button>
+                            </div>
+                        </div>
                         <div class="chart-wrapper">
-                            <canvas id="trendChart"></canvas>
+                            <canvas id="dailyProgressChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -184,18 +192,6 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="analytics-actions-container">
-                <button id="refreshBtn" class="action-button primary">
-                    <span>🔄</span> Refresh
-                </button>
-                <button id="exportBtn" class="action-button secondary">
-                    <span>📥</span> Export Data
-                </button>
-                <button id="clearBtn" class="action-button danger">
-                    <span>🗑️</span> Reset History
-                </button>
-            </div>
         </div>
     </main>
 
