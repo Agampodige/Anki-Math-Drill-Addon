@@ -68,11 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('greetingText')) {
         updateHomeUI();
     }
-    
+
     // Global click handler as backup - capture phase
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         console.log('Global click captured:', e.target.tagName, e.target.className, e.target.id);
-        
+
         // Handle nav-card clicks that might have onclick attributes
         if (e.target.classList.contains('nav-card') || e.target.closest('.nav-card')) {
             const navCard = e.target.classList.contains('nav-card') ? e.target : e.target.closest('.nav-card');
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         }
-        
+
         // Handle back button clicks
         if (e.target.id === 'backBtn' || e.target.closest('#backBtn')) {
             try {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }, true);
-    
+
     // Debug: Check if elements are clickable
     setTimeout(() => {
         const buttons = document.querySelectorAll('button, .nav-card, [onclick]');
@@ -232,10 +232,100 @@ function navigateToHome() {
     window.location.href = 'index.html';
 }
 
-// Theme Management with Auto Detection
+// Theme Management with Auto Detection & Accent Colors
+const THEME_COLORS = {
+    'green': {
+        'primary': '#10b981',
+        'dark': '#059669',
+        'light': '#34d399',
+        'lighter': '#6ee7b7',
+        '50': '#f0fdf4',
+        '100': '#dcfce7',
+        '500': '#10b981',
+        '600': '#059669',
+        '700': '#047857'
+    },
+    'blue': {
+        'primary': '#3b82f6',
+        'dark': '#2563eb',
+        'light': '#60a5fa',
+        'lighter': '#93c5fd',
+        '50': '#eff6ff',
+        '100': '#dbeafe',
+        '500': '#3b82f6',
+        '600': '#2563eb',
+        '700': '#1d4ed8'
+    },
+    'purple': {
+        'primary': '#a855f7',
+        'dark': '#9333ea',
+        'light': '#c084fc',
+        'lighter': '#d8b4fe',
+        '50': '#faf5ff',
+        '100': '#f3e8ff',
+        '500': '#a855f7',
+        '600': '#9333ea',
+        '700': '#7e22ce'
+    },
+    'orange': {
+        'primary': '#f97316',
+        'dark': '#ea580c',
+        'light': '#fb923c',
+        'lighter': '#fdba74',
+        '50': '#fff7ed',
+        '100': '#ffedd5',
+        '500': '#f97316',
+        '600': '#ea580c',
+        '700': '#c2410c'
+    },
+    'red': {
+        'primary': '#ef4444',
+        'dark': '#dc2626',
+        'light': '#f87171',
+        'lighter': '#fca5a5',
+        '50': '#fef2f2',
+        '100': '#fee2e2',
+        '500': '#ef4444',
+        '600': '#dc2626',
+        '700': '#b91c1c'
+    }
+};
+
 function initializeTheme() {
     const savedTheme = localStorage.getItem('theme') || 'auto';
     applyTheme(savedTheme);
+
+    const savedColor = localStorage.getItem('accentColor') || 'green';
+    applyAccentColor(savedColor);
+}
+
+function applyAccentColor(colorName) {
+    const palette = THEME_COLORS[colorName] || THEME_COLORS['green'];
+    const root = document.documentElement;
+
+    // Set CSS variables
+    root.style.setProperty('--primary-color', palette['primary']);
+    root.style.setProperty('--primary-dark', palette['dark']);
+    root.style.setProperty('--primary-light', palette['light']);
+    root.style.setProperty('--primary-lighter', palette['lighter']);
+
+    // Set numeric scale variables if needed
+    root.style.setProperty('--primary-50', palette['50']);
+    root.style.setProperty('--primary-100', palette['100']);
+    root.style.setProperty('--primary-500', palette['500']);
+    root.style.setProperty('--primary-600', palette['600']);
+    root.style.setProperty('--primary-700', palette['700']);
+
+    // Also update secondary/accent variables to match (monochromatic theme)
+    root.style.setProperty('--secondary-color', palette['primary']);
+    root.style.setProperty('--accent-color', palette['primary']);
+    root.style.setProperty('--accent-light', palette['light']);
+
+    // Save preference
+    localStorage.setItem('accentColor', colorName);
+
+    // Dispatch event for settings page to update UI
+    window.dispatchEvent(new CustomEvent('accent-color-changed', { detail: { color: colorName } }));
 }
 
 function applyTheme(themeName) {
@@ -275,33 +365,18 @@ function setupThemeListener() {
             applyTheme('auto');
         }
     });
-}
 
-// Listen for theme changes from other pages/tabs
-function setupThemeStorageListener() {
+    // Listen for storage changes to sync tabs
     window.addEventListener('storage', (event) => {
         if (event.key === 'theme') {
-            const newTheme = event.newValue || 'auto';
-            applyTheme(newTheme);
+            applyTheme(event.newValue || 'auto');
             updateThemeToggleIcon();
+        } else if (event.key === 'accentColor') {
+            applyAccentColor(event.newValue || 'green');
         }
     });
 }
 
-// Toggle between light and dark themes
-function toggleTheme() {
-    const currentTheme = localStorage.getItem('theme') || 'auto';
-    let newTheme = 'light';
-
-    if (currentTheme === 'light') {
-        newTheme = 'dark';
-    } else if (currentTheme === 'dark') {
-        newTheme = 'auto';
-    }
-
-    applyTheme(newTheme);
-    updateThemeToggleIcon();
-}
 
 // Update theme toggle button icon
 function updateThemeToggleIcon() {
@@ -330,25 +405,25 @@ if (typeof qt !== 'undefined' && qt.webChannelTransport) {
     window.addEventListener('load', function () {
         if (typeof QWebChannel !== 'undefined') {
             new QWebChannel(qt.webChannelTransport, function (channel) {
-            pybridge = channel.objects.pybridge;
+                pybridge = channel.objects.pybridge;
 
-            if (pybridge) {
-                window.pybridge = pybridge;
-                isConnected = true;
-                console.log('✅ Successfully connected to Python bridge');
+                if (pybridge) {
+                    window.pybridge = pybridge;
+                    isConnected = true;
+                    console.log('✅ Successfully connected to Python bridge');
 
-                // Dispatch event for other scripts
-                window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
+                    // Dispatch event for other scripts
+                    window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
 
-                // Set up message listener
-                pybridge.messageReceived.connect(function (message) {
-                    console.log('📩 Received from Python:', message);
-                    handlePythonMessage(message);
-                });
-            } else {
-                console.log('❌ Failed to connect to Python bridge');
-            }
-        });
+                    // Set up message listener
+                    pybridge.messageReceived.connect(function (message) {
+                        console.log('📩 Received from Python:', message);
+                        handlePythonMessage(message);
+                    });
+                } else {
+                    console.log('❌ Failed to connect to Python bridge');
+                }
+            });
         } else {
             console.log('❌ QWebChannel not available');
             createMockBridge();
@@ -362,12 +437,12 @@ if (typeof qt !== 'undefined' && qt.webChannelTransport) {
 // Create mock bridge for development/testing
 function createMockBridge() {
     pybridge = {
-        sendMessage: function(message) {
+        sendMessage: function (message) {
             console.log('📤 Mock bridge - would send to Python:', message);
-            
+
             try {
                 const data = JSON.parse(message);
-                
+
                 // Handle different message types
                 switch (data.type) {
                     case 'save_settings':
@@ -375,7 +450,7 @@ function createMockBridge() {
                         console.log('💾 Mock bridge - saving settings:', data.payload.settings);
                         // Store in localStorage for persistence during session
                         localStorage.setItem('mockSettings', JSON.stringify(data.payload.settings));
-                        
+
                         // Simulate success response
                         setTimeout(() => {
                             const mockResponse = JSON.stringify({
@@ -385,7 +460,7 @@ function createMockBridge() {
                             handlePythonMessage(mockResponse);
                         }, 50);
                         break;
-                        
+
                     case 'hello':
                         // Simulate hello response
                         setTimeout(() => {
@@ -396,7 +471,7 @@ function createMockBridge() {
                             handlePythonMessage(mockResponse);
                         }, 100);
                         break;
-                        
+
                     default:
                         console.log('📝 Mock bridge - unhandled message type:', data.type);
                 }
@@ -405,11 +480,11 @@ function createMockBridge() {
             }
         }
     };
-    
+
     // Set connected flag for mock mode
     isConnected = true;
     console.log('✅ Mock bridge created for development');
-    
+
     // Dispatch event for other scripts
     window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
 }

@@ -72,7 +72,7 @@ function saveSettings(settings) {
 // Apply settings to the application
 function applySettings(settings) {
     console.log('Applying settings:', settings);
-    
+
     // Apply theme using app.js system if available
     if (window.applyTheme && settings.theme) {
         applyTheme(settings.theme);
@@ -121,12 +121,12 @@ function syncSettings() {
 // Initialize settings on page load
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Settings page loading...');
-    
+
     // Load initial settings from localStorage (for immediate UI update)
     const initialSettings = loadSettings();
     applySettings(initialSettings);
     updateUI(initialSettings);
-    
+
     // Set up bridge connection handlers first
     window.addEventListener('pybridge-connected', () => {
         console.log('Bridge connected, syncing settings...');
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             syncSettings();
         }
     });
-    
+
     // If bridge is already available, sync settings
     if (window.pybridge) {
         window.pybridge.messageReceived.connect(window.handleBridgeMessage);
@@ -144,6 +144,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // UI Elements
     const themeToggle = document.getElementById('themeToggle');
+    // ... (other vars) ...
+
+    // Accent Color Handler
+    const colorBtns = document.querySelectorAll('.color-btn');
+    colorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const color = btn.dataset.color;
+            console.log('Accent color selected:', color);
+
+            // Apply immediately using app.js function
+            if (window.applyAccentColor) {
+                window.applyAccentColor(color);
+            }
+
+            // Update UI state
+            updateColorUI(color);
+
+            // Also save to settings object for persistence via saveSettings
+            const settings = loadSettings();
+            settings.accentColor = color;
+            saveSettings(settings);
+        });
+    });
+
+    // Helper to update active state of color buttons
+    function updateColorUI(activeColor) {
+        colorBtns.forEach(btn => {
+            if (btn.dataset.color === activeColor) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // Listen for external updates (e.g. from app.js init)
+    window.addEventListener('accent-color-changed', (e) => {
+        updateColorUI(e.detail.color);
+    });
+
+    // Initialize UI with current color
+    const currentColor = localStorage.getItem('accentColor') || 'green';
+    updateColorUI(currentColor);
+
+
+    // Sound & Notifications
     const soundToggle = document.getElementById('soundToggle');
     const notificationsToggle = document.getElementById('notificationsToggle');
     const timerDisplay = document.getElementById('timerDisplay');
@@ -160,13 +206,13 @@ document.addEventListener('DOMContentLoaded', function () {
         themeToggle.addEventListener('change', (e) => {
             const theme = e.target.checked ? 'dark' : 'light';
             console.log('Theme toggle changed to:', theme);
-            
+
             // Update both our settings and the app.js theme system
             const settings = loadSettings();
             settings.theme = theme;
             settings.darkMode = theme === 'dark';
             saveSettings(settings);
-            
+
             // Use app.js theme system if available
             if (window.applyTheme) {
                 applyTheme(theme);
@@ -174,11 +220,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Auto-save listeners for other toggles
+    const autoSaveToggles = [
+        { el: soundToggle, key: 'soundEnabled' },
+        { el: notificationsToggle, key: 'notificationsEnabled' },
+        { el: timerDisplay, key: 'showTimer' },
+        { el: accuracyDisplay, key: 'showAccuracy' },
+        { el: autoCheck, key: 'autoCheckAnswers' },
+        { el: adaptiveToggle, key: 'adaptiveDifficulty' }
+    ];
+
+    autoSaveToggles.forEach(toggle => {
+        if (toggle.el) {
+            toggle.el.addEventListener('change', (e) => {
+                console.log(`Auto-saving setting: ${toggle.key} = ${e.target.checked}`);
+                const settings = loadSettings();
+                settings[toggle.key] = e.target.checked;
+                saveSettings(settings);
+            });
+        }
+    });
+
     // Refresh button handler
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
             refreshBtn.disabled = true;
             refreshBtn.textContent = 'Refreshing...';
+            // Flag to indicate we should show a specific toast for refresh
             syncSettings();
             setTimeout(() => {
                 refreshBtn.disabled = false;
@@ -191,34 +259,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (backBtn) {
         backBtn.addEventListener('click', () => {
             window.location.href = 'index.html';
-        });
-    }
-
-    // Save button handler
-    if (saveBtn) {
-        saveBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('Save button clicked');
-            
-            const currentSettings = loadSettings();
-            const newSettings = {
-                theme: themeToggle?.checked ? 'dark' : 'light',
-                soundEnabled: soundToggle?.checked ?? false,
-                notificationsEnabled: notificationsToggle?.checked ?? true,
-                showTimer: timerDisplay?.checked ?? true,
-                showAccuracy: accuracyDisplay?.checked ?? true,
-                autoCheckAnswers: autoCheck?.checked ?? false,
-                adaptiveDifficulty: adaptiveToggle?.checked ?? true,
-                problemsPerSession: currentSettings.problemsPerSession || 10,
-                difficultyLevel: currentSettings.difficultyLevel || 'medium',
-                darkMode: themeToggle?.checked ?? true
-            };
-
-            console.log('Saving new settings:', newSettings);
-            saveSettings(newSettings);
-            applySettings(newSettings);
         });
     }
 
@@ -288,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('Already processing settings, skipping...');
                     return;
                 }
-                
+
                 isProcessingSettings = true;
                 const backendSettings = message.payload.settings;
                 console.log('Received settings from backend:', backendSettings);
@@ -305,10 +345,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem('appSettings', JSON.stringify(mergedSettings));
                 applySettings(mergedSettings);
                 updateUI(mergedSettings);
-                
+
                 // Show success message for loading
                 showSuccessMessage('Settings loaded successfully!');
-                
+
                 setTimeout(() => {
                     isProcessingSettings = false;
                 }, 500);

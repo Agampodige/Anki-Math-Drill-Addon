@@ -30,6 +30,27 @@
                 <!-- Appearance Section -->
                 <section class="settings-card">
                     <h2 class="section-label">🎨 Appearance</h2>
+
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Accent Color</span>
+                            <span class="setting-desc">Choose your preferred color theme</span>
+                        </div>
+                        <div class="color-options" id="colorOptions">
+                            <!-- Injected by JS or hardcoded -->
+                            <button class="color-btn active" data-color="green" style="background: #10b981;"
+                                aria-label="Green"></button>
+                            <button class="color-btn" data-color="blue" style="background: #3b82f6;"
+                                aria-label="Blue"></button>
+                            <button class="color-btn" data-color="purple" style="background: #a855f7;"
+                                aria-label="Purple"></button>
+                            <button class="color-btn" data-color="orange" style="background: #f97316;"
+                                aria-label="Orange"></button>
+                            <button class="color-btn" data-color="red" style="background: #ef4444;"
+                                aria-label="Red"></button>
+                        </div>
+                    </div>
+
                     <div class="setting-item">
                         <div class="setting-info">
                             <span class="setting-title">Dark Mode</span>
@@ -139,10 +160,9 @@
                     </div>
                 </section>
 
-                <!-- Save Action -->
+                <!-- Footer Actions -->
                 <div class="settings-footer">
-                    <button id="refreshSettingsBtn" class="secondary-button">Refresh</button>
-                    <button id="saveSettingsBtn" class="primary-button">Save Changes</button>
+                    <button id="refreshSettingsBtn" class="secondary-button">Refresh Settings</button>
                     <button id="resetBtn" class="secondary-button">Reset Defaults</button>
                 </div>
 

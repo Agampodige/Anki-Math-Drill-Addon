@@ -11,15 +11,10 @@
 .heatmap-labels-months {
     display: flex;
     padding-left: 40px;
-    /* Space for day labels */
     height: 20px;
     margin-bottom: var(--spacing-xs);
-    color: #9ca3af;
-    font-size: 10px;
-}
-
-body.light-theme .heatmap-labels-months {
     color: var(--text-muted);
+    font-size: 10px;
 }
 
 .heatmap-month {
@@ -37,14 +32,9 @@ body.light-theme .heatmap-labels-months {
     flex-direction: column;
     justify-content: space-between;
     padding: 4px 0;
-    color: #9ca3af;
+    color: var(--text-muted);
     font-size: 10px;
     height: 110px;
-    /* Match grid height */
-}
-
-body.light-theme .heatmap-labels-days {
-    color: var(--text-muted);
 }
 
 /* Insights Grid */
@@ -56,30 +46,21 @@ body.light-theme .heatmap-labels-days {
 }
 
 .insight-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-xl);
     display: flex;
     align-items: center;
     gap: var(--spacing-lg);
-    transition: all 0.25s ease;
-}
-
-body.light-theme .insight-card {
-    background: var(--bg-light);
-    border-color: var(--border-color);
+    transition: var(--transition-base);
     box-shadow: var(--shadow-sm);
 }
 
 .insight-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
-    border-color: #10b981;
-}
-
-body.light-theme .insight-card:hover {
     background: var(--bg-secondary);
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
 }
 
 .insight-icon {
@@ -99,38 +80,25 @@ body.light-theme .insight-card:hover {
 }
 
 .insight-label {
-    color: #9ca3af;
+    color: var(--text-muted);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-body.light-theme .insight-label {
-    color: var(--text-muted);
-}
-
 .insight-value {
-    color: #ffffff;
+    color: var(--text-color);
     font-size: 1.125rem;
     font-weight: 700;
 }
 
-body.light-theme .insight-value {
-    color: var(--text-color);
-}
-
 /* Recent Activity Table */
 .recent-activity-container {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-light);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     overflow: hidden;
     margin-top: var(--spacing-md);
-}
-
-body.light-theme .recent-activity-container {
-    background: var(--bg-light);
-    border-color: var(--border-color);
     box-shadow: var(--shadow-sm);
 }
 
@@ -141,36 +109,22 @@ body.light-theme .recent-activity-container {
 }
 
 .recent-activity-table th {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-secondary);
     padding: 12px;
-    color: #b0b0b0;
+    color: var(--text-muted);
     font-size: 11px;
     text-transform: uppercase;
     font-weight: 600;
 }
 
-body.light-theme .recent-activity-table th {
-    background: var(--bg-secondary);
-    color: var(--text-muted);
-}
-
 .recent-activity-table td {
     padding: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    color: #e0e0e0;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-light);
     font-size: 13px;
 }
 
-body.light-theme .recent-activity-table td {
-    border-top-color: var(--border-light);
-    color: var(--text-light);
-}
-
 .recent-activity-table tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
-}
-
-body.light-theme .recent-activity-table tr:hover td {
     background: var(--bg-secondary);
 }
 
@@ -183,7 +137,7 @@ body.light-theme .recent-activity-table tr:hover td {
 
 .result-tag.correct {
     background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
+    color: var(--primary-color);
 }
 
 .result-tag.incorrect {
@@ -193,13 +147,9 @@ body.light-theme .recent-activity-table tr:hover td {
 
 .empty-row {
     text-align: center;
-    color: #9ca3af;
+    color: var(--text-muted);
     padding: 40px !important;
     font-style: italic;
-}
-
-body.light-theme .empty-row {
-    color: var(--text-muted);
 }
 
 /* Range Selector */
@@ -213,37 +163,24 @@ body.light-theme .empty-row {
 .range-selector {
     display: flex;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-secondary);
     padding: 2px;
     border-radius: 6px;
-}
-
-body.light-theme .range-selector {
-    background: var(--bg-secondary);
 }
 
 .range-btn {
     background: transparent;
     border: none;
-    color: #9ca3af;
+    color: var(--text-muted);
     padding: 4px 8px;
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     border-radius: 4px;
-    transition: all 0.2s ease;
-}
-
-body.light-theme .range-btn {
-    color: var(--text-muted);
+    transition: var(--transition-base);
 }
 
 .range-btn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.05);
-}
-
-body.light-theme .range-btn:hover {
     color: var(--text-color);
     background: var(--bg-light);
 }
@@ -258,7 +195,6 @@ body.light-theme .range-btn:hover {
     .recent-activity-table th:nth-child(1),
     .recent-activity-table td:nth-child(1) {
         display: none;
-        /* Hide date on small screens */
     }
 
     .heatmap-labels-days {
