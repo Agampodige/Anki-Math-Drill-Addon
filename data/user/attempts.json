@@ -1,5 +1,5 @@
 {
-  "lastId": 6975,
+  "lastId": 6976,
   "attempts": [
     {
       "id": 1,
@@ -78203,8 +78203,21 @@
       "isCorrect": false,
       "timeTaken": 2.546,
       "timestamp": "2026-01-21T12:30:13.404Z"
+    },
+    {
+      "id": 6976,
+      "operation": "addition",
+      "digits": 2,
+      "question": "31 + 40",
+      "num1": 31,
+      "num2": 40,
+      "userAnswer": 71,
+      "correctAnswer": 71,
+      "isCorrect": true,
+      "timeTaken": 5.388,
+      "timestamp": "2026-01-21T12:41:44.835Z"
     }
   ],
-  "lastSaved": "2026-01-21T18:00:13.451661",
-  "totalAttempts": 6975
+  "lastSaved": "2026-01-21T18:11:44.897721",
+  "totalAttempts": 6976
 }

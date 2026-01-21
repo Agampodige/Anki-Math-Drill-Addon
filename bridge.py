@@ -40,6 +40,8 @@ class Bridge(QObject):
                 self._handle_show_info(payload)
             elif msg_type == 'save_attempts':
                 self._handle_save_attempts(payload)
+            elif msg_type == 'get_attempts':
+                self._handle_get_attempts(payload)
             elif msg_type == 'load_attempts':
                 self._handle_load_attempts(payload)
             elif msg_type == 'get_statistics':
@@ -195,6 +197,32 @@ class Bridge(QObject):
                 'type': 'error',
                 'payload': {
                     'message': f'Error saving attempts: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+    
+    def _handle_get_attempts(self, payload):
+        """Handle get attempts request for home stats"""
+        try:
+            if not self.attempts_manager:
+                raise Exception('Attempts manager not initialized')
+            
+            data = self.attempts_manager.load_attempts()
+            attempts = data.get('attempts', [])
+            
+            response = {
+                'type': 'get_attempts_response',
+                'payload': {
+                    'attempts': attempts,
+                    'success': True
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+        except Exception as e:
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Error getting attempts: {str(e)}'
                 }
             }
             self.messageReceived.emit(json.dumps(response))

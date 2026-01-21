@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Test Data</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; cursor: pointer; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+    <h1>Load Test Data for Home Stats</h1>
+    
+    <button onclick="loadTestData()">Load Test Data</button>
+    <button onclick="clearData()">Clear Data</button>
+    <button onclick="goToHome()">Go to Home Page</button>
+    
+    <div id="status"></div>
+
+    <script>
+        function generateTestData() {
+            const attempts = [];
+            const operations = ['addition', 'subtraction', 'multiplication', 'division', 'complex'];
+            const now = new Date();
+            
+            // Generate 100 attempts over the last 15 days
+            for (let i = 0; i < 100; i++) {
+                const date = new Date(now);
+                date.setDate(date.getDate() - Math.floor(Math.random() * 15));
+                date.setHours(Math.floor(Math.random() * 24));
+                date.setMinutes(Math.floor(Math.random() * 60));
+                
+                attempts.push({
+                    id: i + 1,
+                    operation: operations[Math.floor(Math.random() * operations.length)],
+                    digits: Math.floor(Math.random() * 3) + 1,
+                    question: `${Math.floor(Math.random() * 100)} ${['+', '-', '×', '÷'][Math.floor(Math.random() * 4)]} ${Math.floor(Math.random() * 100)}`,
+                    userAnswer: Math.floor(Math.random() * 200),
+                    correctAnswer: Math.floor(Math.random() * 200),
+                    isCorrect: Math.random() > 0.25, // 75% accuracy
+                    timeTaken: Math.random() * 15 + 3, // 3-18 seconds
+                    timestamp: date.toISOString()
+                });
+            }
+            
+            // Ensure we have attempts for consecutive days to create a streak
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(now);
+                date.setDate(date.getDate() - i);
+                date.setHours(14, 30, 0, 0);
+                
+                attempts.push({
+                    id: 100 + i,
+                    operation: 'addition',
+                    digits: 2,
+                    question: `${10 + i} + ${20 + i}`,
+                    userAnswer: 30 + (2 * i),
+                    correctAnswer: 30 + (2 * i),
+                    isCorrect: true,
+                    timeTaken: 5 + i,
+                    timestamp: date.toISOString()
+                });
+            }
+            
+            return attempts;
+        }
+        
+        function loadTestData() {
+            const testData = generateTestData();
+            localStorage.setItem('mathDrillAttempts', JSON.stringify(testData));
+            
+            document.getElementById('status').innerHTML = `
+                <div class="status success">
+                    ✅ Test data loaded successfully!<br>
+                    Generated ${testData.length} attempts<br>
+                    Date range: ${new Date(testData[0].timestamp).toLocaleDateString()} to ${new Date(testData[testData.length-1].timestamp).toLocaleDateString()}<br>
+                    Expected accuracy: ~75%<br>
+                    Expected streak: 7 days
+                </div>
+            `;
+        }
+        
+        function clearData() {
+            localStorage.removeItem('mathDrillAttempts');
+            document.getElementById('status').innerHTML = `
+                <div class="status">Data cleared from localStorage</div>
+            `;
+        }
+        
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

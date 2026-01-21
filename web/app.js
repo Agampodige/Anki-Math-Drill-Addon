@@ -123,6 +123,70 @@ window.addEventListener('load', function () {
     updateThemeToggleIcon();
 });
 
+function updateHomeStatsFromBackend(attempts) {
+    if (!attempts || !Array.isArray(attempts)) {
+        console.error('Invalid attempts data received from backend');
+        return;
+    }
+
+    const total = attempts.length;
+    const correct = attempts.filter(a => a.isCorrect).length;
+    const accuracy = Math.round((correct / total) * 100);
+
+    // Calculate daily streak
+    const dates = new Set();
+    attempts.forEach(a => {
+        const ts = a.timestamp || a.date;
+        if (!ts) return;
+        const d = typeof ts === 'number' ? new Date(ts * 1000) : new Date(ts);
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        dates.add(dateStr);
+    });
+
+    let streak = 0;
+    const today = new Date();
+    const checkDate = new Date(today);
+
+    while (true) {
+        const dateStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+        if (dates.has(dateStr)) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+            // If it's today and no attempts yet, check yesterday to continue streak
+            if (streak === 0) {
+                checkDate.setDate(checkDate.getDate() - 1);
+                const yesterdayStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+                if (dates.has(yesterdayStr)) {
+                    // Start streak count from 1 if yesterday was active
+                    // wait, if today is not in set but yesterday is, streak is the streak ending yesterday.
+                    // Let's just count backwards from yesterday.
+                    let yesterdayStreak = 0;
+                    let tempDate = new Date(checkDate);
+                    while (true) {
+                        const s = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}-${String(tempDate.getDate()).padStart(2, '0')}`;
+                        if (dates.has(s)) {
+                            yesterdayStreak++;
+                            tempDate.setDate(tempDate.getDate() - 1);
+                        } else break;
+                    }
+                    streak = yesterdayStreak;
+                }
+            }
+            break;
+        }
+    }
+
+    // Update the UI with real stats
+    if (document.getElementById('homeStatTotalAttempts')) {
+        document.getElementById('homeStatTotalAttempts').textContent = total;
+        document.getElementById('homeStatAccuracy').textContent = accuracy + '%';
+        document.getElementById('homeStatStreak').textContent = streak;
+    }
+
+    console.log(`Updated home stats with real data: ${total} attempts, ${accuracy}% accuracy, ${streak} day streak`);
+}
+
 function updateHomeUI() {
     // 1. Set Greeting
     const greetingText = document.getElementById('greetingText');
@@ -133,12 +197,17 @@ function updateHomeUI() {
         if (greetingEmoji) greetingEmoji.textContent = emoji;
     }
 
-    // 2. Load and Display Stats
-    const stats = calculateHomeStats();
-    if (document.getElementById('homeStatTotalAttempts')) {
-        document.getElementById('homeStatTotalAttempts').textContent = stats.total;
-        document.getElementById('homeStatAccuracy').textContent = stats.accuracy + '%';
-        document.getElementById('homeStatStreak').textContent = stats.streak;
+    // 2. Load and Display Stats - request fresh data from backend
+    if (isConnected && pybridge) {
+        sendToPython('get_attempts', {});
+    } else {
+        // Fallback to localStorage for development/testing
+        const stats = calculateHomeStats();
+        if (document.getElementById('homeStatTotalAttempts')) {
+            document.getElementById('homeStatTotalAttempts').textContent = stats.total;
+            document.getElementById('homeStatAccuracy').textContent = stats.accuracy + '%';
+            document.getElementById('homeStatStreak').textContent = stats.streak;
+        }
     }
 }
 
@@ -151,7 +220,13 @@ function getGreeting() {
 }
 
 function calculateHomeStats() {
-    // Try to load attempts from localStorage set by analytics or practice
+    // If Python bridge is available, request real data from backend
+    if (isConnected && pybridge) {
+        sendToPython('get_attempts', {});
+        return { total: 0, accuracy: 0, streak: 0 }; // Return placeholder while loading
+    }
+
+    // Fallback to localStorage for development/testing
     const attemptsStr = localStorage.getItem('mathDrillAttempts');
     let attempts = [];
     try {
@@ -395,50 +470,14 @@ function updateThemeToggleIcon() {
         themeToggleBtn.textContent = icon;
     }
 }
-
-// Python Bridge Integration (for Anki addon)
 let pybridge = null;
 let isConnected = false;
-
-// Initialize WebChannel connection
-if (typeof qt !== 'undefined' && qt.webChannelTransport) {
-    window.addEventListener('load', function () {
-        if (typeof QWebChannel !== 'undefined') {
-            new QWebChannel(qt.webChannelTransport, function (channel) {
-                pybridge = channel.objects.pybridge;
-
-                if (pybridge) {
-                    window.pybridge = pybridge;
-                    isConnected = true;
-                    console.log('✅ Successfully connected to Python bridge');
-
-                    // Dispatch event for other scripts
-                    window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
-
-                    // Set up message listener
-                    pybridge.messageReceived.connect(function (message) {
-                        console.log('📩 Received from Python:', message);
-                        handlePythonMessage(message);
-                    });
-                } else {
-                    console.log('❌ Failed to connect to Python bridge');
-                }
-            });
-        } else {
-            console.log('❌ QWebChannel not available');
-            createMockBridge();
-        }
-    });
-} else {
-    console.log('🌐 Running outside Qt environment - using mock bridge');
-    createMockBridge();
-}
 
 // Create mock bridge for development/testing
 function createMockBridge() {
     pybridge = {
         sendMessage: function (message) {
-            console.log('📤 Mock bridge - would send to Python:', message);
+            console.log(' Mock bridge - would send to Python:', message);
 
             try {
                 const data = JSON.parse(message);
@@ -447,7 +486,7 @@ function createMockBridge() {
                 switch (data.type) {
                     case 'save_settings':
                         // Simulate saving settings to file
-                        console.log('💾 Mock bridge - saving settings:', data.payload.settings);
+                        console.log(' Mock bridge - saving settings:', data.payload.settings);
                         // Store in localStorage for persistence during session
                         localStorage.setItem('mockSettings', JSON.stringify(data.payload.settings));
 
@@ -459,6 +498,69 @@ function createMockBridge() {
                             });
                             handlePythonMessage(mockResponse);
                         }, 50);
+                        break;
+
+                    case 'get_attempts':
+                        // Simulate loading attempts from localStorage
+                        const attemptsStr = localStorage.getItem('mathDrillAttempts');
+                        let attempts = [];
+                        try {
+                            if (attemptsStr) attempts = JSON.parse(attemptsStr);
+                        } catch (e) {
+                            console.error('Mock bridge - error parsing attempts:', e);
+                        }
+                        
+                        // If no attempts in localStorage, try to load from the actual data file
+                        if (attempts.length === 0) {
+                            console.log('Mock bridge - no attempts in localStorage, using sample data');
+                            // Create some sample data for testing
+                            attempts = [
+                                {
+                                    id: 1,
+                                    operation: "addition",
+                                    digits: 2,
+                                    question: "15 + 27",
+                                    userAnswer: 42,
+                                    correctAnswer: 42,
+                                    isCorrect: true,
+                                    timeTaken: 3.5,
+                                    timestamp: new Date(Date.now() - 86400000).toISOString() // Yesterday
+                                },
+                                {
+                                    id: 2,
+                                    operation: "subtraction",
+                                    digits: 2,
+                                    question: "84 - 36",
+                                    userAnswer: 48,
+                                    correctAnswer: 48,
+                                    isCorrect: true,
+                                    timeTaken: 4.2,
+                                    timestamp: new Date().toISOString() // Today
+                                },
+                                {
+                                    id: 3,
+                                    operation: "multiplication",
+                                    digits: 1,
+                                    question: "7 × 8",
+                                    userAnswer: 56,
+                                    correctAnswer: 56,
+                                    isCorrect: true,
+                                    timeTaken: 2.1,
+                                    timestamp: new Date().toISOString() // Today
+                                }
+                            ];
+                        }
+                        
+                        setTimeout(() => {
+                            const mockResponse = JSON.stringify({
+                                type: 'get_attempts_response',
+                                payload: { 
+                                    attempts: attempts,
+                                    success: true 
+                                }
+                            });
+                            handlePythonMessage(mockResponse);
+                        }, 100);
                         break;
 
                     case 'hello':
@@ -473,7 +575,7 @@ function createMockBridge() {
                         break;
 
                     default:
-                        console.log('📝 Mock bridge - unhandled message type:', data.type);
+                        console.log(' Mock bridge - unhandled message type:', data.type);
                 }
             } catch (e) {
                 console.error('Mock bridge - error parsing message:', e);
@@ -483,11 +585,54 @@ function createMockBridge() {
 
     // Set connected flag for mock mode
     isConnected = true;
-    console.log('✅ Mock bridge created for development');
+    console.log(' Mock bridge created for development');
 
     // Dispatch event for other scripts
     window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
+    
+    // If we're on the home page, update the UI with fresh data
+    if (document.getElementById('greetingText')) {
+        updateHomeUI();
+    }
 }
+
+// Initialize WebChannel connection
+if (typeof qt !== 'undefined' && qt.webChannelTransport) {
+    window.addEventListener('load', function () {
+        if (typeof QWebChannel !== 'undefined') {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                pybridge = channel.objects.pybridge;
+
+                if (pybridge) {
+                    window.pybridge = pybridge;
+                    isConnected = true;
+                    console.log(' Successfully connected to Python bridge');
+
+                    // Dispatch event for other scripts
+                    window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
+
+                    // If we're on the home page, update the UI with fresh data
+                    if (document.getElementById('greetingText')) {
+                        updateHomeUI();
+                    }
+
+                    // Set up message listener
+                    pybridge.messageReceived.connect(function (message) {
+                        console.log(' Received from Python:', message);
+                        handlePythonMessage(message);
+                    });
+                } else {
+                    console.log(' Failed to connect to Python bridge');
+                }
+            });
+        } else {
+            console.log(' QWebChannel not available');
+        }
+    });
+} else {
+    console.log(' Running outside Qt environment - using mock bridge');
+}
+createMockBridge();
 
 function handlePythonMessage(message) {
     try {
@@ -504,6 +649,12 @@ function handlePythonMessage(message) {
                 break;
             case 'data_response':
                 console.log(`📊 Received data: `, payload);
+                break;
+            case 'get_attempts_response':
+                console.log(`📈 Received attempts data for home stats:`, payload);
+                if (payload.attempts && Array.isArray(payload.attempts)) {
+                    updateHomeStatsFromBackend(payload.attempts);
+                }
                 break;
             case 'load_settings_response':
                 console.log(`⚙️ Settings loaded from backend:`, payload.settings);
