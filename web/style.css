@@ -902,7 +902,7 @@ h1 {
 
 .levels-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    background: linear-gradient(135deg, var(--lev-bg) 0%, var(--lev-bg) 100%);
     padding: var(--spacing-xl) var(--spacing-lg);
     display: flex;
     flex-direction: column;
