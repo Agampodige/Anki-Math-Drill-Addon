@@ -3,6 +3,7 @@ from aqt.utils import showInfo, askUser, tooltip
 from aqt import mw
 import json
 import os
+import shutil
 
 class Bridge(QObject):
     """Bridge for communication between Python and JavaScript"""
@@ -21,11 +22,13 @@ class Bridge(QObject):
     def sendMessage(self, message):
         """Receive message from JavaScript"""
         try:
+            print(f"DEBUG: Bridge received message: {message}")
             data = json.loads(message)
             msg_type = data.get('type', '')
             payload = data.get('payload', {})
             
             print(f"DEBUG: Received message type: {msg_type}")
+            print(f"DEBUG: Message payload: {payload}")
             
             if msg_type == 'hello':
                 self._handle_hello(payload)
@@ -48,6 +51,7 @@ class Bridge(QObject):
             elif msg_type == 'get_level_progress':
                 self._handle_get_level_progress(payload)
             elif msg_type == 'save_settings':
+                print(f"DEBUG: Routing to _handle_save_settings")
                 self._handle_save_settings(payload)
             elif msg_type == 'load_settings':
                 self._handle_load_settings(payload)
@@ -58,12 +62,16 @@ class Bridge(QObject):
             elif msg_type == 'import_data':
                 self.import_data(message)
             else:
+                print(f"DEBUG: Unknown message type: {msg_type}")
                 self.messageReceived.emit(json.dumps({
                     'type': 'error',
                     'payload': {'message': f'Unknown message type: {msg_type}'}
                 }))
                 
         except Exception as e:
+            print(f"DEBUG: Exception in sendMessage: {e}")
+            import traceback
+            traceback.print_exc()
             self.messageReceived.emit(json.dumps({
                 'type': 'error',
                 'payload': {'message': f'Error processing message: {str(e)}'}
@@ -350,17 +358,18 @@ class Bridge(QObject):
     def _handle_save_settings(self, payload):
         """Handle save settings request"""
         try:
-            if not self.levels_manager:
-                raise Exception('Levels manager not initialized')
-            
+            print(f"DEBUG: _handle_save_settings called with payload: {payload}")
             settings_data = payload.get('settings', {})
+            print(f"DEBUG: Extracted settings_data: {settings_data}")
             
             # Get the settings file path
             addon_folder = os.path.dirname(__file__)
             settings_file = os.path.join(addon_folder, "data", "user", "setting.json")
+            print(f"DEBUG: Settings file path: {settings_file}")
             
             # Ensure directory exists
             os.makedirs(os.path.dirname(settings_file), exist_ok=True)
+            print(f"DEBUG: Directory ensured")
             
             # Save settings to JSON file
             with open(settings_file, 'w', encoding='utf-8') as f:
@@ -375,6 +384,7 @@ class Bridge(QObject):
                     'message': 'Settings saved successfully'
                 }
             }
+            print(f"DEBUG: Sending response: {response}")
             self.messageReceived.emit(json.dumps(response))
         except Exception as e:
             import traceback
@@ -386,6 +396,7 @@ class Bridge(QObject):
                     'message': f'Error saving settings: {str(e)}'
                 }
             }
+            print(f"DEBUG: Sending error response: {response}")
             self.messageReceived.emit(json.dumps(response))
     
     def _handle_load_settings(self, payload):

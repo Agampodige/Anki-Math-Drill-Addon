@@ -1,5 +1,12 @@
 {
   "theme": "dark",
   "soundEnabled": false,
-  "adaptiveDifficulty": true
+  "notificationsEnabled": true,
+  "showTimer": true,
+  "showAccuracy": true,
+  "autoCheckAnswers": false,
+  "adaptiveDifficulty": true,
+  "problemsPerSession": 10,
+  "difficultyLevel": "medium",
+  "darkMode": true
 }

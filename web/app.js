@@ -319,6 +319,7 @@ if (typeof qt !== 'undefined' && qt.webChannelTransport) {
             pybridge = channel.objects.pybridge;
 
             if (pybridge) {
+                window.pybridge = pybridge;
                 isConnected = true;
                 console.log('✅ Successfully connected to Python bridge');
 
@@ -349,14 +350,45 @@ function createMockBridge() {
     pybridge = {
         sendMessage: function(message) {
             console.log('📤 Mock bridge - would send to Python:', message);
-            // Simulate response after a short delay
-            setTimeout(() => {
-                const mockResponse = JSON.stringify({
-                    type: 'hello_response',
-                    payload: { message: 'Hello from mock Python bridge!' }
-                });
-                handlePythonMessage(mockResponse);
-            }, 100);
+            
+            try {
+                const data = JSON.parse(message);
+                
+                // Handle different message types
+                switch (data.type) {
+                    case 'save_settings':
+                        // Simulate saving settings to file
+                        console.log('💾 Mock bridge - saving settings:', data.payload.settings);
+                        // Store in localStorage for persistence during session
+                        localStorage.setItem('mockSettings', JSON.stringify(data.payload.settings));
+                        
+                        // Simulate success response
+                        setTimeout(() => {
+                            const mockResponse = JSON.stringify({
+                                type: 'settings_saved',
+                                payload: { success: true }
+                            });
+                            handlePythonMessage(mockResponse);
+                        }, 50);
+                        break;
+                        
+                    case 'hello':
+                        // Simulate hello response
+                        setTimeout(() => {
+                            const mockResponse = JSON.stringify({
+                                type: 'hello_response',
+                                payload: { message: 'Hello from mock Python bridge!' }
+                            });
+                            handlePythonMessage(mockResponse);
+                        }, 100);
+                        break;
+                        
+                    default:
+                        console.log('📝 Mock bridge - unhandled message type:', data.type);
+                }
+            } catch (e) {
+                console.error('Mock bridge - error parsing message:', e);
+            }
         }
     };
     
@@ -377,6 +409,9 @@ function handlePythonMessage(message) {
         switch (type) {
             case 'hello_response':
                 console.log(`👋 Python says: ${payload.message}`);
+                break;
+            case 'settings_saved':
+                console.log(`✅ Settings saved successfully:`, payload);
                 break;
             case 'data_response':
                 console.log(`📊 Received data: `, payload);
