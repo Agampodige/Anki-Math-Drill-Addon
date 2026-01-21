@@ -31,8 +31,32 @@
     /* Purple */
 }
 
+body.light-theme {
+    --lev-bg: #f8fafc;
+    --lev-surface: #ffffff;
+    --lev-surface-hover: #e2e8f0;
+    --lev-primary: #10b981;
+    --lev-primary-hover: #059669;
+    --lev-text: #0f172a;
+    --lev-text-muted: #64748b;
+    --lev-border: #e2e8f0;
+    --lev-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-theme {
+    --lev-bg: #0f172a;
+    --lev-surface: #1e293b;
+    --lev-surface-hover: #334155;
+    --lev-primary: #10b981;
+    --lev-primary-hover: #059669;
+    --lev-text: #f8fafc;
+    --lev-text-muted: #94a3b8;
+    --lev-border: #334155;
+    --lev-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
 body {
-    background-color: var(--lev-bg) !important;
+    background-color: var(--lev-bg);
     color: var(--lev-text);
     font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
     margin: 0;

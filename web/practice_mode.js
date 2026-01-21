@@ -177,6 +177,12 @@ class PracticeMode {
             }
         }
 
+        if (this.isAdaptive) {
+            console.log('Adaptive mode is enabled.');
+        } else {
+            console.log('Adaptive mode is disabled.');
+        }
+
         this.isPracticing = true;
         this.isPaused = false;
         this.questionCount = 0;

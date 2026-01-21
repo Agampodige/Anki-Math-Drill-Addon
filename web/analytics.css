@@ -18,6 +18,10 @@
     font-size: 10px;
 }
 
+body.light-theme .heatmap-labels-months {
+    color: var(--text-muted);
+}
+
 .heatmap-month {
     flex: 1;
     min-width: 40px;
@@ -39,6 +43,10 @@
     /* Match grid height */
 }
 
+body.light-theme .heatmap-labels-days {
+    color: var(--text-muted);
+}
+
 /* Insights Grid */
 .insights-grid {
     display: grid;
@@ -58,10 +66,20 @@
     transition: all 0.25s ease;
 }
 
+body.light-theme .insight-card {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
 .insight-card:hover {
     background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
     border-color: #10b981;
+}
+
+body.light-theme .insight-card:hover {
+    background: var(--bg-secondary);
 }
 
 .insight-icon {
@@ -87,10 +105,18 @@
     letter-spacing: 0.5px;
 }
 
+body.light-theme .insight-label {
+    color: var(--text-muted);
+}
+
 .insight-value {
     color: #ffffff;
     font-size: 1.125rem;
     font-weight: 700;
+}
+
+body.light-theme .insight-value {
+    color: var(--text-color);
 }
 
 /* Recent Activity Table */
@@ -100,6 +126,12 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
     margin-top: var(--spacing-md);
+}
+
+body.light-theme .recent-activity-container {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
 }
 
 .recent-activity-table {
@@ -117,6 +149,11 @@
     font-weight: 600;
 }
 
+body.light-theme .recent-activity-table th {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+}
+
 .recent-activity-table td {
     padding: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -124,8 +161,17 @@
     font-size: 13px;
 }
 
+body.light-theme .recent-activity-table td {
+    border-top-color: var(--border-light);
+    color: var(--text-light);
+}
+
 .recent-activity-table tr:hover td {
     background: rgba(255, 255, 255, 0.02);
+}
+
+body.light-theme .recent-activity-table tr:hover td {
+    background: var(--bg-secondary);
 }
 
 .result-tag {
@@ -152,6 +198,10 @@
     font-style: italic;
 }
 
+body.light-theme .empty-row {
+    color: var(--text-muted);
+}
+
 /* Range Selector */
 .chart-header-row {
     display: flex;
@@ -168,6 +218,10 @@
     border-radius: 6px;
 }
 
+body.light-theme .range-selector {
+    background: var(--bg-secondary);
+}
+
 .range-btn {
     background: transparent;
     border: none;
@@ -180,9 +234,18 @@
     transition: all 0.2s ease;
 }
 
+body.light-theme .range-btn {
+    color: var(--text-muted);
+}
+
 .range-btn:hover {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .range-btn:hover {
+    color: var(--text-color);
+    background: var(--bg-light);
 }
 
 .range-btn.active {

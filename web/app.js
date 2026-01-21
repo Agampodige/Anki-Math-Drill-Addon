@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupNavigation();
     initializeTheme();
     setupThemeListener();
+    setupThemeStorageListener();
     updateThemeToggleIcon();
 
     // Home page specific initialization
@@ -249,8 +250,10 @@ function applyTheme(themeName) {
     // Apply theme
     if (effectiveTheme === 'dark') {
         body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
     } else {
         body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
     }
 
     // Save preference
@@ -270,6 +273,17 @@ function setupThemeListener() {
         const currentTheme = localStorage.getItem('theme') || 'auto';
         if (currentTheme === 'auto') {
             applyTheme('auto');
+        }
+    });
+}
+
+// Listen for theme changes from other pages/tabs
+function setupThemeStorageListener() {
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'theme') {
+            const newTheme = event.newValue || 'auto';
+            applyTheme(newTheme);
+            updateThemeToggleIcon();
         }
     });
 }

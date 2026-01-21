@@ -21,7 +21,16 @@ const DEFAULT_SETTINGS = {
 function loadSettings() {
     try {
         const saved = localStorage.getItem('appSettings');
-        return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
+        const parsed = saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : { ...DEFAULT_SETTINGS };
+        const storedTheme = localStorage.getItem('theme');
+        if (!parsed.theme) {
+            if (storedTheme) {
+                parsed.theme = storedTheme;
+            } else if (typeof parsed.darkMode === 'boolean') {
+                parsed.theme = parsed.darkMode ? 'dark' : 'light';
+            }
+        }
+        return parsed;
     } catch (e) {
         console.warn('Error loading settings from localStorage:', e);
         return DEFAULT_SETTINGS;
@@ -32,6 +41,9 @@ function loadSettings() {
 function saveSettings(settings) {
     // Save to localStorage first
     localStorage.setItem('appSettings', JSON.stringify(settings));
+    if (settings.theme) {
+        localStorage.setItem('theme', settings.theme);
+    }
     console.log('Settings saved to localStorage:', settings);
 
     // Also save to backend file
@@ -64,6 +76,10 @@ function applySettings(settings) {
     // Apply theme using app.js system if available
     if (window.applyTheme && settings.theme) {
         applyTheme(settings.theme);
+    }
+
+    if (settings.theme) {
+        localStorage.setItem('theme', settings.theme);
     }
 
     // Store settings in window for global access
@@ -343,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const autoCheck = document.getElementById('autoCheck');
         const adaptiveToggle = document.getElementById('adaptiveDifficultyToggle');
 
-        if (themeToggle) themeToggle.checked = settings.theme === 'dark' || settings.darkMode === true;
+        if (themeToggle) themeToggle.checked = (settings.theme || (settings.darkMode ? 'dark' : 'light')) === 'dark';
         if (soundToggle) soundToggle.checked = settings.soundEnabled ?? false;
         if (notificationsToggle) notificationsToggle.checked = settings.notificationsEnabled ?? true;
         if (timerDisplay) timerDisplay.checked = settings.showTimer ?? true;
