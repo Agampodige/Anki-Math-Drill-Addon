@@ -148,7 +148,6 @@ function calculateHomeStats() {
 
 function navigateToPage(pageName) {
     const pages = {
-        'free_drills': 'free_drills.html',
         'levels': 'levels.html',
         'practice_mode': 'practice_mode.html',
         'analytics': 'analytics.html',
