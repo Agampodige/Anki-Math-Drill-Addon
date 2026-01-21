@@ -14,7 +14,9 @@ const DEFAULT_SETTINGS = {
     showAccuracy: true,
     autoCheckAnswers: false,
     darkMode: true,
-    adaptiveDifficulty: true
+    adaptiveDifficulty: true,
+    autoBackup: true,
+    maxBackups: 5
 };
 
 // Load settings from localStorage with fallback to defaults
@@ -227,7 +229,8 @@ document.addEventListener('DOMContentLoaded', function () {
         { el: timerDisplay, key: 'showTimer' },
         { el: accuracyDisplay, key: 'showAccuracy' },
         { el: autoCheck, key: 'autoCheckAnswers' },
-        { el: adaptiveToggle, key: 'adaptiveDifficulty' }
+        { el: adaptiveToggle, key: 'adaptiveDifficulty' },
+        { el: document.getElementById('autoBackupToggle'), key: 'autoBackup' }
     ];
 
     autoSaveToggles.forEach(toggle => {
@@ -240,6 +243,36 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
+    // Max Backups input handler
+    const maxBackupsInput = document.getElementById('maxBackups');
+    if (maxBackupsInput) {
+        maxBackupsInput.addEventListener('change', (e) => {
+            let val = parseInt(e.target.value);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 20) val = 20;
+            e.target.value = val;
+
+            console.log(`Auto-saving setting: maxBackups = ${val}`);
+            const settings = loadSettings();
+            settings.maxBackups = val;
+            saveSettings(settings);
+        });
+    }
+
+    // Manual backup button
+    const backupNowBtn = document.getElementById('backupNowBtn');
+    if (backupNowBtn) {
+        backupNowBtn.addEventListener('click', () => {
+            if (window.pybridge) {
+                const message = { type: 'perform_backup', payload: {} };
+                console.log('Requesting manual backup...');
+                window.pybridge.sendMessage(JSON.stringify(message));
+                backupNowBtn.disabled = true;
+                backupNowBtn.textContent = 'Backing up...';
+            }
+        });
+    }
 
     // Refresh button handler
     if (refreshBtn) {
@@ -317,6 +350,55 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Open Backup Location handler
+    const openBackupLocationBtn = document.getElementById('openBackupLocationBtn');
+    if (openBackupLocationBtn) {
+        openBackupLocationBtn.addEventListener('click', () => {
+            if (window.pybridge) {
+                const message = { type: 'open_backup_location', payload: {} };
+                console.log('Requesting to open backup location...');
+                window.pybridge.sendMessage(JSON.stringify(message));
+                openBackupLocationBtn.disabled = true;
+                openBackupLocationBtn.textContent = 'Opening...';
+            }
+        });
+    }
+
+    // Support section handlers
+    const buyCoffeeBtn = document.getElementById('buyCoffeeBtn');
+    if (buyCoffeeBtn) {
+        buyCoffeeBtn.addEventListener('click', () => {
+            console.log('DEBUG: Buy coffee button clicked');
+            if (window.pybridge) {
+                console.log('DEBUG: Using bridge to open URL');
+                const message = { type: 'open_url', payload: { url: 'https://ko-fi.com/senee' } };
+                console.log('DEBUG: Sending message:', message);
+                window.pybridge.sendMessage(JSON.stringify(message));
+            } else {
+                console.log('DEBUG: Bridge not available, using window.open');
+                // Fallback to window.open if bridge not available
+                window.open('https://ko-fi.com/senee', '_blank');
+            }
+        });
+    }
+
+    const bugReportBtn = document.getElementById('bugReportBtn');
+    if (bugReportBtn) {
+        bugReportBtn.addEventListener('click', () => {
+            console.log('DEBUG: Bug report button clicked');
+            if (window.pybridge) {
+                console.log('DEBUG: Using bridge to open URL');
+                const message = { type: 'open_url', payload: { url: 'https://github.com/Agampodige/Anki-Math-Drill-Addon/issues' } };
+                console.log('DEBUG: Sending message:', message);
+                window.pybridge.sendMessage(JSON.stringify(message));
+            } else {
+                console.log('DEBUG: Bridge not available, using window.open');
+                // Fallback to window.open if bridge not available
+                window.open('https://github.com/Agampodige/Anki-Math-Drill-Addon/issues', '_blank');
+            }
+        });
+    }
+
     // Handle responses from Python
     window.handleBridgeMessage = function (messageStr) {
         try {
@@ -355,23 +437,17 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (message.type === 'save_settings_response' && message.payload.success) {
                 console.log('Settings successfully saved to backend');
                 showSuccessMessage('Settings saved successfully!');
-            } else if (message.type === 'export_data_response' && message.payload.success) {
-                const dataStr = JSON.stringify(message.payload.data, null, 4);
-                const blob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `math_drill_backup_${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
+            } else if (message.type === 'export_data_response') {
                 if (exportBtn) {
                     exportBtn.disabled = false;
                     exportBtn.textContent = 'Export';
                 }
-                showSuccessMessage('Data exported successfully!');
+
+                if (message.payload.success) {
+                    showSuccessMessage(message.payload.message || 'Data exported successfully!');
+                } else if (message.payload.message !== 'Export cancelled') {
+                    alert('Export failed: ' + message.payload.message);
+                }
             } else if (message.type === 'import_data_response' && message.payload.success) {
                 if (importBtn) {
                     importBtn.disabled = false;
@@ -379,10 +455,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 showSuccessMessage('Data imported! Restart required.');
                 alert('Data imported successfully. Please restart the addon.');
+            } else if (message.type === 'perform_backup_response') {
+                if (backupNowBtn) {
+                    backupNowBtn.disabled = false;
+                    backupNowBtn.textContent = 'Backup Now';
+                }
+                if (message.payload.success) {
+                    showSuccessMessage('Backup created successfully!');
+                } else {
+                    alert('Backup failed: ' + message.payload.message);
+                }
+            } else if (message.type === 'open_backup_location_response') {
+                if (openBackupLocationBtn) {
+                    openBackupLocationBtn.disabled = false;
+                    openBackupLocationBtn.textContent = 'Open Folder';
+                }
+                if (message.payload.success) {
+                    showSuccessMessage('Backup location opened!');
+                } else {
+                    alert('Failed to open backup location: ' + message.payload.message);
+                }
+            } else if (message.type === 'open_url_response') {
+                if (message.payload.success) {
+                    console.log('DEBUG: URL opened successfully');
+                    showSuccessMessage('Opening in browser...');
+                } else {
+                    console.log('DEBUG: Failed to open URL:', message.payload.message);
+                    alert('Failed to open URL: ' + message.payload.message);
+                }
             } else if (message.type === 'error') {
                 console.error('Bridge error:', message.payload.message);
                 if (exportBtn) { exportBtn.disabled = false; exportBtn.textContent = 'Export'; }
                 if (importBtn) { importBtn.disabled = false; importBtn.textContent = 'Import'; }
+                if (openBackupLocationBtn) { openBackupLocationBtn.disabled = false; openBackupLocationBtn.textContent = 'Open Folder'; }
             }
         } catch (e) {
             console.error('Error handling bridge message:', e);
@@ -406,6 +511,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (accuracyDisplay) accuracyDisplay.checked = settings.showAccuracy ?? true;
         if (autoCheck) autoCheck.checked = settings.autoCheckAnswers ?? false;
         if (adaptiveToggle) adaptiveToggle.checked = settings.adaptiveDifficulty ?? true;
+
+        const autoBackupToggle = document.getElementById('autoBackupToggle');
+        const maxBackupsInput = document.getElementById('maxBackups');
+        if (autoBackupToggle) autoBackupToggle.checked = settings.autoBackup ?? true;
+        if (maxBackupsInput) maxBackupsInput.value = settings.maxBackups ?? 5;
     }
 
 });

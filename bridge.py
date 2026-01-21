@@ -4,16 +4,18 @@ from aqt import mw
 import json
 import os
 import shutil
+from datetime import datetime
 
 class Bridge(QObject):
     """Bridge for communication between Python and JavaScript"""
     
-    def __init__(self, parent=None, attempts_manager=None, levels_manager=None):
+    def __init__(self, parent=None, attempts_manager=None, levels_manager=None, backup_manager=None):
         super().__init__(parent)
         self.channel = QWebChannel()
         self.channel.registerObject("pybridge", self)
         self.attempts_manager = attempts_manager
         self.levels_manager = levels_manager
+        self.backup_manager = backup_manager
     
     # Signals to JavaScript
     messageReceived = pyqtSignal(str)
@@ -61,6 +63,12 @@ class Bridge(QObject):
                 self.export_data()
             elif msg_type == 'import_data':
                 self.import_data(message)
+            elif msg_type == 'perform_backup':
+                self.perform_backup(payload)
+            elif msg_type == 'open_backup_location':
+                self.open_backup_location()
+            elif msg_type == 'open_url':
+                self.open_url(message)
             else:
                 print(f"DEBUG: Unknown message type: {msg_type}")
                 self.messageReceived.emit(json.dumps({
@@ -77,6 +85,44 @@ class Bridge(QObject):
                 'payload': {'message': f'Error processing message: {str(e)}'}
             }))
     
+    @pyqtSlot(str)
+    def perform_backup(self, payload_str=None):
+        """Handle manual backup request"""
+        try:
+            if not self.backup_manager:
+                raise Exception('Backup manager not initialized')
+            
+            # Use max_backups from settings if available
+            max_backups = 5
+            addon_folder = os.path.dirname(__file__)
+            settings_file = os.path.join(addon_folder, "data", "user", "setting.json")
+            if os.path.exists(settings_file):
+                with open(settings_file, 'r', encoding='utf-8') as f:
+                    try:
+                        settings_data = json.load(f)
+                        max_backups = settings_data.get('maxBackups', 5)
+                    except:
+                        pass
+            
+            success, result = self.backup_manager.perform_backup(max_backups=max_backups)
+            
+            response = {
+                'type': 'perform_backup_response',
+                'payload': {
+                    'success': success,
+                    'message': f"Backup created successfully!" if success else f"Backup failed: {result}"
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+        except Exception as e:
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Error performing backup: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
     def _handle_hello(self, payload):
         """Handle hello message from JS"""
         name = payload.get('name', 'World')
@@ -438,8 +484,26 @@ class Bridge(QObject):
 
     @pyqtSlot(str)
     def export_data(self, payload_str=None):
-        """Handle export data request"""
+        """Handle export data request with file dialog"""
         try:
+            from aqt.qt import QFileDialog
+            from aqt import mw
+            
+            # Ask user for save location
+            file_path, _ = QFileDialog.getSaveFileName(
+                mw, 
+                "Export Math Drill Data", 
+                f"math_drill_backup_{datetime.now().strftime('%Y-%m-%d')}.json", 
+                "JSON Files (*.json)"
+            )
+            
+            if not file_path:
+                self.messageReceived.emit(json.dumps({
+                    'type': 'export_data_response',
+                    'payload': {'success': False, 'message': 'Export cancelled'}
+                }))
+                return
+
             addon_folder = os.path.dirname(__file__)
             user_data_dir = os.path.join(addon_folder, "data", "user")
             
@@ -447,23 +511,28 @@ class Bridge(QObject):
             if os.path.exists(user_data_dir):
                 for filename in os.listdir(user_data_dir):
                     if filename.endswith(".json"):
-                        file_path = os.path.join(user_data_dir, filename)
+                        file_path_src = os.path.join(user_data_dir, filename)
                         try:
-                            with open(file_path, 'r', encoding='utf-8') as f:
+                            with open(file_path_src, 'r', encoding='utf-8') as f:
                                 data_to_export[filename] = json.load(f)
                         except Exception as fe:
                             print(f"DEBUG: Could not read {filename}: {fe}")
             
+            # Save to chosen path
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data_to_export, f, indent=4, ensure_ascii=False)
+            
             response = {
                 'type': 'export_data_response',
                 'payload': {
-                    'data': data_to_export,
-                    'success': True
+                    'success': True,
+                    'message': f'Data exported to {file_path}',
+                    'path': file_path
                 }
             }
-            # Note: Using sendMessage for response consistency if needed, 
-            # but usually slots emit messageReceived signals
             self.messageReceived.emit(json.dumps(response))
+            tooltip(f"Data exported successfully to {os.path.basename(file_path)}")
+            
         except Exception as e:
             print(f"ERROR in export_data: {e}")
             response = {
@@ -476,27 +545,54 @@ class Bridge(QObject):
     def import_data(self, payload_str):
         """Handle import data request"""
         try:
+            print(f"DEBUG: Import received payload: {payload_str}")
             payload = json.loads(payload_str)
-            import_data = payload.get('data', {})
+            # Fix payload extraction
+            import_data = payload.get('payload', {}).get('data') or payload.get('data', {})
             
+            print(f"DEBUG: Extracted import_data: {import_data}")
+            
+            if not import_data:
+                raise Exception("No data found in import request")
+
             addon_folder = os.path.dirname(__file__)
             user_data_dir = os.path.join(addon_folder, "data", "user")
             
+            print(f"DEBUG: User data dir: {user_data_dir}")
+            
             if not os.path.exists(user_data_dir):
                 os.makedirs(user_data_dir, exist_ok=True)
+            
+            # Perform backup before importing
+            if self.backup_manager:
+                backup_success, backup_result = self.backup_manager.perform_backup(max_backups=5)
+                if not backup_success:
+                    print(f"WARNING: Backup failed before import: {backup_result}")
+                else:
+                    print(f"Backup created before import: {backup_result}")
             
             success_files = []
             for filename, content in import_data.items():
                 if filename.endswith(".json"):
                     file_path = os.path.join(user_data_dir, filename)
-                    # Create backup
-                    if os.path.exists(file_path):
-                        shutil.copy2(file_path, file_path + ".bak")
+                    print(f"DEBUG: Writing to {file_path} with content: {content}")
                     
                     with open(file_path, 'w', encoding='utf-8') as f:
-                        json.dump(content, f, indent=4)
+                        json.dump(content, f, indent=4, ensure_ascii=False)
                     success_files.append(filename)
+                    
+                    # Verify file was written correctly
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        verify_content = json.load(f)
+                    print(f"DEBUG: Verification - file content after write: {verify_content}")
             
+            # Try to reload managers if they have a reload method or we re-init
+            if self.attempts_manager and hasattr(self.attempts_manager, 'load_attempts'):
+                self.attempts_manager.attempts_data = self.attempts_manager.load_attempts()
+            
+            if self.levels_manager and hasattr(self.levels_manager, '_load_data'):
+                self.levels_manager._load_data()
+
             response = {
                 'type': 'import_data_response',
                 'payload': {
@@ -505,12 +601,134 @@ class Bridge(QObject):
                 }
             }
             self.messageReceived.emit(json.dumps(response))
-            # Optional: Refresh managers if needed, or user can restart
-            tooltip("Data imported successfully. Please restart the addon to apply changes.")
+            tooltip("Data imported successfully. Please restart the addon for full effect.")
+            
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             print(f"ERROR in import_data: {e}")
             response = {
                 'type': 'error',
                 'payload': {'message': f'Import failed: {str(e)}'}
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    @pyqtSlot()
+    def open_backup_location(self):
+        """Open the backup location in the system file manager"""
+        try:
+            if not self.backup_manager:
+                raise Exception('Backup manager not initialized')
+            
+            backup_dir = self.backup_manager.backup_dir
+            
+            # Ensure backup directory exists
+            if not os.path.exists(backup_dir):
+                os.makedirs(backup_dir, exist_ok=True)
+            
+            # Open the folder using system file manager
+            import subprocess
+            import platform
+            
+            system = platform.system()
+            if system == "Windows":
+                os.startfile(backup_dir)
+            elif system == "Darwin":  # macOS
+                subprocess.run(["open", backup_dir])
+            else:  # Linux and others
+                subprocess.run(["xdg-open", backup_dir])
+            
+            response = {
+                'type': 'open_backup_location_response',
+                'payload': {
+                    'success': True,
+                    'message': f'Opened backup location: {backup_dir}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+            tooltip(f"Opened backup folder")
+            
+        except Exception as e:
+            print(f"ERROR in open_backup_location: {e}")
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Failed to open backup location: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    @pyqtSlot(str)
+    def open_url(self, payload_str):
+        """Open URL in system default browser"""
+        try:
+            print(f"DEBUG: open_url received payload_str: {payload_str}")
+            print(f"DEBUG: Type of payload_str: {type(payload_str)}")
+            
+            payload = json.loads(payload_str)
+            print(f"DEBUG: Parsed payload: {payload}")
+            print(f"DEBUG: Payload type: {type(payload)}")
+            
+            url = payload.get('url', '')
+            print(f"DEBUG: Extracted URL: {url}")
+            
+            if not url:
+                # Try to get URL from nested payload structure
+                if 'payload' in payload and 'url' in payload['payload']:
+                    url = payload['payload']['url']
+                    print(f"DEBUG: Extracted URL from nested payload: {url}")
+                
+                if not url:
+                    raise Exception('No URL provided')
+            
+            print(f"DEBUG: Attempting to open URL: {url}")
+            
+            # Try multiple methods to open URL
+            import webbrowser
+            import subprocess
+            import platform
+            
+            # Method 1: Try webbrowser module
+            try:
+                webbrowser.open(url)
+                print(f"DEBUG: webbrowser.open() succeeded for {url}")
+            except Exception as e1:
+                print(f"DEBUG: webbrowser.open() failed: {e1}")
+                
+                # Method 2: Try platform-specific commands
+                system = platform.system()
+                try:
+                    if system == "Windows":
+                        os.startfile(url)
+                        print(f"DEBUG: os.startfile() succeeded for {url}")
+                    elif system == "Darwin":  # macOS
+                        subprocess.run(["open", url], check=True)
+                        print(f"DEBUG: subprocess open (macOS) succeeded for {url}")
+                    else:  # Linux
+                        subprocess.run(["xdg-open", url], check=True)
+                        print(f"DEBUG: subprocess xdg-open (Linux) succeeded for {url}")
+                except Exception as e2:
+                    print(f"DEBUG: Platform-specific command failed: {e2}")
+                    raise Exception(f"Both webbrowser and system commands failed: {e1}, {e2}")
+            
+            response = {
+                'type': 'open_url_response',
+                'payload': {
+                    'success': True,
+                    'message': f'Opened URL: {url}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+            tooltip(f"Opening in browser...")
+            
+        except Exception as e:
+            print(f"ERROR in open_url: {e}")
+            import traceback
+            traceback.print_exc()
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Failed to open URL: {str(e)}'
+                }
             }
             self.messageReceived.emit(json.dumps(response))

@@ -599,6 +599,29 @@ h1 {
     transform: scale(0.95);
 }
 
+.them.secondary-button:active {
+    transform: scale(0.98);
+}
+
+.number-input {
+    width: 70px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.number-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
 .home-main {
     display: flex;
     flex-direction: column;

@@ -58,9 +58,16 @@ class AddonDialog(QDialog):
         self.attempts_manager = AttemptsManager(addon_folder)
         self.levels_manager = LevelsManager(addon_folder)
         
-        # Set up bridge with both managers
-        self.bridge = Bridge(self, self.attempts_manager, self.levels_manager)
+        # Initialize Backup Manager
+        from .backup_manager import BackupManager
+        self.backup_manager = BackupManager(addon_folder)
+        
+        # Set up bridge with all managers
+        self.bridge = Bridge(self, self.attempts_manager, self.levels_manager, self.backup_manager)
         self.web.page().setWebChannel(self.bridge.channel)
+        
+        # Trigger automatic backup if enabled
+        self._trigger_auto_backup()
         
         # Load HTML file
         html_path = os.path.join(addon_folder, "web", page)
@@ -79,6 +86,27 @@ class AddonDialog(QDialog):
         # Enable context menu for the web view
         self.web.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.web.customContextMenuRequested.connect(self.show_context_menu)
+
+    def _trigger_auto_backup(self):
+        """Perform automatic backup if enabled in settings"""
+        try:
+            addon_folder = os.path.dirname(__file__)
+            settings_file = os.path.join(addon_folder, "data", "user", "setting.json")
+            
+            auto_backup = True
+            max_backups = 5
+            
+            if os.path.exists(settings_file):
+                import json
+                with open(settings_file, 'r', encoding='utf-8') as f:
+                    settings = json.load(f)
+                    auto_backup = settings.get('autoBackup', True)
+                    max_backups = settings.get('maxBackups', 5)
+            
+            if auto_backup:
+                self.backup_manager.perform_backup(max_backups=max_backups)
+        except Exception as e:
+            print(f"Auto backup trigger error: {e}")
     
     def showEvent(self, event):
         """Override show event to ensure web view gets focus"""
