@@ -1,6 +1,6 @@
 // Navigation System
 function setupNavigation() {
-    const homeButtons = document.querySelectorAll('.nav-button');
+    const homeButtons = document.querySelectorAll('.nav-card, [data-page]');
     const backButtons = document.querySelectorAll('#backBtn');
 
     console.log('Setting up navigation, found buttons:', homeButtons.length, backButtons.length);
@@ -314,7 +314,8 @@ let isConnected = false;
 // Initialize WebChannel connection
 if (typeof qt !== 'undefined' && qt.webChannelTransport) {
     window.addEventListener('load', function () {
-        new QWebChannel(qt.webChannelTransport, function (channel) {
+        if (typeof QWebChannel !== 'undefined') {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
             pybridge = channel.objects.pybridge;
 
             if (pybridge) {
@@ -333,7 +334,38 @@ if (typeof qt !== 'undefined' && qt.webChannelTransport) {
                 console.log('❌ Failed to connect to Python bridge');
             }
         });
+        } else {
+            console.log('❌ QWebChannel not available');
+            createMockBridge();
+        }
     });
+} else {
+    console.log('🌐 Running outside Qt environment - using mock bridge');
+    createMockBridge();
+}
+
+// Create mock bridge for development/testing
+function createMockBridge() {
+    pybridge = {
+        sendMessage: function(message) {
+            console.log('📤 Mock bridge - would send to Python:', message);
+            // Simulate response after a short delay
+            setTimeout(() => {
+                const mockResponse = JSON.stringify({
+                    type: 'hello_response',
+                    payload: { message: 'Hello from mock Python bridge!' }
+                });
+                handlePythonMessage(mockResponse);
+            }, 100);
+        }
+    };
+    
+    // Set connected flag for mock mode
+    isConnected = true;
+    console.log('✅ Mock bridge created for development');
+    
+    // Dispatch event for other scripts
+    window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
 }
 
 function handlePythonMessage(message) {
