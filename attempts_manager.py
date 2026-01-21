@@ -74,6 +74,11 @@ class AttemptsManager:
                 if "id" not in attempt or attempt["id"] in [a.get("id") for a in attempts_list]:
                     last_id += 1
                     attempt["id"] = last_id
+                
+                # Ensure timestamp exists for heatmap
+                if "timestamp" not in attempt:
+                    import time
+                    attempt["timestamp"] = time.time()
 
                 attempts_list.append(attempt)
                 added_count += 1
@@ -98,6 +103,41 @@ class AttemptsManager:
             print(f"Error saving attempts: {e}")
             return {"success": False, "message": str(e)}
 
+    def get_heatmap_data(self) -> Dict[str, int]:
+        """Get aggregated attempt counts by date for heatmap visualization.
+        
+        Returns:
+            Dict mapping date strings (YYYY-MM-DD) to attempt counts
+        """
+        try:
+            data = self.load_attempts()
+            attempts = data.get("attempts", [])
+            
+            date_counts = {}
+            for attempt in attempts:
+                # Get timestamp from attempt
+                timestamp = attempt.get("timestamp")
+                if not timestamp:
+                    continue
+                
+                try:
+                    # Convert timestamp to date string
+                    from datetime import datetime
+                    date_obj = datetime.fromtimestamp(timestamp)
+                    date_str = date_obj.strftime("%Y-%m-%d")
+                    
+                    # Increment count for this date
+                    date_counts[date_str] = date_counts.get(date_str, 0) + 1
+                except (ValueError, OSError, OverflowError) as e:
+                    # Skip invalid timestamps
+                    print(f"Invalid timestamp {timestamp}: {e}")
+                    continue
+            
+            return date_counts
+        except Exception as e:
+            print(f"Error computing heatmap data: {e}")
+            return {}
+
     def get_attempt_statistics(self) -> Dict[str, Any]:
         """Compute basic statistics from available attempts."""
         try:
@@ -105,24 +145,75 @@ class AttemptsManager:
             attempts = data.get("attempts", [])
             total = len(attempts)
             if total == 0:
-                return {"totalAttempts": 0, "correctCount": 0, "incorrectCount": 0, "accuracy": 0.0, "averageTime": 0.0}
+                return {
+                    "totalAttempts": 0, 
+                    "correctCount": 0, 
+                    "incorrectCount": 0, 
+                    "accuracy": 0.0, 
+                    "averageTime": 0.0,
+                    "byOperation": {},
+                    "attempts": []
+                }
 
-            correct = sum(1 for a in attempts if a.get("isCorrect"))
+            # Validate and sanitize attempts
+            valid_attempts = []
+            for a in attempts:
+                if not isinstance(a, dict):
+                    continue
+                # Ensure required fields exist
+                if "isCorrect" not in a:
+                    a["isCorrect"] = False
+                if "timeTaken" not in a:
+                    a["timeTaken"] = 0
+                if "operation" not in a:
+                    a["operation"] = "unknown"
+                valid_attempts.append(a)
+            
+            total = len(valid_attempts)
+            if total == 0:
+                return {
+                    "totalAttempts": 0, 
+                    "correctCount": 0, 
+                    "incorrectCount": 0, 
+                    "accuracy": 0.0, 
+                    "averageTime": 0.0,
+                    "byOperation": {},
+                    "attempts": []
+                }
+
+            correct = sum(1 for a in valid_attempts if a.get("isCorrect"))
             incorrect = total - correct
-            avg_time = sum((a.get("timeTaken", 0) or 0) for a in attempts) / total
+            avg_time = sum((a.get("timeTaken", 0) or 0) for a in valid_attempts) / total
             accuracy = (correct / total) * 100 if total > 0 else 0.0
 
             by_op = {}
-            for a in attempts:
+            for a in valid_attempts:
                 op = a.get("operation", "unknown")
-                by_op.setdefault(op, {"attempts": 0, "correct": 0})
-                by_op[op]["attempts"] += 1
+                # Initialize operation stats if not present
+                if op not in by_op:
+                    by_op[op] = {
+                        "count": 0, 
+                        "correct": 0,
+                        "total_time": 0.0
+                    }
+                
+                # Update stats
+                by_op[op]["count"] += 1
+                by_op[op]["total_time"] += (a.get("timeTaken", 0) or 0)
+                
                 if a.get("isCorrect"):
                     by_op[op]["correct"] += 1
 
-            # Convert by_op to include accuracy
+            # Convert by_op to final format with calculated fields
+            final_by_op = {}
             for op, stats in by_op.items():
-                stats["accuracy"] = (stats["correct"] / stats["attempts"] * 100) if stats["attempts"] > 0 else 0.0
+                count = stats["count"]
+                final_by_op[op] = {
+                    "count": count,
+                    "correct": stats["correct"],
+                    "accuracy": (stats["correct"] / count * 100) if count > 0 else 0.0,
+                    "avgTime": (stats["total_time"] / count) if count > 0 else 0.0
+                }
 
             return {
                 "totalAttempts": total,
@@ -130,8 +221,20 @@ class AttemptsManager:
                 "incorrectCount": incorrect,
                 "accuracy": accuracy,
                 "averageTime": avg_time,
-                "byOperation": by_op,
+                "byOperation": final_by_op,
+                "attempts": valid_attempts  # Include raw attempts for trend analysis
             }
         except Exception as e:
             print(f"Error computing attempt statistics: {e}")
-            return {"error": str(e)}
+            import traceback
+            traceback.print_exc()
+            return {
+                "error": str(e),
+                "totalAttempts": 0, 
+                "correctCount": 0, 
+                "incorrectCount": 0, 
+                "accuracy": 0.0, 
+                "averageTime": 0.0,
+                "byOperation": {},
+                "attempts": []
+            }

@@ -5,8 +5,17 @@
 class LevelsManager {
     constructor() {
         this.levels = [];
+        this.filteredLevels = [];
         this.stats = {};
         this.bridge = null;
+
+        // Filter state
+        this.filters = {
+            search: '',
+            difficulty: 'all',
+            status: 'all',
+            sort: 'id'
+        };
 
         this.init();
     }
@@ -19,6 +28,53 @@ class LevelsManager {
     initializeEventListeners() {
         document.getElementById('backBtn')?.addEventListener('click', () => {
             window.location.href = 'index.html';
+        });
+
+        // Search
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clearSearch');
+
+        searchInput?.addEventListener('input', (e) => {
+            this.filters.search = e.target.value.toLowerCase();
+            clearSearch.style.display = e.target.value ? 'flex' : 'none';
+            this.applyFilters();
+        });
+
+        clearSearch?.addEventListener('click', () => {
+            searchInput.value = '';
+            this.filters.search = '';
+            clearSearch.style.display = 'none';
+            this.applyFilters();
+        });
+
+        // Difficulty filters
+        document.getElementById('difficultyFilters')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('#difficultyFilters .filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                this.filters.difficulty = e.target.dataset.filter;
+                this.applyFilters();
+            }
+        });
+
+        // Status filters
+        document.getElementById('statusFilters')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('#statusFilters .filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                this.filters.status = e.target.dataset.filter;
+                this.applyFilters();
+            }
+        });
+
+        // Sort
+        document.getElementById('sortSelect')?.addEventListener('change', (e) => {
+            this.filters.sort = e.target.value;
+            this.applyFilters();
         });
     }
 
@@ -73,7 +129,8 @@ class LevelsManager {
 
     render() {
         this.renderStats();
-        this.renderLevelList();
+        this.filteredLevels = [...this.levels];
+        this.applyFilters();
     }
 
     renderStats() {
@@ -92,19 +149,70 @@ class LevelsManager {
         if (fill) fill.style.width = `${percent}%`;
     }
 
+    applyFilters() {
+        let filtered = [...this.levels];
+
+        // Search filter
+        if (this.filters.search) {
+            filtered = filtered.filter(level =>
+                level.name.toLowerCase().includes(this.filters.search) ||
+                level.description.toLowerCase().includes(this.filters.search)
+            );
+        }
+
+        // Difficulty filter
+        if (this.filters.difficulty !== 'all') {
+            filtered = filtered.filter(level => level.difficulty === this.filters.difficulty);
+        }
+
+        // Status filter
+        if (this.filters.status !== 'all') {
+            if (this.filters.status === 'completed') {
+                filtered = filtered.filter(level => level.isCompleted);
+            } else if (this.filters.status === 'available') {
+                filtered = filtered.filter(level => !level.isLocked && !level.isCompleted);
+            } else if (this.filters.status === 'locked') {
+                filtered = filtered.filter(level => level.isLocked);
+            }
+        }
+
+        // Sort
+        filtered.sort((a, b) => {
+            switch (this.filters.sort) {
+                case 'id':
+                    return a.id - b.id;
+                case 'difficulty':
+                    const diffOrder = { 'Easy': 1, 'Medium': 2, 'Hard': 3, 'Extreme': 4 };
+                    return (diffOrder[a.difficulty] || 0) - (diffOrder[b.difficulty] || 0);
+                case 'name':
+                    return a.name.localeCompare(b.name);
+                case 'stars':
+                    return (b.starsEarned || 0) - (a.starsEarned || 0);
+                default:
+                    return 0;
+            }
+        });
+
+        this.filteredLevels = filtered;
+        this.renderLevelList();
+    }
+
     renderLevelList() {
         const container = document.getElementById('levelsContainer');
         if (!container) return;
 
         container.innerHTML = '';
 
-        if (this.levels.length === 0) {
-            container.innerHTML = '<div class="empty-state">No levels available.</div>';
+        if (this.filteredLevels.length === 0) {
+            const message = this.levels.length === 0
+                ? 'No levels available.'
+                : 'No levels match your filters.';
+            container.innerHTML = `<div class="empty-state">${message}</div>`;
             return;
         }
 
         const fragment = document.createDocumentFragment();
-        this.levels.forEach(level => {
+        this.filteredLevels.forEach(level => {
             fragment.appendChild(this.createLevelCard(level));
         });
         container.appendChild(fragment);
@@ -113,6 +221,7 @@ class LevelsManager {
     createLevelCard(level) {
         const card = document.createElement('div');
         card.className = `level-card ${this.getCardStateClass(level)}`;
+        card.setAttribute('data-difficulty', level.difficulty);
 
         // Header
         const header = document.createElement('div');
@@ -141,6 +250,11 @@ class LevelsManager {
         // Stars (if completed)
         if (level.isCompleted) {
             card.appendChild(this.createStarDisplay(level.starsEarned));
+
+            // Performance metrics
+            if (level.bestAccuracy || level.bestTime) {
+                card.appendChild(this.createPerformanceDisplay(level));
+            }
         }
 
         // Lock Overlay (if locked)
@@ -149,7 +263,6 @@ class LevelsManager {
         } else {
             // Clickable if unlocked
             card.style.cursor = 'pointer';
-            // Use dataset for event delegation if we wanted, but closure is fine here for simplicity
             card.addEventListener('click', () => this.startLevel(level.id));
         }
 
@@ -170,42 +283,81 @@ class LevelsManager {
         return container;
     }
 
-    createLockOverlay(level) {
-        const overlay = document.createElement('div');
-        overlay.className = 'lock-overlay'; // This needs to be styled in CSS to cover the card
+    createPerformanceDisplay(level) {
+        const container = document.createElement('div');
+        container.className = 'level-performance';
 
-        // Lock Icon
-        let content = '<div class="lock-icon">🔒</div>';
+        let html = '';
 
-        // Unlock Requirement Text
-        const needed = this.getStarsNeeded(level.unlockCondition);
-        if (needed) {
-            content += `<div class="unlock-text">Need ${needed} Stars</div>`;
+        if (level.bestAccuracy) {
+            html += `
+                <div class="performance-item">
+                    <span class="performance-icon">🎯</span>
+                    <span class="performance-value">${Math.round(level.bestAccuracy)}%</span>
+                </div>
+            `;
         }
 
-        // We ensure the card has "position: relative" via CSS class "locked" usually
-        // But we add the overlay as a child.
+        if (level.bestTime) {
+            const minutes = Math.floor(level.bestTime / 60);
+            const seconds = Math.round(level.bestTime % 60);
+            const timeStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+            html += `
+                <div class="performance-item">
+                    <span class="performance-icon">⏱️</span>
+                    <span class="performance-value">${timeStr}</span>
+                </div>
+            `;
+        }
 
-        // NOTE: The previous code had lock icon separate from overlay. 
-        // We'll combine them or keep separate based on existing CSS.
-        // Assuming existing CSS handles .lock-badge and .lock-overlay separately?
-        // Let's stick to a cleaner single overlay approach if possible, 
-        // but to handle existing CSS, I will replicate structure if needed.
-        // Replicating previous structure:
+        container.innerHTML = html;
+        return container;
+    }
 
+    createLockOverlay(level) {
         const wrapper = document.createElement('div');
+
+        const requirementText = this.getUnlockRequirementText(level.unlockCondition);
+
         wrapper.innerHTML = `
             <div class="lock-badge">🔒</div>
-            ${needed ? `
+            ${requirementText ? `
             <div class="lock-overlay">
                 <div class="unlock-text">
-                    ${needed} ${needed === 1 ? 'Star' : 'Stars'} Needed<br>
-                    ${'⭐'.repeat(Math.min(needed, 3))}
+                    ${requirementText}
                 </div>
             </div>` : ''}
         `;
 
         return wrapper;
+    }
+
+    getUnlockRequirementText(condition) {
+        if (!condition || condition === 'none') return null;
+
+        if (condition.startsWith('total_stars_')) {
+            const needed = parseInt(condition.split('_')[2]) || 0;
+            return `Need ${needed} Total Stars`;
+        }
+
+        if (condition.startsWith('complete_level_')) {
+            const parts = condition.split('_');
+            const reqId = parseInt(parts[2]);
+            const starsIdx = parts.indexOf('stars');
+            const reqStars = (starsIdx !== -1 && parts.length > starsIdx + 1) ? (parseInt(parts[starsIdx + 1]) || 1) : 1;
+
+            // Try to find level name for context
+            const reqLevel = this.levels.find(l => l.id === reqId);
+            const levelRef = reqLevel ? (reqLevel.name.split(':')[0] || reqLevel.name) : `Level ${reqId}`;
+
+            if (reqStars > 1) {
+                return `${levelRef}: ${reqStars} Stars Needed`;
+            } else {
+                return `Complete ${levelRef}`;
+            }
+        }
+
+        return "Locked";
     }
 
     // --- Helpers ---
@@ -226,12 +378,6 @@ class LevelsManager {
         return colors[diff] || '#999';
     }
 
-    getStarsNeeded(condition) {
-        if (condition && condition.startsWith('total_stars_')) {
-            return parseInt(condition.split('_')[2]) || null;
-        }
-        return null;
-    }
 
     setText(id, text) {
         const el = document.getElementById(id);

@@ -1,117 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="chart.min.js"></script>
 </head>
+
 <body>
     <main>
         <div class="page-container active">
-            <div class="analytics-header">
-                <h1>📊 Analytics Dashboard</h1>
-                <p class="subtitle">Track your math practice performance</p>
+            <!-- Navigation Header -->
+            <div class="levels-nav-bar">
+                <button id="backBtn" class="levels-back-button" onclick="navigateToHome()">
+                    ←
+                </button>
+                <h1 class="levels-title">Analytics Dashboard</h1>
+                <div class="levels-spacer"></div>
             </div>
 
             <!-- Overall Statistics -->
             <div class="analytics-section">
-                <h2>Overall Statistics</h2>
-                <div class="analytics-container">
-                    <div class="stat-card">
-                        <h3>Total Problems</h3>
-                        <p class="stat-value" id="totalProblems">0</p>
+                <h2 class="section-title">Overall Performance</h2>
+                <div class="levels-stats-section">
+                    <div class="stat-item">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="totalProblems">0</span>
+                            <span class="stat-name">Total Problems</span>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Correct Answers</h3>
-                        <p class="stat-value" id="correctAnswers">0</p>
+                    <div class="stat-item">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="correctAnswers">0</span>
+                            <span class="stat-name">Correct Answers</span>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Overall Accuracy</h3>
-                        <p class="stat-value accuracy-badge" id="overallAccuracy">0%</p>
+                    <div class="stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="overallAccuracy">0%</span>
+                            <span class="stat-name">Accuracy</span>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Average Time</h3>
-                        <p class="stat-value" id="avgTime">0.0s</p>
+                    <div class="stat-item">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="avgTime">0.0s</span>
+                            <span class="stat-name">Avg Time</span>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Current Streak</h3>
-                        <p class="stat-value" id="currentStreak">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Best Accuracy</h3>
-                        <p class="stat-value" id="bestAccuracy">0%</p>
+                </div>
+            </div>
+
+            <!-- Activity Heatmap -->
+            <div class="analytics-section">
+                <h2 class="section-title">Activity Heatmap</h2>
+                <div class="heatmap-container" id="activityHeatmap">
+                    <div id="heatmapGrid" class="heatmap-grid"></div>
+                    <div class="heatmap-legend">
+                        <span>Less</span>
+                        <div class="legend-item" data-level="0" style="background-color: rgba(255, 255, 255, 0.05);">
+                        </div>
+                        <div class="legend-item" data-level="1" style="background-color: #0e4429;"></div>
+                        <div class="legend-item" data-level="2" style="background-color: #006d32;"></div>
+                        <div class="legend-item" data-level="3" style="background-color: #26a641;"></div>
+                        <div class="legend-item" data-level="4" style="background-color: #39d353;"></div>
+                        <span>More</span>
                     </div>
                 </div>
             </div>
 
             <!-- Charts Section -->
             <div class="analytics-section">
-                <h2>Performance Charts</h2>
+                <h2 class="section-title">Visual Insights</h2>
                 <div class="charts-grid">
-                    <div class="chart-container">
+                    <div class="chart-card">
                         <h3>Accuracy by Operation</h3>
-                        <canvas id="accuracyChart"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="accuracyChart"></canvas>
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <h3>Attempts by Operation</h3>
-                        <canvas id="attemptsChart"></canvas>
+                    <div class="chart-card">
+                        <h3>Attempts Overview</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="attemptsChart"></canvas>
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <h3>Average Time by Operation</h3>
-                        <canvas id="timeChart"></canvas>
+                    <div class="chart-card">
+                        <h3>Speed Performance</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="timeChart"></canvas>
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <h3>Accuracy Trend</h3>
-                        <canvas id="trendChart"></canvas>
+                    <div class="chart-card">
+                        <h3>Learning Trend</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="trendChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Operation Statistics -->
             <div class="analytics-section">
-                <h2>Performance by Operation</h2>
-                <div id="operationStats" class="operation-stats">
-                    <p class="loading">Loading statistics...</p>
-                </div>
-            </div>
-
-            <!-- Recent Attempts -->
-            <div class="analytics-section">
-                <h2>Recent Attempts</h2>
-                <div class="table-container">
-                    <table id="recentTable" class="attempts-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Operation</th>
-                                <th>Question</th>
-                                <th>Your Answer</th>
-                                <th>Correct</th>
-                                <th>Time (s)</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id="attemptsBody">
-                            <tr><td colspan="7" class="loading">Loading attempts...</td></tr>
-                        </tbody>
-                    </table>
+                <h2 class="section-title">Detailed Breakdown</h2>
+                <div id="operationStats" class="operation-stats-grid">
+                    <div class="loading-state">
+                        <p>Loading detailed statistics...</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="analytics-actions">
-                <button id="refreshBtn" class="submit-button">🔄 Refresh Data</button>
-                <button id="exportBtn" class="submit-button">📥 Export Data</button>
-                <button id="clearBtn" class="reset-button">🗑️ Clear All Data</button>
+            <div class="analytics-actions-container">
+                <button id="refreshBtn" class="action-button primary">
+                    <span>🔄</span> Refresh
+                </button>
+                <button id="exportBtn" class="action-button secondary">
+                    <span>📥</span> Export Data
+                </button>
+                <button id="clearBtn" class="action-button danger">
+                    <span>🗑️</span> Reset History
+                </button>
             </div>
-
-            <button id="backBtn" class="back-button">← Back to Home</button>
         </div>
     </main>
+
+    <!-- Scripts -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script src="app.js"></script>
     <script src="analytics.js"></script>
 </body>
+
 </html>

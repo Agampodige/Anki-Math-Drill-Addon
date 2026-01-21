@@ -51,6 +51,10 @@ class Bridge(QObject):
                 self._handle_save_settings(payload)
             elif msg_type == 'load_settings':
                 self._handle_load_settings(payload)
+            elif msg_type == 'export_data':
+                self.export_data()
+            elif msg_type == 'import_data':
+                self.import_data(message)
             else:
                 self.messageReceived.emit(json.dumps({
                     'type': 'error',
@@ -387,5 +391,84 @@ class Bridge(QObject):
                 'payload': {
                     'message': f'Error loading settings: {str(e)}'
                 }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    @pyqtSlot(str)
+    def export_data(self, payload_str=None):
+        """Handle export data request"""
+        try:
+            addon_folder = os.path.dirname(__file__)
+            user_data_dir = os.path.join(addon_folder, "data", "user")
+            
+            data_to_export = {}
+            if os.path.exists(user_data_dir):
+                for filename in os.listdir(user_data_dir):
+                    if filename.endswith(".json"):
+                        file_path = os.path.join(user_data_dir, filename)
+                        try:
+                            with open(file_path, 'r', encoding='utf-8') as f:
+                                data_to_export[filename] = json.load(f)
+                        except Exception as fe:
+                            print(f"DEBUG: Could not read {filename}: {fe}")
+            
+            response = {
+                'type': 'export_data_response',
+                'payload': {
+                    'data': data_to_export,
+                    'success': True
+                }
+            }
+            # Note: Using sendMessage for response consistency if needed, 
+            # but usually slots emit messageReceived signals
+            self.messageReceived.emit(json.dumps(response))
+        except Exception as e:
+            print(f"ERROR in export_data: {e}")
+            response = {
+                'type': 'error',
+                'payload': {'message': f'Export failed: {str(e)}'}
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    @pyqtSlot(str)
+    def import_data(self, payload_str):
+        """Handle import data request"""
+        try:
+            payload = json.loads(payload_str)
+            import_data = payload.get('data', {})
+            
+            addon_folder = os.path.dirname(__file__)
+            user_data_dir = os.path.join(addon_folder, "data", "user")
+            
+            if not os.path.exists(user_data_dir):
+                os.makedirs(user_data_dir, exist_ok=True)
+            
+            success_files = []
+            for filename, content in import_data.items():
+                if filename.endswith(".json"):
+                    file_path = os.path.join(user_data_dir, filename)
+                    # Create backup
+                    if os.path.exists(file_path):
+                        shutil.copy2(file_path, file_path + ".bak")
+                    
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        json.dump(content, f, indent=4)
+                    success_files.append(filename)
+            
+            response = {
+                'type': 'import_data_response',
+                'payload': {
+                    'success': True,
+                    'imported_files': success_files
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+            # Optional: Refresh managers if needed, or user can restart
+            tooltip("Data imported successfully. Please restart the addon to apply changes.")
+        except Exception as e:
+            print(f"ERROR in import_data: {e}")
+            response = {
+                'type': 'error',
+                'payload': {'message': f'Import failed: {str(e)}'}
             }
             self.messageReceived.emit(json.dumps(response))

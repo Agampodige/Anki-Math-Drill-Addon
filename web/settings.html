@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
@@ -9,119 +10,134 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+
+<body class="settings-page">
     <main>
-        <div class="page-container active">
-            <div class="settings-container">
-                <!-- Header -->
-                <div class="settings-header-nav">
-                    <button id="backBtn" class="settings-back-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 12H5M12 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    <h1>Settings</h1>
-                    <div class="header-spacer"></div>
+        <div class="settings-container">
+            <!-- Header -->
+            <header class="settings-header">
+                <button id="backBtn" class="back-button" aria-label="Back">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <h1>Settings</h1>
+                <div class="header-action"></div>
+            </header>
+
+            <div class="settings-content">
+                <!-- Appearance Section -->
+                <section class="settings-card">
+                    <h2 class="section-label">🎨 Appearance</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Dark Mode</span>
+                            <span class="setting-desc">Switch between light and dark themes</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Sound & Notifications Section -->
+                <section class="settings-card">
+                    <h2 class="section-label">🔔 Sound & Notifications</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Sound Effects</span>
+                            <span class="setting-desc">Play sounds during gameplay</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Notifications</span>
+                            <span class="setting-desc">Receive app notifications</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Display Options Section -->
+                <section class="settings-card">
+                    <h2 class="section-label">📊 Display Options</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Show Timer</span>
+                            <span class="setting-desc">Display time spent on drills</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="timerDisplay" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Show Accuracy</span>
+                            <span class="setting-desc">Display performance percentage</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="accuracyDisplay" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Gameplay Options Section -->
+                <section class="settings-card">
+                    <h2 class="section-label">🎮 Gameplay</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Auto-check</span>
+                            <span class="setting-desc">Instant feedback after answering</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="autoCheck">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Data Management Section -->
+                <section class="settings-card">
+                    <h2 class="section-label">💾 Data Management</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Export Data</span>
+                            <span class="setting-desc">Save all your progress and attempts to a file</span>
+                        </div>
+                        <button id="exportDataBtn" class="secondary-button"
+                            style="width: auto; min-width: 120px;">Export</button>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title">Import Data</span>
+                            <span class="setting-desc">Restore your data from a previously exported file</span>
+                        </div>
+                        <button id="importDataBtn" class="secondary-button"
+                            style="width: auto; min-width: 120px;">Import</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                </section>
+
+                <!-- Save Action -->
+                <div class="settings-footer">
+                    <button id="saveSettingsBtn" class="primary-button">Save Changes</button>
+                    <button id="resetBtn" class="secondary-button">Reset Defaults</button>
                 </div>
 
-                <div class="settings-content">
-                    <!-- Theme Section -->
-                    <div class="settings-section">
-                        <div class="section-title">🎨 Appearance</div>
-                        <div class="setting-group">
-                            <label for="themeSelect">Theme Preference:</label>
-                            <div class="select-wrapper">
-                                <select id="themeSelect">
-                                    <option value="light">☀️ Light Mode</option>
-                                    <option value="dark">🌙 Dark Mode</option>
-                                    <option value="auto">🔄 Auto (System)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sound & Notifications Section -->
-                    <div class="settings-section">
-                        <div class="section-title">🔔 Sound & Notifications</div>
-                        <div class="setting-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="soundToggle" checked>
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Enable Sound Effects</span>
-                            </label>
-                        </div>
-                        <div class="setting-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="notificationsToggle" checked>
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Enable Notifications</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Practice Settings Section -->
-                    <div class="settings-section">
-                        <div class="section-title">📚 Practice Settings</div>
-                        <div class="setting-group">
-                            <label for="problemsPerSession">Problems per session:</label>
-                            <div class="input-wrapper">
-                                <input type="number" id="problemsPerSession" min="5" max="50" value="10">
-                                <span class="input-hint">Between 5 and 50</span>
-                            </div>
-                        </div>
-                        <div class="setting-group">
-                            <label for="difficultyLevel">Default Difficulty:</label>
-                            <div class="select-wrapper">
-                                <select id="difficultyLevel">
-                                    <option value="easy">🟢 Easy</option>
-                                    <option value="medium" selected>🟡 Medium</option>
-                                    <option value="hard">🔴 Hard</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Display Options Section -->
-                    <div class="settings-section">
-                        <div class="section-title">📊 Display Options</div>
-                        <div class="setting-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="timerDisplay" checked>
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Show Timer</span>
-                            </label>
-                        </div>
-                        <div class="setting-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="accuracyDisplay" checked>
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Show Accuracy Percentage</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Gameplay Options Section -->
-                    <div class="settings-section">
-                        <div class="section-title">🎮 Gameplay</div>
-                        <div class="setting-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="autoCheck">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Auto-check answers (instant feedback)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="settings-actions">
-                        <button id="saveSettingsBtn" class="save-button">✓ Save Settings</button>
-                        <button id="resetBtn" class="reset-button">↻ Reset to Default</button>
-                    </div>
-
-                    <!-- Success Message -->
-                    <div id="successMessage" class="settings-message success-message" style="display: none;">
-                        ✓ Settings saved successfully!
-                    </div>
+                <!-- Messages -->
+                <div id="successMessage" class="toast-message" style="display: none;">
+                    ✓ Settings saved
                 </div>
             </div>
         </div>
@@ -129,4 +145,5 @@
     <script src="app.js"></script>
     <script src="settings.js"></script>
 </body>
+
 </html>

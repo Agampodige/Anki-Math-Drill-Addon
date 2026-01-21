@@ -5,8 +5,15 @@ import random
 def generate_levels():
     base_path = r"d:\coding\Math drill 2\data\static\level_data.json"
     
-    with open(base_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    try:
+        with open(base_path, 'r', encoding='utf-8') as f:
+            content = f.read().strip()
+            if not content:
+                data = {"levels": []}
+            else:
+                data = json.loads(content)
+    except (json.JSONDecodeError, FileNotFoundError):
+        data = {"levels": []}
     
     levels = data.get("levels", [])
     start_id = max([l['id'] for l in levels]) + 1 if levels else 1
@@ -39,17 +46,11 @@ def generate_levels():
         digits = base_digits
         if op == 'multiplication' and digits > 2: digits -= 1 # Keep mult sane
         
-        # Unlock condition: usually previous level stars
-        prev_level_id = level_id - 1
-        unlock_condition = f"complete_level_{prev_level_id}_total_stars_1"
-        if i == 0: # First new level
-             # Unlock based on the last existing level if any, otherwise unlocked?
-             # Actually, let's make it require stars from the very last existing level
-             last_existing = levels[-1]['id'] if levels else 0
-             if last_existing > 0:
-                 unlock_condition = f"complete_level_{last_existing}_total_stars_1"
-             else:
-                 unlock_condition = "none"
+        # Unlock condition: total stars threshold
+        if level_id == 1:
+            unlock_condition = "none"
+        else:
+            unlock_condition = f"total_stars_{level_id - 1}"
 
         # Requirements
         total_q = 10 + (i // 10) * 2 # Increase length gradually

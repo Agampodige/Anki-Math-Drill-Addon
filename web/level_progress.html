@@ -1,81 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level Progress</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="level_progress.css">
 </head>
+
 <body>
     <div class="level-progress-container">
         <!-- Top Navigation Bar -->
         <div class="level-nav-bar">
             <button id="backButton" class="back-button">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
                 </svg>
             </button>
             <div class="level-title-section">
                 <h1 id="levelTitle">Loading...</h1>
             </div>
-            <div class="level-stats-compact">
-                <div class="stat-badge">
-                    <span id="progressText" class="badge-value">0/0</span>
-                </div>
-                <div class="stat-badge">
-                    <span id="accuracyText" class="badge-value">0%</span>
-                </div>
-                <div class="stat-badge" id="timerStatDiv" style="display:none;">
-                    <span id="timerText" class="badge-value">--:--</span>
-                </div>
-            </div>
+            <div class="level-spacer" style="width: 44px;"></div>
         </div>
 
         <!-- Progress Bar -->
         <div class="progress-bar-container">
-            <div id="progressBar" class="progress-bar">
-                <span class="progress-text" id="progressText2"></span>
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="level-stats-compact">
+            <div class="stat-badge">
+                <span class="badge-label">Progress</span>
+                <span id="progressText" class="badge-value">0/0</span>
+            </div>
+            <div class="stat-badge">
+                <span class="badge-label">Accuracy</span>
+                <span id="accuracyText" class="badge-value">0%</span>
+            </div>
+            <div class="stat-badge" id="timerStatDiv" style="display:none;">
+                <span class="badge-label">Time</span>
+                <span id="timerText" class="badge-value">--:--</span>
             </div>
         </div>
 
-        <!-- Main Practice Area -->
-        <div id="practiceArea" class="level-practice-area">
-            <!-- Question Display -->
-            <div class="question-section">
-                <div id="questionDisplay" class="question-display">
-                    <div class="question-prompt" id="questionPrompt">0 + 0 = ?</div>
+        <!-- Main View Area -->
+        <div class="level-main-view">
+            <!-- Question Card -->
+            <div class="question-card" id="questionCard">
+                <div class="question-section">
+                    <div id="questionDisplay" class="question-display">
+                        <div class="question-prompt" id="questionPrompt">Ready?</div>
+                    </div>
+                    <p id="levelDescription" class="level-description-text"></p>
                 </div>
-                
-                <!-- Level Description -->
-                <p id="levelDescription" class="level-description-text"></p>
+
+                <!-- Answer Input -->
+                <div class="input-section">
+                    <input type="number" id="answerInput" class="answer-input" placeholder="?" disabled>
+                    <button id="submitButton" class="submit-button" disabled>
+                        <span>Submit</span>
+                    </button>
+                </div>
+
+                <!-- Stars Progress -->
+                <div class="stars-progress">
+                    <div id="starsDisplay" class="stars-display">
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Answer Input Section -->
-            <div class="input-section">
-                <input 
-                    type="number" 
-                    id="answerInput" 
-                    class="answer-input" 
-                    placeholder="Your answer"
-                    autocomplete="off"
-                >
-                <button id="submitButton" class="submit-button">
-                    <span>Submit</span>
-                </button>
-            </div>
-
-            <!-- Feedback Area -->
-            <div id="feedbackArea" class="feedback-area" style="display: none;">
-                <div id="feedbackMessage" class="feedback-message"></div>
-                <button id="nextButton" class="next-button">Continue</button>
-            </div>
-
-            <!-- Stars Progress -->
-            <div class="stars-progress">
-                <div id="starsDisplay" class="stars-display">
-                    <span class="star empty">☆</span>
-                    <span class="star empty">☆</span>
-                    <span class="star empty">☆</span>
+            <!-- Feedback Overlay -->
+            <div id="feedbackArea" class="feedback-overlay" style="display: none;">
+                <div class="feedback-content">
+                    <div id="feedbackMessage" class="feedback-message"></div>
+                    <button id="nextButton" class="next-button">Continue</button>
                 </div>
             </div>
         </div>
@@ -113,4 +116,5 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script src="level_progress.js"></script>
 </body>
+
 </html>

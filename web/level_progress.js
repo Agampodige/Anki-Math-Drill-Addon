@@ -208,6 +208,21 @@ class LevelProgress {
             return;
         }
 
+        const card = document.getElementById('questionCard');
+        if (this.currentQuestionIndex !== index && index > 0) {
+            card.classList.add('slide-out');
+            setTimeout(() => {
+                this.setupQuestion(index);
+                card.classList.remove('slide-out');
+                card.classList.add('slide-in');
+                setTimeout(() => card.classList.remove('slide-in'), 300);
+            }, 300);
+        } else {
+            this.setupQuestion(index);
+        }
+    }
+
+    setupQuestion(index) {
         const q = this.questions[index];
         this.currentQuestionIndex = index;
         this.questionStartTime = Date.now();
@@ -258,10 +273,10 @@ class LevelProgress {
         const msg = document.getElementById('feedbackMessage');
 
         if (area && msg) {
-            area.style.display = 'block';
+            area.style.display = 'flex';
             msg.innerHTML = isCorrect
-                ? '<span class="success">✓ Correct!</span>'
-                : `<span class="error">✗ Wrong! Answer: ${correctAnswer}</span>`;
+                ? '<span class="success">✓ Correct</span>'
+                : `<span class="error">✗ Incorrect<br><small>Answer: ${correctAnswer}</small></span>`;
         }
 
         // Lock input
@@ -334,11 +349,14 @@ class LevelProgress {
 
         const stars = document.getElementById('earnedStars');
         stars.innerHTML = '';
-        const limit = result.success ? result.starsEarned : 3;
+        const limit = 3;
         for (let i = 0; i < limit; i++) {
             const s = document.createElement('span');
-            s.className = 'star-lg' + (result.success && i < result.starsEarned ? '' : ' empty');
-            s.textContent = result.success && i < result.starsEarned ? '★' : '☆';
+            const isActive = result.success && i < result.starsEarned;
+            s.className = 'star-lg' + (isActive ? '' : ' empty');
+            s.style.color = isActive ? '#fbbf24' : '#334155';
+            s.style.fontSize = '3rem';
+            s.textContent = '★';
             stars.appendChild(s);
         }
 

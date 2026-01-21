@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-14T08:18:09.179261",
+  "lastUpdated": "2026-01-21T08:13:02.870985",
   "completions": [
     {
       "levelId": 1,
@@ -13,12 +13,32 @@
     },
     {
       "levelId": 2,
-      "starsEarned": 1,
-      "correctAnswers": 7,
-      "totalQuestions": 8,
-      "bestAccuracy": 87.5,
-      "bestTime": 32.47,
-      "completionDate": "2026-01-14T08:18:09.179243",
+      "starsEarned": 3,
+      "correctAnswers": 10,
+      "totalQuestions": 10,
+      "bestAccuracy": 100.0,
+      "bestTime": 18.087999999999997,
+      "completionDate": "2026-01-21T08:08:22.934110",
+      "isNewRecord": true
+    },
+    {
+      "levelId": 3,
+      "starsEarned": 3,
+      "correctAnswers": 10,
+      "totalQuestions": 10,
+      "bestAccuracy": 100.0,
+      "bestTime": 24.707,
+      "completionDate": "2026-01-14T10:29:44.754040",
+      "isNewRecord": true
+    },
+    {
+      "levelId": 4,
+      "starsEarned": 3,
+      "correctAnswers": 10,
+      "totalQuestions": 10,
+      "bestAccuracy": 100.0,
+      "bestTime": 18.174,
+      "completionDate": "2026-01-21T08:13:02.870973",
       "isNewRecord": true
     }
   ]

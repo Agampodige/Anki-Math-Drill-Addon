@@ -11,18 +11,26 @@ class PracticeMode {
         this.countdownInterval = null;
         this.questionStartTime = 0;
         this.isPracticing = false;
+        this.isPaused = false;
+        this.pauseStartTime = 0;
+        this.totalPauseTime = 0;
         this.operation = 'addition';
         this.digits = 2;
         this.autoAdvanceTimer = null;
         this.feedbackShown = false;
-        
+        this.lastMilestone = 0;
+
         this.initializeEventListeners();
+        this.initializeKeyboardShortcuts();
+        this.initializeSoundToggle();
         this.loadAttempts();
     }
 
     initializeEventListeners() {
         document.getElementById('startBtn')?.addEventListener('click', () => this.startPractice());
         document.getElementById('stopBtn')?.addEventListener('click', () => this.stopPractice());
+        document.getElementById('pauseBtn')?.addEventListener('click', () => this.togglePause());
+        document.getElementById('resumeBtn')?.addEventListener('click', () => this.togglePause());
         document.getElementById('submitBtn')?.addEventListener('click', () => this.submitAnswer());
         document.getElementById('nextBtn')?.addEventListener('click', () => this.skipAutoAdvance());
         document.getElementById('answerInput')?.addEventListener('keydown', (e) => {
@@ -32,6 +40,105 @@ class PracticeMode {
             }
         });
         document.getElementById('backBtn')?.addEventListener('click', () => navigateToHome());
+        document.getElementById('helpBtn')?.addEventListener('click', () => this.showHelp());
+        document.getElementById('closeHelp')?.addEventListener('click', () => this.hideHelp());
+        document.getElementById('helpModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'helpModal') this.hideHelp();
+        });
+    }
+
+    initializeKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Don't trigger shortcuts when typing in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+                return;
+            }
+
+            switch (e.key) {
+                case 'Escape':
+                    if (this.isPracticing && !this.isPaused) {
+                        e.preventDefault();
+                        this.stopPractice();
+                    }
+                    break;
+                case ' ':
+                    if (this.feedbackShown) {
+                        e.preventDefault();
+                        this.skipAutoAdvance();
+                    }
+                    break;
+                case 'p':
+                case 'P':
+                    if (this.isPracticing) {
+                        e.preventDefault();
+                        this.togglePause();
+                    }
+                    break;
+                case '?':
+                    e.preventDefault();
+                    this.showHelp();
+                    break;
+            }
+        });
+    }
+
+    initializeSoundToggle() {
+        const soundToggle = document.getElementById('soundToggle');
+        const soundWaves = document.getElementById('soundWaves');
+
+        // Update initial state
+        this.updateSoundIcon();
+
+        soundToggle?.addEventListener('click', () => {
+            if (window.soundManager) {
+                window.soundManager.toggle();
+                this.updateSoundIcon();
+                window.soundManager.playClick();
+            }
+        });
+    }
+
+    updateSoundIcon() {
+        const soundWaves = document.getElementById('soundWaves');
+        if (window.soundManager && soundWaves) {
+            soundWaves.style.display = window.soundManager.enabled ? 'block' : 'none';
+        }
+    }
+
+    showHelp() {
+        document.getElementById('helpModal').style.display = 'flex';
+    }
+
+    hideHelp() {
+        document.getElementById('helpModal').style.display = 'none';
+    }
+
+    togglePause() {
+        if (!this.isPracticing) return;
+
+        this.isPaused = !this.isPaused;
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const pauseBtn = document.getElementById('pauseBtn');
+
+        if (this.isPaused) {
+            // Pause
+            this.pauseStartTime = Date.now();
+            this.stopTimer();
+            pauseOverlay.style.display = 'flex';
+            pauseBtn.textContent = '▶ Resume';
+            pauseBtn.classList.add('resumed');
+        } else {
+            // Resume
+            this.totalPauseTime += Date.now() - this.pauseStartTime;
+            pauseOverlay.style.display = 'none';
+            pauseBtn.textContent = '⏸ Pause';
+            pauseBtn.classList.remove('resumed');
+
+            // Restart timer if not showing feedback
+            if (!this.feedbackShown) {
+                this.startTimer();
+            }
+        }
     }
 
     skipAutoAdvance() {
@@ -50,18 +157,22 @@ class PracticeMode {
     startPractice() {
         this.operation = document.getElementById('operationSelect').value;
         this.digits = parseInt(document.getElementById('digitsSelect').value);
-        
+
         this.isPracticing = true;
+        this.isPaused = false;
         this.questionCount = 0;
         this.correctCount = 0;
         this.streak = 0;
-        
+        this.lastMilestone = 0;
+        this.totalPauseTime = 0;
+
         // Hide settings, show practice area and controls
         document.getElementById('settingsPanel').style.display = 'none';
-        document.getElementById('practiceArea').style.display = 'block';
-        document.getElementById('practiceControls').style.display = 'block';
+        document.getElementById('practiceArea').style.display = 'flex';
+        document.getElementById('practiceControls').style.display = 'flex';
+        document.getElementById('progressContainer').style.display = 'block';
         document.getElementById('backBtn').style.display = 'none';
-        
+
         this.generateNextQuestion();
     }
 
@@ -70,22 +181,32 @@ class PracticeMode {
         if (!confirm('Stop practicing? Your current streak and session will be lost.')) {
             return;
         }
-        
+
         // Reset state
         this.isPracticing = false;
+        this.isPaused = false;
         this.feedbackShown = false;
-        
+
         // Clear timers
         if (this.timerInterval) clearInterval(this.timerInterval);
         if (this.autoAdvanceTimer) clearTimeout(this.autoAdvanceTimer);
         if (this.countdownInterval) { clearInterval(this.countdownInterval); this.countdownInterval = null; }
-        
+
+        // Hide overlays
+        document.getElementById('pauseOverlay').style.display = 'none';
+
         // Show settings, hide practice area
         document.getElementById('settingsPanel').style.display = 'block';
         document.getElementById('practiceArea').style.display = 'none';
         document.getElementById('practiceControls').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
         document.getElementById('backBtn').style.display = 'flex';
-        
+
+        // Reset pause button
+        const pauseBtn = document.getElementById('pauseBtn');
+        pauseBtn.textContent = '⏸ Pause';
+        pauseBtn.classList.remove('resumed');
+
         // Reset UI
         this.hideFeedback();
         document.getElementById('answerInput').value = '';
@@ -102,7 +223,7 @@ class PracticeMode {
         const digits = this.digits;
         let a, b, c, d, expression, answer, display;
 
-        switch(this.operation) {
+        switch (this.operation) {
             case 'addition':
                 a = this.generateRandomNumber(digits);
                 b = this.generateRandomNumber(digits);
@@ -265,20 +386,40 @@ class PracticeMode {
 
     generateNextQuestion() {
         this.hideFeedback();
+
+        const card = document.getElementById('questionCard');
+        if (this.currentQuestion) {
+            card.classList.add('slide-out');
+            setTimeout(() => {
+                this.setupNextQuestion();
+                card.classList.remove('slide-out');
+                card.classList.add('slide-in');
+                setTimeout(() => card.classList.remove('slide-in'), 300);
+            }, 300);
+        } else {
+            this.setupNextQuestion();
+        }
+    }
+
+    setupNextQuestion() {
         this.currentQuestion = this.generateQuestion();
         this.questionCount++;
         this.questionStartTime = Date.now();
 
         // Update display
         document.getElementById('questionText').textContent = this.currentQuestion.display + ' = ?';
-        document.getElementById('questionNumber').textContent = this.currentQuestion.id;
-        
+        document.getElementById('questionNumber').textContent = this.questionCount;
+
+        // Update progress bar (visual only for now, can be time-based or count-based)
+        const progress = Math.min(100, (this.questionCount % 10) * 10);
+        document.getElementById('progressBar').style.width = `${progress}%`;
+
         // Enable input
         const input = document.getElementById('answerInput');
         input.value = '';
         input.disabled = false;
         input.focus();
-        
+
         document.getElementById('submitBtn').disabled = false;
 
         // Start timer
@@ -304,17 +445,30 @@ class PracticeMode {
 
     submitAnswer() {
         this.stopTimer();
-        
+
         const userAnswer = parseFloat(document.getElementById('answerInput').value);
-        const timeTaken = (Date.now() - this.questionStartTime) / 1000;
+        const timeTaken = (Date.now() - this.questionStartTime - this.totalPauseTime) / 1000;
         const isCorrect = Math.abs(userAnswer - this.currentQuestion.answer) < 0.01;
 
         // Update stats
         if (isCorrect) {
             this.correctCount++;
             this.streak++;
+
+            // Play correct sound
+            if (window.soundManager) {
+                window.soundManager.playCorrect();
+            }
+
+            // Check for milestones
+            this.checkMilestone();
         } else {
             this.streak = 0;
+
+            // Play incorrect sound
+            if (window.soundManager) {
+                window.soundManager.playIncorrect();
+            }
         }
 
         // Store attempt
@@ -341,14 +495,74 @@ class PracticeMode {
         document.getElementById('submitBtn').disabled = true;
     }
 
+    checkMilestone() {
+        const milestones = [5, 10, 20, 50, 100];
+
+        for (let milestone of milestones) {
+            if (this.streak === milestone && this.lastMilestone < milestone) {
+                this.lastMilestone = milestone;
+                this.showCelebration(milestone);
+                break;
+            }
+        }
+    }
+
+    showCelebration(milestone) {
+        const overlay = document.getElementById('celebrationOverlay');
+        const message = document.getElementById('celebrationMessage');
+
+        const messages = {
+            5: '🔥 5 Streak! You\'re on fire!',
+            10: '⭐ 10 Streak! Amazing!',
+            20: '🚀 20 Streak! Incredible!',
+            50: '💎 50 Streak! Legendary!',
+            100: '👑 100 Streak! Unstoppable!'
+        };
+
+        message.textContent = messages[milestone] || `🎉 ${milestone} Streak!`;
+
+        // Create confetti
+        this.createConfetti();
+
+        // Play milestone sound
+        if (window.soundManager) {
+            window.soundManager.playMilestone();
+        }
+
+        // Show overlay
+        overlay.style.display = 'flex';
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            document.getElementById('confettiContainer').innerHTML = '';
+        }, 3000);
+    }
+
+    createConfetti() {
+        const container = document.getElementById('confettiContainer');
+        container.innerHTML = '';
+
+        const colors = ['#10b981', '#34d399', '#fbbf24', '#f59e0b', '#ef4444', '#ec4899'];
+
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            container.appendChild(confetti);
+        }
+    }
+
     showFeedback(isCorrect, userAnswer, timeTaken) {
         const feedbackBox = document.getElementById('feedbackBox');
         const feedbackText = document.getElementById('feedbackText');
         const correctAnswer = this.currentQuestion.answer;
 
-        feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
-        feedbackText.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
-        feedbackText.style.color = isCorrect ? '#10b981' : '#ef4444';
+        feedbackBox.className = 'feedback-overlay ' + (isCorrect ? 'correct' : 'incorrect');
+        feedbackText.textContent = isCorrect ? '✓ Correct' : '✗ Incorrect';
 
         document.getElementById('userAnswer').textContent = userAnswer.toString();
         document.getElementById('correctAnswer').textContent = correctAnswer.toString();
@@ -357,13 +571,13 @@ class PracticeMode {
         // Update stats summary
         this.updateStatsSummary();
 
-        feedbackBox.style.display = 'block';
+        feedbackBox.style.display = 'flex';
         this.feedbackShown = true;
 
         // Auto-advance after a shorter delay (0.8s for correct, 1.2s for incorrect)
         const delay = isCorrect ? 800 : 1200;
         const nextBtn = document.getElementById('nextBtn');
-        
+
         // Clear any existing timers
         if (this.autoAdvanceTimer) {
             clearTimeout(this.autoAdvanceTimer);
@@ -373,10 +587,10 @@ class PracticeMode {
             clearInterval(this.countdownInterval);
             this.countdownInterval = null;
         }
-        
+
         const originalText = 'Next Question';
         const endTime = Date.now() + delay;
-        
+
         const updateCountdown = () => {
             const remainingMs = Math.max(0, endTime - Date.now());
             if (remainingMs >= 1000) {
@@ -386,11 +600,11 @@ class PracticeMode {
                 nextBtn.textContent = `Next Question (${(remainingMs / 1000).toFixed(1)}s)`;
             }
         };
-        
+
         updateCountdown();
         this.countdownInterval = setInterval(updateCountdown, 100);
         nextBtn.disabled = false; // allow immediate skipping by user
-        
+
         this.autoAdvanceTimer = setTimeout(() => {
             if (this.countdownInterval) {
                 clearInterval(this.countdownInterval);
@@ -419,7 +633,7 @@ class PracticeMode {
         document.getElementById('correctCount').textContent = this.correctCount;
         document.getElementById('streakCount').textContent = this.streak;
         document.getElementById('totalQuestions').textContent = this.questionCount;
-        
+
         const accuracy = this.questionCount > 0 ? Math.round((this.correctCount / this.questionCount) * 100) : 0;
         document.getElementById('accuracy').textContent = accuracy + '%';
 
@@ -462,6 +676,6 @@ class PracticeMode {
 }
 
 // Initialize Practice Mode when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     window.practiceMode = new PracticeMode();
 });

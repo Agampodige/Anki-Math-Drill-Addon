@@ -1,5 +1,5 @@
 from aqt import mw
-from aqt.qt import QDialog, QVBoxLayout, QWebEngineView, QUrl, QWebEngineSettings
+from aqt.qt import QDialog, QVBoxLayout, QWebEngineView, QUrl, QWebEngineSettings, QShortcut, QKeySequence
 from .bridge import Bridge
 from .attempts_manager import AttemptsManager
 from .levels_manager import LevelsManager
@@ -9,7 +9,7 @@ class AddonDialog(QDialog):
     def __init__(self, page="index.html"):
         super().__init__(mw)
         self.setWindowTitle("Math Drill")
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(3, 600)
         
         # Create layout
         layout = QVBoxLayout(self)
@@ -44,6 +44,25 @@ class AddonDialog(QDialog):
         self.web.load(QUrl.fromLocalFile(html_path))
         
         self.setLayout(layout)
+        
+        # Add F12 shortcut for developer tools
+        self.f12_shortcut = QShortcut(QKeySequence("F12"), self)
+        self.f12_shortcut.activated.connect(self.toggle_inspector)
+        
+    def toggle_inspector(self):
+        """Toggle the web inspector in a separate window"""
+        if not hasattr(self, "inspector"):
+            self.inspector = QWebEngineView()
+            self.web.page().setDevToolsPage(self.inspector.page())
+        
+        if self.inspector.isVisible():
+            self.inspector.hide()
+        else:
+            self.inspector.setWindowTitle(f"Inspector - {self.windowTitle()}")
+            self.inspector.resize(1000, 700)
+            self.inspector.show()
+            self.inspector.raise_()
+            self.inspector.activateWindow()
 
 def show_addon_dialog(page="index.html"):
     """Show the addon dialog"""

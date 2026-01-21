@@ -52,6 +52,58 @@
                     </div>
                 </div>
 
+                <!-- Search and Filters -->
+                <div class="search-filter-section">
+                    <div class="search-bar">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search levels..." />
+                        <button id="clearSearch" class="clear-search-btn" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label class="filter-label">Difficulty:</label>
+                            <div class="filter-buttons" id="difficultyFilters">
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="Easy">Easy</button>
+                                <button class="filter-btn" data-filter="Medium">Medium</button>
+                                <button class="filter-btn" data-filter="Hard">Hard</button>
+                                <button class="filter-btn" data-filter="Extreme">Extreme</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Status:</label>
+                            <div class="filter-buttons" id="statusFilters">
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="completed">Completed</button>
+                                <button class="filter-btn" data-filter="available">Available</button>
+                                <button class="filter-btn" data-filter="locked">Locked</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Sort:</label>
+                            <select id="sortSelect" class="sort-select">
+                                <option value="id">Level Order</option>
+                                <option value="difficulty">Difficulty</option>
+                                <option value="name">Name (A-Z)</option>
+                                <option value="stars">Stars Earned</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Progress Bar -->
                 <div class="overall-progress-section">
                     <div class="progress-header">

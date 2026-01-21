@@ -161,8 +161,22 @@ class LevelsManager:
         if condition.startswith('complete_level_'):
             try:
                 parts = condition.split('_')
+                # parts: ['complete', 'level', 'ID', 'total', 'stars', 'COUNT']
                 req_id = int(parts[2])
-                req_stars = int(parts[4]) if len(parts) > 4 else 1
+                
+                # Check for star count in various possible positions
+                req_stars = 1
+                if 'stars' in parts:
+                    stars_idx = parts.index('stars')
+                    if len(parts) > stars_idx + 1:
+                        req_stars = int(parts[stars_idx + 1])
+                elif len(parts) > 3:
+                     # Attempt to find any trailing integer as stars
+                     try:
+                         req_stars = int(parts[-1])
+                     except ValueError:
+                         pass
+
                 prev_comp = self.completions.get(req_id)
                 return prev_comp and prev_comp.get('starsEarned', 0) >= req_stars
             except (ValueError, IndexError):

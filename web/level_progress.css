@@ -1,0 +1,519 @@
+/* level_progress.css - Enhanced Layout aligned with Practice Mode */
+
+:root {
+    --lp-bg: #0f172a;
+    --lp-surface: #1e293b;
+    --lp-surface-hover: #334155;
+    --lp-primary: #10b981;
+    --lp-primary-hover: #059669;
+    --lp-primary-dark: #047857;
+    --lp-accent: #34d399;
+    --lp-accent-alt: #fbbf24;
+    --lp-text: #f8fafc;
+    --lp-text-muted: #94a3b8;
+    --lp-border: #334155;
+    --lp-input-bg: #020617;
+    --lp-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --lp-glow: 0 0 15px rgba(16, 185, 129, 0.2);
+    --lp-glass: rgba(30, 41, 59, 0.7);
+    --lp-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    background-color: var(--lp-bg) !important;
+    color: var(--lp-text);
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.level-progress-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-sizing: border-box;
+    background: var(--lp-bg);
+    overflow: hidden;
+}
+
+/* --- Progress Bar --- */
+.progress-bar-container {
+    width: 100%;
+    height: 4px;
+    background: var(--lp-surface);
+    margin-bottom: 1.5rem;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--lp-primary);
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--lp-primary);
+}
+
+/* --- Nav Bar --- */
+.level-nav-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.back-button {
+    background: var(--lp-surface);
+    border: 1px solid var(--lp-border);
+    color: var(--lp-text);
+    cursor: pointer;
+    padding: 0.6rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--lp-transition);
+}
+
+.back-button:hover {
+    background-color: var(--lp-surface-hover);
+    color: var(--lp-primary);
+    transform: translateX(-2px);
+}
+
+.level-title-section {
+    flex-grow: 1;
+    text-align: center;
+}
+
+#levelTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--lp-text);
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+/* --- Dashboard Stat Cards --- */
+.level-stats-compact {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-badge {
+    background: var(--lp-surface);
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid var(--lp-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    transition: var(--lp-transition);
+}
+
+.stat-badge .badge-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--lp-text-muted);
+}
+
+.stat-badge .badge-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--lp-text);
+}
+
+.stat-badge[id="timerStatDiv"] {
+    border-color: rgba(251, 191, 36, 0.4);
+    background: linear-gradient(135deg, var(--lp-surface) 0%, rgba(251, 191, 36, 0.1) 100%);
+}
+
+.stat-badge[id="timerStatDiv"] .badge-value {
+    color: var(--lp-accent-alt);
+    font-family: 'Monaco', 'Consolas', monospace;
+}
+
+/* --- Main Work Area --- */
+.level-main-view {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.question-card {
+    width: 100%;
+    max-width: 600px;
+    background: var(--lp-surface);
+    padding: 2.5rem;
+    border-radius: 28px;
+    border: 1px solid var(--lp-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    transition: var(--lp-transition);
+}
+
+.question-prompt {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--lp-text);
+    text-align: center;
+    margin: 0;
+    letter-spacing: -0.05em;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.level-description-text {
+    font-size: 0.9rem;
+    color: var(--lp-text-muted);
+    text-align: center;
+    margin-top: -1rem;
+}
+
+.input-section {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.answer-input {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 800;
+    border: 2px solid var(--lp-border);
+    border-radius: 16px;
+    color: var(--lp-primary);
+    outline: none;
+    background: var(--lp-input-bg);
+    transition: var(--lp-transition);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.answer-input:focus {
+    border-color: var(--lp-primary);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15), inset 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.submit-button {
+    background: var(--lp-primary);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--lp-transition);
+}
+
+.submit-button:hover:not(:disabled) {
+    background: var(--lp-primary-hover);
+    transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- Feedback Overlay --- */
+.feedback-overlay {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(16px);
+    background: var(--lp-glass);
+    border-radius: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+}
+
+.feedback-content {
+    text-align: center;
+}
+
+.feedback-message {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.feedback-message .success {
+    color: var(--lp-primary);
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.feedback-message .error {
+    color: #ef4444;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+.next-button {
+    padding: 1rem 2rem;
+    background: var(--lp-surface-hover);
+    color: white;
+    border: 1px solid var(--lp-border);
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--lp-transition);
+}
+
+.next-button:hover {
+    border-color: var(--lp-primary);
+}
+
+/* --- Stars Display --- */
+.stars-progress {
+    margin-top: 2rem;
+}
+
+.stars-display {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 2rem;
+}
+
+.star {
+    color: #fbbf24;
+}
+
+.star.empty {
+    color: var(--lp-surface-hover);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutLeft {
+    to {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide-out {
+    animation: slideOutLeft 0.3s ease forwards;
+}
+
+.slide-in {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--lp-surface);
+    padding: 2.5rem;
+    border-radius: 24px;
+    border: 1px solid var(--lp-border);
+    z-index: 1001;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.completion-stars {
+    font-size: 3rem;
+    margin: 1rem 0;
+}
+
+.completion-stats {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.completion-stats .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.completion-stats .stat .label {
+    font-size: 0.75rem;
+    color: var(--lp-text-muted);
+    text-transform: uppercase;
+}
+
+.completion-stats .stat .value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--lp-primary);
+}
+
+.completion-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.completion-actions button {
+    padding: 1rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.button-primary {
+    background: var(--lp-primary);
+    color: white;
+}
+
+.button-secondary {
+    background: var(--lp-surface-hover);
+    color: white;
+    border: 1px solid var(--lp-border);
+}
+
+/* --- Responsive Design (Small UI Optimization) --- */
+
+/* Mid-size optimization (Tablets/Phablets) */
+@media (max-width: 650px) {
+    .question-card {
+        padding: 1.5rem;
+        max-width: 95%;
+    }
+
+    .question-prompt {
+        font-size: 2.5rem;
+    }
+}
+
+/* Small Screens (e.g. 300x700) */
+@media (max-width: 450px) {
+    .level-progress-container {
+        padding: 0.75rem;
+    }
+
+    #levelTitle {
+        font-size: 1.2rem;
+    }
+
+    .level-stats-compact {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+
+    /* Make time badge take full width if 3rd */
+    .stat-badge#timerStatDiv:nth-child(3) {
+        grid-column: span 2;
+    }
+
+    .question-card {
+        padding: 1.25rem;
+        gap: 1.5rem;
+        border-radius: 20px;
+    }
+
+    .question-prompt {
+        font-size: 2rem;
+    }
+
+    .input-section {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .answer-input {
+        font-size: 1.5rem;
+        padding: 0.6rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .submit-button {
+        padding: 0.8rem;
+        width: 100%;
+    }
+
+    .stars-progress {
+        margin-top: 1rem;
+    }
+
+    .stars-display {
+        font-size: 1.5rem;
+    }
+
+    /* Modal responsiveness */
+    .modal {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .completion-stars {
+        font-size: 2.25rem;
+    }
+
+    .completion-stats .stat .value {
+        font-size: 1.25rem;
+    }
+}
+
+/* Extra Small (300px and below) */
+@media (max-width: 320px) {
+    .level-stats-compact {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-badge#timerStatDiv:nth-child(3) {
+        grid-column: span 1;
+    }
+
+    #levelTitle {
+        font-size: 1.1rem;
+    }
+
+    .question-prompt {
+        font-size: 1.75rem;
+    }
+}
