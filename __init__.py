@@ -5,20 +5,12 @@ from .main import show_addon_dialog
 
 # Initialize the addon
 def init():
-    # Create the submenu
-    math_drill_menu = mw.form.menuTools.addMenu("Mathdrill")
+    # Create a single action in the Tools menu
+    action = QAction("Anki Math Drill", mw)
+    action.triggered.connect(lambda: show_addon_dialog("index.html"))
+    mw.form.menuTools.addAction(action)
     
-    # Practice Mode Action
-    action_practice = QAction("Practice mod", mw)
-    action_practice.triggered.connect(lambda: show_addon_dialog("practice_mode.html"))
-    math_drill_menu.addAction(action_practice)
-
-    # Levels Action
-    action_levels = QAction("Levels", mw)
-    action_levels.triggered.connect(lambda: show_addon_dialog("levels.html"))
-    math_drill_menu.addAction(action_levels)
-    
-    showInfo("Math Drill addon loaded successfully!")
+    # print("Math Drill addon menu entry registered")
 
 # Call init to register the addon
 init()
