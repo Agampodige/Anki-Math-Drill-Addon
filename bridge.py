@@ -225,10 +225,11 @@ class Bridge(QObject):
             if not self.levels_manager:
                 raise Exception('Levels manager not initialized')
             
-            levels = self.levels_manager.get_all_levels()
+            compact = payload.get('compact', False)
+            levels = self.levels_manager.get_all_levels(compact=compact)
             stats = self.levels_manager.get_progression_stats()
             
-            print(f"DEBUG: Loading levels - found {len(levels)} levels")
+            print(f"DEBUG: Loading levels (compact={compact}) - found {len(levels)} levels")
             print(f"DEBUG: Stats: {stats}")
             
             response = {

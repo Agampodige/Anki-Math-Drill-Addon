@@ -17,6 +17,10 @@ class LevelsManager {
             sort: 'id'
         };
 
+        this.renderBatchSize = 15;
+        this.renderQueue = [];
+        this.renderInProgress = false;
+
         this.init();
     }
 
@@ -31,13 +35,23 @@ class LevelsManager {
         });
 
         // Search
-        const searchInput = document.getElementById('searchInput');
-        const clearSearch = document.getElementById('clearSearch');
+        // Search with debounce
+        const debounce = (fn, delay) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        };
+
+        const handleSearch = debounce((e) => {
+            this.filters.search = e.target.value.toLowerCase();
+            this.applyFilters();
+        }, 300);
 
         searchInput?.addEventListener('input', (e) => {
-            this.filters.search = e.target.value.toLowerCase();
             clearSearch.style.display = e.target.value ? 'flex' : 'none';
-            this.applyFilters();
+            handleSearch(e);
         });
 
         clearSearch?.addEventListener('click', () => {
@@ -109,7 +123,7 @@ class LevelsManager {
         console.log('🚀 Requesting levels...');
         this.bridge.sendMessage(JSON.stringify({
             type: 'load_levels',
-            payload: {}
+            payload: { compact: true }
         }));
     }
 
@@ -204,9 +218,12 @@ class LevelsManager {
         const container = document.getElementById('levelsContainer');
         if (!container) return;
 
+        // Reset rendering state
+        this.renderQueue = [...this.filteredLevels];
+        this.renderInProgress = false;
         container.innerHTML = '';
 
-        if (this.filteredLevels.length === 0) {
+        if (this.renderQueue.length === 0) {
             const message = this.levels.length === 0
                 ? 'No levels available.'
                 : 'No levels match your filters.';
@@ -214,11 +231,29 @@ class LevelsManager {
             return;
         }
 
-        const fragment = document.createDocumentFragment();
-        this.filteredLevels.forEach(level => {
-            fragment.appendChild(this.createLevelCard(level));
-        });
-        container.appendChild(fragment);
+        this.startIncrementalRender();
+    }
+
+    startIncrementalRender() {
+        const container = document.getElementById('levelsContainer');
+        if (!container || this.renderQueue.length === 0) return;
+
+        const renderBatch = () => {
+            const fragment = document.createDocumentFragment();
+            const batch = this.renderQueue.splice(0, this.renderBatchSize);
+
+            batch.forEach(level => {
+                fragment.appendChild(this.createLevelCard(level));
+            });
+
+            container.appendChild(fragment);
+
+            if (this.renderQueue.length > 0) {
+                requestAnimationFrame(renderBatch);
+            }
+        };
+
+        requestAnimationFrame(renderBatch);
     }
 
     createLevelCard(level) {

@@ -1,5 +1,5 @@
 {
-  "lastId": 6213,
+  "lastId": 6223,
   "attempts": [
     {
       "id": 1,
@@ -68553,8 +68553,138 @@
       "isCorrect": false,
       "timeTaken": 4.322,
       "timestamp": "2026-01-21T10:02:50.504Z"
+    },
+    {
+      "id": 6214,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.6000000000000001 ÷ 6",
+      "num1": 0.6000000000000001,
+      "num2": 6,
+      "userAnswer": null,
+      "correctAnswer": 0.10000000000000002,
+      "isCorrect": false,
+      "timeTaken": 2.348,
+      "timestamp": "2026-01-21T11:10:22.934Z"
+    },
+    {
+      "id": 6215,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.6000000000000001 ÷ 6",
+      "num1": 0.6000000000000001,
+      "num2": 6,
+      "userAnswer": null,
+      "correctAnswer": 0.10000000000000002,
+      "isCorrect": false,
+      "timeTaken": 2.348,
+      "timestamp": "2026-01-21T11:10:22.934Z"
+    },
+    {
+      "id": 6216,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.1 ÷ 1",
+      "num1": 0.1,
+      "num2": 1,
+      "userAnswer": 0.1,
+      "correctAnswer": 0.1,
+      "isCorrect": true,
+      "timeTaken": 6.439,
+      "timestamp": "2026-01-21T11:10:30.875Z"
+    },
+    {
+      "id": 6217,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.6000000000000001 ÷ 6",
+      "num1": 0.6000000000000001,
+      "num2": 6,
+      "userAnswer": null,
+      "correctAnswer": 0.10000000000000002,
+      "isCorrect": false,
+      "timeTaken": 2.348,
+      "timestamp": "2026-01-21T11:10:22.934Z"
+    },
+    {
+      "id": 6218,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.1 ÷ 1",
+      "num1": 0.1,
+      "num2": 1,
+      "userAnswer": 0.1,
+      "correctAnswer": 0.1,
+      "isCorrect": true,
+      "timeTaken": 6.439,
+      "timestamp": "2026-01-21T11:10:30.875Z"
+    },
+    {
+      "id": 6219,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.4 ÷ 4",
+      "num1": 0.4,
+      "num2": 4,
+      "userAnswer": 0.4,
+      "correctAnswer": 0.1,
+      "isCorrect": false,
+      "timeTaken": 3.506,
+      "timestamp": "2026-01-21T11:10:35.483Z"
+    },
+    {
+      "id": 6220,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.6000000000000001 ÷ 6",
+      "num1": 0.6000000000000001,
+      "num2": 6,
+      "userAnswer": null,
+      "correctAnswer": 0.10000000000000002,
+      "isCorrect": false,
+      "timeTaken": 2.348,
+      "timestamp": "2026-01-21T11:10:22.934Z"
+    },
+    {
+      "id": 6221,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.1 ÷ 1",
+      "num1": 0.1,
+      "num2": 1,
+      "userAnswer": 0.1,
+      "correctAnswer": 0.1,
+      "isCorrect": true,
+      "timeTaken": 6.439,
+      "timestamp": "2026-01-21T11:10:30.875Z"
+    },
+    {
+      "id": 6222,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.4 ÷ 4",
+      "num1": 0.4,
+      "num2": 4,
+      "userAnswer": 0.4,
+      "correctAnswer": 0.1,
+      "isCorrect": false,
+      "timeTaken": 3.506,
+      "timestamp": "2026-01-21T11:10:35.483Z"
+    },
+    {
+      "id": 6223,
+      "operation": "division",
+      "digits": 1,
+      "question": "0.9 ÷ 9",
+      "num1": 0.9,
+      "num2": 9,
+      "userAnswer": 0.9,
+      "correctAnswer": 0.1,
+      "isCorrect": false,
+      "timeTaken": 3.282,
+      "timestamp": "2026-01-21T11:10:40.267Z"
     }
   ],
-  "lastSaved": "2026-01-21T15:32:50.535284",
-  "totalAttempts": 6213
+  "lastSaved": "2026-01-21T16:40:40.302233",
+  "totalAttempts": 6223
 }

@@ -95,14 +95,17 @@ class LevelsManager:
         }
         return self._atomic_write(data, self.completion_path)
 
-    def get_all_levels(self) -> List[Dict]:
+    def get_all_levels(self, compact: bool = False) -> List[Dict]:
         """Return all levels with their current unlock/completion status."""
         result = []
         # Calculate total stars once for unlock logic
         total_stars = sum(c.get('starsEarned', 0) for c in self.completions.values())
         
         for level in self.levels_data:
-            level_info = self._enrich_level_data(level, total_stars)
+            if compact:
+                level_info = self._enrich_level_compact(level, total_stars)
+            else:
+                level_info = self._enrich_level_data(level, total_stars)
             result.append(level_info)
         return result
 
@@ -113,6 +116,42 @@ class LevelsManager:
                 total_stars = sum(c.get('starsEarned', 0) for c in self.completions.values())
                 return self._enrich_level_data(level, total_stars)
         return None
+
+    def _enrich_level_compact(self, level: Dict, total_stars: int) -> Dict:
+        """Return only essential fields for the list view."""
+        level_id = level['id']
+        completion = self.completions.get(level_id)
+        
+        # Essential fields for grid view
+        info = {
+            'id': level_id,
+            'name': level['name'],
+            'difficulty': level['difficulty'],
+            'description': level.get('description', ''),
+            'unlockCondition': level.get('unlockCondition', 'none'),
+            'isCompleted': False,
+            'starsEarned': 0,
+            'bestTime': 0,
+            'bestAccuracy': 0,
+            'isLocked': not self._check_unlock_condition(level, total_stars)
+        }
+
+        if completion:
+            info.update({
+                'isCompleted': True,
+                'starsEarned': completion.get('starsEarned', 0),
+                'bestTime': completion.get('bestTime', 0),
+                'bestAccuracy': completion.get('bestAccuracy', 0)
+            })
+            
+        # Include specific requirement fields if needed for UI
+        reqs = level.get('requirements', {})
+        info['requirements'] = {
+            'minCorrect': reqs.get('minCorrect', 0),
+            'totalQuestions': reqs.get('totalQuestions', 0)
+        }
+        
+        return info
 
     def _enrich_level_data(self, level: Dict, total_stars: int) -> Dict:
         """Add dynamic status (locked, completed, stars) to static level data."""
