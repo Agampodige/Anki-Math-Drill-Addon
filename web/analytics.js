@@ -477,21 +477,26 @@ class AnalyticsManager {
     }
 
     displayChartsFromAggregates(byOperation) {
-        // Destroy existing charts
-        ['accuracy', 'attempts', 'time', 'trend', 'dailyProgress'].forEach(key => {
-            if (this.charts[key]) {
-                this.charts[key].destroy();
-                this.charts[key] = null;
-            }
-        });
-
-        // Check if Chart.js is available
-        if (typeof Chart === 'undefined') {
-            console.error('Chart.js not loaded');
-            return;
-        }
-
         try {
+            // Destroy existing charts
+            ['accuracy', 'attempts', 'time', 'trend', 'dailyProgress'].forEach(key => {
+                if (this.charts[key]) {
+                    try {
+                        this.charts[key].destroy();
+                    } catch (e) {
+                        console.warn('Error destroying chart:', key, e);
+                    }
+                    this.charts[key] = null;
+                }
+            });
+
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js not loaded');
+                this.showChartError('Chart library not available');
+                return;
+            }
+
             const labels = Object.keys(byOperation).map(op => this.getOperationDisplay(op));
             const accuracyData = Object.values(byOperation).map(d => Math.round(d.accuracy));
             const attemptsData = Object.values(byOperation).map(d => d.count);
@@ -900,6 +905,18 @@ class AnalyticsManager {
         // Clear charts
         ['accuracy', 'attempts', 'time', 'trend'].forEach(k => {
             if (this.charts[k]) this.charts[k].destroy();
+        });
+    }
+
+    showChartError(message) {
+        console.error('Chart Error:', message);
+        // Display error message in chart containers
+        const chartContainers = ['accuracyChart', 'attemptsChart', 'timeChart', 'trendChart', 'dailyProgressChart'];
+        chartContainers.forEach(id => {
+            const container = document.getElementById(id);
+            if (container) {
+                container.parentElement.innerHTML = `<div style="color: #ef4444; text-align: center; padding: 20px;">Chart Error: ${message}</div>`;
+            }
         });
     }
 

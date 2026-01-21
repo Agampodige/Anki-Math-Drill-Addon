@@ -5,32 +5,54 @@ function setupNavigation() {
 
     console.log('Setting up navigation, found buttons:', homeButtons.length, backButtons.length);
 
-    // Add click listeners to navigation buttons
+    // Add click listeners to navigation buttons with robust error handling
     homeButtons.forEach(button => {
         button.addEventListener('click', function (e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            console.log('Navigating to:', page);
-            navigateToPage(page);
-        });
+            try {
+                e.preventDefault();
+                e.stopPropagation();
+                const page = this.getAttribute('data-page');
+                console.log('Navigating to:', page);
+                navigateToPage(page);
+            } catch (error) {
+                console.error('Navigation error:', error);
+                // Fallback: direct navigation
+                const page = this.getAttribute('data-page');
+                if (page) {
+                    window.location.href = page + '.html';
+                }
+            }
+        }, { capture: true });
     });
 
-    // Add click listeners to back buttons
+    // Add click listeners to back buttons with robust error handling
     backButtons.forEach(button => {
         button.addEventListener('click', function (e) {
-            e.preventDefault();
-            console.log('Going back to home');
-            navigateToHome();
-        });
+            try {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Going back to home');
+                navigateToHome();
+            } catch (error) {
+                console.error('Back navigation error:', error);
+                // Fallback: direct navigation
+                window.location.href = 'index.html';
+            }
+        }, { capture: true });
     });
 
     // Setup theme toggle button
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            toggleTheme();
-        });
+            try {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleTheme();
+            } catch (error) {
+                console.error('Theme toggle error:', error);
+            }
+        }, { capture: true });
     }
 }
 
@@ -45,6 +67,52 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('greetingText')) {
         updateHomeUI();
     }
+    
+    // Global click handler as backup - capture phase
+    document.addEventListener('click', function(e) {
+        console.log('Global click captured:', e.target.tagName, e.target.className, e.target.id);
+        
+        // Handle nav-card clicks that might have onclick attributes
+        if (e.target.classList.contains('nav-card') || e.target.closest('.nav-card')) {
+            const navCard = e.target.classList.contains('nav-card') ? e.target : e.target.closest('.nav-card');
+            const page = navCard.getAttribute('data-page') || navCard.getAttribute('onclick');
+            if (page) {
+                try {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Global handler navigating to:', page);
+                    // Extract page name from onclick if needed
+                    const pageName = page.includes("'") ? page.split("'")[1] : page.replace('navigateToPage(', '').replace(')', '');
+                    navigateToPage(pageName);
+                    return;
+                } catch (error) {
+                    console.error('Global navigation error:', error);
+                }
+            }
+        }
+        
+        // Handle back button clicks
+        if (e.target.id === 'backBtn' || e.target.closest('#backBtn')) {
+            try {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Global handler going back to home');
+                navigateToHome();
+                return;
+            } catch (error) {
+                console.error('Global back navigation error:', error);
+            }
+        }
+    }, true);
+    
+    // Debug: Check if elements are clickable
+    setTimeout(() => {
+        const buttons = document.querySelectorAll('button, .nav-card, [onclick]');
+        console.log('Found clickable elements:', buttons.length);
+        buttons.forEach((btn, i) => {
+            console.log(`Button ${i}:`, btn.tagName, btn.className, btn.onclick ? 'has onclick' : 'no onclick');
+        });
+    }, 1000);
 });
 
 // Also setup on window load as backup
