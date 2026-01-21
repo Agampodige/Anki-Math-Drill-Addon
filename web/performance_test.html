@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .metric { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
+        .metric-value { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .metric-label { color: #7f8c8d; font-size: 14px; }
+        .fast { color: #27ae60; }
+        .medium { color: #f39c12; }
+        .slow { color: #e74c3c; }
+        .log { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto; margin: 10px 0; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Progress Page Performance Test</h1>
+        <p>Test the loading performance improvements</p>
+        
+        <div>
+            <button onclick="runPerformanceTest()">🚀 Run Performance Test</button>
+            <button onclick="runMultipleTests()">📊 Run 5 Tests</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+        
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value" id="fetchTime">-</div>
+                <div class="metric-label">Fetch Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="processTime">-</div>
+                <div class="metric-label">Process Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="totalTime">-</div>
+                <div class="metric-label">Total Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="attemptsLoaded">-</div>
+                <div class="metric-label">Attempts Loaded</div>
+            </div>
+        </div>
+        
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value" id="avgTime">-</div>
+                <div class="metric-label">Average Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="minTime">-</div>
+                <div class="metric-label">Min Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="maxTime">-</div>
+                <div class="metric-label">Max Time (ms)</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="testCount">0</div>
+                <div class="metric-label">Tests Run</div>
+            </div>
+        </div>
+        
+        <div class="log" id="log">Ready to run performance tests...</div>
+    </div>
+
+    <script>
+        let testResults = [];
+        let logElement = document.getElementById('log');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            logElement.innerHTML = 'Log cleared...\n';
+            testResults = [];
+            updateMetrics();
+        }
+        
+        function updateMetrics() {
+            if (testResults.length === 0) {
+                document.getElementById('fetchTime').textContent = '-';
+                document.getElementById('processTime').textContent = '-';
+                document.getElementById('totalTime').textContent = '-';
+                document.getElementById('attemptsLoaded').textContent = '-';
+                document.getElementById('avgTime').textContent = '-';
+                document.getElementById('minTime').textContent = '-';
+                document.getElementById('maxTime').textContent = '-';
+                document.getElementById('testCount').textContent = '0';
+                return;
+            }
+            
+            const latest = testResults[testResults.length - 1];
+            const times = testResults.map(r => r.totalTime);
+            const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+            const minTime = Math.min(...times);
+            const maxTime = Math.max(...times);
+            
+            document.getElementById('fetchTime').textContent = latest.fetchTime.toFixed(2);
+            document.getElementById('processTime').textContent = latest.processTime.toFixed(2);
+            document.getElementById('totalTime').textContent = latest.totalTime.toFixed(2);
+            document.getElementById('attemptsLoaded').textContent = latest.attempts;
+            document.getElementById('avgTime').textContent = avgTime.toFixed(2);
+            document.getElementById('minTime').textContent = minTime.toFixed(2);
+            document.getElementById('maxTime').textContent = maxTime.toFixed(2);
+            document.getElementById('testCount').textContent = testResults.length;
+            
+            // Color code the total time
+            const totalElement = document.getElementById('totalTime');
+            totalElement.className = 'metric-value';
+            if (latest.totalTime < 50) {
+                totalElement.classList.add('fast');
+            } else if (latest.totalTime < 150) {
+                totalElement.classList.add('medium');
+            } else {
+                totalElement.classList.add('slow');
+            }
+        }
+        
+        async function runPerformanceTest() {
+            log('🚀 Starting performance test...');
+            const startTime = performance.now();
+            
+            try {
+                // Fetch attempts.json
+                const fetchStart = performance.now();
+                const response = await fetch('./attempts.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const attempts = await response.json();
+                const fetchTime = performance.now() - fetchStart;
+                
+                log(`✅ Fetched ${attempts.length} attempts in ${fetchTime.toFixed(2)}ms`);
+                
+                // Process data (optimized version)
+                const processStart = performance.now();
+                const dailyStats = new Map();
+                const masteryStats = new Map();
+                const operations = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
+                
+                let totalCorrect = 0;
+                let totalSumTime = 0;
+                
+                // Single loop optimization
+                attempts.forEach(attempt => {
+                    const { correct, time_taken = 0, operation, digits, created, timestamp } = attempt;
+                    
+                    if (correct) totalCorrect++;
+                    totalSumTime += time_taken;
+                    
+                    const date = created || timestamp?.split('T')[0];
+                    if (date) {
+                        if (!dailyStats.has(date)) {
+                            dailyStats.set(date, { count: 0, correct: 0, timeSum: 0 });
+                        }
+                        const dayStats = dailyStats.get(date);
+                        dayStats.count++;
+                        if (correct) dayStats.correct++;
+                        dayStats.timeSum += time_taken;
+                    }
+                    
+                    if (operation && digits) {
+                        const key = `${operation}-${digits}`;
+                        if (!masteryStats.has(key)) {
+                            masteryStats.set(key, { count: 0, correct: 0, timeSum: 0 });
+                        }
+                        const mastery = masteryStats.get(key);
+                        mastery.count++;
+                        if (correct) mastery.correct++;
+                        mastery.timeSum += time_taken;
+                    }
+                });
+                
+                // Calculate final stats
+                const totalAttempts = attempts.length;
+                const accuracy = (totalCorrect / totalAttempts) * 100;
+                const avgSpeed = totalSumTime / totalAttempts;
+                
+                // Create recent activity
+                const recentActivity = Array.from(dailyStats.entries())
+                    .sort(([a], [b]) => b.localeCompare(a))
+                    .slice(0, 7)
+                    .map(([date, stats]) => ({
+                        date,
+                        questions: stats.count,
+                        accuracy: (stats.correct / stats.count) * 100,
+                        avgSpeed: stats.timeSum / stats.count
+                    }));
+                
+                // Create mastery data
+                const mastery = {};
+                operations.forEach(op => {
+                    [1, 2, 3].forEach(digit => {
+                        const key = `${op}-${digit}`;
+                        const stats = masteryStats.get(key) || { count: 0, correct: 0, timeSum: 0 };
+                        const acc = stats.count > 0 ? (stats.correct / stats.count) * 100 : 0;
+                        const speed = stats.count > 0 ? stats.timeSum / stats.count : 0;
+                        
+                        let level = 'Novice';
+                        if (acc >= 90 && speed < 3.0) level = 'Master';
+                        else if (acc >= 80 && speed < 5.0) level = 'Pro';
+                        else if (acc >= 70) level = 'Apprentice';
+                        
+                        mastery[key] = { level, acc, speed, count: stats.count };
+                    });
+                });
+                
+                const processTime = performance.now() - processStart;
+                const totalTime = performance.now() - startTime;
+                
+                const result = {
+                    fetchTime,
+                    processTime,
+                    totalTime,
+                    attempts: totalAttempts,
+                    accuracy,
+                    avgSpeed,
+                    days: dailyStats.size,
+                    masteryKeys: Object.keys(mastery).length
+                };
+                
+                testResults.push(result);
+                updateMetrics();
+                
+                log(`⚡ Processed data in ${processTime.toFixed(2)}ms`);
+                log(`🎯 Total time: ${totalTime.toFixed(2)}ms`);
+                log(`📊 Results: ${result.attempts} attempts, ${result.accuracy.toFixed(1)}% accuracy, ${result.days} days`);
+                log(`✅ Test completed successfully!\n`);
+                
+            } catch (error) {
+                const totalTime = performance.now() - startTime;
+                log(`❌ Test failed after ${totalTime.toFixed(2)}ms: ${error.message}\n`);
+            }
+        }
+        
+        async function runMultipleTests() {
+            log('📊 Running 5 performance tests...');
+            for (let i = 1; i <= 5; i++) {
+                log(`--- Test ${i}/5 ---`);
+                await runPerformanceTest();
+                await new Promise(resolve => setTimeout(resolve, 500)); // Small delay between tests
+            }
+            
+            if (testResults.length >= 5) {
+                const times = testResults.map(r => r.totalTime);
+                const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+                log(`🏁 All tests completed. Average time: ${avgTime.toFixed(2)}ms`);
+            }
+        }
+        
+        // Initialize
+        log('Performance test ready. Click "Run Performance Test" to begin.\n');
+    </script>
+</body>
+</html>

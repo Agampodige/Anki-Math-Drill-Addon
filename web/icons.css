@@ -1,0 +1,44 @@
+/* Modern Icon System */
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Icon Sizing */
+.icon-sm {
+    font-size: 16px;
+}
+
+.icon-md {
+    font-size: 20px;
+}
+
+.icon-lg {
+    font-size: 24px;
+}
+
+/* Fallback for Material Icons */
+@font-face {
+    font-family: 'Material Icons Fallback';
+    src: local('Arial');
+}
+
+.material-icons:not(.material-icons-loaded) {
+    font-family: 'Material Icons Fallback', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Specific fallbacks */
+.material-icons:not(.material-icons-loaded)::after {
+    content: "•";
+    color: var(--text-tertiary);
+}
