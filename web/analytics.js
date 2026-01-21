@@ -33,7 +33,6 @@ class AnalyticsManager {
 
         // Listen for bridge connection
         window.addEventListener('pybridge-connected', () => {
-            console.log('Analytics: Bridge connected, loading statistics...');
             this.loadStatistics();
         });
 

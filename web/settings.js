@@ -46,7 +46,6 @@ function saveSettings(settings) {
     if (settings.theme) {
         localStorage.setItem('theme', settings.theme);
     }
-    console.log('Settings saved to localStorage:', settings);
 
     // Also save to backend file
     if (window.pybridge) {
@@ -57,9 +56,7 @@ function saveSettings(settings) {
             }
         };
         try {
-            console.log('Sending save message to backend:', message);
             window.pybridge.sendMessage(JSON.stringify(message));
-            console.log('Settings sent to backend for saving');
         } catch (e) {
             console.warn('Could not save to backend:', e);
             // Still show success message since localStorage worked
@@ -73,7 +70,6 @@ function saveSettings(settings) {
 
 // Apply settings to the application
 function applySettings(settings) {
-    console.log('Applying settings:', settings);
 
     // Apply theme using app.js system if available
     if (window.applyTheme && settings.theme) {
@@ -96,7 +92,6 @@ function loadSettingsFromBackend() {
             payload: {}
         };
         try {
-            console.log('Requesting settings from backend...');
             window.pybridge.sendMessage(JSON.stringify(message));
         } catch (e) {
             console.warn('Could not load from backend:', e);
@@ -108,7 +103,6 @@ function loadSettingsFromBackend() {
 
 // Synchronize settings between localStorage and backend
 function syncSettings() {
-    console.log('Syncing settings...');
     if (window.pybridge) {
         loadSettingsFromBackend();
     } else {
@@ -122,7 +116,6 @@ function syncSettings() {
 
 // Initialize settings on page load
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Settings page loading...');
 
     // Load initial settings from localStorage (for immediate UI update)
     const initialSettings = loadSettings();
@@ -131,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Set up bridge connection handlers first
     window.addEventListener('pybridge-connected', () => {
-        console.log('Bridge connected, syncing settings...');
         if (window.pybridge) {
             window.pybridge.messageReceived.connect(window.handleBridgeMessage);
             syncSettings();
@@ -153,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
     colorBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const color = btn.dataset.color;
-            console.log('Accent color selected:', color);
 
             // Apply immediately using app.js function
             if (window.applyAccentColor) {
@@ -207,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (themeToggle) {
         themeToggle.addEventListener('change', (e) => {
             const theme = e.target.checked ? 'dark' : 'light';
-            console.log('Theme toggle changed to:', theme);
 
             // Update both our settings and the app.js theme system
             const settings = loadSettings();
@@ -236,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function () {
     autoSaveToggles.forEach(toggle => {
         if (toggle.el) {
             toggle.el.addEventListener('change', (e) => {
-                console.log(`Auto-saving setting: ${toggle.key} = ${e.target.checked}`);
                 const settings = loadSettings();
                 settings[toggle.key] = e.target.checked;
                 saveSettings(settings);
@@ -253,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (val > 20) val = 20;
             e.target.value = val;
 
-            console.log(`Auto-saving setting: maxBackups = ${val}`);
             const settings = loadSettings();
             settings.maxBackups = val;
             saveSettings(settings);
@@ -266,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
         backupNowBtn.addEventListener('click', () => {
             if (window.pybridge) {
                 const message = { type: 'perform_backup', payload: {} };
-                console.log('Requesting manual backup...');
                 window.pybridge.sendMessage(JSON.stringify(message));
                 backupNowBtn.disabled = true;
                 backupNowBtn.textContent = 'Backing up...';
@@ -356,7 +343,6 @@ document.addEventListener('DOMContentLoaded', function () {
         openBackupLocationBtn.addEventListener('click', () => {
             if (window.pybridge) {
                 const message = { type: 'open_backup_location', payload: {} };
-                console.log('Requesting to open backup location...');
                 window.pybridge.sendMessage(JSON.stringify(message));
                 openBackupLocationBtn.disabled = true;
                 openBackupLocationBtn.textContent = 'Opening...';
@@ -368,14 +354,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const buyCoffeeBtn = document.getElementById('buyCoffeeBtn');
     if (buyCoffeeBtn) {
         buyCoffeeBtn.addEventListener('click', () => {
-            console.log('DEBUG: Buy coffee button clicked');
             if (window.pybridge) {
-                console.log('DEBUG: Using bridge to open URL');
                 const message = { type: 'open_url', payload: { url: 'https://ko-fi.com/senee' } };
-                console.log('DEBUG: Sending message:', message);
                 window.pybridge.sendMessage(JSON.stringify(message));
             } else {
-                console.log('DEBUG: Bridge not available, using window.open');
                 // Fallback to window.open if bridge not available
                 window.open('https://ko-fi.com/senee', '_blank');
             }
@@ -385,14 +367,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const bugReportBtn = document.getElementById('bugReportBtn');
     if (bugReportBtn) {
         bugReportBtn.addEventListener('click', () => {
-            console.log('DEBUG: Bug report button clicked');
             if (window.pybridge) {
-                console.log('DEBUG: Using bridge to open URL');
                 const message = { type: 'open_url', payload: { url: 'https://github.com/Agampodige/Anki-Math-Drill-Addon/issues' } };
-                console.log('DEBUG: Sending message:', message);
                 window.pybridge.sendMessage(JSON.stringify(message));
             } else {
-                console.log('DEBUG: Bridge not available, using window.open');
                 // Fallback to window.open if bridge not available
                 window.open('https://github.com/Agampodige/Anki-Math-Drill-Addon/issues', '_blank');
             }
@@ -403,17 +381,14 @@ document.addEventListener('DOMContentLoaded', function () {
     window.handleBridgeMessage = function (messageStr) {
         try {
             const message = JSON.parse(messageStr);
-            console.log('Received bridge message in settings:', message);
 
             if (message.type === 'load_settings_response' && message.payload.success) {
                 if (isProcessingSettings) {
-                    console.log('Already processing settings, skipping...');
                     return;
                 }
 
                 isProcessingSettings = true;
                 const backendSettings = message.payload.settings;
-                console.log('Received settings from backend:', backendSettings);
 
                 // Merge sequence: defaults -> backend -> local (local takes precedence)
                 const currentSettings = loadSettings();
@@ -423,7 +398,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     ...currentSettings // Local settings override backend
                 };
 
-                console.log('Applying merged settings:', mergedSettings);
                 localStorage.setItem('appSettings', JSON.stringify(mergedSettings));
                 applySettings(mergedSettings);
                 updateUI(mergedSettings);
@@ -435,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     isProcessingSettings = false;
                 }, 500);
             } else if (message.type === 'save_settings_response' && message.payload.success) {
-                console.log('Settings successfully saved to backend');
                 showSuccessMessage('Settings saved successfully!');
             } else if (message.type === 'export_data_response') {
                 if (exportBtn) {
@@ -477,10 +450,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else if (message.type === 'open_url_response') {
                 if (message.payload.success) {
-                    console.log('DEBUG: URL opened successfully');
                     showSuccessMessage('Opening in browser...');
                 } else {
-                    console.log('DEBUG: Failed to open URL:', message.payload.message);
                     alert('Failed to open URL: ' + message.payload.message);
                 }
             } else if (message.type === 'error') {

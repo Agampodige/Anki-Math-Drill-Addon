@@ -127,10 +127,8 @@ class LevelsManager {
             if (window.pybridge) {
                 this.bridge = window.pybridge;
                 this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
-                console.log('✓ Bridge connected (reused)');
                 this.loadLevels();
             } else {
-                console.warn('Bridge not ready in app.js yet, waiting...');
             }
         };
 
@@ -138,7 +136,6 @@ class LevelsManager {
             connectToBridge();
         } else {
             window.addEventListener('pybridge-connected', (event) => {
-                console.log('Bridge connection event received');
                 connectToBridge();
             });
         }
@@ -147,7 +144,6 @@ class LevelsManager {
     loadLevels() {
         if (!this.bridge) return;
 
-        console.log('🚀 Requesting levels...');
         this.bridge.sendMessage(JSON.stringify({
             type: 'load_levels',
             payload: { compact: true }

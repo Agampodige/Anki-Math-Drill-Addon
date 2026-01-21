@@ -1722,6 +1722,7 @@ h1 {
     flex-direction: column;
     gap: var(--spacing-2xl);
     flex: 1;
+    align-items: center;
 }
 
 /* Practice Header styles moved to practice_mode.css to avoid conflicts */

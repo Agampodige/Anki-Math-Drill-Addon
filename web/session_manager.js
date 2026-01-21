@@ -31,7 +31,6 @@ class SessionManager {
             difficultyProgression: []
         };
         
-        console.log('Session started:', this.currentSession.id);
         return this.currentSession;
     }
 
@@ -99,7 +98,6 @@ class SessionManager {
         const completedSession = this.currentSession;
         this.currentSession = null;
 
-        console.log('Session ended:', completedSession.id, 'Status:', reason);
         return completedSession;
     }
 

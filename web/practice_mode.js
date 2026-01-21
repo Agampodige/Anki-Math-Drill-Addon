@@ -185,9 +185,7 @@ class PracticeMode {
         }
 
         if (this.isAdaptive) {
-            console.log('Adaptive mode is enabled.');
         } else {
-            console.log('Adaptive mode is disabled.');
         }
 
         // Start session tracking
@@ -239,7 +237,6 @@ class PracticeMode {
                     const data = JSON.parse(msg);
                     if (data.type === 'get_weaknesses_response' && data.payload.success) {
                         this.weaknesses = data.payload.weaknesses || [];
-                        console.log('Fetched weaknesses:', this.weaknesses);
                         pybridge.messageReceived.disconnect(handler);
                     }
                 };
@@ -338,7 +335,6 @@ class PracticeMode {
             // High priority: If we have weaknesses and a random roll (25%), target a weakness
             if (this.weaknesses.length > 0 && Math.random() < 0.25) {
                 const weakness = this.weaknesses[Math.floor(Math.random() * this.weaknesses.length)];
-                console.log(`Targeting weakness: ${weakness.num1} ${weakness.op} ${weakness.num2} (${weakness.reason})`);
 
                 // Determine display symbol based on operation
                 let symbol = '+';
@@ -652,7 +648,6 @@ class PracticeMode {
                 if (this.adaptiveState.consecutiveCorrect >= 3 && this.adaptiveState.level < 3) {
                     this.adaptiveState.level++;
                     this.adaptiveState.consecutiveCorrect = 0;
-                    console.log(`Adaptive: Difficulty increased to ${this.adaptiveState.level}`);
                 }
             }
 
@@ -672,7 +667,6 @@ class PracticeMode {
                 // Decrease level on error
                 if (this.adaptiveState.level > 1) {
                     this.adaptiveState.level--;
-                    console.log(`Adaptive: Difficulty decreased to ${this.adaptiveState.level}`);
                 }
             }
 
@@ -876,7 +870,6 @@ class PracticeMode {
                     payload: { attempts: attemptsData }
                 });
                 pybridge.sendMessage(message);
-                console.log('Attempts saved to Python backend');
             } catch (e) {
                 console.warn('Could not save to Python backend:', e);
             }

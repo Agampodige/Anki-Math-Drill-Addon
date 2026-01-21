@@ -3,7 +3,6 @@ function setupNavigation() {
     const homeButtons = document.querySelectorAll('.nav-card, [data-page]');
     const backButtons = document.querySelectorAll('#backBtn');
 
-    console.log('Setting up navigation, found buttons:', homeButtons.length, backButtons.length);
 
     // Add click listeners to navigation buttons with robust error handling
     homeButtons.forEach(button => {
@@ -12,7 +11,6 @@ function setupNavigation() {
                 e.preventDefault();
                 e.stopPropagation();
                 const page = this.getAttribute('data-page');
-                console.log('Navigating to:', page);
                 navigateToPage(page);
             } catch (error) {
                 console.error('Navigation error:', error);
@@ -31,7 +29,6 @@ function setupNavigation() {
             try {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Going back to home');
                 navigateToHome();
             } catch (error) {
                 console.error('Back navigation error:', error);
@@ -57,7 +54,6 @@ function setupNavigation() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM Content Loaded');
     setupNavigation();
     initializeTheme();
     setupThemeListener();
@@ -71,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Global click handler as backup - capture phase
     document.addEventListener('click', function (e) {
-        console.log('Global click captured:', e.target.tagName, e.target.className, e.target.id);
 
         // Handle nav-card clicks that might have onclick attributes
         if (e.target.classList.contains('nav-card') || e.target.closest('.nav-card')) {
@@ -81,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 try {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Global handler navigating to:', page);
                     // Extract page name from onclick if needed
                     const pageName = page.includes("'") ? page.split("'")[1] : page.replace('navigateToPage(', '').replace(')', '');
                     navigateToPage(pageName);
@@ -97,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Global handler going back to home');
                 navigateToHome();
                 return;
             } catch (error) {
@@ -109,16 +102,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Debug: Check if elements are clickable
     setTimeout(() => {
         const buttons = document.querySelectorAll('button, .nav-card, [onclick]');
-        console.log('Found clickable elements:', buttons.length);
         buttons.forEach((btn, i) => {
-            console.log(`Button ${i}:`, btn.tagName, btn.className, btn.onclick ? 'has onclick' : 'no onclick');
         });
     }, 1000);
 });
 
 // Also setup on window load as backup
 window.addEventListener('load', function () {
-    console.log('Window Load');
     setupNavigation();
     updateThemeToggleIcon();
 });
@@ -184,7 +174,6 @@ function updateHomeStatsFromBackend(attempts) {
         document.getElementById('homeStatStreak').textContent = streak;
     }
 
-    console.log(`Updated home stats with real data: ${total} attempts, ${accuracy}% accuracy, ${streak} day streak`);
 }
 
 function updateHomeUI() {
@@ -477,7 +466,6 @@ let isConnected = false;
 function createMockBridge() {
     pybridge = {
         sendMessage: function (message) {
-            console.log(' Mock bridge - would send to Python:', message);
 
             try {
                 const data = JSON.parse(message);
@@ -486,7 +474,6 @@ function createMockBridge() {
                 switch (data.type) {
                     case 'save_settings':
                         // Simulate saving settings to file
-                        console.log(' Mock bridge - saving settings:', data.payload.settings);
                         // Store in localStorage for persistence during session
                         localStorage.setItem('mockSettings', JSON.stringify(data.payload.settings));
 
@@ -512,7 +499,6 @@ function createMockBridge() {
                         
                         // If no attempts in localStorage, try to load from the actual data file
                         if (attempts.length === 0) {
-                            console.log('Mock bridge - no attempts in localStorage, using sample data');
                             // Create some sample data for testing
                             attempts = [
                                 {
@@ -575,7 +561,6 @@ function createMockBridge() {
                         break;
 
                     default:
-                        console.log(' Mock bridge - unhandled message type:', data.type);
                 }
             } catch (e) {
                 console.error('Mock bridge - error parsing message:', e);
@@ -585,7 +570,6 @@ function createMockBridge() {
 
     // Set connected flag for mock mode
     isConnected = true;
-    console.log(' Mock bridge created for development');
 
     // Dispatch event for other scripts
     window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
@@ -606,7 +590,6 @@ if (typeof qt !== 'undefined' && qt.webChannelTransport) {
                 if (pybridge) {
                     window.pybridge = pybridge;
                     isConnected = true;
-                    console.log(' Successfully connected to Python bridge');
 
                     // Dispatch event for other scripts
                     window.dispatchEvent(new CustomEvent('pybridge-connected', { detail: { bridge: pybridge } }));
@@ -618,19 +601,15 @@ if (typeof qt !== 'undefined' && qt.webChannelTransport) {
 
                     // Set up message listener
                     pybridge.messageReceived.connect(function (message) {
-                        console.log(' Received from Python:', message);
                         handlePythonMessage(message);
                     });
                 } else {
-                    console.log(' Failed to connect to Python bridge');
                 }
             });
         } else {
-            console.log(' QWebChannel not available');
-        }
+                }
     });
 } else {
-    console.log(' Running outside Qt environment - using mock bridge');
 }
 createMockBridge();
 
@@ -642,22 +621,17 @@ function handlePythonMessage(message) {
 
         switch (type) {
             case 'hello_response':
-                console.log(`👋 Python says: ${payload.message}`);
                 break;
             case 'settings_saved':
-                console.log(`✅ Settings saved successfully:`, payload);
                 break;
             case 'data_response':
-                console.log(`📊 Received data: `, payload);
                 break;
             case 'get_attempts_response':
-                console.log(`📈 Received attempts data for home stats:`, payload);
                 if (payload.attempts && Array.isArray(payload.attempts)) {
                     updateHomeStatsFromBackend(payload.attempts);
                 }
                 break;
             case 'load_settings_response':
-                console.log(`⚙️ Settings loaded from backend:`, payload.settings);
                 if (payload.settings) {
                     // Merge backend settings with current localStorage
                     // We don't have DEFAULT_SETTINGS here, but we can preserve what's in localStorage
@@ -675,7 +649,6 @@ function handlePythonMessage(message) {
                 }
                 break;
             case 'save_settings_response':
-                console.log(`✓ Settings saved to backend`);
                 break;
             default:
                 // Try to delegate to global handler if exists (e.g. for analytics)
@@ -683,7 +656,6 @@ function handlePythonMessage(message) {
                     window.handleBackendMessage(message);
                     return;
                 }
-                console.log('Unknown message type:', type);
         }
     } catch (e) {
         console.error('Error parsing message:', e);
