@@ -51,6 +51,8 @@ class Bridge(QObject):
                 self._handle_save_settings(payload)
             elif msg_type == 'load_settings':
                 self._handle_load_settings(payload)
+            elif msg_type == 'get_weaknesses':
+                self._handle_get_weaknesses(payload)
             elif msg_type == 'export_data':
                 self.export_data()
             elif msg_type == 'import_data':
@@ -159,6 +161,34 @@ class Bridge(QObject):
             }
             self.messageReceived.emit(json.dumps(response))
     
+    def _handle_get_weaknesses(self, payload):
+        """Handle get weaknesses request"""
+        try:
+            if not self.attempts_manager:
+                raise Exception('Attempts manager not initialized')
+            
+            operation = payload.get('operation')
+            digits = payload.get('digits')
+            
+            weaknesses = self.attempts_manager.get_weaknesses(operation, digits)
+            
+            response = {
+                'type': 'get_weaknesses_response',
+                'payload': {
+                    'weaknesses': weaknesses,
+                    'success': True
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+        except Exception as e:
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Error getting weaknesses: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
     def _handle_get_statistics(self, payload):
         """Handle get statistics request"""
         try:

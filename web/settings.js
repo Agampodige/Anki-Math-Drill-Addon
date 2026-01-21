@@ -10,7 +10,8 @@ const DEFAULT_SETTINGS = {
     showTimer: true,
     showAccuracy: true,
     autoCheckAnswers: false,
-    darkMode: true
+    darkMode: true,
+    adaptiveDifficulty: false
 };
 
 // Load settings from localStorage
@@ -83,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const timerDisplay = document.getElementById('timerDisplay');
     const accuracyDisplay = document.getElementById('accuracyDisplay');
     const autoCheck = document.getElementById('autoCheck');
+    const adaptiveToggle = document.getElementById('adaptiveDifficultyToggle');
     const saveBtn = document.getElementById('saveSettingsBtn');
     const resetBtn = document.getElementById('resetBtn');
     const backBtn = document.getElementById('backBtn');
@@ -102,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (timerDisplay) timerDisplay.checked = settings.showTimer;
     if (accuracyDisplay) accuracyDisplay.checked = settings.showAccuracy;
     if (autoCheck) autoCheck.checked = settings.autoCheckAnswers;
+    if (adaptiveToggle) adaptiveToggle.checked = settings.adaptiveDifficulty || false;
 
     // Back button handler
     if (backBtn) {
@@ -120,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showTimer: timerDisplay?.checked ?? true,
                 showAccuracy: accuracyDisplay?.checked ?? true,
                 autoCheckAnswers: autoCheck?.checked ?? false,
+                adaptiveDifficulty: adaptiveToggle?.checked ?? false,
                 // Keep default values for removed settings to avoid breaking other parts of the app
                 problemsPerSession: settings.problemsPerSession || 10,
                 difficultyLevel: settings.difficultyLevel || 'medium',
@@ -148,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (timerDisplay) timerDisplay.checked = DEFAULT_SETTINGS.showTimer;
                 if (accuracyDisplay) accuracyDisplay.checked = DEFAULT_SETTINGS.showAccuracy;
                 if (autoCheck) autoCheck.checked = DEFAULT_SETTINGS.autoCheckAnswers;
+                if (adaptiveToggle) adaptiveToggle.checked = DEFAULT_SETTINGS.adaptiveDifficulty;
 
                 // Apply theme
                 if (window.applyTheme) {

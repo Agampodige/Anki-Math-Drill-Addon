@@ -19,6 +19,13 @@ class PracticeMode {
         this.autoAdvanceTimer = null;
         this.feedbackShown = false;
         this.lastMilestone = 0;
+        this.adaptiveState = {
+            level: 1, // 1: Easy, 2: Medium, 3: Hard
+            consecutiveCorrect: 0,
+            history: []
+        };
+        this.isAdaptive = false;
+        this.weaknesses = [];
 
         this.initializeEventListeners();
         this.initializeKeyboardShortcuts();
@@ -158,6 +165,18 @@ class PracticeMode {
         this.operation = document.getElementById('operationSelect').value;
         this.digits = parseInt(document.getElementById('digitsSelect').value);
 
+        // Load adaptive setting from global appSettings if available
+        if (window.appSettings) {
+            this.isAdaptive = window.appSettings.adaptiveDifficulty || false;
+        } else {
+            // Fallback to localStorage if appSettings not in window
+            const saved = localStorage.getItem('appSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                this.isAdaptive = settings.adaptiveDifficulty || false;
+            }
+        }
+
         this.isPracticing = true;
         this.isPaused = false;
         this.questionCount = 0;
@@ -165,6 +184,11 @@ class PracticeMode {
         this.streak = 0;
         this.lastMilestone = 0;
         this.totalPauseTime = 0;
+        this.adaptiveState = {
+            level: 1,
+            consecutiveCorrect: 0,
+            history: []
+        };
 
         // Hide settings, show practice area and controls
         document.getElementById('settingsPanel').style.display = 'none';
@@ -174,6 +198,39 @@ class PracticeMode {
         document.getElementById('backBtn').style.display = 'none';
 
         this.generateNextQuestion();
+
+        // Fetch weaknesses for current operation/digits
+        if (this.isAdaptive) {
+            this.fetchWeaknesses();
+        }
+    }
+
+    async fetchWeaknesses() {
+        if (typeof pybridge !== 'undefined' && pybridge) {
+            try {
+                const message = JSON.stringify({
+                    type: 'get_weaknesses',
+                    payload: {
+                        operation: this.operation,
+                        digits: this.digits
+                    }
+                });
+
+                // Set up a one-time listener for the response
+                const handler = (msg) => {
+                    const data = JSON.parse(msg);
+                    if (data.type === 'get_weaknesses_response' && data.payload.success) {
+                        this.weaknesses = data.payload.weaknesses || [];
+                        console.log('Fetched weaknesses:', this.weaknesses);
+                        pybridge.messageReceived.disconnect(handler);
+                    }
+                };
+                pybridge.messageReceived.connect(handler);
+                pybridge.sendMessage(message);
+            } catch (e) {
+                console.warn('Could not fetch weaknesses:', e);
+            }
+        }
     }
 
     stopPractice() {
@@ -213,9 +270,25 @@ class PracticeMode {
         document.getElementById('timerDisplay').textContent = '0.0s';
     }
 
-    generateRandomNumber(digits) {
+    generateRandomNumber(digits, toughness = 2) {
         const min = Math.pow(10, digits - 1);
         const max = Math.pow(10, digits) - 1;
+
+        if (toughness === 1) {
+            // "Easy" - try to pick "friendly" numbers
+            if (digits === 1) return Math.floor(Math.random() * 5) + 1; // 1-5
+            if (digits === 2) {
+                const friendly = [10, 11, 12, 15, 20, 25, 30, 40, 50];
+                return friendly[Math.floor(Math.random() * friendly.length)];
+            }
+        }
+
+        if (toughness === 3) {
+            // "Hard" - pick from upper range
+            const mid = min + (max - min) / 2;
+            return Math.floor(Math.random() * (max - mid + 1)) + Math.floor(mid);
+        }
+
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
@@ -223,33 +296,108 @@ class PracticeMode {
         const digits = this.digits;
         let a, b, c, d, expression, answer, display;
 
+        // Determine toughness
+        let toughness = 2; // Default Medium
+        if (this.isAdaptive) {
+            // 30% chance of an easy question even if user is at high level (Smart Mixing)
+            if (Math.random() < 0.3) {
+                toughness = 1;
+            } else {
+                toughness = this.adaptiveState.level;
+            }
+
+            // High priority: If we have weaknesses and a random roll (25%), target a weakness
+            if (this.weaknesses.length > 0 && Math.random() < 0.25) {
+                const weakness = this.weaknesses[Math.floor(Math.random() * this.weaknesses.length)];
+                console.log(`Targeting weakness: ${weakness.num1} ${weakness.op} ${weakness.num2} (${weakness.reason})`);
+
+                // Determine display symbol based on operation
+                let symbol = '+';
+                if (weakness.op === 'subtraction') symbol = '−';
+                else if (weakness.op === 'multiplication') symbol = '×';
+                else if (weakness.op === 'division') symbol = '÷';
+
+                return {
+                    id: this.lastQuestionId + this.questionCount + 1,
+                    operation: weakness.op,
+                    display: `${weakness.num1} ${symbol} ${weakness.num2}`,
+                    answer: this.calculateAnswer(weakness.num1, weakness.num2, weakness.op),
+                    digits: this.digits,
+                    toughness: toughness,
+                    isWeaknessTarget: true
+                };
+            }
+        }
+
         switch (this.operation) {
             case 'addition':
-                a = this.generateRandomNumber(digits);
-                b = this.generateRandomNumber(digits);
+                if (toughness === 1 && digits === 2) {
+                    // Addition without carrying
+                    a = Math.floor(Math.random() * 4) + 1; // Tens 1-4
+                    b = Math.floor(Math.random() * 4) + 1; // Tens 1-4
+                    const a1 = Math.floor(Math.random() * 4); // Ones 0-4
+                    const b1 = Math.floor(Math.random() * 4); // Ones 0-4
+                    a = a * 10 + a1;
+                    b = b * 10 + b1;
+                } else if (toughness === 3 && digits === 2) {
+                    // Addition with guaranteed carrying
+                    a = Math.floor(Math.random() * 4) + 6; // 6-9
+                    b = Math.floor(Math.random() * 4) + 6; // 6-9
+                    const a1 = Math.floor(Math.random() * 4) + 6;
+                    const b1 = Math.floor(Math.random() * 4) + 6;
+                    a = a * 10 + a1;
+                    b = b * 10 + b1;
+                } else {
+                    a = this.generateRandomNumber(digits, toughness);
+                    b = this.generateRandomNumber(digits, toughness);
+                }
                 answer = a + b;
                 display = `${a} + ${b}`;
                 break;
 
             case 'subtraction':
-                a = this.generateRandomNumber(digits);
-                b = this.generateRandomNumber(digits);
-                // Ensure positive answer
+                a = this.generateRandomNumber(digits, toughness);
+                b = this.generateRandomNumber(digits, toughness);
                 if (a < b) [a, b] = [b, a];
+
+                if (toughness === 1 && digits === 2) {
+                    // Subtraction without borrowing
+                    const a_tens = Math.floor(Math.random() * 8) + 2;
+                    const b_tens = Math.floor(Math.random() * a_tens);
+                    const a_ones = Math.floor(Math.random() * 8) + 1;
+                    const b_ones = Math.floor(Math.random() * a_ones);
+                    a = a_tens * 10 + a_ones;
+                    b = b_tens * 10 + b_ones;
+                }
+
                 answer = a - b;
                 display = `${a} − ${b}`;
                 break;
 
             case 'multiplication':
-                a = this.generateRandomNumber(Math.min(digits, 3));
-                b = this.generateRandomNumber(Math.min(digits, 3));
+                if (toughness === 1) {
+                    a = [2, 3, 5, 10][Math.floor(Math.random() * 4)];
+                    b = this.generateRandomNumber(Math.min(digits, 2), 2);
+                } else if (toughness === 3) {
+                    a = Math.floor(Math.random() * 3) + 7; // 7, 8, 9
+                    b = Math.floor(Math.random() * 3) + 7; // 7, 8, 9
+                } else {
+                    a = this.generateRandomNumber(Math.min(digits, 3), toughness);
+                    b = this.generateRandomNumber(Math.min(digits, 3), toughness);
+                }
                 answer = a * b;
                 display = `${a} × ${b}`;
                 break;
 
             case 'division':
-                b = this.generateRandomNumber(Math.max(1, digits - 1));
-                a = b * this.generateRandomNumber(digits - 1);
+                if (toughness === 1) {
+                    b = [2, 5, 10][Math.floor(Math.random() * 3)];
+                    answer = Math.floor(Math.random() * 10) + 1;
+                    a = b * answer;
+                } else {
+                    b = this.generateRandomNumber(Math.max(1, digits - 1), toughness);
+                    a = b * this.generateRandomNumber(digits - 1, toughness);
+                }
                 answer = a / b;
                 display = `${a} ÷ ${b}`;
                 break;
@@ -261,8 +409,8 @@ class PracticeMode {
                 break;
 
             default:
-                a = this.generateRandomNumber(digits);
-                b = this.generateRandomNumber(digits);
+                a = this.generateRandomNumber(digits, toughness);
+                b = this.generateRandomNumber(digits, toughness);
                 answer = a + b;
                 display = `${a} + ${b}`;
         }
@@ -272,8 +420,21 @@ class PracticeMode {
             operation: this.operation,
             display: display,
             answer: answer,
-            digits: digits
+            digits: digits,
+            toughness: toughness,
+            num1: a,
+            num2: b
         };
+    }
+
+    calculateAnswer(a, b, op) {
+        switch (op) {
+            case 'addition': return a + b;
+            case 'subtraction': return a - b;
+            case 'multiplication': return a * b;
+            case 'division': return a / b;
+            default: return 0;
+        }
     }
 
     generateComplexQuestion() {
@@ -455,6 +616,17 @@ class PracticeMode {
             this.correctCount++;
             this.streak++;
 
+            // Adaptive logic update
+            if (this.isAdaptive) {
+                this.adaptiveState.consecutiveCorrect++;
+                // Increase level if 3 correct in a row and not yet at Hard (3)
+                if (this.adaptiveState.consecutiveCorrect >= 3 && this.adaptiveState.level < 3) {
+                    this.adaptiveState.level++;
+                    this.adaptiveState.consecutiveCorrect = 0;
+                    console.log(`Adaptive: Difficulty increased to ${this.adaptiveState.level}`);
+                }
+            }
+
             // Play correct sound
             if (window.soundManager) {
                 window.soundManager.playCorrect();
@@ -464,6 +636,16 @@ class PracticeMode {
             this.checkMilestone();
         } else {
             this.streak = 0;
+
+            // Adaptive logic update
+            if (this.isAdaptive) {
+                this.adaptiveState.consecutiveCorrect = 0;
+                // Decrease level on error
+                if (this.adaptiveState.level > 1) {
+                    this.adaptiveState.level--;
+                    console.log(`Adaptive: Difficulty decreased to ${this.adaptiveState.level}`);
+                }
+            }
 
             // Play incorrect sound
             if (window.soundManager) {
@@ -477,6 +659,8 @@ class PracticeMode {
             operation: this.currentQuestion.operation,
             digits: this.currentQuestion.digits,
             question: this.currentQuestion.display,
+            num1: this.currentQuestion.num1,
+            num2: this.currentQuestion.num2,
             userAnswer: userAnswer,
             correctAnswer: this.currentQuestion.answer,
             isCorrect: isCorrect,

@@ -144,6 +144,103 @@ class AttemptsManager:
             print(f"Error computing heatmap data: {e}")
             return {}
 
+    def get_weaknesses(self, operation: str = None, digits: int = None) -> List[Dict[str, Any]]:
+        """
+        Analyze attempts to find specific number pairs that the user struggles with.
+        Identifies pairs with:
+        1. High error rate
+        2. Significantly slower response time ( > 1.5x average)
+        
+        Returns a list of weakness objects: {"num1": int, "num2": int, "op": str, "reason": str}
+        """
+        try:
+            data = self.load_attempts()
+            attempts = data.get("attempts", [])
+            if not attempts:
+                return []
+
+            # Group attempts by pair and operation
+            stats = {} # key: (num1, num2, op)
+            
+            # Map display symbols to standard operation names
+            op_map = {
+                "+": "addition",
+                "−": "subtraction",
+                "×": "multiplication",
+                "÷": "division"
+            }
+
+            for a in attempts:
+                # Filter by operation/digits if provided
+                if operation and a.get("operation") != operation:
+                    continue
+                if digits and a.get("digits") != digits:
+                    continue
+
+                q_str = a.get("question", "")
+                # Try to parse operands from question string "A op B"
+                parts = q_str.split()
+                if len(parts) < 3:
+                    # Maybe it has " = ?" at the end
+                    parts = q_str.replace("= ?", "").strip().split()
+                
+                if len(parts) >= 3:
+                    try:
+                        num1 = int(parts[0])
+                        op_sym = parts[1]
+                        num2 = int(parts[2])
+                        op = op_map.get(op_sym, a.get("operation"))
+                        
+                        key = (num1, num2, op)
+                        if key not in stats:
+                            stats[key] = {"correct": 0, "total": 0, "times": []}
+                        
+                        stats[key]["total"] += 1
+                        if a.get("isCorrect"):
+                            stats[key]["correct"] += 1
+                        
+                        if a.get("timeTaken"):
+                            stats[key]["times"].append(float(a["timeTaken"]))
+                    except (ValueError, IndexError):
+                        continue
+
+            if not stats:
+                return []
+
+            # Calculate global averages for comparison
+            all_times = [t for s in stats.values() for t in s["times"]]
+            global_avg_time = sum(all_times) / len(all_times) if all_times else 5.0
+            
+            weaknesses = []
+            for (n1, n2, op), s in stats.items():
+                accuracy = s["correct"] / s["total"]
+                avg_time = sum(s["times"]) / len(s["times"]) if s["times"] else 0
+                
+                reason = None
+                if accuracy < 0.7 and s["total"] >= 2:
+                    reason = "accuracy"
+                elif avg_time > global_avg_time * 1.5 and s["total"] >= 2:
+                    reason = "speed"
+                
+                if reason:
+                    weaknesses.append({
+                        "num1": n1,
+                        "num2": n2,
+                        "op": op,
+                        "reason": reason,
+                        "accuracy": round(accuracy * 100, 1),
+                        "avgTime": round(avg_time, 2)
+                    })
+
+            # Sort by accuracy (worst first) then speed
+            weaknesses.sort(key=lambda x: (x.get("accuracy", 100), -x.get("avgTime", 0)))
+            
+            return weaknesses[:10] # Return top 10 weaknesses
+            
+        except Exception as e:
+            print(f"Error getting weaknesses: {e}")
+            return []
+
     def get_attempt_statistics(self) -> Dict[str, Any]:
         """Compute basic statistics from available attempts."""
         try:
