@@ -109,6 +109,7 @@
 .settings-row {
     width: 100%;
     display: flex;
+    align-items: center;
     flex-direction: column;
     gap: 1.25rem;
     background: var(--bg-light);
@@ -156,6 +157,38 @@
     transform: translateY(-2px);
 }
 
+/* --- Practice Header --- */
+.practice-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--bg-light);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+}
+
+.card-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.card-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+.timer-card {
+    background: linear-gradient(135deg, var(--bg-light) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
 /* --- Stat Cards --- */
 .stat-card {
     background: var(--bg-light);
@@ -194,6 +227,14 @@
     transition: var(--transition-base);
 }
 
+.input-area {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+    align-items: center;
+}
+
 .input-area input {
     flex: 1;
     padding: 1rem;
@@ -212,6 +253,52 @@
 .input-area input:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15), inset 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.next-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.next-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.submit-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    white-space: nowrap;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.submit-button:disabled {
+    background-color: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* --- Feedback Overlay --- */
@@ -236,10 +323,80 @@
     animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Animations and Base components used from style.css */
+.feedback-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
 
-/* Responsive and specific logic below */
+.feedback-data {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
 
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.data-row span {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.data-row strong {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.practice-main-view {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.practice-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.stop-button {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.stop-button:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* --- Stat Cards --- */
 .stats-summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -302,19 +459,68 @@
 @media (max-width: 768px) {
     .practice-header {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding: 1rem;
     }
 
     .question-card {
         padding: 2rem;
+    }
+
+    .input-area input {
+        font-size: 2rem;
+        padding: 0.75rem;
+    }
+
+    .practice-settings {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+
+    .stats-summary {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        padding: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     .practice-header {
         grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .question-card {
+        padding: 1.5rem;
+        border-radius: 20px;
     }
 
     .question-box h2 {
-        font-size: 2.5rem;
+        font-size: 2rem;
+    }
+
+    .input-area input {
+        font-size: 1.75rem;
+        padding: 0.5rem;
+    }
+
+    .stats-summary {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .practice-nav-bar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .practice-title {
+        font-size: 1.25rem;
+    }
+
+    .icon-button {
+        padding: 0.5rem;
     }
 }
