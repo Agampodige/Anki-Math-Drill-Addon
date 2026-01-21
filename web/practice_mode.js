@@ -136,7 +136,14 @@ class PracticeMode {
             pauseBtn.classList.add('resumed');
         } else {
             // Resume
-            this.totalPauseTime += Date.now() - this.pauseStartTime;
+            const pauseDuration = Date.now() - this.pauseStartTime;
+            this.totalPauseTime += pauseDuration;
+            
+            // Record pause in session manager
+            if (window.sessionManager) {
+                window.sessionManager.recordPause(pauseDuration);
+            }
+            
             pauseOverlay.style.display = 'none';
             pauseBtn.textContent = '⏸ Pause';
             pauseBtn.classList.remove('resumed');
@@ -181,6 +188,11 @@ class PracticeMode {
             console.log('Adaptive mode is enabled.');
         } else {
             console.log('Adaptive mode is disabled.');
+        }
+
+        // Start session tracking
+        if (window.sessionManager) {
+            window.sessionManager.startSession(this.operation, this.digits, this.isAdaptive);
         }
 
         this.isPracticing = true;
@@ -241,8 +253,14 @@ class PracticeMode {
 
     stopPractice() {
         // Confirm stop
-        if (!confirm('Stop practicing? Your current streak and session will be lost.')) {
+        if (!confirm('Stop practicing? Your current session will be saved.')) {
             return;
+        }
+
+        // End session and get summary
+        let sessionSummary = null;
+        if (window.sessionManager && window.sessionManager.currentSession) {
+            sessionSummary = window.sessionManager.endSession('completed');
         }
 
         // Reset state
@@ -257,6 +275,11 @@ class PracticeMode {
 
         // Hide overlays
         document.getElementById('pauseOverlay').style.display = 'none';
+
+        // Show session summary if available
+        if (sessionSummary) {
+            this.showSessionSummary(sessionSummary);
+        }
 
         // Show settings, hide practice area
         document.getElementById('settingsPanel').style.display = 'block';
@@ -677,6 +700,11 @@ class PracticeMode {
         this.attempts.push(attempt);
         this.saveAttempts();
 
+        // Record attempt in session manager
+        if (window.sessionManager) {
+            window.sessionManager.recordAttempt(attempt);
+        }
+
         // Show feedback
         this.showFeedback(isCorrect, userAnswer, timeTaken);
 
@@ -861,6 +889,159 @@ class PracticeMode {
             const data = JSON.parse(saved);
             this.attempts = data.attempts || [];
             this.lastQuestionId = data.lastId || 0;
+        }
+    }
+
+    showSessionSummary(session) {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.id = 'sessionSummaryModal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        `;
+
+        // Get session summary
+        const summary = window.sessionManager.getSessionSummary(session);
+        
+        // Determine performance emoji and color
+        let performanceEmoji = '📊';
+        let performanceColor = 'var(--text-color)';
+        if (summary.performanceRating === 'excellent') {
+            performanceEmoji = '🏆';
+            performanceColor = 'var(--success-color)';
+        } else if (summary.performanceRating === 'good') {
+            performanceEmoji = '⭐';
+            performanceColor = 'var(--primary-color)';
+        } else if (summary.performanceRating === 'fair') {
+            performanceEmoji = '📈';
+            performanceColor = 'var(--warning-color)';
+        } else if (summary.performanceRating === 'needs_improvement') {
+            performanceEmoji = '💪';
+            performanceColor = 'var(--error-color)';
+        }
+
+        // Create modal content
+        modal.innerHTML = `
+            <div style="
+                background: var(--bg-light);
+                border-radius: var(--border-radius-xl);
+                padding: var(--spacing-2xl);
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: var(--shadow-xl);
+                animation: slideUp 0.3s ease;
+            ">
+                <div style="text-align: center; margin-bottom: var(--spacing-xl);">
+                    <div style="font-size: 48px; margin-bottom: var(--spacing-md);">${performanceEmoji}</div>
+                    <h2 style="margin: 0; color: var(--text-color); font-size: var(--font-size-2xl);">Session Complete!</h2>
+                    <p style="margin: var(--spacing-sm) 0 0 0; color: var(--text-muted); font-size: var(--font-size-sm);">Great job on completing your practice session</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
+                    <div style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--border-radius-lg); text-align: center;">
+                        <div style="font-size: var(--font-size-2xl); font-weight: bold; color: ${performanceColor};">${summary.accuracy}%</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--spacing-xs);">Accuracy</div>
+                    </div>
+                    <div style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--border-radius-lg); text-align: center;">
+                        <div style="font-size: var(--font-size-2xl); font-weight: bold; color: var(--primary-color);">${summary.questionsAttempted}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--spacing-xs);">Questions</div>
+                    </div>
+                    <div style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--border-radius-lg); text-align: center;">
+                        <div style="font-size: var(--font-size-2xl); font-weight: bold; color: var(--success-color);">${summary.averageTime}s</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--spacing-xs);">Avg Time</div>
+                    </div>
+                    <div style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--border-radius-lg); text-align: center;">
+                        <div style="font-size: var(--font-size-2xl); font-weight: bold; color: var(--warning-color);">${summary.bestStreak}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--spacing-xs);">Best Streak</div>
+                    </div>
+                </div>
+
+                <div style="background: var(--warning-50); border: 1px solid var(--warning-color); padding: var(--spacing-md); border-radius: var(--border-radius-md); margin-bottom: var(--spacing-xl);">
+                    <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                        <span style="font-size: var(--font-size-base);">💡</span>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: var(--warning-900); font-size: var(--font-size-sm);">Performance Insights</div>
+                            <div style="color: var(--warning-700); font-size: var(--font-size-xs); margin-top: var(--spacing-xs);">
+                                ${this.getPerformanceInsight(summary)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: var(--spacing-md);">
+                    <button onclick="this.closest('#sessionSummaryModal').remove()" style="
+                        flex: 1;
+                        background: var(--text-muted);
+                        color: white;
+                        border: none;
+                        padding: var(--spacing-md) var(--spacing-xl);
+                        border-radius: var(--border-radius-md);
+                        font-size: var(--font-size-sm);
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: var(--transition-colors);
+                    " onmouseover="this.style.background='var(--text-light)'" onmouseout="this.style.background='var(--text-muted)'">
+                        Close
+                    </button>
+                    <button onclick="window.location.href='analytics.html'" style="
+                        flex: 1;
+                        background: var(--primary-color);
+                        color: white;
+                        border: none;
+                        padding: var(--spacing-md) var(--spacing-xl);
+                        border-radius: var(--border-radius-md);
+                        font-size: var(--font-size-sm);
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: var(--transition-colors);
+                    " onmouseover="this.style.background='var(--primary-dark)'" onmouseout="this.style.background='var(--primary-color)'">
+                        View Analytics
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideUp {
+                    from { transform: translateY(20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+            </style>
+        `;
+
+        // Add to body and handle click outside
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+
+    getPerformanceInsight(summary) {
+        if (summary.performanceRating === 'excellent') {
+            return 'Outstanding performance! Your accuracy and speed are both impressive.';
+        } else if (summary.performanceRating === 'good') {
+            return 'Great work! You\'re performing well and showing good consistency.';
+        } else if (summary.performanceRating === 'fair') {
+            return 'Good effort! Focus on accuracy and try to maintain a steady pace.';
+        } else {
+            return 'Keep practicing! Focus on understanding the problems before answering.';
         }
     }
 }

@@ -69,6 +69,12 @@ class Bridge(QObject):
                 self.open_backup_location()
             elif msg_type == 'open_url':
                 self.open_url(message)
+            elif msg_type == 'save_session':
+                self._handle_save_session(payload)
+            elif msg_type == 'load_sessions':
+                self._handle_load_sessions(payload)
+            elif msg_type == 'clear_sessions':
+                self._handle_clear_sessions(payload)
             else:
                 print(f"DEBUG: Unknown message type: {msg_type}")
                 self.messageReceived.emit(json.dumps({
@@ -729,6 +735,106 @@ class Bridge(QObject):
                 'type': 'error',
                 'payload': {
                     'message': f'Failed to open URL: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    def _handle_save_session(self, payload):
+        """Handle saving session data"""
+        try:
+            addon_folder = os.path.dirname(__file__)
+            sessions_file = os.path.join(addon_folder, "data", "user", "sessions.json")
+            
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(sessions_file), exist_ok=True)
+            
+            # Load existing sessions
+            sessions = []
+            if os.path.exists(sessions_file):
+                with open(sessions_file, 'r', encoding='utf-8') as f:
+                    sessions = json.load(f)
+            
+            # Add new session
+            if isinstance(payload, dict):
+                sessions.append(payload)
+            
+            # Save sessions
+            with open(sessions_file, 'w', encoding='utf-8') as f:
+                json.dump(sessions, f, indent=2, ensure_ascii=False)
+            
+            response = {
+                'type': 'save_session_response',
+                'payload': {
+                    'success': True,
+                    'message': 'Session saved successfully'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+            
+        except Exception as e:
+            print(f"ERROR in save_session: {e}")
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Failed to save session: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    def _handle_load_sessions(self, payload):
+        """Handle loading session data"""
+        try:
+            addon_folder = os.path.dirname(__file__)
+            sessions_file = os.path.join(addon_folder, "data", "user", "sessions.json")
+            
+            sessions = []
+            if os.path.exists(sessions_file):
+                with open(sessions_file, 'r', encoding='utf-8') as f:
+                    sessions = json.load(f)
+            
+            response = {
+                'type': 'load_sessions_response',
+                'payload': {
+                    'sessions': sessions,
+                    'count': len(sessions)
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+            
+        except Exception as e:
+            print(f"ERROR in load_sessions: {e}")
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Failed to load sessions: {str(e)}'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+
+    def _handle_clear_sessions(self, payload):
+        """Handle clearing session data"""
+        try:
+            addon_folder = os.path.dirname(__file__)
+            sessions_file = os.path.join(addon_folder, "data", "user", "sessions.json")
+            
+            if os.path.exists(sessions_file):
+                os.remove(sessions_file)
+            
+            response = {
+                'type': 'clear_sessions_response',
+                'payload': {
+                    'success': True,
+                    'message': 'Sessions cleared successfully'
+                }
+            }
+            self.messageReceived.emit(json.dumps(response))
+            
+        except Exception as e:
+            print(f"ERROR in clear_sessions: {e}")
+            response = {
+                'type': 'error',
+                'payload': {
+                    'message': f'Failed to clear sessions: {str(e)}'
                 }
             }
             self.messageReceived.emit(json.dumps(response))

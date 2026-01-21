@@ -36,6 +36,9 @@ class AnalyticsManager {
             console.log('Analytics: Bridge connected, loading statistics...');
             this.loadStatistics();
         });
+
+        // Load session data
+        this.loadSessionData();
     }
 
     loadStatistics() {
@@ -930,6 +933,117 @@ class AnalyticsManager {
             this.showEmptyState();
         }
     }
+
+    loadSessionData() {
+        if (window.sessionManager) {
+            const sessionStats = window.sessionManager.getOverallSessionStats();
+            const recentSessions = window.sessionManager.getSessionHistory(10);
+            
+            this.displaySessionAnalytics(sessionStats);
+            this.displayRecentSessions(recentSessions);
+        }
+    }
+
+    displaySessionAnalytics(stats) {
+        // Update session analytics section
+        document.getElementById('totalSessions').textContent = stats.totalSessions;
+        document.getElementById('sessionAccuracy').textContent = stats.averageAccuracy + '%';
+        document.getElementById('improvementTrend').textContent = this.formatTrend(stats.improvementTrend);
+        document.getElementById('avgSessionLength').textContent = this.formatDuration(stats.averageSessionLength);
+    }
+
+    displayRecentSessions(sessions) {
+        const container = document.getElementById('recentSessionsList');
+        if (!container) return;
+
+        if (!sessions || sessions.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>No practice sessions yet. Start practicing to see your session history!</p>
+                </div>
+            `;
+            return;
+        }
+
+        const sessionsHtml = sessions.map(session => {
+            const date = new Date(session.id.split('_')[1] * 1);
+            const dateStr = date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const performanceClass = `performance-${session.performanceRating}`;
+            const performanceText = this.formatPerformanceRating(session.performanceRating);
+
+            return `
+                <div class="session-card">
+                    <div class="session-header">
+                        <h3 class="session-title">${this.getOperationDisplay(session.operation)} Practice</h3>
+                        <span class="session-date">${dateStr}</span>
+                    </div>
+                    <div class="session-stats">
+                        <div class="session-stat">
+                            <span class="session-stat-value">${session.questionsAttempted}</span>
+                            <span class="session-stat-label">Questions</span>
+                        </div>
+                        <div class="session-stat">
+                            <span class="session-stat-value">${session.accuracy}%</span>
+                            <span class="session-stat-label">Accuracy</span>
+                        </div>
+                        <div class="session-stat">
+                            <span class="session-stat-value">${session.averageTime}s</span>
+                            <span class="session-stat-label">Avg Time</span>
+                        </div>
+                        <div class="session-stat">
+                            <span class="session-stat-value">${session.bestStreak}</span>
+                            <span class="session-stat-label">Best Streak</span>
+                        </div>
+                    </div>
+                    <div class="session-performance">
+                        <span>Performance:</span>
+                        <span class="performance-badge ${performanceClass}">${performanceText}</span>
+                        <span style="margin-left: auto; color: var(--text-muted);">Duration: ${session.duration}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = sessionsHtml;
+    }
+
+    formatTrend(trend) {
+        const trendMap = {
+            'improving': '📈 Improving',
+            'declining': '📉 Declining',
+            'stable': '➡️ Stable'
+        };
+        return trendMap[trend] || '➡️ Stable';
+    }
+
+    formatDuration(milliseconds) {
+        if (!milliseconds || milliseconds === 0) return '0m';
+        
+        const minutes = Math.floor(milliseconds / 60000);
+        const seconds = Math.floor((milliseconds % 60000) / 1000);
+        
+        if (minutes > 0) {
+            return `${minutes}m ${seconds}s`;
+        } else {
+            return `${seconds}s`;
+        }
+    }
+
+    formatPerformanceRating(rating) {
+        const ratingMap = {
+            'excellent': 'Excellent',
+            'good': 'Good',
+            'fair': 'Fair',
+            'needs_improvement': 'Needs Work'
+        };
+        return ratingMap[rating] || 'Unknown';
+    }
 }
 
 // Handle messages from Python backend
@@ -938,6 +1052,14 @@ window.handleBackendMessage = function (message) {
         const data = JSON.parse(message);
         if (data.type === 'statistics_response' && window.analyticsManager) {
             window.analyticsManager.displayStatisticsFromBackend(data.payload);
+        } else if (data.type === 'load_sessions_response' && window.sessionManager) {
+            if (data.payload.sessions && data.payload.sessions.length > 0) {
+                window.sessionManager.sessionHistory = data.payload.sessions;
+                // Reload session data in analytics
+                if (window.analyticsManager) {
+                    window.analyticsManager.loadSessionData();
+                }
+            }
         }
     } catch (e) {
         console.error('Bridge error:', e);

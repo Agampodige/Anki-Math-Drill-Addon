@@ -22,6 +22,53 @@
                 <div class="levels-spacer"></div>
             </div>
 
+            <!-- Session Analytics -->
+            <div class="analytics-section">
+                <h2 class="section-title">Session Analytics</h2>
+                <div class="levels-stats-section">
+                    <div class="stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="totalSessions">0</span>
+                            <span class="stat-name">Total Sessions</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="sessionAccuracy">0%</span>
+                            <span class="stat-name">Session Accuracy</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="improvementTrend">-</span>
+                            <span class="stat-name">Improvement Trend</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="avgSessionLength">0m</span>
+                            <span class="stat-name">Avg Session</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Sessions -->
+            <div class="analytics-section">
+                <h2 class="section-title">Recent Sessions</h2>
+                <div class="recent-sessions-container">
+                    <div id="recentSessionsList" class="sessions-list">
+                        <div class="loading-state">
+                            <p>Loading session data...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Overall Statistics -->
             <div class="analytics-section">
                 <h2 class="section-title">Overall Performance</h2>
@@ -197,6 +244,7 @@
 
     <!-- Scripts -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script src="session_manager.js"></script>
     <script src="app.js"></script>
     <script src="analytics.js"></script>
 </body>
