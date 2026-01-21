@@ -81,23 +81,26 @@ class LevelsManager {
     // --- Bridge & Data Loading ---
 
     setupBridge() {
-        // Safe bridge initialization with retry logic
-        const initBridge = () => {
-            if (typeof QWebChannel !== 'undefined' && typeof qt !== 'undefined') {
-                new QWebChannel(qt.webChannelTransport, (channel) => {
-                    this.bridge = channel.objects.pybridge;
-                    if (this.bridge) {
-                        this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
-                        console.log('✓ Bridge connected');
-                        this.loadLevels();
-                    }
-                });
+        // Reuse the bridge initialized by app.js
+        const connectToBridge = () => {
+            if (window.pybridge) {
+                this.bridge = window.pybridge;
+                this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
+                console.log('✓ Bridge connected (reused)');
+                this.loadLevels();
             } else {
-                console.warn('Bridge not ready, retrying...');
-                setTimeout(initBridge, 100);
+                console.warn('Bridge not ready in app.js yet, waiting...');
             }
         };
-        initBridge();
+
+        if (window.pybridge) {
+            connectToBridge();
+        } else {
+            window.addEventListener('pybridge-connected', (event) => {
+                console.log('Bridge connection event received');
+                connectToBridge();
+            });
+        }
     }
 
     loadLevels() {
