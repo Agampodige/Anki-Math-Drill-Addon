@@ -50,9 +50,8 @@ This major update transforms Math Drill from a simple practice tool into a full-
 ---
 
 ## ⚠️ Known Limitations
-* **Compatibility:** Optimized for Anki 25.x. Older versions may experience minor UI glitches.
+* **Compatibility:** Optimized for Anki 25.x. Older versions may experience glitches.
 * **Experimental Build:** Some features are subject to change, and bugs may occur.
-* **Local Storage:** All data is stored locally on your machine to ensure privacy.
 
 ---
 
