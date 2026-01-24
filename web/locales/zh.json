@@ -75,13 +75,19 @@
       "show_timer": "显示计时器",
       "show_timer_desc": "显示练习花费的时间",
       "show_accuracy": "显示准确率",
-      "show_accuracy_desc": "显示性能百分比"
+      "show_accuracy_desc": "显示性能百分比",
+      "show_recent_sessions": "显示最近会话",
+      "show_recent_sessions_desc": "在分析页面显示最近会话详情和分析"
     },
     "gameplay": {
       "auto_check": "自动检查",
       "auto_check_desc": "回答后立即反馈",
       "adaptive_difficulty": "自适应难度",
-      "adaptive_difficulty_desc": "根据您的表现调整挑战"
+      "adaptive_difficulty_desc": "根据您的表现调整挑战",
+      "mcq_mode": "多选题模式",
+      "mcq_mode_desc": "显示4个答案选项而不是输入",
+      "feedback_delay": "反馈延迟",
+      "feedback_delay_desc": "显示下一题前的等待时间（秒）"
     },
     "data_management": {
       "automatic_backups": "自动备份",

@@ -165,7 +165,10 @@
     "level_order": "Level Order",
     "name_az": "Name (A-Z)",
     "stars_earned": "Stars Earned",
-    "search_placeholder": "Search levels..."
+    "search_placeholder": "Search levels...",
+    "level": "Level",
+    "best_time": "Best Time",
+    "attempts": "Attempts"
   },
   "practice": {
     "title": "Practice Mode",
