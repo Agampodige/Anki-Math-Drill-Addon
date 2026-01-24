@@ -1,5 +1,5 @@
 {
-  "theme": "light",
+  "theme": "dark",
   "soundEnabled": false,
   "notificationsEnabled": true,
   "problemsPerSession": 10,
@@ -8,9 +8,9 @@
   "showAccuracy": true,
   "showRecentSessions": false,
   "autoCheckAnswers": true,
-  "darkMode": false,
+  "darkMode": true,
   "adaptiveDifficulty": true,
-  "mcqMode": true,
+  "mcqMode": false,
   "feedbackDelay": 1.4,
   "autoBackup": true,
   "maxBackups": 5

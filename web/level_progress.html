@@ -58,10 +58,35 @@
 
                 <!-- Answer Input -->
                 <div class="input-section">
-                    <input type="number" id="answerInput" class="answer-input" placeholder="?" disabled>
-                    <button id="submitButton" class="submit-button" disabled>
-                        <span>Submit</span>
-                    </button>
+                    <!-- Typing Input -->
+                    <div class="typing-input-area" id="typingInputArea">
+                        <input type="number" id="answerInput" class="answer-input" placeholder="?" disabled>
+                        <button id="submitButton" class="submit-button" disabled>
+                            <span>Submit</span>
+                        </button>
+                    </div>
+                    
+                    <!-- MCQ Options (Hidden by default) -->
+                    <div class="mcq-area" id="mcqInputArea" style="display: none;">
+                        <div class="mcq-options" id="mcqOptions">
+                            <button class="mcq-option" data-option="A" disabled>
+                                <span class="option-label">A</span>
+                                <span class="option-value"></span>
+                            </button>
+                            <button class="mcq-option" data-option="B" disabled>
+                                <span class="option-label">B</span>
+                                <span class="option-value"></span>
+                            </button>
+                            <button class="mcq-option" data-option="C" disabled>
+                                <span class="option-label">C</span>
+                                <span class="option-value"></span>
+                            </button>
+                            <button class="mcq-option" data-option="D" disabled>
+                                <span class="option-label">D</span>
+                                <span class="option-value"></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Stars Progress -->

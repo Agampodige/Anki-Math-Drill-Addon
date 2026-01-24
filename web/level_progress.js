@@ -21,6 +21,11 @@ class LevelProgress {
         // UI State
         this.state = 'LOADING'; // LOADING, READY, PLAYING, FEEDBACK, FINISHED
 
+        // MCQ State
+        this.isMCQMode = false;
+        this.mcqOptions = [];
+        this.selectedMCQOption = null;
+
         this.bridge = null;
 
         this.init();
@@ -51,6 +56,42 @@ class LevelProgress {
                 if (e.key === 'Enter') this.submitAnswer();
             });
         }
+
+        // MCQ option listeners
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                if (!option.disabled) {
+                    this.selectMCQOption(option.dataset.option);
+                }
+            });
+        });
+
+        // MCQ keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (this.state !== 'PLAYING' || !this.isMCQMode) return;
+            
+            switch(e.key.toLowerCase()) {
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    e.preventDefault();
+                    const optionIndex = parseInt(e.key) - 1;
+                    const optionLabels = ['A', 'B', 'C', 'D'];
+                    if (optionIndex < optionLabels.length) {
+                        this.selectMCQOption(optionLabels[optionIndex]);
+                    }
+                    break;
+                case 'a':
+                case 's':
+                case 'd':
+                case 'f':
+                    e.preventDefault();
+                    const keyMap = { 'a': 'A', 's': 'B', 'd': 'C', 'f': 'D' };
+                    this.selectMCQOption(keyMap[e.key.toLowerCase()]);
+                    break;
+            }
+        });
     }
 
     bindClick(id, handler) {
@@ -118,6 +159,9 @@ class LevelProgress {
         this.currentQuestionIndex = 0;
         this.correctCount = 0;
         this.totalTimeTaken = 0;
+
+        // Load MCQ mode setting
+        this.loadMCQMode();
 
         this.updateHeaderUI();
         this.setState('PLAYING');
@@ -235,18 +279,24 @@ class LevelProgress {
         const feedback = document.getElementById('feedbackArea');
         if (feedback) feedback.style.display = 'none';
 
-        const input = document.getElementById('answerInput');
-        if (input) {
-            input.disabled = false;
-            input.focus();
+        // Setup input mode based on MCQ setting
+        if (this.isMCQMode) {
+            this.setupMCQMode();
+        } else {
+            this.setupTypingMode();
         }
-        document.getElementById('submitButton').disabled = false;
 
         this.updateProgressBar();
     }
 
     submitAnswer() {
         if (this.state !== 'PLAYING') return;
+
+        // Route to appropriate submit method based on mode
+        if (this.isMCQMode) {
+            // MCQ mode is handled by selectMCQOption -> submitMCQAnswer
+            return;
+        }
 
         const input = document.getElementById('answerInput');
         const val = parseFloat(input.value);
@@ -279,9 +329,13 @@ class LevelProgress {
                 : `<span class="error">✗ Incorrect<br><small>Answer: ${correctAnswer}</small></span>`;
         }
 
-        // Lock input
-        document.getElementById('answerInput').disabled = true;
-        document.getElementById('submitButton').disabled = true;
+        // Hide input areas during feedback
+        if (this.isMCQMode) {
+            document.getElementById('mcqInputArea').style.display = 'none';
+        } else {
+            document.getElementById('answerInput').disabled = true;
+            document.getElementById('submitButton').disabled = true;
+        }
 
         // Auto Advance
         const delay = isCorrect ? 1000 : 2000;
@@ -413,6 +467,141 @@ class LevelProgress {
         // For now, reload to levels or handle via param if passed
         // Simplest: go back to list, they will see next unlocked
         window.location.href = 'levels.html';
+    }
+
+    // --- MCQ Methods ---
+    
+    loadMCQMode() {
+        // Check global appSettings first
+        if (window.appSettings) {
+            this.isMCQMode = window.appSettings.mcqMode || false;
+        } else {
+            // Fallback to localStorage
+            const saved = localStorage.getItem('appSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                this.isMCQMode = settings.mcqMode || false;
+            }
+        }
+    }
+
+    setupTypingMode() {
+        // Show typing input, hide MCQ
+        document.getElementById('typingInputArea').style.display = 'flex';
+        document.getElementById('mcqInputArea').style.display = 'none';
+        
+        // Enable input
+        const input = document.getElementById('answerInput');
+        if (input) {
+            input.disabled = false;
+            input.focus();
+        }
+        document.getElementById('submitButton').disabled = false;
+    }
+
+    setupMCQMode() {
+        // Show MCQ, hide typing input
+        document.getElementById('typingInputArea').style.display = 'none';
+        document.getElementById('mcqInputArea').style.display = 'block';
+        
+        // Generate MCQ options
+        this.generateMCQOptions();
+        
+        // Reset selection
+        this.selectedMCQOption = null;
+        
+        // Enable MCQ options
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            option.disabled = false;
+            option.classList.remove('selected', 'correct', 'incorrect');
+        });
+    }
+
+    generateMCQOptions() {
+        const currentQuestion = this.questions[this.currentQuestionIndex];
+        const correctAnswer = currentQuestion.answer;
+        const options = [correctAnswer];
+        
+        // Generate 3 wrong options
+        while (options.length < 4) {
+            const variation = (Math.random() - 0.5) * correctAnswer * 0.5; // ±25% variation
+            const wrongAnswer = Math.round(correctAnswer + variation);
+            
+            // Avoid duplicates and ensure it's different from correct answer
+            if (!options.includes(wrongAnswer) && Math.abs(wrongAnswer - correctAnswer) > 0.01) {
+                options.push(wrongAnswer);
+            }
+        }
+        
+        // Shuffle options
+        this.mcqOptions = this.shuffleArray(options);
+        
+        // Update UI
+        const optionLabels = ['A', 'B', 'C', 'D'];
+        document.querySelectorAll('.mcq-option').forEach((option, index) => {
+            const valueSpan = option.querySelector('.option-value');
+            valueSpan.textContent = this.mcqOptions[index];
+            option.dataset.answer = this.mcqOptions[index];
+        });
+    }
+
+    shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    selectMCQOption(option) {
+        // Remove previous selection
+        document.querySelectorAll('.mcq-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        // Add selection to clicked option
+        const selectedElement = document.querySelector(`[data-option="${option}"]`);
+        selectedElement.classList.add('selected');
+        this.selectedMCQOption = option;
+        
+        // Auto-submit after selection
+        setTimeout(() => {
+            this.submitMCQAnswer();
+        }, 300);
+    }
+
+    submitMCQAnswer() {
+        if (!this.selectedMCQOption) return;
+        
+        const selectedElement = document.querySelector(`[data-option="${this.selectedMCQOption}"]`);
+        const userAnswer = parseFloat(selectedElement.dataset.answer);
+        const currentQuestion = this.questions[this.currentQuestionIndex];
+        const correct = Math.abs(userAnswer - currentQuestion.answer) < 0.01;
+        
+        // Accumulate time
+        const now = Date.now();
+        const duration = (now - this.questionStartTime) / 1000;
+        this.totalTimeTaken += duration;
+        
+        if (correct) {
+            this.correctCount++;
+        }
+        
+        // Show correct/incorrect feedback on options
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            const answer = parseFloat(option.dataset.answer);
+            option.disabled = true;
+            
+            if (Math.abs(answer - currentQuestion.answer) < 0.01) {
+                option.classList.add('correct');
+            } else if (option.dataset.option === this.selectedMCQOption && !correct) {
+                option.classList.add('incorrect');
+            }
+        });
+        
+        this.setState('FEEDBACK');
+        this.showFeedback(correct, currentQuestion.answer);
     }
 }
 
