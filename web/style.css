@@ -228,6 +228,9 @@ body.light-theme {
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: rgba(148, 163, 184, 0.2);
     --hero-title-color: var(--primary-dark);
+    --card-bg: var(--bg-light);
+    --card-border: var(--border-light);
+    --card-shadow: var(--shadow-lg);
 }
 
 body.dark-theme {
@@ -261,6 +264,11 @@ body.dark-theme {
 
     /* Text Overrides for Dark Mode */
     --hero-title-color: var(--primary-light);
+
+    /* Shared Component Overrides */
+    --card-bg: var(--bg-light);
+    --card-border: var(--border-color);
+    --card-shadow: var(--shadow-lg);
 }
 
 /* ============================================
@@ -339,7 +347,6 @@ body.dark-theme {
 
 /* Custom scrollbar for specific elements */
 .sessions-list::-webkit-scrollbar,
-.recent-activity-container::-webkit-scrollbar,
 .heatmap-wrapper::-webkit-scrollbar,
 .heatmap-container::-webkit-scrollbar {
     width: 6px;
@@ -347,14 +354,12 @@ body.dark-theme {
 }
 
 .sessions-list::-webkit-scrollbar-track,
-.recent-activity-container::-webkit-scrollbar-track,
 .heatmap-wrapper::-webkit-scrollbar-track,
 .heatmap-container::-webkit-scrollbar-track {
     background: transparent;
 }
 
 .sessions-list::-webkit-scrollbar-thumb,
-.recent-activity-container::-webkit-scrollbar-thumb,
 .heatmap-wrapper::-webkit-scrollbar-thumb,
 .heatmap-container::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
@@ -364,7 +369,6 @@ body.dark-theme {
 }
 
 .sessions-list::-webkit-scrollbar-thumb:hover,
-.recent-activity-container::-webkit-scrollbar-thumb:hover,
 .heatmap-wrapper::-webkit-scrollbar-thumb:hover,
 .heatmap-container::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
@@ -1224,9 +1228,9 @@ h1 {
 }
 
 .levels-back-button {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
-    border: none;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     cursor: pointer;
     padding: var(--spacing-md);
@@ -1240,7 +1244,8 @@ h1 {
 }
 
 .levels-back-button:hover {
-    background: rgba(16, 185, 129, 0.3);
+    background: var(--bg-secondary);
+    color: var(--primary-color);
     transform: translateX(-2px);
 }
 
@@ -1729,9 +1734,9 @@ h1 {
 }
 
 .practice-back-button {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
-    border: none;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     cursor: pointer;
     padding: var(--spacing-md);
@@ -1745,7 +1750,8 @@ h1 {
 }
 
 .practice-back-button:hover {
-    background: rgba(16, 185, 129, 0.3);
+    background: var(--bg-secondary);
+    color: var(--primary-color);
     transform: translateX(-2px);
 }
 
@@ -2768,9 +2774,9 @@ input:checked+.slider:before {
 }
 
 .back-button {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
-    border: none;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     cursor: pointer;
     padding: var(--spacing-md);
@@ -2783,7 +2789,8 @@ input:checked+.slider:before {
 }
 
 .back-button:hover {
-    background: rgba(16, 185, 129, 0.3);
+    background: var(--bg-secondary);
+    color: var(--primary-color);
     transform: translateX(-2px);
 }
 

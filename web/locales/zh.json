@@ -175,6 +175,9 @@
     "correct": "正确！",
     "incorrect": "错误",
     "time": "时间",
+    "time_limit": "时间限制",
+    "time_remaining": "剩余时间",
+    "infinity": "∞ 无限",
     "score": "分数",
     "question": "问题",
     "operation": "运算",
@@ -198,7 +201,12 @@
     "equals": "=",
     "correct_feedback": "✓ 正确",
     "incorrect_feedback": "✗ 错误",
-    "next_question": "下一题"
+    "next_question": "下一题",
+    "select_answer": "选择答案",
+    "option_a": "A",
+    "option_b": "B",
+    "option_c": "C",
+    "option_d": "D"
   },
   "analytics": {
     "title": "分析",

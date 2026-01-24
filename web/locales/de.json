@@ -165,6 +165,9 @@
     "correct": "Korrekt!",
     "incorrect": "Falsch",
     "time": "Zeit",
+    "time_limit": "Zeitlimit",
+    "time_remaining": "Verbleibende Zeit",
+    "infinity": "∞ Unendlich",
     "score": "Punktzahl",
     "question": "Frage",
     "operation": "Operation",
@@ -188,7 +191,12 @@
     "equals": "=",
     "correct_feedback": "✓ Korrekt",
     "incorrect_feedback": "✗ Falsch",
-    "next_question": "Nächste Frage"
+    "next_question": "Nächste Frage",
+    "select_answer": "Antwort auswählen",
+    "option_a": "A",
+    "option_b": "B",
+    "option_c": "C",
+    "option_d": "D"
   },
   "analytics": {
     "title": "Analytik",

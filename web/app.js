@@ -497,44 +497,9 @@ function createMockBridge() {
                             console.error('Mock bridge - error parsing attempts:', e);
                         }
                         
-                        // If no attempts in localStorage, try to load from the actual data file
+                        // If no attempts in localStorage, return empty array to show zeros
                         if (attempts.length === 0) {
-                            // Create some sample data for testing
-                            attempts = [
-                                {
-                                    id: 1,
-                                    operation: "addition",
-                                    digits: 2,
-                                    question: "15 + 27",
-                                    userAnswer: 42,
-                                    correctAnswer: 42,
-                                    isCorrect: true,
-                                    timeTaken: 3.5,
-                                    timestamp: new Date(Date.now() - 86400000).toISOString() // Yesterday
-                                },
-                                {
-                                    id: 2,
-                                    operation: "subtraction",
-                                    digits: 2,
-                                    question: "84 - 36",
-                                    userAnswer: 48,
-                                    correctAnswer: 48,
-                                    isCorrect: true,
-                                    timeTaken: 4.2,
-                                    timestamp: new Date().toISOString() // Today
-                                },
-                                {
-                                    id: 3,
-                                    operation: "multiplication",
-                                    digits: 1,
-                                    question: "7 × 8",
-                                    userAnswer: 56,
-                                    correctAnswer: 56,
-                                    isCorrect: true,
-                                    timeTaken: 2.1,
-                                    timestamp: new Date().toISOString() // Today
-                                }
-                            ];
+                            attempts = [];
                         }
                         
                         setTimeout(() => {

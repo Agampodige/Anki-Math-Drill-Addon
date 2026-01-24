@@ -175,6 +175,9 @@
     "correct": "Correct !",
     "incorrect": "Incorrect",
     "time": "Temps",
+    "time_limit": "Limite de Temps",
+    "time_remaining": "Temps Restant",
+    "infinity": "∞ Infini",
     "score": "Score",
     "question": "Question",
     "operation": "Opération",
@@ -198,7 +201,12 @@
     "equals": "=",
     "correct_feedback": "✓ Correct",
     "incorrect_feedback": "✗ Incorrect",
-    "next_question": "Question Suivante"
+    "next_question": "Question Suivante",
+    "select_answer": "Sélectionner une Réponse",
+    "option_a": "A",
+    "option_b": "B",
+    "option_c": "C",
+    "option_d": "D"
   },
   "analytics": {
     "title": "Analytiques",

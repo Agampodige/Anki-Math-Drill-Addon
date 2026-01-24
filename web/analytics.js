@@ -175,9 +175,6 @@ class AnalyticsManager {
         // Render Insights & Streaks
         this.renderInsights(this.attempts, stats.byOperation || {});
 
-        // Render Recent Activity
-        this.renderRecentActivity(this.attempts);
-
         // Render Activity Heatmap
         this.renderActivityHeatmap(this.attempts);
 
@@ -364,45 +361,7 @@ class AnalyticsManager {
         return { current, best };
     }
 
-    renderRecentActivity(attempts) {
-        const container = document.getElementById('recentActivityBody');
-        if (!container) return;
-
-        if (!attempts || attempts.length === 0) {
-            const noActivityText = window.t('analytics.no_recent_activity');
-            container.innerHTML = `<tr><td colspan="5" class="empty-row">${noActivityText}</td></tr>`;
-            return;
-        }
-
-        // Sort by timestamp descending
-        const sorted = [...attempts].sort((a, b) => {
-            const t1 = a.timestamp || 0;
-            const t2 = b.timestamp || 0;
-            return t2 - t1;
-        }).slice(0, 10);
-
-        container.innerHTML = sorted.map(a => {
-            const date = a.timestamp ?
-                new Date(typeof a.timestamp === 'number' ? a.timestamp * 1000 : a.timestamp) :
-                new Date();
-            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-            return `
-                <tr>
-                    <td>${dateStr}</td>
-                    <td>${this.getOperationDisplay(a.operation)}</td>
-                    <td class="font-mono">${a.problem}</td>
-                    <td>
-                        <span class="result-tag ${a.isCorrect ? 'correct' : 'incorrect'}">
-                            ${a.isCorrect ? 'Correct' : 'Incorrect'}
-                        </span>
-                    </td>
-                    <td>${(a.timeTaken || 0).toFixed(1)}s</td>
-                </tr>
-            `;
-        }).join('');
-    }
-
+    
     renderOperationStats(byOperation) {
         const statsHtml = Object.entries(byOperation).map(([op, data]) => {
             const opDisplay = this.getOperationDisplay(op);
