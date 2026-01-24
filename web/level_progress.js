@@ -128,20 +128,27 @@ class LevelProgress {
 
     handlePythonResponse(responseStr) {
         try {
+            console.log('Received Python response:', responseStr.substring(0, 200) + '...');
             const data = JSON.parse(responseStr);
             const type = data.type;
             const payload = data.payload;
 
+            console.log('Processing response type:', type);
+
             if (type === 'get_level_response') {
+                console.log('Starting level with payload:', payload);
                 this.startLevel(payload);
             } else if (type === 'complete_level_response') {
                 this.showCompletionModal(payload);
             } else if (type === 'error') {
                 console.error('Backend Error:', payload.message);
                 alert('Error: ' + payload.message); // Simple fallback
+            } else {
+                console.log('Unhandled response type:', type);
             }
         } catch (e) {
             console.error('Response parse error:', e);
+            console.error('Response string was:', responseStr);
         }
     }
 
@@ -154,96 +161,143 @@ class LevelProgress {
     // --- Game Logic ---
 
     startLevel(data) {
-        this.levelData = data;
-        this.questions = this.generateQuestions(data);
-        this.currentQuestionIndex = 0;
-        this.correctCount = 0;
-        this.totalTimeTaken = 0;
+        try {
+            console.log('Starting level with data:', data);
+            this.levelData = data;
+            
+            // Add safeguards for question generation
+            const maxQuestions = Math.min(data.requirements.totalQuestions || 10, 50); // Cap at 50 questions
+            console.log(`Generating ${maxQuestions} questions (was ${data.requirements.totalQuestions})`);
+            
+            this.questions = this.generateQuestions(data, maxQuestions);
+            this.currentQuestionIndex = 0;
+            this.correctCount = 0;
+            this.totalTimeTaken = 0;
 
-        // Load MCQ mode setting
-        this.loadMCQMode();
+            // Load MCQ mode setting
+            this.loadMCQMode();
 
-        this.updateHeaderUI();
-        this.setState('PLAYING');
-        this.loadQuestion(0);
+            this.updateHeaderUI();
+            this.setState('PLAYING');
+            this.loadQuestion(0);
 
-        this.levelStartTime = Date.now();
-        // If level has a total time limit, we could track it here
-        if (this.levelData.requirements.timeLimit) {
-            this.startLevelTimer(this.levelData.requirements.timeLimit);
+            this.levelStartTime = Date.now();
+            // If level has a total time limit, we could track it here
+            if (this.levelData.requirements.timeLimit) {
+                this.startLevelTimer(this.levelData.requirements.timeLimit);
+            }
+        } catch (error) {
+            console.error('Error starting level:', error);
+            alert('Error starting level: ' + error.message);
         }
     }
 
-    generateQuestions(level) {
-        // Generate robust questions based on ops
-        const count = level.requirements.totalQuestions;
-        const qs = [];
-        for (let i = 0; i < count; i++) {
-            qs.push(this.createQuestion(level.operation, level.digits));
+    generateQuestions(level, maxCount = null) {
+        try {
+            // Generate robust questions based on ops
+            const count = maxCount !== null ? maxCount : level.requirements.totalQuestions;
+            const qs = [];
+            console.log(`Generating ${count} questions for ${level.operation} with ${level.digits} digits`);
+            
+            // Add progress logging for large question sets
+            const logInterval = Math.max(1, Math.floor(count / 10));
+            
+            for (let i = 0; i < count; i++) {
+                if (i % logInterval === 0) {
+                    console.log(`Question generation progress: ${i}/${count}`);
+                }
+                qs.push(this.createQuestion(level.operation, level.digits));
+            }
+            console.log(`Generated ${qs.length} questions successfully`);
+            return qs;
+        } catch (error) {
+            console.error('Error generating questions:', error);
+            // Return fallback questions if generation fails
+            return [
+                { prompt: '1 + 1 = ?', answer: 2 },
+                { prompt: '2 + 2 = ?', answer: 4 },
+                { prompt: '3 + 3 = ?', answer: 6 }
+            ];
         }
-        return qs;
     }
 
     createQuestion(op, digits) {
-        const max = Math.pow(10, digits);
-        const min = Math.pow(10, digits - 1);
+        try {
+            const max = Math.pow(10, digits);
+            const min = Math.pow(10, digits - 1);
 
-        // Helper
-        const rand = (min, max) => Math.floor(Math.random() * (max - min)) + min;
-
-        if (op === 'addition') {
-            const a = rand(min, max);
-            const b = rand(min, max);
-            return { prompt: `${a} + ${b} = ?`, answer: a + b };
-        }
-        else if (op === 'subtraction') {
-            const a = rand(min, max);
-            const b = rand(min, max);
-            return {
-                prompt: `${Math.max(a, b)} - ${Math.min(a, b)} = ?`,
-                answer: Math.max(a, b) - Math.min(a, b)
+            // Helper
+            const rand = (min, max) => {
+                try {
+                    return Math.floor(Math.random() * (max - min)) + min;
+                } catch (error) {
+                    console.error('Error in rand function:', error);
+                    return Math.floor(Math.random() * 9) + 1; // Fallback
+                }
             };
-        }
-        else if (op === 'multiplication') {
-            // For mult, we might want smaller numbers for sanity if digits is large,
-            // but let's stick to the digits rule or cap it like original
-            const limit = Math.pow(10, Math.ceil(digits / 2)) - 1;
-            const a = rand(2, limit);
-            const b = rand(2, limit);
-            return { prompt: `${a} × ${b} = ?`, answer: a * b };
-        }
-        else if (op === 'division') {
-            // inverse of mult
-            const limit = Math.pow(10, Math.ceil(digits / 2)) - 2;
-            const divisor = rand(2, limit);
-            const quotient = rand(min, max);
-            const dividend = divisor * quotient;
-            return {
-                prompt: `${dividend} ÷ ${divisor} = ?`,
-                answer: quotient
-            };
-        }
-        else if (op === 'complex') {
-            return this.createComplexQuestion(digits);
-        }
 
-        return { prompt: '0 + 0 = ?', answer: 0 };
+            if (op === 'addition') {
+                const a = rand(min, max);
+                const b = rand(min, max);
+                return { prompt: `${a} + ${b} = ?`, answer: a + b };
+            }
+            else if (op === 'subtraction') {
+                const a = rand(min, max);
+                const b = rand(min, max);
+                return {
+                    prompt: `${Math.max(a, b)} - ${Math.min(a, b)} = ?`,
+                    answer: Math.max(a, b) - Math.min(a, b)
+                };
+            }
+            else if (op === 'multiplication') {
+                // For mult, we might want smaller numbers for sanity if digits is large,
+                // but let's stick to the digits rule or cap it like original
+                const limit = Math.pow(10, Math.ceil(digits / 2)) - 1;
+                const a = rand(2, limit);
+                const b = rand(2, limit);
+                return { prompt: `${a} × ${b} = ?`, answer: a * b };
+            }
+            else if (op === 'division') {
+                // inverse of mult
+                const limit = Math.pow(10, Math.ceil(digits / 2)) - 2;
+                const divisor = rand(2, limit);
+                const quotient = rand(min, max);
+                const dividend = divisor * quotient;
+                return {
+                    prompt: `${dividend} ÷ ${divisor} = ?`,
+                    answer: quotient
+                };
+            }
+            else if (op === 'complex') {
+                return this.createComplexQuestion(digits);
+            }
+
+            return { prompt: '0 + 0 = ?', answer: 0 };
+        } catch (error) {
+            console.error('Error creating question:', error);
+            return { prompt: '1 + 1 = ?', answer: 2 }; // Fallback question
+        }
     }
 
     createComplexQuestion(digits) {
-        // Simple random complex ops
-        const a = Math.floor(Math.random() * 20) + 1;
-        const b = Math.floor(Math.random() * 20) + 1;
-        const c = Math.floor(Math.random() * 10) + 1;
+        try {
+            // Simple random complex ops
+            const a = Math.floor(Math.random() * 20) + 1;
+            const b = Math.floor(Math.random() * 20) + 1;
+            const c = Math.floor(Math.random() * 10) + 1;
 
-        const types = [
-            () => ({ prompt: `(${a} + ${b}) × ${c} = ?`, answer: (a + b) * c }),
-            () => ({ prompt: `${a} × ${b} + ${c} = ?`, answer: a * b + c }),
-            () => ({ prompt: `${a} + ${b} + ${c} = ?`, answer: a + b + c }),
-        ];
+            const types = [
+                () => ({ prompt: `(${a} + ${b}) × ${c} = ?`, answer: (a + b) * c }),
+                () => ({ prompt: `${a} × ${b} + ${c} = ?`, answer: a * b + c }),
+                () => ({ prompt: `${a} + ${b} + ${c} = ?`, answer: a + b + c }),
+            ];
 
-        const type = types[Math.floor(Math.random() * types.length)];
-        return type();
+            const type = types[Math.floor(Math.random() * types.length)];
+            return type();
+        } catch (error) {
+            console.error('Error creating complex question:', error);
+            return { prompt: '1 + 1 + 1 = ?', answer: 3 }; // Fallback
+        }
     }
 
     loadQuestion(index) {
@@ -271,8 +325,11 @@ class LevelProgress {
         this.currentQuestionIndex = index;
         this.questionStartTime = Date.now();
 
-        // UI
-        this.setText('questionPrompt', q.prompt);
+        // UI - Update to match new HTML structure
+        const questionDisplay = document.getElementById('questionDisplay');
+        if (questionDisplay) {
+            questionDisplay.textContent = q.prompt;
+        }
         this.setValue('answerInput', '');
         this.setText('progressText', `${index + 1}/${this.questions.length}`);
 
@@ -320,13 +377,34 @@ class LevelProgress {
 
     showFeedback(isCorrect, correctAnswer) {
         const area = document.getElementById('feedbackArea');
-        const msg = document.getElementById('feedbackMessage');
+        const icon = document.getElementById('feedbackIcon');
+        const title = document.getElementById('feedbackTitle');
+        const userAnswerEl = document.getElementById('userAnswer');
+        const correctAnswerEl = document.getElementById('correctAnswer');
+        const timeTakenEl = document.getElementById('timeTaken');
 
-        if (area && msg) {
-            area.style.display = 'flex';
-            msg.innerHTML = isCorrect
-                ? '<span class="success">✓ Correct</span>'
-                : `<span class="error">✗ Incorrect<br><small>Answer: ${correctAnswer}</small></span>`;
+        if (area && icon && title) {
+            // Set feedback type styling
+            area.className = 'feedback-area' + (isCorrect ? ' correct' : ' incorrect');
+            
+            // Set icon and title
+            icon.textContent = isCorrect ? '✓' : '✗';
+            title.textContent = isCorrect ? 'Correct!' : 'Incorrect';
+            
+            // Set answer details
+            if (userAnswerEl) {
+                const input = document.getElementById('answerInput');
+                userAnswerEl.textContent = input ? input.value : '-';
+            }
+            if (correctAnswerEl) {
+                correctAnswerEl.textContent = correctAnswer;
+            }
+            if (timeTakenEl) {
+                const duration = ((Date.now() - this.questionStartTime) / 1000).toFixed(1);
+                timeTakenEl.textContent = `${duration}s`;
+            }
+            
+            area.style.display = 'block';
         }
 
         // Hide input areas during feedback
@@ -487,8 +565,11 @@ class LevelProgress {
 
     setupTypingMode() {
         // Show typing input, hide MCQ
-        document.getElementById('typingInputArea').style.display = 'flex';
-        document.getElementById('mcqInputArea').style.display = 'none';
+        const typingArea = document.getElementById('typingInputArea');
+        const mcqArea = document.getElementById('mcqInputArea');
+        
+        if (typingArea) typingArea.style.display = 'flex';
+        if (mcqArea) mcqArea.style.display = 'none';
         
         // Enable input
         const input = document.getElementById('answerInput');
@@ -496,13 +577,17 @@ class LevelProgress {
             input.disabled = false;
             input.focus();
         }
-        document.getElementById('submitButton').disabled = false;
+        const submitBtn = document.getElementById('submitButton');
+        if (submitBtn) submitBtn.disabled = false;
     }
 
     setupMCQMode() {
         // Show MCQ, hide typing input
-        document.getElementById('typingInputArea').style.display = 'none';
-        document.getElementById('mcqInputArea').style.display = 'block';
+        const typingArea = document.getElementById('typingInputArea');
+        const mcqArea = document.getElementById('mcqInputArea');
+        
+        if (typingArea) typingArea.style.display = 'none';
+        if (mcqArea) mcqArea.style.display = 'block';
         
         // Generate MCQ options
         this.generateMCQOptions();
@@ -522,14 +607,36 @@ class LevelProgress {
         const correctAnswer = currentQuestion.answer;
         const options = [correctAnswer];
         
-        // Generate 3 wrong options
-        while (options.length < 4) {
-            const variation = (Math.random() - 0.5) * correctAnswer * 0.5; // ±25% variation
-            const wrongAnswer = Math.round(correctAnswer + variation);
+        // Generate 3 wrong options with safety checks
+        let attempts = 0;
+        const maxAttempts = 100; // Prevent infinite loop
+        
+        while (options.length < 4 && attempts < maxAttempts) {
+            attempts++;
+            
+            let wrongAnswer;
+            if (correctAnswer === 0) {
+                // For zero, use small integers
+                wrongAnswer = Math.floor(Math.random() * 10) - 5; // Range: -5 to 5
+            } else {
+                // For non-zero, use variation
+                const variation = (Math.random() - 0.5) * Math.abs(correctAnswer) * 0.5; // ±25% variation
+                wrongAnswer = Math.round(correctAnswer + variation);
+            }
             
             // Avoid duplicates and ensure it's different from correct answer
             if (!options.includes(wrongAnswer) && Math.abs(wrongAnswer - correctAnswer) > 0.01) {
                 options.push(wrongAnswer);
+            }
+        }
+        
+        // If we still don't have enough options, add some fallback values
+        while (options.length < 4) {
+            const fallback = correctAnswer + options.length;
+            if (!options.includes(fallback)) {
+                options.push(fallback);
+            } else {
+                options.push(correctAnswer + options.length + 1);
             }
         }
         

@@ -10,7 +10,7 @@
   "autoCheckAnswers": true,
   "darkMode": true,
   "adaptiveDifficulty": true,
-  "mcqMode": false,
+  "mcqMode": true,
   "feedbackDelay": 1.4,
   "autoBackup": true,
   "maxBackups": 5

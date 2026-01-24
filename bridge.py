@@ -352,11 +352,29 @@ class Bridge(QObject):
             
             print(f"DEBUG: Found level: {level.get('name')}")
             
+            # Ensure level data is JSON serializable
+            try:
+                # Test serialization first
+                test_json = json.dumps(level)
+                print(f"DEBUG: JSON serialization test passed, length: {len(test_json)}")
+            except Exception as json_error:
+                print(f"DEBUG: JSON serialization failed: {json_error}")
+                # Try to clean the level data
+                level = self._clean_level_data(level)
+                test_json = json.dumps(level)
+                print(f"DEBUG: Cleaned JSON serialization passed, length: {len(test_json)}")
+            
             response = {
                 'type': 'get_level_response',
                 'payload': level
             }
-            self.messageReceived.emit(json.dumps(response))
+            
+            print(f"DEBUG: Sending response...")
+            response_json = json.dumps(response)
+            print(f"DEBUG: Response JSON length: {len(response_json)}")
+            self.messageReceived.emit(response_json)
+            print(f"DEBUG: Response sent successfully")
+            
         except Exception as e:
             import traceback
             print(f"ERROR in _handle_get_level: {e}")
@@ -367,7 +385,58 @@ class Bridge(QObject):
                     'message': f'Error getting level: {str(e)}'
                 }
             }
-            self.messageReceived.emit(json.dumps(response))
+            try:
+                self.messageReceived.emit(json.dumps(response))
+                print(f"DEBUG: Error response sent")
+            except Exception as emit_error:
+                print(f"DEBUG: Failed to send error response: {emit_error}")
+    
+    def _clean_level_data(self, level):
+        """Clean level data to ensure JSON serializability"""
+        try:
+            # Create a clean copy with only JSON-serializable data
+            clean_level = {}
+            
+            # Copy basic string/number fields
+            for key, value in level.items():
+                if isinstance(value, (str, int, float, bool, type(None))):
+                    clean_level[key] = value
+                elif isinstance(value, list):
+                    # Clean list items
+                    clean_level[key] = [self._clean_value(item) for item in value]
+                elif isinstance(value, dict):
+                    # Clean dict items
+                    clean_level[key] = {k: self._clean_value(v) for k, v in value.items()}
+                else:
+                    # Convert other types to string
+                    clean_level[key] = str(value)
+            
+            return clean_level
+        except Exception as e:
+            print(f"DEBUG: Error cleaning level data: {e}")
+            # Return minimal safe data if cleaning fails
+            return {
+                'id': level.get('id', 0),
+                'name': str(level.get('name', 'Unknown')),
+                'description': str(level.get('description', '')),
+                'operation': str(level.get('operation', 'addition')),
+                'digits': int(level.get('digits', 1)),
+                'requirements': {
+                    'totalQuestions': 10,
+                    'minCorrect': 7
+                }
+            }
+    
+    def _clean_value(self, value):
+        """Clean a single value for JSON serialization"""
+        if isinstance(value, (str, int, float, bool, type(None))):
+            return value
+        elif isinstance(value, list):
+            return [self._clean_value(item) for item in value]
+        elif isinstance(value, dict):
+            return {k: self._clean_value(v) for k, v in value.items()}
+        else:
+            return str(value)
     
     def _handle_complete_level(self, payload):
         """Handle level completion"""

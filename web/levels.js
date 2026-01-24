@@ -62,6 +62,9 @@ class LevelsManager {
         });
 
         // Search
+        const searchInput = document.getElementById('searchInput');
+        const clearSearch = document.getElementById('clearSearch');
+        
         // Search with debounce
         const debounce = (fn, delay) => {
             let timeout;
@@ -121,13 +124,17 @@ class LevelsManager {
         // MCQ Mode Toggle
         const mcqToggle = document.getElementById('mcqModeToggle');
         if (mcqToggle) {
-            // Load saved MCQ setting
-            const savedMCQMode = this.getMCQMode();
-            mcqToggle.checked = savedMCQMode;
-            
-            mcqToggle.addEventListener('change', (e) => {
-                this.setMCQMode(e.target.checked);
-            });
+            try {
+                // Load saved MCQ setting
+                const savedMCQMode = this.getMCQMode();
+                mcqToggle.checked = savedMCQMode;
+                
+                mcqToggle.addEventListener('change', (e) => {
+                    this.setMCQMode(e.target.checked);
+                });
+            } catch (error) {
+                console.error('Error setting up MCQ toggle:', error);
+            }
         }
     }
 
@@ -138,9 +145,14 @@ class LevelsManager {
         const connectToBridge = () => {
             if (window.pybridge) {
                 this.bridge = window.pybridge;
-                this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
-                this.loadLevels();
+                try {
+                    this.bridge.messageReceived.connect(this.handlePythonResponse.bind(this));
+                    this.loadLevels();
+                } catch (error) {
+                    console.error('Error connecting to bridge:', error);
+                }
             } else {
+                console.log('Bridge not available, waiting...');
             }
         };
 
@@ -148,6 +160,7 @@ class LevelsManager {
             connectToBridge();
         } else {
             window.addEventListener('pybridge-connected', (event) => {
+                console.log('Bridge connected event received');
                 connectToBridge();
             });
         }
@@ -467,39 +480,48 @@ class LevelsManager {
     }
 
     getMCQMode() {
-        // Check global appSettings first
-        if (window.appSettings) {
-            return window.appSettings.mcqMode || false;
+        try {
+            // Check global appSettings first
+            if (window.appSettings) {
+                return window.appSettings.mcqMode || false;
+            }
+            
+            // Fallback to localStorage
+            const saved = localStorage.getItem('appSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                return settings.mcqMode || false;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Error getting MCQ mode:', error);
+            return false;
         }
-        
-        // Fallback to localStorage
-        const saved = localStorage.getItem('appSettings');
-        if (saved) {
-            const settings = JSON.parse(saved);
-            return settings.mcqMode || false;
-        }
-        
-        return false;
     }
 
     setMCQMode(enabled) {
-        // Update global appSettings if available
-        if (window.appSettings) {
-            window.appSettings.mcqMode = enabled;
-        }
-        
-        // Update localStorage
-        const saved = localStorage.getItem('appSettings');
-        const settings = saved ? JSON.parse(saved) : {};
-        settings.mcqMode = enabled;
-        localStorage.setItem('appSettings', JSON.stringify(settings));
-        
-        // Send to Python bridge for persistence
-        if (window.pybridge) {
-            window.pybridge.sendMessage(JSON.stringify({
-                type: 'save_settings',
-                payload: { settings: settings }
-            }));
+        try {
+            // Update global appSettings if available
+            if (window.appSettings) {
+                window.appSettings.mcqMode = enabled;
+            }
+            
+            // Update localStorage
+            const saved = localStorage.getItem('appSettings');
+            const settings = saved ? JSON.parse(saved) : {};
+            settings.mcqMode = enabled;
+            localStorage.setItem('appSettings', JSON.stringify(settings));
+            
+            // Send to Python bridge for persistence
+            if (window.pybridge) {
+                window.pybridge.sendMessage(JSON.stringify({
+                    type: 'save_settings',
+                    payload: { settings: settings }
+                }));
+            }
+        } catch (error) {
+            console.error('Error setting MCQ mode:', error);
         }
     }
 }

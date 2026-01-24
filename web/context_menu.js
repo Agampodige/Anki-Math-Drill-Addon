@@ -1,8 +1,5 @@
-// Disable right-click context menu and only allow refresh
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    return false;
-});
+// Allow right-click context menu for developer tools access
+// Note: Context menu is now enabled for web inspection purposes
 
 // Add keyboard shortcut for refresh (F5 or Ctrl+R)
 document.addEventListener('keydown', function(e) {

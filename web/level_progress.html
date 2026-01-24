@@ -49,43 +49,38 @@
         <div class="level-main-view">
             <!-- Question Card -->
             <div class="question-card" id="questionCard">
-                <div class="question-section">
-                    <div id="questionDisplay" class="question-display">
-                        <div class="question-prompt" id="questionPrompt">Ready?</div>
-                    </div>
-                    <p id="levelDescription" class="level-description-text"></p>
+                <div class="question-box">
+                    <h2 id="questionDisplay" class="question-prompt">Ready?</h2>
                 </div>
+                <p id="levelDescription" class="level-description-text"></p>
 
                 <!-- Answer Input -->
-                <div class="input-section">
-                    <!-- Typing Input -->
-                    <div class="typing-input-area" id="typingInputArea">
-                        <input type="number" id="answerInput" class="answer-input" placeholder="?" disabled>
-                        <button id="submitButton" class="submit-button" disabled>
-                            <span>Submit</span>
+                <div class="input-area" id="typingInputArea">
+                    <input type="number" id="answerInput" class="answer-input" placeholder="?" disabled>
+                    <button id="submitButton" class="submit-button" disabled>
+                        <span>Submit</span>
+                    </button>
+                </div>
+                
+                <!-- MCQ Options (Hidden by default) -->
+                <div class="mcq-area" id="mcqInputArea" style="display: none;">
+                    <div class="mcq-options" id="mcqOptions">
+                        <button class="mcq-option" data-option="A" disabled>
+                            <span class="option-label">A</span>
+                            <span class="option-value"></span>
                         </button>
-                    </div>
-                    
-                    <!-- MCQ Options (Hidden by default) -->
-                    <div class="mcq-area" id="mcqInputArea" style="display: none;">
-                        <div class="mcq-options" id="mcqOptions">
-                            <button class="mcq-option" data-option="A" disabled>
-                                <span class="option-label">A</span>
-                                <span class="option-value"></span>
-                            </button>
-                            <button class="mcq-option" data-option="B" disabled>
-                                <span class="option-label">B</span>
-                                <span class="option-value"></span>
-                            </button>
-                            <button class="mcq-option" data-option="C" disabled>
-                                <span class="option-label">C</span>
-                                <span class="option-value"></span>
-                            </button>
-                            <button class="mcq-option" data-option="D" disabled>
-                                <span class="option-label">D</span>
-                                <span class="option-value"></span>
-                            </button>
-                        </div>
+                        <button class="mcq-option" data-option="B" disabled>
+                            <span class="option-label">B</span>
+                            <span class="option-value"></span>
+                        </button>
+                        <button class="mcq-option" data-option="C" disabled>
+                            <span class="option-label">C</span>
+                            <span class="option-value"></span>
+                        </button>
+                        <button class="mcq-option" data-option="D" disabled>
+                            <span class="option-label">D</span>
+                            <span class="option-value"></span>
+                        </button>
                     </div>
                 </div>
 
@@ -99,12 +94,27 @@
                 </div>
             </div>
 
-            <!-- Feedback Overlay -->
-            <div id="feedbackArea" class="feedback-overlay" style="display: none;">
-                <div class="feedback-content">
-                    <div id="feedbackMessage" class="feedback-message"></div>
-                    <button id="nextButton" class="next-button">Continue</button>
+            <!-- Inline Feedback Area -->
+            <div class="feedback-area" id="feedbackArea" style="display: none;">
+                <div class="feedback-header">
+                    <div class="feedback-icon" id="feedbackIcon"></div>
+                    <div class="feedback-title" id="feedbackTitle"></div>
                 </div>
+                <div class="feedback-details">
+                    <div class="feedback-row">
+                        <span>Your Answer:</span>
+                        <strong id="userAnswer"></strong>
+                    </div>
+                    <div class="feedback-row">
+                        <span>Correct:</span>
+                        <strong id="correctAnswer"></strong>
+                    </div>
+                    <div class="feedback-row">
+                        <span>Speed:</span>
+                        <strong id="timeTaken"></strong>
+                    </div>
+                </div>
+                <button id="nextButton" class="continue-button">Continue</button>
             </div>
         </div>
     </div>
