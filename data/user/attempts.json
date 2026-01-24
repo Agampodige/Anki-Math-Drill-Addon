@@ -1,5 +1,5 @@
 {
-  "lastId": 428,
+  "lastId": 434,
   "attempts": [
     {
       "id": 1,
@@ -5100,8 +5100,86 @@
       "isCorrect": true,
       "timeTaken": 11.383,
       "timestamp": "2026-01-24T01:59:19.990Z"
+    },
+    {
+      "id": 429,
+      "operation": "addition",
+      "digits": 2,
+      "question": "21 + 43",
+      "num1": 21,
+      "num2": 43,
+      "userAnswer": 70,
+      "correctAnswer": 64,
+      "isCorrect": false,
+      "timeTaken": 11.388,
+      "timestamp": "2026-01-24T05:58:30.104Z"
+    },
+    {
+      "id": 430,
+      "operation": "addition",
+      "digits": 2,
+      "question": "21 + 43",
+      "num1": 21,
+      "num2": 43,
+      "userAnswer": 70,
+      "correctAnswer": 64,
+      "isCorrect": false,
+      "timeTaken": 11.388,
+      "timestamp": "2026-01-24T05:58:30.104Z"
+    },
+    {
+      "id": 431,
+      "operation": "addition",
+      "digits": 2,
+      "question": "42 + 31",
+      "num1": 42,
+      "num2": 31,
+      "userAnswer": 73,
+      "correctAnswer": 73,
+      "isCorrect": true,
+      "timeTaken": 12.683,
+      "timestamp": "2026-01-24T05:58:44.593Z"
+    },
+    {
+      "id": 432,
+      "operation": "addition",
+      "digits": 2,
+      "question": "21 + 43",
+      "num1": 21,
+      "num2": 43,
+      "userAnswer": 70,
+      "correctAnswer": 64,
+      "isCorrect": false,
+      "timeTaken": 11.388,
+      "timestamp": "2026-01-24T05:58:30.104Z"
+    },
+    {
+      "id": 433,
+      "operation": "addition",
+      "digits": 2,
+      "question": "42 + 31",
+      "num1": 42,
+      "num2": 31,
+      "userAnswer": 73,
+      "correctAnswer": 73,
+      "isCorrect": true,
+      "timeTaken": 12.683,
+      "timestamp": "2026-01-24T05:58:44.593Z"
+    },
+    {
+      "id": 434,
+      "operation": "addition",
+      "digits": 2,
+      "question": "22 + 32",
+      "num1": 22,
+      "num2": 32,
+      "userAnswer": 54,
+      "correctAnswer": 54,
+      "isCorrect": true,
+      "timeTaken": 7.657,
+      "timestamp": "2026-01-24T05:58:53.554Z"
     }
   ],
-  "lastSaved": "2026-01-24T07:29:19.993871",
-  "totalAttempts": 428
+  "lastSaved": "2026-01-24T11:28:53.562512",
+  "totalAttempts": 434
 }

@@ -13,9 +13,9 @@ class AddonDialog(QDialog):
         
         # Use proper window flags for better event handling
         if hasattr(Qt, "WindowType"):
-            flags = Qt.WindowType.Window | Qt.WindowType.WindowCloseButtonHint
+            flags = Qt.WindowType.Window | Qt.WindowType.WindowCloseButtonHint | Qt.WindowType.WindowMinMaxButtonsHint
         else:
-            flags = Qt.Window | Qt.WindowCloseButtonHint
+            flags = Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinMaxButtonsHint
             
         self.setWindowFlags(flags)
         

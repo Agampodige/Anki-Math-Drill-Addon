@@ -2924,5 +2924,46 @@
     "difficultyProgression": [],
     "performanceRating": "needs_improvement",
     "speedRating": "very_fast"
+  },
+  {
+    "id": "session_1769234298624_fskkrf345",
+    "startTime": 1769234298624,
+    "endTime": 1769234333501,
+    "operation": "addition",
+    "digits": 2,
+    "isAdaptive": true,
+    "questionsAttempted": 2,
+    "questionsCorrect": 1,
+    "totalTime": 34877,
+    "averageTime": 12.035499999999999,
+    "streak": 1,
+    "bestStreak": 1,
+    "weaknesses": [
+      {
+        "operation": "addition",
+        "userAnswer": 70,
+        "correctAnswer": 64,
+        "timeTaken": 11.388,
+        "timestamp": "2026-01-24T05:58:30.104Z"
+      }
+    ],
+    "improvements": [
+      {
+        "operation": "addition",
+        "timeTaken": 12.683,
+        "timestamp": "2026-01-24T05:58:44.593Z"
+      }
+    ],
+    "sessionStatus": "completed",
+    "pauseCount": 0,
+    "totalPauseTime": 0,
+    "accuracy": 50,
+    "timePerQuestion": [
+      11.388,
+      12.683
+    ],
+    "difficultyProgression": [],
+    "performanceRating": "needs_improvement",
+    "speedRating": "slow"
   }
 ]
