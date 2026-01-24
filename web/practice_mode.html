@@ -68,6 +68,19 @@
                                 <option value="4" data-i18n="practice.extreme_4_digits">Extreme - 4 Digits</option>
                             </select>
                         </div>
+                        <div class="setting-item">
+                            <label for="timeSelect" data-i18n="practice.time_limit">Time Limit</label>
+                            <select id="timeSelect">
+                                <option value="infinity" data-i18n="practice.infinity">∞ Infinity</option>
+                                <option value="30">30 seconds</option>
+                                <option value="60">1 minute</option>
+                                <option value="120">2 minutes</option>
+                                <option value="300">5 minutes</option>
+                                <option value="600">10 minutes</option>
+                                <option value="900">15 minutes</option>
+                                <option value="1800">30 minutes</option>
+                            </select>
+                        </div>
                         <button id="startBtn" class="practice-start-button" data-i18n="practice.start">Start Practice</button>
                     </div>
                 </div>
@@ -91,6 +104,10 @@
                         <div class="stat-card timer-card">
                             <span class="card-label" data-i18n="practice.time">Time</span>
                             <span class="card-value" id="timerDisplay">0.0s</span>
+                        </div>
+                        <div class="stat-card time-limit-card" id="timeLimitCard" style="display: none;">
+                            <span class="card-label" data-i18n="practice.time_remaining">Time Left</span>
+                            <span class="card-value" id="timeRemainingDisplay">∞</span>
                         </div>
                     </div>
 

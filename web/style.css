@@ -264,6 +264,114 @@ body.dark-theme {
 }
 
 /* ============================================
+   MODERN SCROLLBAR STYLES
+   ============================================ */
+
+/* Light Theme Scrollbar */
+:root {
+    --scrollbar-bg: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --scrollbar-thumb-active: #64748b;
+    --scrollbar-width: 8px;
+    --scrollbar-radius: 4px;
+}
+
+/* Dark Theme Scrollbar */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --scrollbar-bg: #1f2937;
+        --scrollbar-thumb: #4b5563;
+        --scrollbar-thumb-hover: #6b7280;
+        --scrollbar-thumb-active: #9ca3af;
+    }
+}
+
+body.light-theme {
+    --scrollbar-bg: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --scrollbar-thumb-active: #64748b;
+}
+
+body.dark-theme {
+    --scrollbar-bg: #1f2937;
+    --scrollbar-thumb: #4b5563;
+    --scrollbar-thumb-hover: #6b7280;
+    --scrollbar-thumb-active: #9ca3af;
+}
+
+/* Webkit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: var(--scrollbar-radius);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: var(--scrollbar-radius);
+    transition: background-color var(--transition-base);
+    border: 2px solid var(--scrollbar-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--scrollbar-thumb-active);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--scrollbar-bg);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+/* Custom scrollbar for specific elements */
+.sessions-list::-webkit-scrollbar,
+.recent-activity-container::-webkit-scrollbar,
+.heatmap-wrapper::-webkit-scrollbar,
+.heatmap-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.sessions-list::-webkit-scrollbar-track,
+.recent-activity-container::-webkit-scrollbar-track,
+.heatmap-wrapper::-webkit-scrollbar-track,
+.heatmap-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sessions-list::-webkit-scrollbar-thumb,
+.recent-activity-container::-webkit-scrollbar-thumb,
+.heatmap-wrapper::-webkit-scrollbar-thumb,
+.heatmap-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+    border: none;
+    opacity: 0.6;
+}
+
+.sessions-list::-webkit-scrollbar-thumb:hover,
+.recent-activity-container::-webkit-scrollbar-thumb:hover,
+.heatmap-wrapper::-webkit-scrollbar-thumb:hover,
+.heatmap-container::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    opacity: 0.8;
+}
+
+/* ============================================
    GLOBAL STYLES
    ============================================ */
 * {

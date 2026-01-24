@@ -29,6 +29,12 @@ class PracticeMode {
         this.isMCQMode = false;
         this.mcqOptions = [];
         this.selectedMCQOption = null;
+        
+        // Timed practice properties
+        this.timeLimit = null; // in seconds, null means infinity
+        this.timeRemaining = null; // in seconds
+        this.sessionStartTime = null;
+        this.timeLimitInterval = null;
 
         this.initializeEventListeners();
         this.initializeKeyboardShortcuts();
@@ -197,6 +203,7 @@ class PracticeMode {
             // Pause
             this.pauseStartTime = Date.now();
             this.stopTimer();
+            this.stopTimeLimitTimer(); // Also pause the time limit timer
             const pauseOverlay = document.getElementById('pauseOverlay');
             pauseOverlay.style.display = 'flex';
             const resumeText = window.t('practice.resume');
@@ -223,6 +230,11 @@ class PracticeMode {
             if (!this.feedbackShown) {
                 this.startTimer();
             }
+            
+            // Restart time limit timer if using time limit
+            if (this.timeLimit !== null) {
+                this.startTimeLimitTimer();
+            }
         }
     }
 
@@ -242,6 +254,16 @@ class PracticeMode {
     startPractice() {
         this.operation = document.getElementById('operationSelect').value;
         this.digits = parseInt(document.getElementById('digitsSelect').value);
+        
+        // Handle time limit selection
+        const timeLimitValue = document.getElementById('timeSelect').value;
+        if (timeLimitValue === 'infinity') {
+            this.timeLimit = null;
+            this.timeRemaining = null;
+        } else {
+            this.timeLimit = parseInt(timeLimitValue);
+            this.timeRemaining = this.timeLimit;
+        }
 
         // Load adaptive setting from global appSettings if available
         if (window.appSettings) {
@@ -273,6 +295,7 @@ class PracticeMode {
         this.streak = 0;
         this.lastMilestone = 0;
         this.totalPauseTime = 0;
+        this.sessionStartTime = Date.now();
         this.adaptiveState = {
             level: 1,
             consecutiveCorrect: 0,
@@ -285,6 +308,16 @@ class PracticeMode {
         document.getElementById('practiceControls').style.display = 'flex';
         document.getElementById('progressContainer').style.display = 'block';
         document.getElementById('backBtn').style.display = 'none';
+
+        // Show/hide time limit card based on selection
+        const timeLimitCard = document.getElementById('timeLimitCard');
+        if (this.timeLimit !== null) {
+            timeLimitCard.style.display = 'block';
+            this.updateTimeRemainingDisplay();
+            this.startTimeLimitTimer();
+        } else {
+            timeLimitCard.style.display = 'none';
+        }
 
         this.generateNextQuestion();
 
@@ -342,6 +375,7 @@ class PracticeMode {
         if (this.timerInterval) clearInterval(this.timerInterval);
         if (this.autoAdvanceTimer) clearTimeout(this.autoAdvanceTimer);
         if (this.countdownInterval) { clearInterval(this.countdownInterval); this.countdownInterval = null; }
+        if (this.timeLimitInterval) clearInterval(this.timeLimitInterval);
 
         // Hide overlays
         document.getElementById('pauseOverlay').style.display = 'none';
@@ -369,6 +403,9 @@ class PracticeMode {
         this.hideFeedback();
         document.getElementById('answerInput').value = '';
         document.getElementById('timerDisplay').textContent = '0.0s';
+        
+        // Hide time limit card
+        document.getElementById('timeLimitCard').style.display = 'none';
     }
 
     generateRandomNumber(digits, toughness = 2) {
@@ -898,6 +935,172 @@ class PracticeMode {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
+    }
+
+    startTimeLimitTimer() {
+        if (this.timeLimitInterval) {
+            clearInterval(this.timeLimitInterval);
+        }
+
+        this.timeLimitInterval = setInterval(() => {
+            if (!this.isPaused && this.timeRemaining !== null) {
+                this.timeRemaining -= 0.1;
+                
+                if (this.timeRemaining <= 0) {
+                    this.timeRemaining = 0;
+                    this.updateTimeRemainingDisplay();
+                    this.stopPracticeDueToTimeLimit();
+                } else {
+                    this.updateTimeRemainingDisplay();
+                }
+            }
+        }, 100);
+    }
+
+    stopTimeLimitTimer() {
+        if (this.timeLimitInterval) {
+            clearInterval(this.timeLimitInterval);
+            this.timeLimitInterval = null;
+        }
+    }
+
+    updateTimeRemainingDisplay() {
+        const display = document.getElementById('timeRemainingDisplay');
+        if (this.timeRemaining === null) {
+            display.textContent = '∞';
+        } else if (this.timeRemaining <= 0) {
+            display.textContent = '0:00';
+            display.style.color = 'var(--error-color)';
+        } else {
+            const minutes = Math.floor(this.timeRemaining / 60);
+            const seconds = Math.floor(this.timeRemaining % 60);
+            display.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running out
+            if (this.timeRemaining <= 10) {
+                display.style.color = 'var(--error-color)';
+            } else if (this.timeRemaining <= 30) {
+                display.style.color = 'var(--warning-color)';
+            } else {
+                display.style.color = 'var(--text-color)';
+            }
+        }
+    }
+
+    stopPracticeDueToTimeLimit() {
+        this.stopTimeLimitTimer();
+        
+        // Show time up message
+        const timeUpMessage = `Time's up! You completed ${this.questionCount} questions with ${this.correctCount} correct answers.`;
+        
+        // Play time up sound if available
+        if (window.soundManager) {
+            window.soundManager.playIncorrect(); // Use incorrect sound as time up alert
+        }
+        
+        // Stop practice
+        this.stopPractice();
+        
+        // Show custom time up modal
+        this.showTimeUpModal(timeUpMessage);
+    }
+
+    showTimeUpModal(message) {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.id = 'timeUpModal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        `;
+
+        // Create modal content
+        modal.innerHTML = `
+            <div style="
+                background: var(--bg-light);
+                border-radius: var(--border-radius-xl);
+                padding: var(--spacing-2xl);
+                max-width: 400px;
+                width: 90%;
+                text-align: center;
+                box-shadow: var(--shadow-xl);
+                animation: slideUp 0.3s ease;
+            ">
+                <div style="font-size: 48px; margin-bottom: var(--spacing-md);">⏰</div>
+                <h2 style="margin: 0 0 var(--spacing-md) 0; color: var(--text-color); font-size: var(--font-size-2xl);">Time's Up!</h2>
+                <p style="margin: 0 0 var(--spacing-xl) 0; color: var(--text-muted); font-size: var(--font-size-base);">${message}</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
+                    <div style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--border-radius-lg);">
+                        <div style="font-size: var(--font-size-xl); font-weight: bold; color: var(--primary-color);">${this.questionCount}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Questions</div>
+                    </div>
+                    <div style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--border-radius-lg);">
+                        <div style="font-size: var(--font-size-xl); font-weight: bold; color: var(--success-color);">${this.correctCount}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Correct</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: var(--spacing-md);">
+                    <button onclick="this.closest('#timeUpModal').remove()" style="
+                        flex: 1;
+                        background: var(--text-muted);
+                        color: white;
+                        border: none;
+                        padding: var(--spacing-md) var(--spacing-xl);
+                        border-radius: var(--border-radius-md);
+                        font-size: var(--font-size-sm);
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: var(--transition-colors);
+                    " onmouseover="this.style.background='var(--text-light)'" onmouseout="this.style.background='var(--text-muted)'">
+                        Close
+                    </button>
+                    <button onclick="window.location.reload()" style="
+                        flex: 1;
+                        background: var(--primary-color);
+                        color: white;
+                        border: none;
+                        padding: var(--spacing-md) var(--spacing-xl);
+                        border-radius: var(--border-radius-md);
+                        font-size: var(--font-size-sm);
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: var(--transition-colors);
+                    " onmouseover="this.style.background='var(--primary-dark)'" onmouseout="this.style.background='var(--primary-color)'">
+                        New Session
+                    </button>
+                </div>
+            </div>
+
+            <style>
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideUp {
+                    from { transform: translateY(20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+            </style>
+        `;
+
+        // Add to body and handle click outside
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
     }
 
     submitAnswer() {
