@@ -111,6 +111,16 @@
                             <span class="slider round"></span>
                         </label>
                     </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title" data-i18n="settings.display.show_recent_sessions">Show Recent Sessions</span>
+                            <span class="setting-desc" data-i18n="settings.display.show_recent_sessions_desc">Display recent session details and analytics on analytics page</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="showRecentSessionsToggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
                 </section>
 
                 <!-- Gameplay Options Section -->
@@ -135,6 +145,23 @@
                             <input type="checkbox" id="adaptiveDifficultyToggle" checked>
                             <span class="slider round"></span>
                         </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title" data-i18n="settings.gameplay.mcq_mode">Multiple Choice Mode</span>
+                            <span class="setting-desc" data-i18n="settings.gameplay.mcq_mode_desc">Show 4 answer options instead of typing</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="mcqModeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title" data-i18n="settings.gameplay.feedback_delay">Feedback Delay</span>
+                            <span class="setting-desc" data-i18n="settings.gameplay.feedback_delay_desc">Time before showing next question (seconds)</span>
+                        </div>
+                        <input type="number" id="feedbackDelay" value="1.0" min="0.5" max="5.0" step="0.1" class="number-input">
                     </div>
                 </section>
 

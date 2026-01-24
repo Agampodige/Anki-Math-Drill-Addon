@@ -12,9 +12,12 @@ const DEFAULT_SETTINGS = {
     difficultyLevel: 'medium',
     showTimer: true,
     showAccuracy: true,
+    showRecentSessions: true,
     autoCheckAnswers: false,
     darkMode: true,
     adaptiveDifficulty: true,
+    mcqMode: false,
+    feedbackDelay: 1.0,
     autoBackup: true,
     maxBackups: 5
 };
@@ -189,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const accuracyDisplay = document.getElementById('accuracyDisplay');
     const autoCheck = document.getElementById('autoCheck');
     const adaptiveToggle = document.getElementById('adaptiveDifficultyToggle');
+    const mcqToggle = document.getElementById('mcqModeToggle');
     const saveBtn = document.getElementById('saveSettingsBtn');
     const resetBtn = document.getElementById('resetBtn');
     const refreshBtn = document.getElementById('refreshSettingsBtn');
@@ -218,8 +222,10 @@ document.addEventListener('DOMContentLoaded', function () {
         { el: notificationsToggle, key: 'notificationsEnabled' },
         { el: timerDisplay, key: 'showTimer' },
         { el: accuracyDisplay, key: 'showAccuracy' },
+        { el: document.getElementById('showRecentSessionsToggle'), key: 'showRecentSessions' },
         { el: autoCheck, key: 'autoCheckAnswers' },
         { el: adaptiveToggle, key: 'adaptiveDifficulty' },
+        { el: mcqToggle, key: 'mcqMode' },
         { el: document.getElementById('autoBackupToggle'), key: 'autoBackup' }
     ];
 
@@ -244,6 +250,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const settings = loadSettings();
             settings.maxBackups = val;
+            saveSettings(settings);
+        });
+    }
+
+    // Feedback Delay input handler
+    const feedbackDelayInput = document.getElementById('feedbackDelay');
+    if (feedbackDelayInput) {
+        feedbackDelayInput.addEventListener('change', (e) => {
+            let val = parseFloat(e.target.value);
+            if (isNaN(val) || val < 0.5) val = 0.5;
+            if (val > 5.0) val = 5.0;
+            e.target.value = val.toFixed(1);
+
+            const settings = loadSettings();
+            settings.feedbackDelay = val;
             saveSettings(settings);
         });
     }
@@ -503,16 +524,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const notificationsToggle = document.getElementById('notificationsToggle');
         const timerDisplay = document.getElementById('timerDisplay');
         const accuracyDisplay = document.getElementById('accuracyDisplay');
+        const showRecentSessionsToggle = document.getElementById('showRecentSessionsToggle');
         const autoCheck = document.getElementById('autoCheck');
         const adaptiveToggle = document.getElementById('adaptiveDifficultyToggle');
+        const mcqToggle = document.getElementById('mcqModeToggle');
+        const feedbackDelayInput = document.getElementById('feedbackDelay');
 
         if (themeToggle) themeToggle.checked = (settings.theme || (settings.darkMode ? 'dark' : 'light')) === 'dark';
         if (soundToggle) soundToggle.checked = settings.soundEnabled ?? false;
         if (notificationsToggle) notificationsToggle.checked = settings.notificationsEnabled ?? true;
         if (timerDisplay) timerDisplay.checked = settings.showTimer ?? true;
         if (accuracyDisplay) accuracyDisplay.checked = settings.showAccuracy ?? true;
+        if (showRecentSessionsToggle) showRecentSessionsToggle.checked = settings.showRecentSessions ?? true;
         if (autoCheck) autoCheck.checked = settings.autoCheckAnswers ?? false;
         if (adaptiveToggle) adaptiveToggle.checked = settings.adaptiveDifficulty ?? true;
+        if (mcqToggle) mcqToggle.checked = settings.mcqMode ?? false;
+        if (feedbackDelayInput) feedbackDelayInput.value = settings.feedbackDelay ?? 1.0;
 
         const autoBackupToggle = document.getElementById('autoBackupToggle');
         const maxBackupsInput = document.getElementById('maxBackups');

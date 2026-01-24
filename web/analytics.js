@@ -10,6 +10,18 @@ class AnalyticsManager {
         this.loadStatistics();
     }
 
+    getSettings() {
+        try {
+            const saved = localStorage.getItem('appSettings');
+            return saved ? JSON.parse(saved) : {
+                showRecentSessions: true
+            };
+        } catch (e) {
+            console.warn('Error loading settings:', e);
+            return { showRecentSessions: true };
+        }
+    }
+
     initializeEventListeners() {
         document.getElementById('refreshBtn')?.addEventListener('click', () => this.loadStatistics());
         document.getElementById('exportBtn')?.addEventListener('click', () => this.exportData());
@@ -34,6 +46,14 @@ class AnalyticsManager {
         // Listen for bridge connection
         window.addEventListener('pybridge-connected', () => {
             this.loadStatistics();
+        });
+
+        // Listen for settings changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'appSettings') {
+                this.toggleRecentSessionsSection();
+                this.loadSessionData();
+            }
         });
 
         // Load session data
@@ -951,6 +971,22 @@ class AnalyticsManager {
             this.displaySessionAnalytics(sessionStats);
             this.displayRecentSessions(recentSessions);
         }
+
+        // Toggle recent sessions section visibility based on settings
+        this.toggleRecentSessionsSection();
+    }
+
+    toggleRecentSessionsSection() {
+        const settings = this.getSettings();
+        const recentSessionsSection = document.querySelector('.analytics-section:has(#recentSessionsList)');
+        
+        if (recentSessionsSection) {
+            if (settings.showRecentSessions) {
+                recentSessionsSection.style.display = 'block';
+            } else {
+                recentSessionsSection.style.display = 'none';
+            }
+        }
     }
 
     displaySessionAnalytics(stats) {
@@ -964,6 +1000,17 @@ class AnalyticsManager {
     displayRecentSessions(sessions) {
         const container = document.getElementById('recentSessionsList');
         if (!container) return;
+
+        // Check if recent sessions should be shown based on settings
+        const settings = this.getSettings();
+        if (!settings.showRecentSessions) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>Recent sessions are hidden in settings</p>
+                </div>
+            `;
+            return;
+        }
 
         if (!sessions || sessions.length === 0) {
             const noSessionsText = window.t('analytics.no_practice_sessions');

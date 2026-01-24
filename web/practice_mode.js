@@ -26,6 +26,9 @@ class PracticeMode {
         };
         this.isAdaptive = false;
         this.weaknesses = [];
+        this.isMCQMode = false;
+        this.mcqOptions = [];
+        this.selectedMCQOption = null;
 
         this.initializeEventListeners();
         this.initializeKeyboardShortcuts();
@@ -51,6 +54,15 @@ class PracticeMode {
         document.getElementById('closeHelp')?.addEventListener('click', () => this.hideHelp());
         document.getElementById('helpModal')?.addEventListener('click', (e) => {
             if (e.target.id === 'helpModal') this.hideHelp();
+        });
+
+        // MCQ option listeners
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                if (!option.disabled) {
+                    this.selectMCQOption(option.dataset.option);
+                }
+            });
         });
     }
 
@@ -84,6 +96,48 @@ class PracticeMode {
                 case '?':
                     e.preventDefault();
                     this.showHelp();
+                    break;
+                // MCQ keyboard shortcuts
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    if (this.isPracticing && this.isMCQMode && !this.feedbackShown) {
+                        e.preventDefault();
+                        const optionIndex = parseInt(e.key) - 1;
+                        const optionLabels = ['A', 'B', 'C', 'D'];
+                        if (optionIndex < optionLabels.length) {
+                            this.selectMCQOption(optionLabels[optionIndex]);
+                        }
+                    }
+                    break;
+                case 'a':
+                case 'A':
+                    if (this.isPracticing && this.isMCQMode && !this.feedbackShown) {
+                        e.preventDefault();
+                        this.selectMCQOption('A');
+                    }
+                    break;
+                case 's':
+                case 'S':
+                    if (this.isPracticing && this.isMCQMode && !this.feedbackShown) {
+                        e.preventDefault();
+                        this.selectMCQOption('B');
+                    }
+                    break;
+                case 'd':
+                case 'D':
+                    if (this.isPracticing && this.isMCQMode && !this.feedbackShown) {
+                        e.preventDefault();
+                        this.selectMCQOption('C');
+                    }
+                    break;
+                case 'f':
+                case 'F':
+                    if (this.isPracticing && this.isMCQMode && !this.feedbackShown) {
+                        e.preventDefault();
+                        this.selectMCQOption('D');
+                    }
                     break;
             }
         });
@@ -158,8 +212,10 @@ class PracticeMode {
                 window.sessionManager.recordPause(pauseDuration);
             }
 
+            const pauseOverlay = document.getElementById('pauseOverlay');
             pauseOverlay.style.display = 'none';
             const pauseText = window.t('practice.pause');
+            const pauseBtn = document.getElementById('pauseBtn');
             pauseBtn.textContent = `⏸ ${pauseText}`;
             pauseBtn.classList.remove('resumed');
 
@@ -190,12 +246,14 @@ class PracticeMode {
         // Load adaptive setting from global appSettings if available
         if (window.appSettings) {
             this.isAdaptive = window.appSettings.adaptiveDifficulty || false;
+            this.isMCQMode = window.appSettings.mcqMode || false;
         } else {
             // Fallback to localStorage if appSettings not in window
             const saved = localStorage.getItem('appSettings');
             if (saved) {
                 const settings = JSON.parse(saved);
                 this.isAdaptive = settings.adaptiveDifficulty || false;
+                this.isMCQMode = settings.mcqMode || false;
             }
         }
 
@@ -287,6 +345,7 @@ class PracticeMode {
 
         // Hide overlays
         document.getElementById('pauseOverlay').style.display = 'none';
+        document.getElementById('feedbackArea').style.display = 'none';
 
         // Show session summary if available
         if (sessionSummary) {
@@ -618,6 +677,22 @@ class PracticeMode {
         const progress = Math.min(100, (this.questionCount % 10) * 10);
         document.getElementById('progressBar').style.width = `${progress}%`;
 
+        // Setup input mode based on MCQ setting
+        if (this.isMCQMode) {
+            this.setupMCQMode();
+        } else {
+            this.setupTypingMode();
+        }
+
+        // Start timer
+        this.startTimer();
+    }
+
+    setupTypingMode() {
+        // Show typing input, hide MCQ
+        document.getElementById('typingInputArea').style.display = 'flex';
+        document.getElementById('mcqInputArea').style.display = 'none';
+        
         // Enable input
         const input = document.getElementById('answerInput');
         input.value = '';
@@ -625,9 +700,187 @@ class PracticeMode {
         input.focus();
 
         document.getElementById('submitBtn').disabled = false;
+    }
 
-        // Start timer
-        this.startTimer();
+    setupMCQMode() {
+        // Show MCQ, hide typing input
+        document.getElementById('typingInputArea').style.display = 'none';
+        document.getElementById('mcqInputArea').style.display = 'block';
+        
+        // Generate MCQ options
+        this.generateMCQOptions();
+        
+        // Reset selection
+        this.selectedMCQOption = null;
+        
+        // Enable MCQ options
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            option.disabled = false;
+            option.classList.remove('selected', 'correct', 'incorrect');
+        });
+    }
+
+    generateMCQOptions() {
+        const correctAnswer = this.currentQuestion.answer;
+        const options = [correctAnswer];
+        
+        // Generate 3 similar but incorrect answers
+        while (options.length < 4) {
+            const wrongAnswer = this.generateSimilarAnswer(correctAnswer);
+            if (!options.includes(wrongAnswer)) {
+                options.push(wrongAnswer);
+            }
+        }
+        
+        // Shuffle options
+        this.mcqOptions = this.shuffleArray(options);
+        
+        // Update UI
+        const optionLabels = ['A', 'B', 'C', 'D'];
+        document.querySelectorAll('.mcq-option').forEach((option, index) => {
+            const valueSpan = option.querySelector('.option-value');
+            valueSpan.textContent = this.mcqOptions[index];
+            option.dataset.answer = this.mcqOptions[index];
+        });
+    }
+
+    generateSimilarAnswer(correctAnswer) {
+        // Generate answers that are similar but not identical
+        const variation = Math.max(1, Math.floor(Math.abs(correctAnswer) * 0.1)); // 10% variation
+        const operations = [
+            () => correctAnswer + variation,
+            () => correctAnswer - variation,
+            () => correctAnswer + variation * 2,
+            () => correctAnswer - variation * 2,
+            () => correctAnswer + Math.floor(variation / 2),
+            () => correctAnswer - Math.floor(variation / 2)
+        ];
+        
+        let wrongAnswer;
+        let attempts = 0;
+        do {
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+            wrongAnswer = operation();
+            attempts++;
+        } while (wrongAnswer === correctAnswer && attempts < 10);
+        
+        // Ensure we don't use floats or decimals
+        return Math.round(wrongAnswer);
+    }
+
+    shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    selectMCQOption(option) {
+        // Remove previous selection
+        document.querySelectorAll('.mcq-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        // Add selection to clicked option
+        const selectedElement = document.querySelector(`[data-option="${option}"]`);
+        selectedElement.classList.add('selected');
+        this.selectedMCQOption = option;
+        
+        // Auto-submit after selection
+        setTimeout(() => {
+            this.submitMCQAnswer();
+        }, 300);
+    }
+
+    submitMCQAnswer() {
+        if (!this.selectedMCQOption) return;
+        
+        this.stopTimer();
+        
+        const selectedElement = document.querySelector(`[data-option="${this.selectedMCQOption}"]`);
+        const userAnswer = parseFloat(selectedElement.dataset.answer);
+        const timeTaken = (Date.now() - this.questionStartTime - this.totalPauseTime) / 1000;
+        const isCorrect = Math.abs(userAnswer - this.currentQuestion.answer) < 0.01;
+        
+        // Show correct/incorrect feedback on options
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            const answer = parseFloat(option.dataset.answer);
+            option.disabled = true;
+            
+            if (Math.abs(answer - this.currentQuestion.answer) < 0.01) {
+                option.classList.add('correct');
+            } else if (option.dataset.option === this.selectedMCQOption && !isCorrect) {
+                option.classList.add('incorrect');
+            }
+        });
+        
+        // Update stats
+        if (isCorrect) {
+            this.correctCount++;
+            this.streak++;
+
+            // Adaptive logic update
+            if (this.isAdaptive) {
+                this.adaptiveState.consecutiveCorrect++;
+                // Increase level if 3 correct in a row and not yet at Hard (3)
+                if (this.adaptiveState.consecutiveCorrect >= 3 && this.adaptiveState.level < 3) {
+                    this.adaptiveState.level++;
+                    this.adaptiveState.consecutiveCorrect = 0;
+                }
+            }
+
+            // Play correct sound
+            if (window.soundManager) {
+                window.soundManager.playCorrect();
+            }
+
+            // Check for milestones
+            this.checkMilestone();
+        } else {
+            this.streak = 0;
+
+            // Adaptive logic update
+            if (this.isAdaptive) {
+                this.adaptiveState.consecutiveCorrect = 0;
+                // Decrease level on error
+                if (this.adaptiveState.level > 1) {
+                    this.adaptiveState.level--;
+                }
+            }
+
+            // Play incorrect sound
+            if (window.soundManager) {
+                window.soundManager.playIncorrect();
+            }
+        }
+
+        // Store attempt
+        const attempt = {
+            id: this.currentQuestion.id,
+            operation: this.currentQuestion.operation,
+            digits: this.currentQuestion.digits,
+            question: this.currentQuestion.display,
+            num1: this.currentQuestion.num1,
+            num2: this.currentQuestion.num2,
+            userAnswer: userAnswer,
+            correctAnswer: this.currentQuestion.answer,
+            isCorrect: isCorrect,
+            timeTaken: timeTaken,
+            timestamp: new Date().toISOString()
+        };
+
+        this.attempts.push(attempt);
+        this.saveAttempts();
+
+        // Record attempt in session manager
+        if (window.sessionManager) {
+            window.sessionManager.recordAttempt(attempt);
+        }
+
+        // Show feedback
+        this.showFeedback(isCorrect, userAnswer, timeTaken);
     }
 
     startTimer() {
@@ -648,6 +901,12 @@ class PracticeMode {
     }
 
     submitAnswer() {
+        // Route to appropriate submit method based on mode
+        if (this.isMCQMode) {
+            // MCQ mode is handled by selectMCQOption -> submitMCQAnswer
+            return;
+        }
+        
         this.stopTimer();
 
         const userAnswer = parseFloat(document.getElementById('answerInput').value);
@@ -789,15 +1048,24 @@ class PracticeMode {
     }
 
     showFeedback(isCorrect, userAnswer, timeTaken) {
-        const feedbackBox = document.getElementById('feedbackBox');
-        const feedbackText = document.getElementById('feedbackText');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const feedbackIcon = document.getElementById('feedbackIcon');
+        const feedbackTitle = document.getElementById('feedbackTitle');
         const correctAnswer = this.currentQuestion.answer;
 
-        feedbackBox.className = 'feedback-overlay ' + (isCorrect ? 'correct' : 'incorrect');
-        const correctFeedbackText = window.t('practice.correct_feedback');
-        const incorrectFeedbackText = window.t('practice.incorrect_feedback');
-        feedbackText.textContent = isCorrect ? correctFeedbackText : incorrectFeedbackText;
+        // Set feedback area class for styling
+        feedbackArea.className = 'feedback-area ' + (isCorrect ? 'correct' : 'incorrect');
+        
+        // Set icon and title based on correctness
+        if (isCorrect) {
+            feedbackIcon.textContent = '✓';
+            feedbackTitle.textContent = window.t('practice.correct_feedback');
+        } else {
+            feedbackIcon.textContent = '✗';
+            feedbackTitle.textContent = window.t('practice.incorrect_feedback');
+        }
 
+        // Update feedback details
         document.getElementById('userAnswer').textContent = userAnswer.toString();
         document.getElementById('correctAnswer').textContent = correctAnswer.toString();
         document.getElementById('timeTaken').textContent = timeTaken.toFixed(2) + 's';
@@ -805,11 +1073,20 @@ class PracticeMode {
         // Update stats summary
         this.updateStatsSummary();
 
-        feedbackBox.style.display = 'flex';
+        // Show feedback area
+        feedbackArea.style.display = 'block';
         this.feedbackShown = true;
 
-        // Auto-advance after a shorter delay (0.8s for correct, 1.2s for incorrect)
-        const delay = isCorrect ? 800 : 1200;
+        // Hide input areas during feedback
+        if (this.isMCQMode) {
+            document.getElementById('mcqInputArea').style.display = 'none';
+        } else {
+            document.getElementById('typingInputArea').style.display = 'none';
+        }
+
+        // Auto-advance using user-configurable feedback delay
+        const baseDelay = (window.appSettings?.feedbackDelay || 1.0) * 1000; // Convert to milliseconds
+        const delay = isCorrect ? baseDelay : (baseDelay * 1.5); // 50% longer for incorrect answers
         const nextBtn = document.getElementById('nextBtn');
 
         // Clear any existing timers
@@ -824,7 +1101,6 @@ class PracticeMode {
                 clearInterval(this.countdownInterval);
                 this.countdownInterval = null;
             }
-            nextBtn.textContent = originalText;
             this.generateNextQuestion();
         }, delay);
     }
@@ -839,7 +1115,7 @@ class PracticeMode {
             clearInterval(this.countdownInterval);
             this.countdownInterval = null;
         }
-        document.getElementById('feedbackBox').style.display = 'none';
+        document.getElementById('feedbackArea').style.display = 'none';
         this.feedbackShown = false;
     }
 

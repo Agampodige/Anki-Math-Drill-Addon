@@ -6,9 +6,12 @@
   "difficultyLevel": "medium",
   "showTimer": true,
   "showAccuracy": true,
-  "autoCheckAnswers": false,
+  "showRecentSessions": false,
+  "autoCheckAnswers": true,
   "darkMode": true,
   "adaptiveDifficulty": true,
+  "mcqMode": true,
+  "feedbackDelay": 1.4,
   "autoBackup": true,
   "maxBackups": 5
 }

@@ -103,34 +103,57 @@
                             </div>
 
                             <!-- Answer Input -->
-                            <div class="input-area">
+                            <div class="input-area" id="typingInputArea">
                                 <input type="number" id="answerInput" data-i18n-placeholder="practice.answer_placeholder" placeholder="?" disabled>
                                 <button id="submitBtn" class="submit-button" disabled>
                                     <span data-i18n="practice.answer">Submit</span>
                                 </button>
                             </div>
+
+                            <!-- MCQ Options (Hidden by default) -->
+                            <div class="mcq-area" id="mcqInputArea" style="display: none;">
+                                <div class="mcq-options" id="mcqOptions">
+                                    <button class="mcq-option" data-option="A" disabled>
+                                        <span class="option-label" data-i18n="practice.option_a">A</span>
+                                        <span class="option-value"></span>
+                                    </button>
+                                    <button class="mcq-option" data-option="B" disabled>
+                                        <span class="option-label" data-i18n="practice.option_b">B</span>
+                                        <span class="option-value"></span>
+                                    </button>
+                                    <button class="mcq-option" data-option="C" disabled>
+                                        <span class="option-label" data-i18n="practice.option_c">C</span>
+                                        <span class="option-value"></span>
+                                    </button>
+                                    <button class="mcq-option" data-option="D" disabled>
+                                        <span class="option-label" data-i18n="practice.option_d">D</span>
+                                        <span class="option-value"></span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Feedback Overlay (Glassmorphism) -->
-                        <div class="feedback-overlay" id="feedbackBox" style="display: none;">
-                            <div class="feedback-content">
-                                <div class="feedback-text" id="feedbackText"></div>
-                                <div class="feedback-data">
-                                    <div class="data-row">
-                                        <span data-i18n="practice.your_answer">Your Answer:</span>
-                                        <strong id="userAnswer"></strong>
-                                    </div>
-                                    <div class="data-row">
-                                        <span data-i18n="practice.correct_answer">Correct:</span>
-                                        <strong id="correctAnswer"></strong>
-                                    </div>
-                                    <div class="data-row">
-                                        <span data-i18n="practice.speed">Speed:</span>
-                                        <strong id="timeTaken"></strong>
-                                    </div>
-                                </div>
-                                <button id="nextBtn" class="next-button" data-i18n="practice.continue">Continue</button>
+                        <!-- Inline Feedback Area -->
+                        <div class="feedback-area" id="feedbackArea" style="display: none;">
+                            <div class="feedback-header">
+                                <div class="feedback-icon" id="feedbackIcon"></div>
+                                <div class="feedback-title" id="feedbackTitle"></div>
                             </div>
+                            <div class="feedback-details">
+                                <div class="feedback-row">
+                                    <span data-i18n="practice.your_answer">Your Answer:</span>
+                                    <strong id="userAnswer"></strong>
+                                </div>
+                                <div class="feedback-row">
+                                    <span data-i18n="practice.correct_answer">Correct:</span>
+                                    <strong id="correctAnswer"></strong>
+                                </div>
+                                <div class="feedback-row">
+                                    <span data-i18n="practice.speed">Speed:</span>
+                                    <strong id="timeTaken"></strong>
+                                </div>
+                            </div>
+                            <button id="nextBtn" class="continue-button" data-i18n="practice.continue">Continue</button>
                         </div>
                     </div>
 
@@ -170,7 +193,15 @@
             <div class="modal-body">
                 <div class="shortcut-item">
                     <kbd>Enter</kbd>
-                    <span>Submit answer</span>
+                    <span>Submit answer (typing mode)</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>1, 2, 3, 4</kbd>
+                    <span>Select MCQ option</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>a, s, d, f</kbd>
+                    <span>Select MCQ option</span>
                 </div>
                 <div class="shortcut-item">
                     <kbd>Space</kbd>

@@ -75,13 +75,19 @@
       "show_timer": "Show Timer",
       "show_timer_desc": "Display time spent on drills",
       "show_accuracy": "Show Accuracy",
-      "show_accuracy_desc": "Display performance percentage"
+      "show_accuracy_desc": "Display performance percentage",
+      "show_recent_sessions": "Show Recent Sessions",
+      "show_recent_sessions_desc": "Display recent session details and analytics on analytics page"
     },
     "gameplay": {
       "auto_check": "Auto-check",
       "auto_check_desc": "Instant feedback after answering",
       "adaptive_difficulty": "Adaptive Difficulty",
-      "adaptive_difficulty_desc": "Adjust challenges based on your performance"
+      "adaptive_difficulty_desc": "Adjust challenges based on your performance",
+      "mcq_mode": "Multiple Choice Mode",
+      "mcq_mode_desc": "Show 4 answer options instead of typing",
+      "feedback_delay": "Feedback Delay",
+      "feedback_delay_desc": "Time before showing next question (seconds)"
     },
     "data_management": {
       "automatic_backups": "Automatic Backups",
@@ -195,7 +201,12 @@
     "equals": "=",
     "correct_feedback": "✓ Correct",
     "incorrect_feedback": "✗ Incorrect",
-    "next_question": "Next Question"
+    "next_question": "Next Question",
+    "select_answer": "Select Answer",
+    "option_a": "A",
+    "option_b": "B",
+    "option_c": "C",
+    "option_d": "D"
   },
   "analytics": {
     "title": "Analytics",
