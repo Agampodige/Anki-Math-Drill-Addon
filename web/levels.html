@@ -6,7 +6,7 @@
     <link href="levels.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Levels - Math Drill</title>
+    <title data-i18n="levels.title">Levels - Math Drill</title>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
                             <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <h1 class="levels-title">Math Challenges</h1>
+                    <h1 class="levels-title" data-i18n="levels.title">Math Challenges</h1>
                     <div class="levels-spacer"></div>
                 </div>
 
@@ -32,7 +32,7 @@
                         <div class="stat-icon">⭐</div>
                         <div class="stat-details">
                             <span class="stat-value" id="totalStars">0</span>
-                            <span class="stat-name">Stars Earned</span>
+                            <span class="stat-name" data-i18n="levels.stars">Stars Earned</span>
                         </div>
                     </div>
                     <div class="stat-item">
@@ -40,14 +40,14 @@
                         <div class="stat-details">
                             <span class="stat-value"><span id="completedCount">0</span>/<span
                                     id="totalCount">0</span></span>
-                            <span class="stat-name">Completed</span>
+                            <span class="stat-name" data-i18n="levels.completed">Completed</span>
                         </div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-icon">📊</div>
                         <div class="stat-details">
                             <span class="stat-value" id="progressPercentage">0%</span>
-                            <span class="stat-name">Progress</span>
+                            <span class="stat-name" data-i18n="analytics.progress">Progress</span>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
-                        <span class="toggle-text">Show Filters</span>
+                        <span class="toggle-text" data-i18n="common.show_filters">Show Filters</span>
                     </button>
                 </div>
 
@@ -74,7 +74,7 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
-                        <input type="text" id="searchInput" placeholder="Search levels..." />
+                        <input type="text" id="searchInput" data-i18n-placeholder="levels.search_placeholder" placeholder="Search levels..." />
                         <button id="clearSearch" class="clear-search-btn" style="display: none;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -86,33 +86,33 @@
 
                     <div class="filter-controls">
                         <div class="filter-group">
-                            <label class="filter-label">Difficulty:</label>
+                            <label class="filter-label" data-i18n="levels.difficulty">Difficulty:</label>
                             <div class="filter-buttons" id="difficultyFilters">
-                                <button class="filter-btn active" data-filter="all">All</button>
-                                <button class="filter-btn" data-filter="Easy">Easy</button>
-                                <button class="filter-btn" data-filter="Medium">Medium</button>
-                                <button class="filter-btn" data-filter="Hard">Hard</button>
-                                <button class="filter-btn" data-filter="Extreme">Extreme</button>
+                                <button class="filter-btn active" data-filter="all" data-i18n="common.all">All</button>
+                                <button class="filter-btn" data-filter="Easy" data-i18n="levels.easy">Easy</button>
+                                <button class="filter-btn" data-filter="Medium" data-i18n="levels.medium">Medium</button>
+                                <button class="filter-btn" data-filter="Hard" data-i18n="levels.hard">Hard</button>
+                                <button class="filter-btn" data-filter="Extreme" data-i18n="levels.extreme">Extreme</button>
                             </div>
                         </div>
 
                         <div class="filter-group">
-                            <label class="filter-label">Status:</label>
+                            <label class="filter-label" data-i18n="levels.status">Status:</label>
                             <div class="filter-buttons" id="statusFilters">
-                                <button class="filter-btn active" data-filter="all">All</button>
-                                <button class="filter-btn" data-filter="completed">Completed</button>
-                                <button class="filter-btn" data-filter="available">Available</button>
-                                <button class="filter-btn" data-filter="locked">Locked</button>
+                                <button class="filter-btn active" data-filter="all" data-i18n="common.all">All</button>
+                                <button class="filter-btn" data-filter="completed" data-i18n="levels.completed">Completed</button>
+                                <button class="filter-btn" data-filter="available" data-i18n="levels.available">Available</button>
+                                <button class="filter-btn" data-filter="locked" data-i18n="levels.locked">Locked</button>
                             </div>
                         </div>
 
                         <div class="filter-group">
-                            <label class="filter-label">Sort:</label>
+                            <label class="filter-label" data-i18n="levels.sort">Sort:</label>
                             <select id="sortSelect" class="sort-select">
-                                <option value="id">Level Order</option>
-                                <option value="difficulty">Difficulty</option>
-                                <option value="name">Name (A-Z)</option>
-                                <option value="stars">Stars Earned</option>
+                                <option value="id" data-i18n="levels.level_order">Level Order</option>
+                                <option value="difficulty" data-i18n="levels.difficulty">Difficulty</option>
+                                <option value="name" data-i18n="levels.name_az">Name (A-Z)</option>
+                                <option value="stars" data-i18n="levels.stars_earned">Stars Earned</option>
                             </select>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                 <!-- Progress Bar -->
                 <div class="overall-progress-section">
                     <div class="progress-header">
-                        <span class="progress-label">Overall Progress</span>
+                        <span class="progress-label" data-i18n="analytics.overall_progress">Overall Progress</span>
                         <span class="progress-text" id="progressText">0%</span>
                     </div>
                     <div class="progress-bar-container">
@@ -133,13 +133,14 @@
                 <div id="levelsContainer" class="levels-grid">
                     <div class="loading-state">
                         <div class="loading-spinner"></div>
-                        <p>Loading levels...</p>
+                        <p data-i18n="common.loading_levels">Loading levels...</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script src="i18n.js"></script>
     <script src="context_menu.js"></script>
     <script src="app.js"></script>
     <script src="levels.js"></script>

@@ -49,13 +49,13 @@ class LevelsManager {
             if (isFilterVisible) {
                 searchFilterSection.style.display = 'block';
                 filterToggleBtn.classList.add('active');
-                toggleText.textContent = 'Hide Filters';
+                toggleText.textContent = window.t('common.hide_filters');
                 filterIcon.style.display = 'none';
                 closeIcon.style.display = 'block';
             } else {
                 searchFilterSection.style.display = 'none';
                 filterToggleBtn.classList.remove('active');
-                toggleText.textContent = 'Show Filters';
+                toggleText.textContent = window.t('common.show_filters');
                 filterIcon.style.display = 'block';
                 closeIcon.style.display = 'none';
             }

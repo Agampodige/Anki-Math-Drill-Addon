@@ -1,0 +1,14 @@
+{
+  "theme": "dark",
+  "soundEnabled": false,
+  "notificationsEnabled": true,
+  "problemsPerSession": 10,
+  "difficultyLevel": "medium",
+  "showTimer": true,
+  "showAccuracy": true,
+  "autoCheckAnswers": false,
+  "darkMode": true,
+  "adaptiveDifficulty": true,
+  "autoBackup": true,
+  "maxBackups": 5
+}

@@ -6,7 +6,7 @@
     <link href="practice_mode.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practice Mode</title>
+    <title data-i18n="practice.title">Practice Mode</title>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
                             <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <h1 class="practice-title">Free Practice</h1>
+                    <h1 class="practice-title" data-i18n="practice.title">Free Practice</h1>
                     <div class="practice-nav-actions">
                         <button id="soundToggle" class="icon-button" title="Toggle Sound Effects">
                             <svg id="soundIcon" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -50,25 +50,25 @@
                 <div class="practice-settings" id="settingsPanel">
                     <div class="settings-row">
                         <div class="setting-item">
-                            <label for="operationSelect">Operation</label>
+                            <label for="operationSelect" data-i18n="practice.operation">Operation</label>
                             <select id="operationSelect">
-                                <option value="addition">Addition (X + Y)</option>
-                                <option value="subtraction">Subtraction (X - Y)</option>
-                                <option value="multiplication">Multiplication (X × Y)</option>
-                                <option value="division">Division (X ÷ Y)</option>
-                                <option value="complex">Complex (X + Y × Z)</option>
+                                <option value="addition" data-i18n="practice.addition">Addition (X + Y)</option>
+                                <option value="subtraction" data-i18n="practice.subtraction">Subtraction (X - Y)</option>
+                                <option value="multiplication" data-i18n="practice.multiplication">Multiplication (X × Y)</option>
+                                <option value="division" data-i18n="practice.division">Division (X ÷ Y)</option>
+                                <option value="complex" data-i18n="practice.complex">Complex (X + Y × Z)</option>
                             </select>
                         </div>
                         <div class="setting-item">
-                            <label for="digitsSelect">Difficulty</label>
+                            <label for="digitsSelect" data-i18n="practice.difficulty">Difficulty</label>
                             <select id="digitsSelect">
-                                <option value="1">Easy - 1 Digit</option>
-                                <option value="2" selected>Medium - 2 Digits</option>
-                                <option value="3">Hard - 3 Digits</option>
-                                <option value="4">Extreme - 4 Digits</option>
+                                <option value="1" data-i18n="practice.easy_1_digit">Easy - 1 Digit</option>
+                                <option value="2" selected data-i18n="practice.medium_2_digits">Medium - 2 Digits</option>
+                                <option value="3" data-i18n="practice.hard_3_digits">Hard - 3 Digits</option>
+                                <option value="4" data-i18n="practice.extreme_4_digits">Extreme - 4 Digits</option>
                             </select>
                         </div>
-                        <button id="startBtn" class="practice-start-button">Start Practice</button>
+                        <button id="startBtn" class="practice-start-button" data-i18n="practice.start">Start Practice</button>
                     </div>
                 </div>
 
@@ -77,19 +77,19 @@
                     <!-- New Dashboard Header -->
                     <div class="practice-header">
                         <div class="stat-card">
-                            <span class="card-label">Question</span>
+                            <span class="card-label" data-i18n="practice.question">Question</span>
                             <span class="card-value" id="questionNumber">1</span>
                         </div>
                         <div class="stat-card highlight">
-                            <span class="card-label">Correct</span>
+                            <span class="card-label" data-i18n="practice.correct">Correct</span>
                             <span class="card-value" id="correctCount">0</span>
                         </div>
                         <div class="stat-card highlight-alt">
-                            <span class="card-label">Streak</span>
+                            <span class="card-label" data-i18n="analytics.current_streak">Streak</span>
                             <span class="card-value" id="streakCount">0</span>
                         </div>
                         <div class="stat-card timer-card">
-                            <span class="card-label">Time</span>
+                            <span class="card-label" data-i18n="practice.time">Time</span>
                             <span class="card-value" id="timerDisplay">0.0s</span>
                         </div>
                     </div>
@@ -99,14 +99,14 @@
                         <!-- Question Card -->
                         <div class="question-card" id="questionCard">
                             <div class="question-box">
-                                <h2 id="questionText">Ready?</h2>
+                                <h2 id="questionText" data-i18n="practice.ready">Ready?</h2>
                             </div>
 
                             <!-- Answer Input -->
                             <div class="input-area">
-                                <input type="number" id="answerInput" placeholder="?" disabled>
+                                <input type="number" id="answerInput" data-i18n-placeholder="practice.answer_placeholder" placeholder="?" disabled>
                                 <button id="submitBtn" class="submit-button" disabled>
-                                    <span>Submit</span>
+                                    <span data-i18n="practice.answer">Submit</span>
                                 </button>
                             </div>
                         </div>
@@ -117,19 +117,19 @@
                                 <div class="feedback-text" id="feedbackText"></div>
                                 <div class="feedback-data">
                                     <div class="data-row">
-                                        <span>Your Answer:</span>
+                                        <span data-i18n="practice.your_answer">Your Answer:</span>
                                         <strong id="userAnswer"></strong>
                                     </div>
                                     <div class="data-row">
-                                        <span>Correct:</span>
+                                        <span data-i18n="practice.correct_answer">Correct:</span>
                                         <strong id="correctAnswer"></strong>
                                     </div>
                                     <div class="data-row">
-                                        <span>Speed:</span>
+                                        <span data-i18n="practice.speed">Speed:</span>
                                         <strong id="timeTaken"></strong>
                                     </div>
                                 </div>
-                                <button id="nextBtn" class="next-button">Continue</button>
+                                <button id="nextBtn" class="next-button" data-i18n="practice.continue">Continue</button>
                             </div>
                         </div>
                     </div>
@@ -137,15 +137,15 @@
                     <!-- Live Stats Summary -->
                     <div class="stats-summary">
                         <div class="summary-stat">
-                            <span class="summary-label">Total</span>
+                            <span class="summary-label" data-i18n="analytics.total_problems">Total</span>
                             <span class="summary-value" id="totalQuestions">0</span>
                         </div>
                         <div class="summary-stat">
-                            <span class="summary-label">Accuracy</span>
+                            <span class="summary-label" data-i18n="practice.accuracy">Accuracy</span>
                             <span class="summary-value" id="accuracy">0%</span>
                         </div>
                         <div class="summary-stat">
-                            <span class="summary-label">Avg Time</span>
+                            <span class="summary-label" data-i18n="analytics.avg_time">Avg Time</span>
                             <span class="summary-value" id="avgTime">0.0s</span>
                         </div>
                     </div>
@@ -210,6 +210,7 @@
     </div>
 
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script src="i18n.js"></script>
     <script src="context_menu.js"></script>
     <script src="session_manager.js"></script>
     <script src="app.js"></script>

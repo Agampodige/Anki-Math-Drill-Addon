@@ -5,7 +5,7 @@
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
+    <title data-i18n="settings.title">Settings</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,19 +22,19 @@
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <h1>Settings</h1>
+                <h1 data-i18n="settings.title">Settings</h1>
                 <div class="header-action"></div>
             </header>
 
             <div class="settings-content">
                 <!-- Appearance Section -->
                 <section class="settings-card">
-                    <h2 class="section-label">🎨 Appearance</h2>
+                    <h2 class="section-label" data-i18n="settings.sections.appearance">🎨 Appearance</h2>
 
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Accent Color</span>
-                            <span class="setting-desc">Choose your preferred color theme</span>
+                            <span class="setting-title" data-i18n="settings.appearance.accent_color">Accent Color</span>
+                            <span class="setting-desc" data-i18n="settings.appearance.accent_color_desc">Choose your preferred color theme</span>
                         </div>
                         <div class="color-options" id="colorOptions">
                             <!-- Injected by JS or hardcoded -->
@@ -53,8 +53,8 @@
 
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Dark Mode</span>
-                            <span class="setting-desc">Switch between light and dark themes</span>
+                            <span class="setting-title" data-i18n="settings.appearance.dark_mode">Dark Mode</span>
+                            <span class="setting-desc" data-i18n="settings.appearance.dark_mode_desc">Switch between light and dark themes</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="themeToggle">
@@ -65,11 +65,11 @@
 
                 <!-- Sound & Notifications Section -->
                 <section class="settings-card">
-                    <h2 class="section-label">🔔 Sound & Notifications</h2>
+                    <h2 class="section-label" data-i18n="settings.sections.sound_notifications">🔔 Sound & Notifications</h2>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Sound Effects</span>
-                            <span class="setting-desc">Play sounds during gameplay</span>
+                            <span class="setting-title" data-i18n="settings.sound_notifications.sound_effects">Sound Effects</span>
+                            <span class="setting-desc" data-i18n="settings.sound_notifications.sound_effects_desc">Play sounds during gameplay</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="soundToggle">
@@ -78,8 +78,8 @@
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Notifications</span>
-                            <span class="setting-desc">Receive app notifications</span>
+                            <span class="setting-title" data-i18n="settings.sound_notifications.notifications">Notifications</span>
+                            <span class="setting-desc" data-i18n="settings.sound_notifications.notifications_desc">Receive app notifications</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="notificationsToggle">
@@ -90,11 +90,11 @@
 
                 <!-- Display Options Section -->
                 <section class="settings-card">
-                    <h2 class="section-label">📊 Display Options</h2>
+                    <h2 class="section-label" data-i18n="settings.sections.display">📊 Display Options</h2>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Show Timer</span>
-                            <span class="setting-desc">Display time spent on drills</span>
+                            <span class="setting-title" data-i18n="settings.display.show_timer">Show Timer</span>
+                            <span class="setting-desc" data-i18n="settings.display.show_timer_desc">Display time spent on drills</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="timerDisplay" checked>
@@ -103,8 +103,8 @@
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Show Accuracy</span>
-                            <span class="setting-desc">Display performance percentage</span>
+                            <span class="setting-title" data-i18n="settings.display.show_accuracy">Show Accuracy</span>
+                            <span class="setting-desc" data-i18n="settings.display.show_accuracy_desc">Display performance percentage</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="accuracyDisplay" checked>
@@ -115,11 +115,11 @@
 
                 <!-- Gameplay Options Section -->
                 <section class="settings-card">
-                    <h2 class="section-label">🎮 Gameplay</h2>
+                    <h2 class="section-label" data-i18n="settings.sections.gameplay">🎮 Gameplay</h2>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Auto-check</span>
-                            <span class="setting-desc">Instant feedback after answering</span>
+                            <span class="setting-title" data-i18n="settings.gameplay.auto_check">Auto-check</span>
+                            <span class="setting-desc" data-i18n="settings.gameplay.auto_check_desc">Instant feedback after answering</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="autoCheck">
@@ -128,8 +128,8 @@
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Adaptive Difficulty</span>
-                            <span class="setting-desc">Adjust challenges based on your performance</span>
+                            <span class="setting-title" data-i18n="settings.gameplay.adaptive_difficulty">Adaptive Difficulty</span>
+                            <span class="setting-desc" data-i18n="settings.gameplay.adaptive_difficulty_desc">Adjust challenges based on your performance</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="adaptiveDifficultyToggle" checked>
@@ -140,11 +140,11 @@
 
                 <!-- Data Management Section -->
                 <section class="settings-card">
-                    <h2 class="section-label">💾 Data Management</h2>
+                    <h2 class="section-label" data-i18n="settings.sections.data_management">💾 Data Management</h2>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Automatic Backups</span>
-                            <span class="setting-desc">Create a backup snapshot when app starts</span>
+                            <span class="setting-title" data-i18n="settings.data_management.automatic_backups">Automatic Backups</span>
+                            <span class="setting-desc" data-i18n="settings.data_management.automatic_backups_desc">Create a backup snapshot when app starts</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="autoBackupToggle" checked>
@@ -153,82 +153,93 @@
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Max Backups</span>
-                            <span class="setting-desc">Number of rolling backups to keep</span>
+                            <span class="setting-title" data-i18n="settings.data_management.max_backups">Max Backups</span>
+                            <span class="setting-desc" data-i18n="settings.data_management.max_backups_desc">Number of rolling backups to keep</span>
                         </div>
                         <input type="number" id="maxBackups" value="5" min="1" max="20" class="number-input">
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Manual Backup</span>
-                            <span class="setting-desc">Create a backup snapshot right now</span>
+                            <span class="setting-title" data-i18n="settings.data_management.manual_backup">Manual Backup</span>
+                            <span class="setting-desc" data-i18n="settings.data_management.manual_backup_desc">Create a backup snapshot right now</span>
                         </div>
-                        <button id="backupNowBtn" class="secondary-button" style="width: auto; min-width: 120px;">Backup
-                            Now</button>
+                        <button id="backupNowBtn" class="secondary-button" style="width: auto; min-width: 120px;" data-i18n="settings.data_management.backup_now">Backup Now</button>
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Export Data</span>
-                            <span class="setting-desc">Save all your progress and attempts to a file</span>
+                            <span class="setting-title" data-i18n="settings.data_management.export_data">Export Data</span>
+                            <span class="setting-desc" data-i18n="settings.data_management.export_data_desc">Save all your progress and attempts to a file</span>
                         </div>
                         <button id="exportDataBtn" class="secondary-button"
-                            style="width: auto; min-width: 120px;">Export</button>
+                            style="width: auto; min-width: 120px;" data-i18n="settings.data_management.export">Export</button>
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Import Data</span>
-                            <span class="setting-desc">Restore your data from a previously exported file</span>
+                            <span class="setting-title" data-i18n="settings.data_management.import_data">Import Data</span>
+                            <span class="setting-desc" data-i18n="settings.data_management.import_data_desc">Restore your data from a previously exported file</span>
                         </div>
                         <button id="importDataBtn" class="secondary-button"
-                            style="width: auto; min-width: 120px;">Import</button>
+                            style="width: auto; min-width: 120px;" data-i18n="settings.data_management.import">Import</button>
                         <input type="file" id="importFile" accept=".json" style="display: none;">
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Open Backup Location</span>
-                            <span class="setting-desc">Open the folder where automatic backups are stored</span>
+                            <span class="setting-title" data-i18n="settings.data_management.open_backup_location">Open Backup Location</span>
+                            <span class="setting-desc" data-i18n="settings.data_management.open_backup_location_desc">Open the folder where automatic backups are stored</span>
                         </div>
-                        <button id="openBackupLocationBtn" class="secondary-button"
-                            style="width: auto; min-width: 120px;">Open Folder</button>
+                        <button id="openBackupLocationBtn" class="secondary-button" style="width: auto; min-width: 120px;" data-i18n="settings.data_management.open_folder">Open Folder</button>
+                    </div>
+                </section>
+
+                <!-- Language Section -->
+                <section class="settings-card">
+                    <h2 class="section-label" data-i18n="settings.sections.language">🌐 Language</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-title" data-i18n="settings.language.select_language">Select Language</span>
+                            <span class="setting-desc" data-i18n="settings.language.select_language_desc">Choose your preferred interface language</span>
+                        </div>
+                        <select id="languageSelect" class="language-select">
+                            <!-- Language options will be populated by JavaScript -->
+                        </select>
                     </div>
                 </section>
 
                 <!-- Support Section -->
                 <section class="settings-card">
-                    <h2 class="section-label">💝 Support</h2>
+                    <h2 class="section-label" data-i18n="settings.sections.support">💝 Support</h2>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Buy Me a Coffee</span>
-                            <span class="setting-desc">Support the development of this addon</span>
+                            <span class="setting-title" data-i18n="settings.support.buy_me_coffee">Buy Me a Coffee</span>
+                            <span class="setting-desc" data-i18n="settings.support.buy_me_coffee_desc">Support the development of this addon</span>
                         </div>
-                        <button id="buyCoffeeBtn" class="secondary-button"
-                            style="width: auto; min-width: 120px;">☕ Donate</button>
+                        <button id="buyCoffeeBtn" class="secondary-button" style="width: auto; min-width: 120px;" data-i18n="settings.support.donate">☕ Donate</button>
                     </div>
                     <div class="setting-item">
                         <div class="setting-info">
-                            <span class="setting-title">Bug Reports</span>
-                            <span class="setting-desc">Report issues or request features</span>
+                            <span class="setting-title" data-i18n="settings.support.bug_reports">Bug Reports</span>
+                            <span class="setting-desc" data-i18n="settings.support.bug_reports_desc">Report issues or request features</span>
                         </div>
-                        <button id="bugReportBtn" class="secondary-button"
-                            style="width: auto; min-width: 120px;">🐛 Report Issue</button>
+                        <button id="bugReportBtn" class="secondary-button" style="width: auto; min-width: 120px;" data-i18n="settings.support.report_issue">🐛 Report Issue</button>
                     </div>
                 </section>
 
                 <!-- Footer Actions -->
                 <div class="settings-footer">
-                    <button id="refreshSettingsBtn" class="secondary-button">Refresh Settings</button>
-                    <button id="resetBtn" class="secondary-button">Reset Defaults</button>
+                    <button id="refreshSettingsBtn" class="secondary-button" data-i18n="settings.footer.refresh_settings">Refresh Settings</button>
+                    <button id="resetBtn" class="secondary-button" data-i18n="settings.footer.reset_defaults">Reset Defaults</button>
                 </div>
 
                 <!-- Messages -->
                 <div id="successMessage" class="toast-message" style="display: none;">
-                    ✓ Settings saved
+                    <span data-i18n="settings.footer.settings_saved">✓ Settings saved</span>
                 </div>
             </div>
         </div>
     </main>
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script src="context_menu.js"></script>
+    <script src="i18n.js"></script>
     <script src="app.js"></script>
     <script src="settings.js"></script>
 </body>

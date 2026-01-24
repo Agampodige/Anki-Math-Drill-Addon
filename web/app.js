@@ -202,10 +202,10 @@ function updateHomeUI() {
 
 function getGreeting() {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return { text: 'Good Morning', emoji: '🌅' };
-    if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', emoji: '☀️' };
-    if (hour >= 17 && hour < 21) return { text: 'Good Evening', emoji: '🌇' };
-    return { text: 'Good Night', emoji: '🌙' };
+    if (hour >= 5 && hour < 12) return { text: window.t('home.greeting_morning'), emoji: '🌅' };
+    if (hour >= 12 && hour < 17) return { text: window.t('home.greeting_afternoon'), emoji: '☀️' };
+    if (hour >= 17 && hour < 21) return { text: window.t('home.greeting_evening'), emoji: '🌇' };
+    return { text: window.t('home.greeting_night'), emoji: '🌙' };
 }
 
 function calculateHomeStats() {

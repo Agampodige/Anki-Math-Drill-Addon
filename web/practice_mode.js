@@ -124,28 +124,43 @@ class PracticeMode {
         if (!this.isPracticing) return;
 
         this.isPaused = !this.isPaused;
-        const pauseOverlay = document.getElementById('pauseOverlay');
-        const pauseBtn = document.getElementById('pauseBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const originalText = window.t('practice.continue');
+        
+        const updateCountdown = () => {
+            const remainingMs = Math.max(0, endTime - Date.now());
+            if (remainingMs >= 1000) {
+                const remainingSec = Math.ceil(remainingMs / 1000);
+                const nextQuestionText = window.t('practice.next_question');
+                nextBtn.textContent = `${nextQuestionText} (${remainingSec}s)`;
+            } else {
+                const nextQuestionText = window.t('practice.next_question');
+                nextBtn.textContent = `${nextQuestionText} (${(remainingMs / 1000).toFixed(1)}s)`;
+            }
+        };
 
         if (this.isPaused) {
             // Pause
             this.pauseStartTime = Date.now();
             this.stopTimer();
+            const pauseOverlay = document.getElementById('pauseOverlay');
             pauseOverlay.style.display = 'flex';
-            pauseBtn.textContent = '▶ Resume';
-            pauseBtn.classList.add('resumed');
+            const resumeText = window.t('practice.resume');
+            document.getElementById('pauseBtn').textContent = `▶ ${resumeText}`;
+            document.getElementById('pauseBtn').classList.add('resumed');
         } else {
             // Resume
             const pauseDuration = Date.now() - this.pauseStartTime;
             this.totalPauseTime += pauseDuration;
-            
+
             // Record pause in session manager
             if (window.sessionManager) {
                 window.sessionManager.recordPause(pauseDuration);
             }
-            
+
             pauseOverlay.style.display = 'none';
-            pauseBtn.textContent = '⏸ Pause';
+            const pauseText = window.t('practice.pause');
+            pauseBtn.textContent = `⏸ ${pauseText}`;
             pauseBtn.classList.remove('resumed');
 
             // Restart timer if not showing feedback
@@ -287,7 +302,8 @@ class PracticeMode {
 
         // Reset pause button
         const pauseBtn = document.getElementById('pauseBtn');
-        pauseBtn.textContent = '⏸ Pause';
+        const pauseText = window.t('practice.pause');
+        pauseBtn.textContent = `⏸ ${pauseText}`;
         pauseBtn.classList.remove('resumed');
 
         // Reset UI
@@ -593,7 +609,9 @@ class PracticeMode {
         this.questionStartTime = Date.now();
 
         // Update display
-        document.getElementById('questionText').textContent = this.currentQuestion.display + ' = ?';
+        const equalsText = window.t('practice.equals');
+        const questionText = window.t('practice.question');
+        document.getElementById('questionText').textContent = this.currentQuestion.display + ` ${equalsText} ?`;
         document.getElementById('questionNumber').textContent = this.questionCount;
 
         // Update progress bar (visual only for now, can be time-based or count-based)
@@ -731,6 +749,8 @@ class PracticeMode {
             100: '👑 100 Streak! Unstoppable!'
         };
 
+        const correctText = window.t('practice.correct');
+        const incorrectText = window.t('practice.incorrect');
         message.textContent = messages[milestone] || `🎉 ${milestone} Streak!`;
 
         // Create confetti
@@ -774,7 +794,9 @@ class PracticeMode {
         const correctAnswer = this.currentQuestion.answer;
 
         feedbackBox.className = 'feedback-overlay ' + (isCorrect ? 'correct' : 'incorrect');
-        feedbackText.textContent = isCorrect ? '✓ Correct' : '✗ Incorrect';
+        const correctFeedbackText = window.t('practice.correct_feedback');
+        const incorrectFeedbackText = window.t('practice.incorrect_feedback');
+        feedbackText.textContent = isCorrect ? correctFeedbackText : incorrectFeedbackText;
 
         document.getElementById('userAnswer').textContent = userAnswer.toString();
         document.getElementById('correctAnswer').textContent = correctAnswer.toString();
@@ -795,26 +817,6 @@ class PracticeMode {
             clearTimeout(this.autoAdvanceTimer);
             this.autoAdvanceTimer = null;
         }
-        if (this.countdownInterval) {
-            clearInterval(this.countdownInterval);
-            this.countdownInterval = null;
-        }
-
-        const originalText = 'Next Question';
-        const endTime = Date.now() + delay;
-
-        const updateCountdown = () => {
-            const remainingMs = Math.max(0, endTime - Date.now());
-            if (remainingMs >= 1000) {
-                const remainingSec = Math.ceil(remainingMs / 1000);
-                nextBtn.textContent = `Next Question (${remainingSec}s)`;
-            } else {
-                nextBtn.textContent = `Next Question (${(remainingMs / 1000).toFixed(1)}s)`;
-            }
-        };
-
-        updateCountdown();
-        this.countdownInterval = setInterval(updateCountdown, 100);
         nextBtn.disabled = false; // allow immediate skipping by user
 
         this.autoAdvanceTimer = setTimeout(() => {

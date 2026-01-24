@@ -257,15 +257,20 @@ class AnalyticsManager {
             });
         } catch (error) {
             console.error('Error rendering heatmap:', error);
-            grid.innerHTML = '<p style="color: #9ca3af; padding: 20px; text-align: center;">Unable to render heatmap</p>';
+            grid.innerHTML = `<p style="color: #9ca3af; padding: 20px; text-align: center;">${window.t('analytics.unable_to_render_heatmap')}</p>`;
         }
     }
 
     renderInsights(attempts, byOperation) {
         // Calculate Streaks
         const streaks = this.calculateStreaks(attempts);
-        document.getElementById('currentStreak').textContent = `${streaks.current} Day${streaks.current !== 1 ? 's' : ''}`;
-        document.getElementById('bestStreak').textContent = `${streaks.best} Day${streaks.best !== 1 ? 's' : ''}`;
+        const currentStreakText = window.t('analytics.current_streak');
+        const bestStreakText = window.t('analytics.best_streak');
+        const dayText = window.t('analytics.day');
+        const daysText = window.t('analytics.days');
+        
+        document.getElementById('currentStreak').textContent = `${streaks.current} ${streaks.current !== 1 ? daysText : dayText}`;
+        document.getElementById('bestStreak').textContent = `${streaks.best} ${streaks.best !== 1 ? daysText : dayText}`;
 
         // Top Operation (Highest Accuracy with significant attempts)
         let topOp = '-';
@@ -365,7 +370,8 @@ class AnalyticsManager {
         if (!container) return;
 
         if (!attempts || attempts.length === 0) {
-            container.innerHTML = '<tr><td colspan="5" class="empty-row">No recent activity</td></tr>';
+            const noActivityText = window.t('analytics.no_recent_activity');
+            container.innerHTML = `<tr><td colspan="5" class="empty-row">${noActivityText}</td></tr>`;
             return;
         }
 
@@ -427,17 +433,18 @@ class AnalyticsManager {
 
         const container = document.getElementById('operationStats');
         if (container) {
-            container.innerHTML = statsHtml || '<p class="empty-message">No operation data available</p>';
+            const noDataText = window.t('analytics.no_operation_data');
+            container.innerHTML = statsHtml || `<p class="empty-message">${noDataText}</p>`;
         }
     }
 
     getOperationDisplay(op) {
         const displays = {
-            'addition': '➕ Addition',
-            'subtraction': '➖ Subtraction',
-            'multiplication': '✖️ Multiplication',
-            'division': '➗ Division',
-            'complex': '🔀 Complex'
+            'addition': `➕ ${window.t('practice.addition')}`,
+            'subtraction': `➖ ${window.t('practice.subtraction')}`,
+            'multiplication': `✖️ ${window.t('practice.multiplication')}`,
+            'division': `➗ ${window.t('practice.division')}`,
+            'complex': `🔀 ${window.t('practice.complex')}`
         };
         return displays[op] || op;
     }
@@ -537,7 +544,8 @@ class AnalyticsManager {
                                 callbacks: {
                                     label: function (context) {
                                         return context.label + ': ' + context.parsed + '%';
-                                    }
+                                    },
+                                    avgTime: window.t('analytics.avg_time_tooltip')
                                 }
                             }
                         }
@@ -553,7 +561,7 @@ class AnalyticsManager {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Attempts',
+                            label: window.t('analytics.attempts'),
                             data: attemptsData,
                             backgroundColor: '#3B82F6',
                             borderRadius: 6,
@@ -600,7 +608,7 @@ class AnalyticsManager {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Avg Time (seconds)',
+                            label: window.t('analytics.avg_time_chart'),
                             data: timeData,
                             backgroundColor: '#F59E0B',
                             borderRadius: 6,
@@ -617,7 +625,7 @@ class AnalyticsManager {
                                 padding: 12,
                                 callbacks: {
                                     label: function (context) {
-                                        return 'Avg Time: ' + context.parsed.y + 's';
+                                        return window.t('analytics.avg_time_tooltip') + ': ' + context.parsed.y + 's';
                                     }
                                 }
                             }
@@ -667,7 +675,7 @@ class AnalyticsManager {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Accuracy Trend',
+                    label: window.t('analytics.accuracy_trend'),
                     data: dataPoints,
                     borderColor: '#10B981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -769,7 +777,7 @@ class AnalyticsManager {
                 datasets: [
                     {
                         type: 'line',
-                        label: 'Correct Cards',
+                        label: window.t('analytics.correct_cards'),
                         data: correctData,
                         borderColor: '#10B981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -781,7 +789,7 @@ class AnalyticsManager {
                     },
                     {
                         type: 'bar',
-                        label: 'Total Attempts',
+                        label: window.t('analytics.total_attempts'),
                         data: totalData,
                         backgroundColor: '#8B5CF6',
                         borderRadius: 4,
@@ -903,7 +911,8 @@ class AnalyticsManager {
 
     showEmptyState() {
         document.getElementById('totalProblems').textContent = '0';
-        document.getElementById('operationStats').innerHTML = '<p class="empty-message">No practice attempts yet.</p>';
+        const noAttemptsText = window.t('analytics.no_practice_attempts');
+        document.getElementById('operationStats').innerHTML = `<p class="empty-message">${noAttemptsText}</p>`;
         // Clear charts
         ['accuracy', 'attempts', 'time', 'trend'].forEach(k => {
             if (this.charts[k]) this.charts[k].destroy();
@@ -917,13 +926,14 @@ class AnalyticsManager {
         chartContainers.forEach(id => {
             const container = document.getElementById(id);
             if (container) {
-                container.parentElement.innerHTML = `<div style="color: #ef4444; text-align: center; padding: 20px;">Chart Error: ${message}</div>`;
+                const chartErrorText = window.t('analytics.chart_error');
+                container.parentElement.innerHTML = `<div style="color: #ef4444; text-align: center; padding: 20px;">${chartErrorText}: ${message}</div>`;
             }
         });
     }
 
     clearAllData() {
-        if (confirm('Delete all data?')) {
+        if (confirm(window.t('analytics.delete_all_data_confirm'))) {
             localStorage.removeItem('mathDrillAttempts');
             if (typeof pybridge !== 'undefined' && pybridge) {
                 pybridge.sendMessage(JSON.stringify({ type: 'clear_attempts', payload: {} }));
@@ -956,9 +966,10 @@ class AnalyticsManager {
         if (!container) return;
 
         if (!sessions || sessions.length === 0) {
+            const noSessionsText = window.t('analytics.no_practice_sessions');
             container.innerHTML = `
                 <div class="empty-state">
-                    <p>No practice sessions yet. Start practicing to see your session history!</p>
+                    <p>${noSessionsText}</p>
                 </div>
             `;
             return;
@@ -1014,11 +1025,11 @@ class AnalyticsManager {
 
     formatTrend(trend) {
         const trendMap = {
-            'improving': '📈 Improving',
-            'declining': '📉 Declining',
-            'stable': '➡️ Stable'
+            'improving': `📈 ${window.t('analytics.improving')}`,
+            'declining': `📉 ${window.t('analytics.declining')}`,
+            'stable': `➡️ ${window.t('analytics.stable')}`
         };
-        return trendMap[trend] || '➡️ Stable';
+        return trendMap[trend] || `➡️ ${window.t('analytics.stable')}`;
     }
 
     formatDuration(milliseconds) {

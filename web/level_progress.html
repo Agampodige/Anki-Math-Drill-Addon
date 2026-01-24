@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Progress</title>
+    <title data-i18n="levels.title">Level Progress</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="level_progress.css">
 </head>
@@ -32,15 +32,15 @@
         <!-- Dashboard Stats -->
         <div class="level-stats-compact">
             <div class="stat-badge">
-                <span class="badge-label">Progress</span>
+                <span class="badge-label" data-i18n="analytics.progress">Progress</span>
                 <span id="progressText" class="badge-value">0/0</span>
             </div>
             <div class="stat-badge">
-                <span class="badge-label">Accuracy</span>
+                <span class="badge-label" data-i18n="practice.accuracy">Accuracy</span>
                 <span id="accuracyText" class="badge-value">0%</span>
             </div>
             <div class="stat-badge" id="timerStatDiv" style="display:none;">
-                <span class="badge-label">Time</span>
+                <span class="badge-label" data-i18n="practice.time">Time</span>
                 <span id="timerText" class="badge-value">--:--</span>
             </div>
         </div>
@@ -114,6 +114,7 @@
     <div id="modalOverlay" class="modal-overlay" style="display: none;"></div>
 
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script src="i18n.js"></script>
     <script src="context_menu.js"></script>
     <script src="level_progress.js"></script>
 </body>

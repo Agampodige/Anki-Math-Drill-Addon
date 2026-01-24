@@ -343,7 +343,7 @@ class LevelProgress {
 
         const title = modal.querySelector('h2');
         if (title) {
-            title.textContent = result.success ? 'Level Complete!' : 'Level Failed';
+            title.textContent = result.success ? window.t('levels.level_complete') : window.t('levels.level_failed');
             title.style.color = result.success ? 'var(--text-color)' : 'var(--danger-color)';
         }
 

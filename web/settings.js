@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const message = { type: 'perform_backup', payload: {} };
                 window.pybridge.sendMessage(JSON.stringify(message));
                 backupNowBtn.disabled = true;
-                backupNowBtn.textContent = 'Backing up...';
+                backupNowBtn.textContent = window.t('settings.data_management.backing_up');
             }
         });
     }
@@ -265,12 +265,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
             refreshBtn.disabled = true;
-            refreshBtn.textContent = 'Refreshing...';
+            refreshBtn.textContent = window.t('settings.footer.refreshing');
             // Flag to indicate we should show a specific toast for refresh
             syncSettings();
             setTimeout(() => {
                 refreshBtn.disabled = false;
-                refreshBtn.textContent = 'Refresh';
+                refreshBtn.textContent = window.t('settings.footer.refresh');
             }, 1000);
         });
     }
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const message = { type: 'export_data', payload: {} };
                 window.pybridge.sendMessage(JSON.stringify(message));
                 exportBtn.disabled = true;
-                exportBtn.textContent = 'Exporting...';
+                exportBtn.textContent = window.t('settings.data_management.exporting');
             }
         });
     }
@@ -327,10 +327,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         const message = { type: 'import_data', payload: { data: data } };
                         window.pybridge.sendMessage(JSON.stringify(message));
                         importBtn.disabled = true;
-                        importBtn.textContent = 'Importing...';
+                        importBtn.textContent = window.t('settings.data_management.importing');
                     }
                 } catch (err) {
-                    alert('Invalid JSON file');
+                    alert(window.t('settings.data_management.invalid_json'));
                 }
             };
             reader.readAsText(file);
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const message = { type: 'open_backup_location', payload: {} };
                 window.pybridge.sendMessage(JSON.stringify(message));
                 openBackupLocationBtn.disabled = true;
-                openBackupLocationBtn.textContent = 'Opening...';
+                openBackupLocationBtn.textContent = window.t('settings.data_management.opening');
             }
         });
     }
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (message.type === 'export_data_response') {
                 if (exportBtn) {
                     exportBtn.disabled = false;
-                    exportBtn.textContent = 'Export';
+                    exportBtn.textContent = window.t('settings.data_management.export');
                 }
 
                 if (message.payload.success) {
@@ -424,14 +424,14 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (message.type === 'import_data_response' && message.payload.success) {
                 if (importBtn) {
                     importBtn.disabled = false;
-                    importBtn.textContent = 'Import';
+                    importBtn.textContent = window.t('settings.data_management.import');
                 }
                 showSuccessMessage('Data imported! Restart required.');
                 alert('Data imported successfully. Please restart the addon.');
             } else if (message.type === 'perform_backup_response') {
                 if (backupNowBtn) {
                     backupNowBtn.disabled = false;
-                    backupNowBtn.textContent = 'Backup Now';
+                    backupNowBtn.textContent = window.t('settings.data_management.backup_now');
                 }
                 if (message.payload.success) {
                     showSuccessMessage('Backup created successfully!');
@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (message.type === 'open_backup_location_response') {
                 if (openBackupLocationBtn) {
                     openBackupLocationBtn.disabled = false;
-                    openBackupLocationBtn.textContent = 'Open Folder';
+                    openBackupLocationBtn.textContent = window.t('settings.data_management.open_folder');
                 }
                 if (message.payload.success) {
                     showSuccessMessage('Backup location opened!');
@@ -451,21 +451,52 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (message.type === 'open_url_response') {
                 if (message.payload.success) {
                     showSuccessMessage('Opening in browser...');
-                } else {
-                    alert('Failed to open URL: ' + message.payload.message);
-                }
-            } else if (message.type === 'error') {
-                console.error('Bridge error:', message.payload.message);
-                if (exportBtn) { exportBtn.disabled = false; exportBtn.textContent = 'Export'; }
-                if (importBtn) { importBtn.disabled = false; importBtn.textContent = 'Import'; }
-                if (openBackupLocationBtn) { openBackupLocationBtn.disabled = false; openBackupLocationBtn.textContent = 'Open Folder'; }
             }
-        } catch (e) {
-            console.error('Error handling bridge message:', e);
+        } else if (message.type === 'import_data_response' && message.payload.success) {
+            if (importBtn) {
+                importBtn.disabled = false;
+                importBtn.textContent = window.t('settings.data_management.import');
+            }
+            showSuccessMessage('Data imported! Restart required.');
+            alert('Data imported successfully. Please restart the addon.');
+        } else if (message.type === 'perform_backup_response') {
+            if (backupNowBtn) {
+                backupNowBtn.disabled = false;
+                backupNowBtn.textContent = window.t('settings.data_management.backup_now');
+            }
+            if (message.payload.success) {
+                showSuccessMessage('Backup created successfully!');
+            } else {
+                alert('Backup failed: ' + message.payload.message);
+            }
+        } else if (message.type === 'open_backup_location_response') {
+            if (openBackupLocationBtn) {
+                openBackupLocationBtn.disabled = false;
+                openBackupLocationBtn.textContent = window.t('settings.data_management.open_folder');
+            }
+            if (message.payload.success) {
+                showSuccessMessage('Backup location opened!');
+            } else {
+                alert('Failed to open backup location: ' + message.payload.message);
+            }
+        } else if (message.type === 'open_url_response') {
+            if (message.payload.success) {
+                showSuccessMessage('Opening in browser...');
+            } else {
+                alert('Failed to open URL: ' + message.payload.message);
+            }
+        } else if (message.type === 'error') {
+            console.error('Bridge error:', message.payload.message);
+            if (exportBtn) { exportBtn.disabled = false; exportBtn.textContent = window.t('settings.data_management.export'); }
+            if (importBtn) { importBtn.disabled = false; importBtn.textContent = window.t('settings.data_management.import'); }
+            if (openBackupLocationBtn) { openBackupLocationBtn.disabled = false; openBackupLocationBtn.textContent = window.t('settings.data_management.open_folder'); }
         }
-    };
+    } catch (e) {
+        console.error('Error handling bridge message:', e);
+    }
+}
 
-    // Helper to update UI elements based on settings
+// Helper to update UI elements based on settings
     function updateUI(settings) {
         const themeToggle = document.getElementById('themeToggle');
         const soundToggle = document.getElementById('soundToggle');
@@ -530,3 +561,56 @@ function getSettingValue(key) {
     const settings = getSettings();
     return settings[key] !== undefined ? settings[key] : DEFAULT_SETTINGS[key];
 }
+
+// Language Management
+function initializeLanguageSelector() {
+    const languageSelect = document.getElementById('languageSelect');
+    if (!languageSelect) return;
+
+    // Populate language options
+    const supportedLanguages = i18n.getSupportedLanguages();
+    languageSelect.innerHTML = '';
+    
+    Object.entries(supportedLanguages).forEach(([code, language]) => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = language.nativeName;
+        languageSelect.appendChild(option);
+    });
+
+    // Set current language
+    languageSelect.value = i18n.getCurrentLanguage();
+
+    // Add change event listener
+    languageSelect.addEventListener('change', async (event) => {
+        const selectedLanguage = event.target.value;
+        await i18n.setLanguage(selectedLanguage);
+        
+        // Show success message
+        showSuccessMessage();
+        
+        // Update page title
+        updatePageTitle();
+    });
+}
+
+// Update page title with translation
+function updatePageTitle() {
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+        titleElement.textContent = window.t('settings.title');
+    }
+    
+    const headerTitle = document.querySelector('.settings-header h1');
+    if (headerTitle) {
+        headerTitle.textContent = window.t('settings.title');
+    }
+}
+
+// Initialize language selector when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait for i18n to be ready
+    window.addEventListener('i18n-ready', () => {
+        setTimeout(initializeLanguageSelector, 100);
+    });
+});

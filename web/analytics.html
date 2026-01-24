@@ -5,7 +5,7 @@
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics</title>
+    <title data-i18n="analytics.title">Analytics</title>
     <script src="chart.min.js"></script>
     <link href="analytics.css" rel="stylesheet">
 </head>
@@ -18,26 +18,26 @@
                 <button id="backBtn" class="levels-back-button" onclick="navigateToHome()">
                     ←
                 </button>
-                <h1 class="levels-title">Analytics Dashboard</h1>
+                <h1 class="levels-title" data-i18n="analytics.title">Analytics Dashboard</h1>
                 <div class="levels-spacer"></div>
             </div>
 
             <!-- Session Analytics -->
             <div class="analytics-section">
-                <h2 class="section-title">Session Analytics</h2>
+                <h2 class="section-title" data-i18n="analytics.overview">Session Analytics</h2>
                 <div class="levels-stats-section">
                     <div class="stat-item">
                         <div class="stat-icon">🎯</div>
                         <div class="stat-details">
                             <span class="stat-value" id="totalSessions">0</span>
-                            <span class="stat-name">Total Sessions</span>
+                            <span class="stat-name" data-i18n="analytics.total_problems">Total Sessions</span>
                         </div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-icon">⏱️</div>
                         <div class="stat-details">
                             <span class="stat-value" id="sessionAccuracy">0%</span>
-                            <span class="stat-name">Session Accuracy</span>
+                            <span class="stat-name" data-i18n="practice.accuracy">Session Accuracy</span>
                         </div>
                     </div>
                     <div class="stat-item">
@@ -51,7 +51,7 @@
                         <div class="stat-icon">⏰</div>
                         <div class="stat-details">
                             <span class="stat-value" id="avgSessionLength">0m</span>
-                            <span class="stat-name">Avg Session</span>
+                            <span class="stat-name" data-i18n="analytics.avg_session">Avg Session</span>
                         </div>
                     </div>
                 </div>
@@ -59,11 +59,11 @@
 
             <!-- Recent Sessions -->
             <div class="analytics-section">
-                <h2 class="section-title">Recent Sessions</h2>
+                <h2 class="section-title" data-i18n="analytics.recent_sessions">Recent Sessions</h2>
                 <div class="recent-sessions-container">
                     <div id="recentSessionsList" class="sessions-list">
                         <div class="loading-state">
-                            <p>Loading session data...</p>
+                            <p data-i18n="analytics.loading_session_data">Loading session data...</p>
                         </div>
                     </div>
                 </div>
@@ -71,34 +71,34 @@
 
             <!-- Overall Statistics -->
             <div class="analytics-section">
-                <h2 class="section-title">Overall Performance</h2>
+                <h2 class="section-title" data-i18n="analytics.overall_performance">Overall Performance</h2>
                 <div class="levels-stats-section">
                     <div class="stat-item">
                         <div class="stat-icon">📝</div>
                         <div class="stat-details">
                             <span class="stat-value" id="totalProblems">0</span>
-                            <span class="stat-name">Total Problems</span>
+                            <span class="stat-name" data-i18n="analytics.total_problems">Total Problems</span>
                         </div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-icon">✅</div>
                         <div class="stat-details">
                             <span class="stat-value" id="correctAnswers">0</span>
-                            <span class="stat-name">Correct Answers</span>
+                            <span class="stat-name" data-i18n="analytics.correct_answers">Correct Answers</span>
                         </div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-icon">🎯</div>
                         <div class="stat-details">
                             <span class="stat-value" id="overallAccuracy">0%</span>
-                            <span class="stat-name">Accuracy</span>
+                            <span class="stat-name" data-i18n="practice.accuracy">Accuracy</span>
                         </div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-icon">⏱️</div>
                         <div class="stat-details">
                             <span class="stat-value" id="avgTime">0.0s</span>
-                            <span class="stat-name">Avg Time</span>
+                            <span class="stat-name" data-i18n="analytics.avg_time">Avg Time</span>
                         </div>
                     </div>
                 </div>
@@ -106,14 +106,14 @@
 
             <!-- Activity Heatmap -->
             <div class="analytics-section">
-                <h2 class="section-title">Activity Heatmap</h2>
+                <h2 class="section-title" data-i18n="analytics.activity_heatmap">Activity Heatmap</h2>
                 <div class="heatmap-wrapper">
                     <div class="heatmap-labels-months" id="heatmapMonths"></div>
                     <div class="heatmap-body">
                         <div class="heatmap-labels-days">
-                            <span>Mon</span>
-                            <span>Wed</span>
-                            <span>Fri</span>
+                            <span data-i18n="analytics.mon">Mon</span>
+                            <span data-i18n="analytics.wed">Wed</span>
+                            <span data-i18n="analytics.fri">Fri</span>
                         </div>
                         <div class="heatmap-container" id="activityHeatmap">
                             <div id="heatmapGrid" class="heatmap-grid"></div>
@@ -121,46 +121,46 @@
                     </div>
                 </div>
                 <div class="heatmap-legend">
-                    <span>Less</span>
+                    <span data-i18n="analytics.less">Less</span>
                     <div class="legend-item" data-level="0" style="background-color: rgba(255, 255, 255, 0.05);">
                     </div>
                     <div class="legend-item" data-level="1" style="background-color: #0e4429;"></div>
                     <div class="legend-item" data-level="2" style="background-color: #006d32;"></div>
                     <div class="legend-item" data-level="3" style="background-color: #26a641;"></div>
                     <div class="legend-item" data-level="4" style="background-color: #39d353;"></div>
-                    <span>More</span>
+                    <span data-i18n="analytics.more">More</span>
                 </div>
             </div>
 
             <!-- Insights Section -->
             <div class="analytics-section">
-                <h2 class="section-title">Performance Insights</h2>
+                <h2 class="section-title" data-i18n="analytics.performance_insights">Performance Insights</h2>
                 <div class="insights-grid">
                     <div class="insight-card">
                         <div class="insight-icon">🔥</div>
                         <div class="insight-details">
-                            <span class="insight-label">Current Streak</span>
+                            <span class="insight-label" data-i18n="analytics.current_streak">Current Streak</span>
                             <span class="insight-value" id="currentStreak">0 Days</span>
                         </div>
                     </div>
                     <div class="insight-card">
                         <div class="insight-icon">🏆</div>
                         <div class="insight-details">
-                            <span class="insight-label">Best Streak</span>
+                            <span class="insight-label" data-i18n="analytics.best_streak">Best Streak</span>
                             <span class="insight-value" id="bestStreak">0 Days</span>
                         </div>
                     </div>
                     <div class="insight-card">
                         <div class="insight-icon">⭐</div>
                         <div class="insight-details">
-                            <span class="insight-label">Top Operation</span>
+                            <span class="insight-label" data-i18n="analytics.top_operation">Top Operation</span>
                             <span class="insight-value" id="topOperation">-</span>
                         </div>
                     </div>
                     <div class="insight-card">
                         <div class="insight-icon">📈</div>
                         <div class="insight-details">
-                            <span class="insight-label">Focus Area</span>
+                            <span class="insight-label" data-i18n="analytics.focus_area">Focus Area</span>
                             <span class="insight-value" id="focusArea">-</span>
                         </div>
                     </div>
@@ -169,34 +169,34 @@
 
             <!-- Charts Section -->
             <div class="analytics-section">
-                <h2 class="section-title">Visual Insights</h2>
+                <h2 class="section-title" data-i18n="analytics.visual_insights">Visual Insights</h2>
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <h3>Accuracy by Operation</h3>
+                        <h3 data-i18n="analytics.accuracy_by_operation">Accuracy by Operation</h3>
                         <div class="chart-wrapper">
                             <canvas id="accuracyChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>Attempts Overview</h3>
+                        <h3 data-i18n="analytics.attempts_overview">Attempts Overview</h3>
                         <div class="chart-wrapper">
                             <canvas id="attemptsChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>Speed Performance</h3>
+                        <h3 data-i18n="analytics.speed_performance">Speed Performance</h3>
                         <div class="chart-wrapper">
                             <canvas id="timeChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
                         <div class="chart-header-row">
-                            <h3>Daily Learning Progress</h3>
+                            <h3 data-i18n="analytics.daily_learning_progress">Daily Learning Progress</h3>
                             <div class="range-selector" id="progressRangeSelector">
-                                <button class="range-btn active" data-range="7">Week</button>
-                                <button class="range-btn" data-range="30">Month</button>
-                                <button class="range-btn" data-range="90">3 Mo</button>
-                                <button class="range-btn" data-range="365">Year</button>
+                                <button class="range-btn active" data-range="7" data-i18n="analytics.week">Week</button>
+                                <button class="range-btn" data-range="30" data-i18n="analytics.month">Month</button>
+                                <button class="range-btn" data-range="90" data-i18n="analytics.three_months">3 Mo</button>
+                                <button class="range-btn" data-range="365" data-i18n="analytics.year">Year</button>
                             </div>
                         </div>
                         <div class="chart-wrapper">
@@ -208,21 +208,21 @@
 
             <!-- Recent Activity -->
             <div class="analytics-section">
-                <h2 class="section-title">Recent Activity</h2>
+                <h2 class="section-title" data-i18n="analytics.recent_activity">Recent Activity</h2>
                 <div class="recent-activity-container">
                     <table class="recent-activity-table">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Operation</th>
-                                <th>Problem</th>
-                                <th>Result</th>
-                                <th>Time</th>
+                                <th data-i18n="analytics.date">Date</th>
+                                <th data-i18n="analytics.operation">Operation</th>
+                                <th data-i18n="practice.question">Problem</th>
+                                <th data-i18n="analytics.result">Result</th>
+                                <th data-i18n="practice.time">Time</th>
                             </tr>
                         </thead>
                         <tbody id="recentActivityBody">
                             <tr>
-                                <td colspan="5" class="empty-row">No recent activity</td>
+                                <td colspan="5" class="empty-row" data-i18n="analytics.no_recent_activity">No recent activity</td>
                             </tr>
                         </tbody>
                     </table>
@@ -231,10 +231,10 @@
 
             <!-- Operation Statistics -->
             <div class="analytics-section">
-                <h2 class="section-title">Detailed Breakdown</h2>
+                <h2 class="section-title" data-i18n="analytics.detailed_breakdown">Detailed Breakdown</h2>
                 <div id="operationStats" class="operation-stats-grid">
                     <div class="loading-state">
-                        <p>Loading detailed statistics...</p>
+                        <p data-i18n="analytics.loading_detailed_statistics">Loading detailed statistics...</p>
                     </div>
                 </div>
             </div>
@@ -244,6 +244,7 @@
 
     <!-- Scripts -->
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script src="i18n.js"></script>
     <script src="context_menu.js"></script>
     <script src="session_manager.js"></script>
     <script src="app.js"></script>

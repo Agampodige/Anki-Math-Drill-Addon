@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="settings.title">Settings</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div style="padding: 20px; max-width: 600px; margin: 0 auto;">
+        <h1 data-i18n="settings.title">Settings</h1>
+        
+        <div style="margin: 20px 0;">
+            <label for="languageSelect" style="display: block; margin-bottom: 10px; font-weight: bold;">
+                <span data-i18n="settings.language.select_language">Select Language</span>:
+            </label>
+            <select id="languageSelect" class="language-select">
+                <!-- Will be populated by JavaScript -->
+            </select>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <h2 data-i18n="settings.sections.appearance">🎨 Appearance</h2>
+            <p data-i18n="settings.appearance.accent_color_desc">Choose your preferred color theme</p>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <h2 data-i18n="home.nav_cards.levels_title">Levels</h2>
+            <p data-i18n="home.nav_cards.levels_desc">Progress through challenging levels and earn stars</p>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="testTranslation()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Test Translation
+            </button>
+        </div>
+
+        <div id="testResult" style="margin: 20px 0; padding: 10px; background: #f0f0f0; border-radius: 5px;"></div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script>
+        // Test function
+        function testTranslation() {
+            const result = document.getElementById('testResult');
+            const currentLang = i18n.getCurrentLanguage();
+            
+            result.innerHTML = `
+                <h3>Translation Test Results:</h3>
+                <p><strong>Current Language:</strong> ${currentLang}</p>
+                <p><strong>Settings Title:</strong> ${window.t('settings.title')}</p>
+                <p><strong>Home Title:</strong> ${window.t('home.title')}</p>
+                <p><strong>Greeting:</strong> ${window.t('home.greeting_morning')}</p>
+                <p><strong>Levels Title:</strong> ${window.t('home.nav_cards.levels_title')}</p>
+            `;
+        }
+
+        // Initialize language selector when DOM is ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            await i18n.init();
+            
+            const languageSelect = document.getElementById('languageSelect');
+            const supportedLanguages = i18n.getSupportedLanguages();
+            
+            // Populate language options
+            languageSelect.innerHTML = '';
+            Object.entries(supportedLanguages).forEach(([code, language]) => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = language.nativeName;
+                languageSelect.appendChild(option);
+            });
+
+            // Set current language
+            languageSelect.value = i18n.getCurrentLanguage();
+
+            // Add change event listener
+            languageSelect.addEventListener('change', async (event) => {
+                const selectedLanguage = event.target.value;
+                await i18n.setLanguage(selectedLanguage);
+                testTranslation(); // Update test results
+            });
+
+            // Initial test
+            testTranslation();
+        });
+    </script>
+</body>
+</html>

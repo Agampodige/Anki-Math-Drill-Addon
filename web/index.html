@@ -5,7 +5,7 @@
     <link href="style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Drill - Home</title>
+    <title data-i18n="home.title">Math Drill - Home</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,9 +17,9 @@
             <div class="hero-content">
                 <div class="greeting-container">
                     <span class="greeting-emoji" id="greetingEmoji">👋</span>
-                    <h1 class="hero-title" id="greetingText">Good Morning</h1>
+                    <h1 class="hero-title" id="greetingText" data-i18n="home.greeting_morning">Good Morning</h1>
                 </div>
-                <p class="hero-subtitle">Ready to sharpen your mind today?</p>
+                <p class="hero-subtitle" data-i18n="home.ready_to_sharpen">Ready to sharpen your mind today?</p>
             </div>
         </div>
 
@@ -29,21 +29,21 @@
                 <span class="home-stat-icon">🎯</span>
                 <div class="home-stat-info">
                     <span class="home-stat-value" id="homeStatTotalAttempts">0</span>
-                    <span class="home-stat-label">Problems</span>
+                    <span class="home-stat-label" data-i18n="home.stats.problems">Problems</span>
                 </div>
             </div>
             <div class="home-stat-card">
                 <span class="home-stat-icon">🎯</span>
                 <div class="home-stat-info">
                     <span class="home-stat-value" id="homeStatAccuracy">0%</span>
-                    <span class="home-stat-label">Accuracy</span>
+                    <span class="home-stat-label" data-i18n="home.stats.accuracy">Accuracy</span>
                 </div>
             </div>
             <div class="home-stat-card">
                 <span class="home-stat-icon">🔥</span>
                 <div class="home-stat-info">
                     <span class="home-stat-value" id="homeStatStreak">0</span>
-                    <span class="home-stat-label">Day Streak</span>
+                    <span class="home-stat-label" data-i18n="home.stats.day_streak">Day Streak</span>
                 </div>
             </div>
         </section>
@@ -52,8 +52,8 @@
             <button class="nav-card glass-card" data-page="levels" onclick="navigateToPage('levels')">
                 <div class="nav-icon-wrapper">🏆</div>
                 <div class="nav-content">
-                    <h3>Levels</h3>
-                    <p>Progress through challenging levels and earn stars</p>
+                    <h3 data-i18n="home.nav_cards.levels_title">Levels</h3>
+                    <p data-i18n="home.nav_cards.levels_desc">Progress through challenging levels and earn stars</p>
                 </div>
                 <div class="nav-arrow">→</div>
             </button>
@@ -61,8 +61,8 @@
             <button class="nav-card glass-card" data-page="practice_mode" onclick="navigateToPage('practice_mode')">
                 <div class="nav-icon-wrapper">💪</div>
                 <div class="nav-content">
-                    <h3>Practice Mode</h3>
-                    <p>Focused practice with customizable settings</p>
+                    <h3 data-i18n="home.nav_cards.practice_title">Practice Mode</h3>
+                    <p data-i18n="home.nav_cards.practice_desc">Focused practice with customizable settings</p>
                 </div>
                 <div class="nav-arrow">→</div>
             </button>
@@ -70,8 +70,8 @@
             <button class="nav-card glass-card" data-page="analytics" onclick="navigateToPage('analytics')">
                 <div class="nav-icon-wrapper">📊</div>
                 <div class="nav-content">
-                    <h3>Analytics</h3>
-                    <p>Track your progress and performance insights</p>
+                    <h3 data-i18n="home.nav_cards.analytics_title">Analytics</h3>
+                    <p data-i18n="home.nav_cards.analytics_desc">Track your progress and performance insights</p>
                 </div>
                 <div class="nav-arrow">→</div>
             </button>
@@ -79,8 +79,8 @@
             <button class="nav-card glass-card" data-page="settings" onclick="navigateToPage('settings')">
                 <div class="nav-icon-wrapper">⚙️</div>
                 <div class="nav-content">
-                    <h3>Settings</h3>
-                    <p>Customize your learning experience</p>
+                    <h3 data-i18n="home.nav_cards.settings_title">Settings</h3>
+                    <p data-i18n="home.nav_cards.settings_desc">Customize your learning experience</p>
                 </div>
                 <div class="nav-arrow">→</div>
             </button>
@@ -88,6 +88,7 @@
     </main>
 
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script src="i18n.js"></script>
     <script src="context_menu.js"></script>
     <script src="app.js"></script>
 </body>
