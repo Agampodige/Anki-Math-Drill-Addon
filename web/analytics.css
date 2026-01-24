@@ -115,25 +115,13 @@
 .heatmap-wrapper {
     margin: var(--spacing-xl) 0;
     overflow-x: auto;
-}
-
-.heatmap-labels-months {
-    display: flex;
-    padding-left: 40px;
-    height: 20px;
-    margin-bottom: var(--spacing-xs);
-    color: var(--text-muted);
-    font-size: 10px;
-}
-
-.heatmap-month {
-    flex: 1;
-    min-width: 40px;
+    max-width: 100%;
 }
 
 .heatmap-body {
     display: flex;
     gap: var(--spacing-md);
+    min-width: 0;
 }
 
 .heatmap-labels-days {
@@ -144,6 +132,54 @@
     color: var(--text-muted);
     font-size: 10px;
     height: 110px;
+    flex-shrink: 0;
+}
+
+.heatmap-container {
+    flex: 1;
+    overflow-x: auto;
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 3px;
+    width: 100%;
+    min-width: 364px;
+}
+
+.heatmap-cell {
+    width: 100%;
+    height: 15px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease;
+}
+
+.heatmap-cell[data-level="0"] {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.heatmap-cell[data-level="1"] {
+    background-color: #0e4429;
+}
+
+.heatmap-cell[data-level="2"] {
+    background-color: #006d32;
+}
+
+.heatmap-cell[data-level="3"] {
+    background-color: #26a641;
+}
+
+.heatmap-cell[data-level="4"] {
+    background-color: #39d353;
+}
+
+.heatmap-cell:hover {
+    outline: 2px solid rgba(255, 255, 255, 0.3);
+    outline-offset: 1px;
 }
 
 /* Insights Grid */
@@ -310,7 +346,42 @@
         display: none;
     }
 
-    .heatmap-labels-months {
-        padding-left: 0;
+    .heatmap-wrapper {
+        margin: var(--spacing-md) 0;
+        overflow-x: auto;
+    }
+
+    .heatmap-body {
+        gap: var(--spacing-sm);
+    }
+
+    .heatmap-container {
+        min-width: 280px;
+        overflow-x: auto;
+    }
+
+    .heatmap-grid {
+        display: grid;
+        grid-template-columns: repeat(52, 1fr);
+        grid-template-rows: repeat(7, 1fr);
+        gap: 2px;
+        width: 100%;
+        min-width: 280px;
+    }
+
+    .heatmap-cell {
+        width: 100%;
+        height: 12px;
+        border-radius: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .heatmap-grid {
+        gap: 1px;
+    }
+
+    .heatmap-cell {
+        height: 10px;
     }
 }

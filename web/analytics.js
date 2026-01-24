@@ -187,11 +187,9 @@ class AnalyticsManager {
 
     renderActivityHeatmap(attempts) {
         const grid = document.getElementById('heatmapGrid');
-        const monthsContainer = document.getElementById('heatmapMonths');
         if (!grid) return;
 
         grid.innerHTML = '';
-        if (monthsContainer) monthsContainer.innerHTML = '';
 
         try {
             // 1. Process attempts into day map "YYYY-MM-DD" -> count
@@ -222,19 +220,10 @@ class AnalyticsManager {
             today.setHours(0, 0, 0, 0);
 
             const squares = [];
-            const monthLabels = [];
-            let lastMonth = -1;
 
             for (let i = 0; i < 364; i++) {
                 const d = new Date(today);
                 d.setDate(today.getDate() - (363 - i));
-
-                const month = d.getMonth();
-                if (month !== lastMonth && i % 7 === 0) {
-                    const monthName = d.toLocaleDateString('en-US', { month: 'short' });
-                    monthLabels.push({ name: monthName, index: i });
-                    lastMonth = month;
-                }
 
                 const y = d.getFullYear();
                 const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -257,17 +246,7 @@ class AnalyticsManager {
                 squares.push({ date: dayStr, formattedDate, count, level });
             }
 
-            // 3. Render Month Labels
-            if (monthsContainer) {
-                monthLabels.forEach(ml => {
-                    const el = document.createElement('div');
-                    el.className = 'heatmap-month';
-                    el.textContent = ml.name;
-                    monthsContainer.appendChild(el);
-                });
-            }
-
-            // 4. Render cells
+            // 3. Render cells
             squares.forEach(sq => {
                 const el = document.createElement('div');
                 el.className = 'heatmap-cell';
